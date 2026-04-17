@@ -409,6 +409,19 @@ body {
 .rp-decision-item:last-child { border-bottom: none; }
 .rp-decision-check { color: #22c55e; font-size: 11px; padding-top: 1px; flex-shrink: 0; }
 .rp-decision-text { font-size: 11px; color: var(--text-2); line-height: 1.45; flex: 1; }
+
+/* ── Velocity chart ─────────────────────────────────────── */
+.vel-wrap { display:flex; align-items:flex-end; gap:3px; height:52px; padding:0 2px; }
+.vel-bar-col { display:flex; flex-direction:column; align-items:center; flex:1; gap:2px; }
+.vel-bar {
+  width:100%; border-radius:3px 3px 0 0;
+  min-height:2px; transition:height .3s ease;
+  cursor:default;
+}
+.vel-bar:hover { filter:brightness(1.2); }
+.vel-label { font-size:8px; color:var(--text-3); letter-spacing:-.2px; }
+.vel-current .vel-bar { box-shadow:0 0 6px rgba(108,99,255,.45); }
+.vel-total { font-size:9px; color:var(--text-3); text-align:right; margin-top:4px; letter-spacing:.2px; }
 .rp-decision-proj {
   font-size: 9px; color: var(--text-3); font-weight: 600;
   text-transform: uppercase; letter-spacing: .4px; margin-top: 2px;
@@ -1892,6 +1905,18 @@ body {
     <div class="rp-section">
       <div class="rp-title">Today's work</div>
       <div id="rp-today"></div>
+    </div>
+
+    <div class="rp-divider"></div>
+
+    <!-- Velocity chart -->
+    <div class="rp-section">
+      <div class="rp-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Velocity</span>
+        <span id="vel-subtitle" style="font-size:9px;color:var(--text-3);font-weight:500">blocks / week</span>
+      </div>
+      <div class="vel-wrap" id="vel-chart"></div>
+      <div class="vel-total" id="vel-total"></div>
     </div>
 
     <div class="rp-divider"></div>
@@ -3491,6 +3516,102 @@ function buildRightPanel() {
       ${b.title.replace('💡 ','')}
     </div>`).join('');
 
+  // Velocity chart
+  buildVelocityChart();
+}
+
+// ── Velocity chart ────────────────────────────────────
+function buildVelocityChart() {
+  const chartEl  = document.getElementById('vel-chart');
+  const totalEl  = document.getElementById('vel-total');
+  if (!chartEl) return;
+
+  const all = mergedBlocks().filter(b => b.type !== 'idea');
+
+  // Build ISO week key: "YYYY-Www"
+  function isoWeek(ts) {
+    // ts is YYYYMMDD integer
+    const s = String(ts);
+    const d = new Date(+s.slice(0,4), +s.slice(4,6)-1, +s.slice(6,8));
+    // Get Thursday of the week → year
+    const tmp = new Date(d);
+    tmp.setDate(tmp.getDate() - ((tmp.getDay()+6)%7) + 3);
+    const jan4 = new Date(tmp.getFullYear(), 0, 4);
+    const wn = 1 + Math.round(((tmp - jan4) / 86400000 - 3 + (jan4.getDay()+6)%7) / 7);
+    return `${tmp.getFullYear()}-W${String(wn).padStart(2,'0')}`;
+  }
+
+  // Current week key
+  const now = new Date();
+  const todayTs = parseInt(now.toISOString().slice(0,10).replace(/-/g,''));
+  const currentWeekKey = isoWeek(todayTs);
+
+  // Last 12 weeks in order (oldest → newest)
+  function weeksBefore(n) {
+    const weeks = [];
+    for (let i = n-1; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i*7);
+      const ts = parseInt(d.toISOString().slice(0,10).replace(/-/g,''));
+      const key = isoWeek(ts);
+      if (!weeks.find(w => w.key === key)) {
+        // Short label: week start Mon
+        const mon = new Date(d);
+        mon.setDate(d.getDate() - ((d.getDay()+6)%7));
+        const label = mon.toLocaleDateString('en-GB',{month:'numeric',day:'numeric'});
+        weeks.push({ key, label });
+      }
+    }
+    return weeks.slice(-12);
+  }
+
+  const weeks = weeksBefore(14).slice(-12);
+
+  // Group blocks by week, track dominant project
+  const weekData = {};
+  weeks.forEach(w => weekData[w.key] = { count:0, projects:{} });
+
+  all.forEach(b => {
+    if (!b.ts) return;
+    const wk = isoWeek(b.ts);
+    if (!weekData[wk]) return;
+    weekData[wk].count++;
+    const proj = b.project || 'Other';
+    weekData[wk].projects[proj] = (weekData[wk].projects[proj] || 0) + 1;
+  });
+
+  // Find max count for scaling
+  const counts = weeks.map(w => weekData[w.key]?.count || 0);
+  const maxCount = Math.max(...counts, 1);
+
+  // Render
+  const bars = weeks.map((w, i) => {
+    const data = weekData[w.key] || { count:0, projects:{} };
+    const count = data.count;
+    const MAX_PX = 44;
+    const heightPx = count > 0 ? Math.max(Math.round(count / maxCount * MAX_PX), 4) : 2;
+    // Dominant project color
+    let color = 'rgba(108,99,255,.18)';
+    if (count > 0) {
+      const dominant = Object.entries(data.projects).sort((a,b)=>b[1]-a[1])[0]?.[0];
+      const base = PROJ[dominant]?.color || '#6c63ff';
+      color = base + 'bb';
+    }
+    const isCurrent = w.key === currentWeekKey;
+    // Label: show only every 3rd, first, and last
+    const showLabel = (i === 0 || i === weeks.length-1 || i % 3 === 0);
+    const labelParts = w.label.split('/');
+    const shortLabel = showLabel ? `${labelParts[0]}/${labelParts[1]}` : '';
+    return `<div class="vel-bar-col${isCurrent ? ' vel-current' : ''}">
+      <div class="vel-bar" style="height:${heightPx}px;background:${color}" title="${count} block${count!==1?'s':''} · ${w.key}"></div>
+      <div class="vel-label">${shortLabel}</div>
+    </div>`;
+  });
+
+  chartEl.innerHTML = bars.join('');
+  const total7 = weekData[currentWeekKey]?.count || 0;
+  const totalAll = counts.reduce((a,b)=>a+b,0);
+  if (totalEl) totalEl.textContent = `${total7} this week · ${totalAll} total (12 wks)`;
 }
 
 // ── seedSession — copy full context seed to clipboard ──
