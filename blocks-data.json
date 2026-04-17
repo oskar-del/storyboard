@@ -1,576 +1,578 @@
 [
   {
-    "id": "sb-ui-v5-apr17-session3",
+    "id": "decision-integration-architecture",
+    "type": "decision",
+    "project": "Storyboard",
+    "title": "MCP-first architecture — browser extension is a bridge, not the plan",
+    "body": "Every AI tool integration goes through mcp-server.js as universal intake. Browser extension covers tools that don't support MCP yet (ChatGPT, Gemini). When those tools adopt MCP, we plug in via config — no server changes. Always monitor when new tools add MCP support. The _source field on every block tracks which tool captured it.",
+    "rationale": "Claude has the most capable environment right now but others will follow. Build the pipes ready — when they open, just connect.",
+    "tags": ["architecture", "mcp", "future-proof"],
+    "ts": 20260417,
+    "confidence": "high"
+  },
+  {
+    "id": "sb-day1-sprint-session",
     "type": "session",
     "project": "Storyboard",
     "date": "Apr 17",
     "ts": 20260417,
-    "_live": true,
+    "_source": "claude.ai",
     "_captured": "2026-04-17T16:00:00.000Z",
     "status": "done",
-    "title": "Dashboard v5 — Search · FAB Speed-dial · Stats Bar · Dynamic Seed",
-    "summary": "Third sprint on Apr 17. Added global search overlay (⌘K shortcut, fuzzy block search). FAB speed-dial (+) replaces single idea button — opens to Idea/Decision/Block capture. Stats bar in All view shows total blocks/decisions/ideas/automations/projects/today counts. Block cards show decision+idea count badges. Session timer in right panel. North Star in right panel when project selected. capturedIdeas persist via localStorage. seedNewChat() is now fully dynamic — pulls live projects with North Stars, recent decisions, today's work. MCP: git_push and score_skills tools added. v5 snapshot saved.",
-    "chips": ["⌘K Search", "FAB Speed-dial", "Stats Bar", "localStorage persist", "Dynamic seed", "MCP git_push"],
+    "title": "Day 1 sprint — landing page, browser extension, pitch deck, Context Hub",
+    "summary": "Full Day 1 of the 10-day sprint. Built the new landing page from scratch with context window hero message. Added Skills view with category intents and skill-by-task suggestions. Context Hub overlay with per-project seed and staleness tracking. First-visit onboarding with 3 paths. Browser extension v0.1 covering Claude, ChatGPT, Gemini, Cursor, Perplexity. MCP server HTTP endpoints /ping and /capture-web. Living investor pitch deck (10 slides, keyboard nav). README completely rewritten. GitHub Pages enabled.",
+    "chips": ["Landing page", "Browser extension", "Context Hub", "Pitch deck", "MCP endpoints", "Onboarding"],
     "decisions": [
-      "Global search built as overlay (not inline) — keeps feed clean, ⌘K is familiar",
-      "FAB becomes speed-dial with + icon (not emoji) — rotates to × when open",
-      "Stats bar only shows in All-time All-projects view — avoids redundancy when filtered",
-      "capturedIdeas persisted to localStorage — survive page refreshes without MCP",
-      "seedNewChat() now dynamic — reads live data instead of hardcoded text",
-      "Decision/idea count badges on block cards — visible without clicking through"
+      "Hero message: 'Context windows end. Your project doesn't.' — most relatable pain point",
+      "Skills organized by category with editable intent statements to prevent steering drift",
+      "Context Hub shows staleness — orange badge when unseen sessions exist for a project",
+      "Browser extension is bridge for non-MCP tools; MCP is always the primary pipe",
+      "Pitch deck lives as pitch.html — updated every sprint day as traction grows",
+      "Copilot added as MCP client — Microsoft adopted MCP in early 2026"
     ],
     "ideas": [
-      "Mobile PWA install flow — show 'Add to Home Screen' prompt on first visit",
-      "Keyboard shortcut guide modal — show all shortcuts (?)",
-      "Export whole storyboard as markdown doc — for handoff or backup"
+      "Chrome Web Store submission — unlocks normal install flow for non-developers",
+      "Screen recording showing full loop: capture → dashboard → Seed → paste",
+      "Demo data that tells a real story across multiple months and projects"
     ],
-    "seed": "Storyboard v5 — Apr 17 Session 3\n\nBuilt today:\n- Global search overlay (⌘K / Ctrl+K, Esc to close)\n- FAB speed-dial: + button → Idea / Decision / Block options\n- Stats bar in All view: blocks / decisions / ideas / automations / projects / today\n- Block card decision+idea count badges\n- Session timer in right panel header\n- North Star display in right panel when project focused\n- capturedIdeas → localStorage persistence\n- seedNewChat() dynamic: live projects + northStars + decisions + today + ideas\n- MCP: git_push tool + score_skills tool added\n- versions/v5-dynamic-seed-fab-persist-20260417.html snapshot\n\nPending:\n- GitHub auth (gh auth login) + first push\n- Weak skill rewrites (consolidate-memory 46, hh-brand-kit 53) — skills dir read-only\n- Mobile PWA install prompt"
+    "seed": "Storyboard — Day 1 Complete\n\nShipped today: landing page (context window hero), skills with category intents, Context Hub (per-project seed + staleness), onboarding (3 paths), browser extension v0.1, MCP /capture-web + /ping endpoints, pitch deck, README.\n\nMCP clients: Claude Desktop, Cursor, Windsurf, Copilot\nExtension coverage: Claude, ChatGPT, Gemini, Perplexity, Replit\n\nNext: block detail overlay, timeline view, Chrome Web Store"
   },
   {
-    "id": "sb-ui-v4-apr17-session2",
+    "id": "sb-v5-session",
     "type": "session",
     "project": "Storyboard",
     "date": "Apr 17",
     "ts": 20260417,
-    "_live": true,
+    "_source": "claude.ai",
     "_captured": "2026-04-17T14:00:00.000Z",
     "status": "done",
-    "title": "Dashboard v4 — North Star · Skills Health · Canvas Live Times",
-    "summary": "Second sprint session on Apr 17. Added North Star display to both canvas cards and project headers — every project now shows its measurable success statement. Skills view upgraded with library health bar (avg score, A-grade count, 'needs work' quick-filter). Canvas cards show relative timestamps for last activity. relTime() utility function added. score_skills.py now runs automatically after every MCP populate call. v4 snapshot saved.",
-    "chips": ["North Star", "Skills Health Bar", "relTime", "Canvas timestamps", "Auto skill scoring", "v4 snapshot"],
+    "title": "Dashboard v5 — Search · FAB · Stats Bar · Dynamic Seed",
+    "summary": "Global search overlay (⌘K), FAB speed-dial for capture, stats bar, localStorage persistence, fully dynamic seedNewChat(). MCP tools added: git_push, score_skills.",
+    "chips": ["⌘K Search", "FAB Speed-dial", "Stats Bar", "Dynamic Seed"],
     "decisions": [
-      "North Star on canvas = small colored line under goal text (project accent color, italic)",
-      "North Star on project header = left-bordered callout block with 🎯 icon — stands out from desc",
-      "Skills library health bar shows avg/100, A-count, weak-count with one-click filter",
-      "score_skills.py wired into MCP populate tool — skills-data.json stays fresh automatically",
-      "relTime() handles both ms timestamps and YYYYMMDD integer formats"
+      "Search as overlay — keeps feed clean, ⌘K is muscle memory for most users",
+      "FAB becomes speed-dial: Idea / Decision / Block — rotates to × when open",
+      "capturedIdeas persisted to localStorage — survive page refreshes without MCP"
     ],
     "ideas": [
-      "Progress ring / % complete per project based on northStar milestone checklist",
-      "Session timer in right panel — how long this session has been running",
-      "GitHub auto-push via MCP tool after populate — code always backed up"
-    ],
-    "seed": "Storyboard v4 — Apr 17 Session 2\n\nBuilt today:\n- North Star display on canvas cards (colored italic line under goal)\n- North Star callout block in project headers (bordered, 🎯 icon)\n- Skills & Memory northStar added to PROJECT_META\n- Skills view: library health bar with avg score, A count, weak-filter button\n- relTime() function for human-friendly relative timestamps\n- Canvas cards show last-active time\n- score_skills.py now auto-runs after MCP populate\n- v4 snapshot: versions/v4-northstar-skills-20260417.html\n\nFiles changed: index.html, mcp-server.js, blocks-data.json"
-  },
-  {
-    "id": "idea-skill-marketplace",
-    "type": "idea",
-    "project": "Opero Agency",
-    "date": "Apr 18",
-    "ts": 20260418,
-    "_live": true,
-    "_captured": "2026-04-18T10:00:00.000Z",
-    "status": "not_started",
-    "title": "💡 Skill Marketplace — curated skill packs for sale",
-    "summary": "Most Claude users don't know what a good skill looks like. We curate, score, and sell them. Agency wants Facebook targeting? Buy the paid-ads skill pack. Real estate agency? Buy the property marketing bundle. Opero angle: sell curated skill packs per industry — verified, scored 90+/100, ready to install. Distribution: skill library built into Storyboard dashboard is the shop window. The inspector scores tell people their skills are bad — we sell the fix.",
-    "chips": ["💡 Idea", "Opero Agency", "Marketplace", "Skills", "Revenue stream"]
-  },
-  {
-    "id": "sb-versions",
-    "type": "session",
-    "project": "Storyboard",
-    "date": "Apr 17–18",
-    "ts": 20260418,
-    "_live": true,
-    "_captured": "2026-04-18T09:00:00.000Z",
-    "status": "done",
-    "title": "Version History — v1 → v2 → v3",
-    "summary": "Three versions of the Storyboard dashboard built in a single sprint. v1: basic app shell + masonry grid. v2: UI redesign with dark theme + right panel rebuilt. v3: Canvas view, Decisions nav, Flag This Moment, Roadmap overlay, PWA.",
-    "chips": ["v1", "v2", "v3", "Sprint", "Visual history"],
-    "filmstripTitle": "Dashboard versions",
-    "filmstrip": [
-      {
-        "thumb": "thumbnails/storyboard-v1-sm.png",
-        "label": "v1 — App Shell",
-        "sub": "Apr 17 · 02:45"
-      },
-      {
-        "thumb": "thumbnails/storyboard-v2-sm.png",
-        "label": "v2 — UI Redesign",
-        "sub": "Apr 17 · 02:48"
-      },
-      {
-        "thumb": "thumbnails/storyboard-v3-sm.png",
-        "label": "v3 — Canvas + PWA",
-        "sub": "Apr 18 · morning"
-      }
-    ],
-    "decisions": [
-      "Each version snapshot saved to versions/ folder before making breaking changes",
-      "Auto-screenshot via html2canvas on every MCP live block — no terminal needed",
-      "Version thumbnails generated with Python PIL as visual placeholders"
-    ],
-    "ideas": [
-      "Real browser screenshots via html2canvas when MCP server is running",
-      "Diff view between versions — highlight what changed visually"
+      "Mobile PWA install flow — 'Add to Home Screen' prompt on first visit",
+      "Export whole storyboard as markdown — for handoff or backup"
     ]
   },
   {
-    "id": "sb-ui-v3-apr17",
+    "id": "sb-v3-session",
     "type": "session",
     "project": "Storyboard",
     "date": "Apr 17",
     "ts": 20260417,
-    "_captured": "2026-04-17T23:00:00.000Z",
-    "_live": true,
+    "_source": "claude.ai",
+    "_captured": "2026-04-17T10:00:00.000Z",
     "status": "done",
-    "title": "Dashboard v3 — OS/AI Mode · Decisions · Flag This Moment",
-    "summary": "Major UI sprint. Rebuilt the dashboard to match the dark v1 vision: OS/AI mode toggle (white vs dark theme, persisted), time lanes (Today/This week/Older), period tabs that actually filter, FOCUS card in nav with pulsing dot, right panel as session summary (Seed Next Chat CTA + today's work + ideas). Added missing v1 sections: Decisions nav item with live count + decisions view, Files nav item, Flag This Moment button (captures timestamped snapshot to clipboard), Recent Decisions in right panel. MCP server wired: HTTP server on port 3847 receives auto-screenshots from html2canvas. Roadmap overlay CSS scaffolded. package.json module type fixed. Claude Desktop config snippet written with correct path.",
-    "chips": ["OS/AI Mode", "Decisions nav", "Flag This Moment", "Period filtering", "Time lanes", "FOCUS card", "MCP HTTP server", "Auto-screenshot"],
+    "title": "Dashboard v3 — Dark mode · Decisions · Flag This Moment",
+    "summary": "Major UI sprint. OS/AI mode toggle (light vs dark, persisted). Period tab filtering. FOCUS card in nav. Right panel as session summary — Seed Next Chat CTA + today's work + ideas. Decisions nav item with live count. Flag This Moment captures timestamped snapshot to clipboard.",
+    "chips": ["AI Mode", "Decisions nav", "Flag This Moment", "Period filtering"],
     "decisions": [
-      "OS Mode = white/light theme (default), AI Mode = dark theme — toggled in header, persisted via localStorage",
-      "No terminal ever — screenshots happen in-browser via html2canvas → POST to MCP HTTP server port 3847",
-      "Decisions and Files as nav items with live counts pulled from block data",
-      "Flag This Moment = timestamped context snapshot → clipboard, for mid-session handoffs",
-      "Period tabs filter the feed; time lanes (Today/This week/Older) show in All time view only",
-      "Featured blocks = most recent block from top 3 most active projects gets visual LATEST treatment",
-      "FOCUS card = most active project by block count, pulsing live dot"
+      "OS Mode = light (default), AI Mode = dark — toggled in header, persisted via localStorage",
+      "No terminal ever — screenshots via html2canvas → POST to MCP HTTP server",
+      "Featured blocks = most recent block from top 3 most active projects"
+    ]
+  },
+  {
+    "id": "idea-browser-widget",
+    "type": "idea",
+    "project": "Storyboard",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "title": "💡 Browser widget — capture every AI tool automatically",
+    "summary": "Install once. Works across all AI tabs: Claude, ChatGPT, Gemini, Cursor, Replit, Perplexity. Sessions auto-captured regardless of which AI you're in. This is the moat: no individual AI company can build cross-model capture — only Storyboard can, because it sits above all of them."
+  },
+  {
+    "id": "idea-storyboard-api",
+    "type": "idea",
+    "project": "Storyboard",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "title": "💡 Storyboard as open API — universal AI memory layer",
+    "summary": "Storyboard becomes middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product — a universal AI memory layer sitting between where you work and where Claude thinks."
+  },
+  {
+    "id": "idea-ai-economy-shopify",
+    "type": "idea",
+    "project": "Storyboard",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "title": "💡 Shopify for the AI economy — track everything AI builds",
+    "summary": "A live dashboard tracking all AI-built outputs: revenue, transactions, deployments, uptime. Not just sessions and decisions — real metrics. Think Shopify dashboard but the products are AI workflows and the sales are automated outputs."
+  },
+  {
+    "id": "sb-first-session",
+    "type": "session",
+    "project": "Storyboard",
+    "date": "Apr 14",
+    "ts": 20260414,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "First build — app shell, masonry grid, dark theme foundation",
+    "summary": "Day zero. Built the initial Storyboard app shell: masonry block grid, project filter sidebar, right panel, dark/light theme. Loaded blocks-data.json as the data source. Established the core data model: blocks have id, type, project, title, summary, ts, decisions[], ideas[]. Session block → decision block → idea block distinction decided here.",
+    "chips": ["v1 App shell", "Masonry grid", "Data model", "Theme foundation"],
+    "decisions": [
+      "Single-file HTML — no build tools, no npm for the UI itself",
+      "blocks-data.json as the source of truth — MCP server writes to it, dashboard polls it",
+      "Three block types at launch: session, decision, idea — keep it simple",
+      "localStorage for captured ideas/decisions so they survive refresh"
     ],
     "ideas": [
-      "Canvas view — project card grid with files/ideas/decisions counts (still pending)",
-      "Roadmap overlay — View Roadmap button on project header (CSS done, HTML+JS pending)",
-      "PWA manifest for mobile home screen install",
-      "Version snapshot blocks with thumbnails in feed"
-    ],
-    "seed": "Storyboard Dashboard v3 — Apr 17\n\nBuilt today:\n- OS/AI mode toggle (header, localStorage persist)\n- Period tab filtering (today/week/month/all actually works)\n- Time lanes (Today / This week / Older) in All view\n- FOCUS card in left nav (most active project, pulsing dot)\n- Right panel rebuilt: Seed Next Chat CTA, Flag This Moment, Today's work, Recent Decisions, Ideas\n- Decisions nav item (live count, click to filter feed to decision-bearing blocks)\n- Files nav item (count from stats)\n- MCP HTTP server port 3847 (auto-screenshot receiver)\n- html2canvas auto-screenshots on live block change\n- package.json type:module fixed\n- Claude Desktop config snippet at storyboard/claude-desktop-config-snippet.json\n\nPending:\n- Roadmap overlay (CSS done, need HTML overlay element + openRoadmap() JS + button in renderProjectHeader)\n- Canvas view (project card grid, v1 had it)\n- PWA manifest\n- GitHub portfolio push\n\nFiles: storyboard/index.html, storyboard/mcp-server.js, storyboard/package.json, storyboard/claude-desktop-config-snippet.json\nVersions saved: versions/v1-before-ui-redesign-20260417-0245.html, versions/v2-ui-redesign-20260417-0248.html"
+      "Canvas view — project card grid with counts instead of a feed",
+      "Version snapshots stored in /versions folder with thumbnails",
+      "Timeline view to see work density across months"
+    ]
   },
   {
-    "id": "idea-storyboard-api-layer",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 Storyboard as open API layer \u2014 sits between all tools and Claude",
-    "summary": "Storyboard becomes the middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product \u2014 a universal AI memory layer. The layer between where you work and where Claude thinks.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Product vision",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T03:30:00.581394"
-  },
-  {
-    "id": "idea-skills-mcp",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 MCP scans skills folder \u2014 shows which skills each project uses",
-    "summary": "MCP tool that reads .claude/skills/, maps each skill to projects. Shows gaps: tasks running without relevant skills.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T03:11:50.674312"
-  },
-  {
-    "id": "idea-skills-prompts",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 Skills library under Prompts \u2014 browse, improve, activate",
-    "summary": "Prompts section becomes a skills browser. See all installed skills, which projects use them, quality score. One-click to improve.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T03:11:50.674356"
-  },
-  {
-    "id": "idea-skill-recommender",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 Skill recommender \u2014 flag tasks running without relevant skills",
-    "summary": "Detect when work is being done without a matching skill active. Proactively suggest: this task could use the hh-seo-content skill.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T03:11:50.674357"
-  },
-  {
-    "id": "idea-skill-library-scrape",
-    "project": "Opero Agency",
-    "title": "\ud83d\udca1 Public skill library \u2014 scrape + curate all Claude skills online",
-    "summary": "Scrape GitHub and community repos for skills. Searchable library. Auto-propose per project type. Opero product angle: sell curated skill packs per industry.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Opero Agency",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T03:11:50.674358"
-  },
-  {
-    "id": "idea-skills-mcp",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 MCP scans skills folder \u2014 shows which skills each project uses",
-    "summary": "MCP tool that reads .claude/skills/, maps each skill to projects by checking which tasks reference them. Shows gaps: tasks running without relevant skills.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T01:11:50.654Z"
-  },
-  {
-    "id": "idea-skills-prompts",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 Skills library under Prompts \u2014 browse, improve, activate skills",
-    "summary": "Prompts section in left nav becomes a skills browser. See all installed skills, which projects use them, quality score each one. One-click to improve a skill.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T01:11:50.655Z"
-  },
-  {
-    "id": "idea-skill-recommender",
-    "project": "Storyboard",
-    "title": "\ud83d\udca1 Skill recommender \u2014 if a task runs without a relevant skill, flag it",
-    "summary": "Detect when work is being done in a project area that has a matching skill not being used. Proactively suggest: this task could use the hh-seo-content skill.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Storyboard",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T01:11:50.655Z"
-  },
-  {
-    "id": "idea-skill-library-scrape",
-    "project": "Opero Agency",
-    "title": "\ud83d\udca1 Public skill library \u2014 scrape + curate all Claude skills on the web",
-    "summary": "Scrape GitHub, Claude forums, community repos for skills. Build a searchable library. Auto-propose relevant skills per project type. Opero product angle: sell curated skill packs per industry.",
-    "chips": [
-      "\ud83d\udca1 Idea",
-      "Opero Agency",
-      "Not started"
-    ],
-    "type": "idea",
-    "status": "not_started",
-    "date": "Apr 17",
-    "ts": 20260417,
-    "_live": true,
-    "_captured": "2026-04-17T01:11:50.655Z"
-  },
-  {
-    "id": "prog-1",
+    "id": "propertyos-valuation-session",
     "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "1",
-    "label": "Opero Airtable",
-    "date": "April 5, 2026",
-    "ts": 20260401,
-    "title": "Task 1 \u2014 Opero Airtable",
-    "summary": "April 5, 2026: Base `appelHcx7WtRwa8pB` created. Table `tblfMLyB2DO11WSK3` created with 18 fields. Test record confirmed.",
+    "project": "PropertyOS",
+    "date": "Apr 10",
+    "ts": 20260410,
+    "_source": "claude.ai",
     "status": "done",
-    "status_emoji": "\u2705",
-    "chips": [
-      "Task 1",
-      "\u2705 Done",
-      "2 files"
-    ],
+    "title": "Valuation engine v2 — Catastro API + pisos.com scraping live",
+    "summary": "Major milestone. Catastro API integration confirmed working — returns cadastral value, surface area, and construction year for any Spanish property reference. pisos.com scraper returns 10-15 comparable listings per query. Valuation algorithm: 60% market comps, 30% cadastral reference, 10% location premium. Flask web interface scaffolded. First end-to-end valuation run returned €285,000 estimate vs agent quote of €310,000 — within 9%.",
+    "chips": ["Catastro API", "pisos.com scraper", "Valuation algo", "Flask UI"],
     "decisions": [
-      "April 5, 2026: Base `appelHcx7WtRwa8pB` created. Table `tblfMLyB2DO11WSK3` created with 18 fields. Test record confirmed."
+      "Valuation formula: 60% market / 30% cadastral / 10% location — weighted blend beats any single source",
+      "Flask over FastAPI — simpler, fewer deps, good enough for internal tool",
+      "Cache Catastro responses for 30 days — data doesn't change that fast",
+      "Confidence score displayed alongside estimate — be honest about uncertainty"
     ],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 1 Progress\n\n**Status: \u2705 Complete**\n\n- April 5, 2026: Base `appelHcx7WtRwa8pB` created. Table `tblfMLyB2DO11WSK3` created with 18 fields. Test record confirmed."
+    "ideas": [
+      "PDF report output — client-ready valuation document with comps and methodology",
+      "Historical price trend chart per postcode",
+      "Rental yield calculator alongside sale valuation"
+    ]
   },
   {
-    "id": "prog-2",
+    "id": "propertyos-map-session",
     "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "2",
-    "label": "Opero Landing Page",
-    "date": "April 5, 2026",
-    "ts": 20260402,
-    "title": "Task 2 \u2014 Opero Landing Page",
-    "summary": "Built by a standalone Sonnet task window reading SETUP.md",
-    "status": "done",
-    "status_emoji": "\u2705",
-    "chips": [
-      "Task 2",
-      "\u2705 Done",
-      "4 files"
-    ],
-    "decisions": [
-      "Built by a standalone Sonnet task window reading SETUP.md",
-      "HTML file at: `AGENCY /opero-landing-mvp.html`",
-      "Airtable token injected (was left as placeholder \u2014 fixed in brain session)",
-      "All sections live: nav, hero, email capture, 3 feature cards, social proof, footer, JSON-LD schema"
-    ],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md",
-      "index.html",
-      "opero-landing-mvp.html"
-    ],
-    "raw_progress": "# Task 2 Progress\n\n**Status: \u2705 Complete \u2014 April 5, 2026**\n\n---\n\n## April 5, 2026\n- Built by a standalone Sonnet task window reading SETUP.md\n- HTML file at: `AGENCY /opero-landing-mvp.html`\n- Airtable token injected (was left as placeholder \u2014 fixed in brain session)\n- All sections live: nav, hero, email capture, 3 feature cards, social proof, footer, JSON-LD schema\n\n**Known issue resolved:** Task window mounted the task subfolder instead of the full AGENCY folder \u2014 output was copied to correct l"
-  },
-  {
-    "id": "prog-3",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "3",
-    "label": "Opero AEO Checker",
-    "date": "Apr 2026",
-    "ts": 20260403,
-    "title": "Task 3 \u2014 Opero AEO Checker",
-    "summary": "# Task 3 \u2014 AEO Checker (Tool 1)\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 3\u20134 hours**\n**Prerequisite",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task 3",
-      "\ud83d\udd34 Not Started",
-      "2 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 3 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
-  },
-  {
-    "id": "prog-4",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "4",
-    "label": "Opero XML Analyser",
-    "date": "Apr 2026",
-    "ts": 20260404,
-    "title": "Task 4 \u2014 Opero XML Analyser",
-    "summary": "# Task 4 \u2014 XML Feed Analyser (Tool 2)\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 3\u20134 hours**\n**Prereq",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task 4",
-      "\ud83d\udd34 Not Started",
-      "2 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 4 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
-  },
-  {
-    "id": "prog-5",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "5",
-    "label": "Opero MailerLite",
-    "date": "Apr 2026",
-    "ts": 20260405,
-    "title": "Task 5 \u2014 Opero MailerLite",
-    "summary": "# Task 5 \u2014 MailerLite Lead Nurture Sequence\n**Model: Sonnet 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 1\u20132 hours**\n",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task 5",
-      "\ud83d\udd34 Not Started",
-      "2 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 5 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
-  },
-  {
-    "id": "prog-6",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "6",
-    "label": "Opero Valuation Reports",
-    "date": "Apr 2026",
-    "ts": 20260406,
-    "title": "Task 6 \u2014 Opero Valuation Reports",
-    "summary": "# Task 6 \u2014 Property Valuation Report Generator\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 3\u20134 hours**",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task 6",
-      "\ud83d\udd34 Not Started",
-      "2 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 6 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
-  },
-  {
-    "id": "prog-7",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "7",
-    "label": "Opero Showcase Deck",
-    "date": "Apr 2026",
+    "project": "PropertyOS",
+    "date": "Apr 7",
     "ts": 20260407,
-    "title": "Task 7 \u2014 Opero Showcase Deck",
-    "summary": "# Task 7 \u2014 Showcase Deck: Add 3 Missing Slides\n**Model: Sonnet 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 1\u20132 hours",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task 7",
-      "\ud83d\udd34 Not Started",
-      "2 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 7 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
-  },
-  {
-    "id": "prog-8",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "8",
-    "label": "Opero Website",
-    "date": "Apr 2026",
-    "ts": 20260408,
-    "title": "Task 8 \u2014 Opero Website",
-    "summary": "# Task 8 \u2014 Full opero.ai Website\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started \u2014 DO THIS LAST**\n**Estimated time: 1\u20132 days**",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task 8",
-      "\ud83d\udd34 Not Started",
-      "2 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "PROGRESS.md",
-      "SETUP.md"
-    ],
-    "raw_progress": "# Task 8 Progress\n\n**Status: \ud83d\udd34 Not Started \u2014 Do this LAST (after Tasks 1\u20136)**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
-  },
-  {
-    "id": "prog-?",
-    "type": "session",
-    "source": "progression",
-    "project": "Opero Agency",
-    "track": "?",
-    "label": "Audit System",
-    "date": "Apr 2026",
-    "ts": 20260400,
-    "title": "Task ? \u2014 Audit System",
-    "summary": "",
-    "status": "not_started",
-    "status_emoji": "\ud83d\udd34",
-    "chips": [
-      "Task ?",
-      "\ud83d\udd34 Not Started",
-      "6 files"
-    ],
-    "decisions": [],
-    "files_in_folder": [
-      "audit.py",
-      "build-bd-pitch-v11-master.js",
-      "build-bd-pitch-v2.js",
-      "build-bd-pitch.js",
-      "foxtons-verified.json",
-      "generate_report.py"
-    ],
-    "raw_progress": ""
-  },
-  {
-    "id": "op-audit-protocol",
-    "type": "session",
-    "source": "scan",
-    "project": "Opero Agency",
-    "date": "Apr 2026",
-    "ts": 20260413,
-    "title": "Audit Pipeline \u2014 11 clients \u00b7 Template \u00b7 Generator",
-    "summary": "Universal audit protocol. Template deck + scripts (agency-audit-template.js, b2b-lead-gen-template.js). 11 client audits: Bronsfastigheter, Chestertons, Eklof, EquityUnion, Foxtons, Hamptons....",
-    "chips": [
-      "11 clients",
-      "Template",
-      "Generator",
-      "Audit protocol"
-    ],
+    "_source": "cursor",
+    "status": "done",
+    "title": "Interactive map view — Leaflet.js + property pins live",
+    "summary": "Built the map view using Leaflet.js. Properties plot as colour-coded pins: green (below market), orange (at market), red (above market). Clicking a pin opens the valuation card. 47 Costa Blanca properties loaded from XML feed as test dataset. Map tiles from OpenStreetMap. Filter panel: price range, property type, bedrooms, distance from beach.",
+    "chips": ["Leaflet.js", "Property pins", "XML feed", "Price filters"],
     "decisions": [
-      "Audit score on the cover \u2014 undeniable before the meeting starts",
-      "Same template per client \u2014 repeatable and scalable",
-      "Audit is the wedge \u2014 give it away to earn the retainer"
+      "Colour by price vs market — green/orange/red — instantly readable without numbers",
+      "OpenStreetMap tiles — free, no API key, loads fast",
+      "Cluster pins at zoom-out — prevents overlap on large datasets",
+      "Filter panel as sidebar, not modal — always visible, no extra click"
     ],
     "ideas": [
-      "Universal audit: any website, any industry",
-      "Currently: 11 real estate agencies audited"
-    ],
-    "clients": [
-      "Bronsfastigheter",
-      "Chestertons",
-      "Eklof",
-      "EquityUnion",
-      "Foxtons",
-      "Hamptons",
-      "KnightFrank",
-      "Savills",
-      "SevenGables",
-      "SuccessBusinessAdvisors",
-      "Winkworth"
-    ],
-    "scripts": [
-      "agency-audit-template.js",
-      "b2b-lead-gen-template.js",
-      "bronsen-audit-v2.js",
-      "eklof-property-audit-v1.js",
-      "equityunion-audit.js",
-      "sba-audit.js",
-      "sevengables-audit.js"
+      "Heatmap layer showing average price per area",
+      "Draw-a-zone tool — let user draw polygon to get stats for that area",
+      "Save map view as shareable link"
     ]
+  },
+  {
+    "id": "decision-propertyos-focus",
+    "type": "decision",
+    "project": "PropertyOS",
+    "title": "PropertyOS scope: internal tool first, SaaS second",
+    "body": "Start as an internal tool for H&H agents. Real valuations for real clients. Prove the accuracy, collect edge cases, build the training data. Launch SaaS only after 6 months of live usage proves the model. Don't build subscription infrastructure until the core product earns trust.",
+    "rationale": "Too many SaaS products die because they build the billing before the product. Internal use gives us honest feedback and real data without the pressure of paying customers.",
+    "ts": 20260401,
+    "confidence": "high"
+  },
+  {
+    "id": "propertyos-initial-session",
+    "type": "session",
+    "project": "PropertyOS",
+    "date": "Mar 24",
+    "ts": 20260324,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "PropertyOS kickoff — architecture, data sources, first scraper",
+    "summary": "Project started. Goal: AI-powered property valuation tool for the Costa Blanca market. Researched data sources: Catastro (official registry), pisos.com, fotocasa, idealista. Built first scraper for pisos.com — returns price/m², bedrooms, location for any postcode. Python stack: requests + BeautifulSoup + pandas. Decided to start with Costa Blanca only — narrow the geography, go deep.",
+    "chips": ["Architecture", "pisos.com scraper", "Python stack", "Market research"],
+    "decisions": [
+      "Costa Blanca only at launch — depth over breadth, we know this market",
+      "Python for scraping and data layer, Flask for web UI",
+      "Four data sources: Catastro, pisos.com, fotocasa, idealista — cross-reference for confidence",
+      "Price per m² as the atomic unit — normalises across property sizes"
+    ],
+    "ideas": [
+      "Extend to whole Spain after Costa Blanca is proven",
+      "Mobile app version for agents at viewings",
+      "Integration with H&H CRM — auto-valuation on new lead"
+    ]
+  },
+  {
+    "id": "idea-propertyos-pdf",
+    "type": "idea",
+    "project": "PropertyOS",
+    "date": "Apr 10",
+    "ts": 20260410,
+    "title": "💡 PDF valuation report — client-ready with methodology",
+    "summary": "Generate a branded PDF after every valuation: summary page, comparable properties table, price trend chart, confidence score explanation, H&H branding. Agents can send it directly to clients. Makes the tool feel professional, not like an internal spreadsheet."
+  },
+  {
+    "id": "idea-propertyos-crm",
+    "type": "idea",
+    "project": "PropertyOS",
+    "date": "Apr 7",
+    "ts": 20260407,
+    "title": "💡 CRM integration — auto-valuation when new lead comes in",
+    "summary": "When a new lead hits the CRM with a property reference, PropertyOS auto-runs the valuation and attaches it to the contact record. Agent opens the lead and already has the valuation ready. Zero extra work."
+  },
+  {
+    "id": "opero-positioning-session",
+    "type": "session",
+    "project": "Opero Agency",
+    "date": "Apr 5",
+    "ts": 20260405,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "Opero brand positioning — 5 pillars, pricing, client playbook",
+    "summary": "Defined the full Opero positioning: AI implementation agency, not a traditional agency. Five pillars: Strategy, Build, Automate, Train, Scale. Pricing: Discovery €2,500 / Build €8,000–25,000 / Retainer €3,000/month. Client playbook written: onboarding doc, first-session script, skill audit process. Landing page structure decided.",
+    "chips": ["Brand positioning", "5 pillars", "Pricing", "Client playbook"],
+    "decisions": [
+      "Agency name: Opero — from Latin 'operor' (to work, to be active) — clean, memorable, no AI cliché",
+      "Domain: opero.ai — short, clear, available",
+      "Tagline: 'Build faster. Think clearer. Ship more.' — active, not feature-focused",
+      "Pricing anchored at Discovery sprint — low barrier, high value, natural upsell to Build",
+      "No hourly billing — project and retainer only, forces scoping discipline"
+    ],
+    "ideas": [
+      "Skill marketplace — sell curated, scored skill packs per industry",
+      "Public skill library — curate and score all Claude skills found online",
+      "Client dashboard showing ROI from AI workflows we built for them"
+    ]
+  },
+  {
+    "id": "opero-landing-session",
+    "type": "session",
+    "project": "Opero Agency",
+    "date": "Apr 5",
+    "ts": 20260405,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "opero.ai landing page — hero, services, social proof, CTA",
+    "summary": "Full landing page built: nav, hero with animated subheadline, 5 service cards, social proof section (client logos + results), team section, email capture, footer. JSON-LD schema for organization. Mobile-first responsive. Dark professional theme with accent colour.",
+    "chips": ["Landing page", "Hero", "Services", "JSON-LD"],
+    "decisions": [
+      "Dark theme with bright accent — stands out from generic agency white pages",
+      "Results-first social proof: '47 automations shipped', '12 clients', '€2.4M pipeline generated'",
+      "Email capture before full contact form — lower friction for first touch",
+      "No chatbot widget — Opero is high-touch, chatbots contradict the positioning"
+    ]
+  },
+  {
+    "id": "decision-opero-niche",
+    "type": "decision",
+    "project": "Opero Agency",
+    "title": "Opero niche: professional services + real estate first",
+    "body": "Focus the first 6 months entirely on professional services firms and real estate agencies. These clients have predictable workflows, high LTV, and are far enough behind on AI that there's genuine urgency. Avoid e-commerce and D2C — too much tooling already exists, margin is thin, clients are price-sensitive.",
+    "rationale": "Better to be the obvious choice in two verticals than a vague option everywhere. Real estate is already our domain — it's the fastest sales cycle.",
+    "ts": 20260320,
+    "confidence": "high"
+  },
+  {
+    "id": "opero-airtable-session",
+    "type": "session",
+    "project": "Opero Agency",
+    "date": "Apr 5",
+    "ts": 20260402,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "Opero CRM — Airtable base with 18 fields, client pipeline live",
+    "summary": "Airtable CRM built from scratch. Client table: 18 fields covering contact info, deal stage, project type, estimated value, notes, next action date. Pipeline view configured. First 3 prospects entered. Automations: new record triggers Slack notification, deal stage change sends internal email summary.",
+    "chips": ["Airtable CRM", "18 fields", "Pipeline view", "Slack automation"],
+    "decisions": [
+      "Airtable over HubSpot — faster to customise, cheaper, we control the schema",
+      "Deal stages: Prospect / Discovery / Proposal / Active / Complete / Churned",
+      "Estimated project value field mandatory — forces qualification early",
+      "Slack notification on new prospect — no lead goes unnoticed"
+    ]
+  },
+  {
+    "id": "idea-opero-skill-marketplace",
+    "type": "idea",
+    "project": "Opero Agency",
+    "date": "Apr 5",
+    "ts": 20260405,
+    "title": "💡 Skill marketplace — curated skill packs per industry",
+    "summary": "Most Claude users don't know what a good skill looks like. We curate, score, and sell them. Agency wants Facebook targeting? Buy the paid-ads skill pack. Real estate agency? Buy the property marketing bundle. The Storyboard skills inspector scores tell people their skills are weak — Opero sells the fix."
+  },
+  {
+    "id": "idea-opero-roi-dashboard",
+    "type": "idea",
+    "project": "Opero Agency",
+    "date": "Apr 5",
+    "ts": 20260405,
+    "title": "💡 Client ROI dashboard — show the value we created",
+    "summary": "Every Opero client gets a live dashboard: hours saved per week, automations running, revenue influenced, content published. Makes the retainer a no-brainer renewal — they can see the number. Also makes case studies almost write themselves."
+  },
+  {
+    "id": "costa-seo-engine-session",
+    "type": "session",
+    "project": "Costa Blanca",
+    "date": "Mar 17",
+    "ts": 20260317,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "SEO engine — 9-language AI descriptions, JSON-LD schemas live",
+    "summary": "Built the complete SEO content generation pipeline for newbuildhomescostablanca.com. AI property descriptions in 9 languages using Anthropic SDK. 14 JSON-LD schema types: Product, RealEstateListing, FAQ, Place, Article, GolfCourse, Breadcrumb, VideoObject. Auto-generated alt tags per image type. Voice-search optimised FAQs (15+ per page). hreflang for all 9 languages.",
+    "chips": ["9 languages", "JSON-LD", "AI descriptions", "hreflang", "FAQ engine"],
+    "decisions": [
+      "AI descriptions generated at build time via Anthropic SDK — not runtime, keeps TTFB fast",
+      "9 languages: EN, SV, NL, DE, FR, ES, PL, NO, DA — match actual buyer demographics",
+      "14 schema types — overkill feels right when competing for featured snippets",
+      "Voice search FAQs: 'What is the best area to buy property in Costa Blanca?' format"
+    ],
+    "ideas": [
+      "Dynamic pricing badges using live feed data",
+      "Schema for upcoming developments — future launches indexed before they go live",
+      "Competitor gap analysis: find queries they rank for that we don't have pages for yet"
+    ]
+  },
+  {
+    "id": "costa-blog-session",
+    "type": "session",
+    "project": "Costa Blanca",
+    "date": "Mar 10",
+    "ts": 20260310,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "Blog pipeline — 12 articles published, 3 languages each",
+    "summary": "Built the full blog content pipeline using the real-estate-blog-writer skill. 12 articles published across EN, SV, NL. Topics: area guides (Benidorm, Alicante, Torrevieja), buying guides (new vs resale, legal process, mortgage), golf property guides (La Manga, Las Colinas), market reports. Passed AEO audit gate: 100/100 on all 12. Internal linking structure complete.",
+    "chips": ["12 articles", "3 languages", "AEO 100/100", "Internal linking"],
+    "decisions": [
+      "Article structure: intro → featured snippet block → 5 H2 sections → FAQ → CTA",
+      "Featured snippet block in first 100 words — targets 'People also ask' boxes",
+      "Internal links from every article to 2 development pages + 1 area page",
+      "Publish EN first, then SV, then NL — prioritise by traffic opportunity"
+    ],
+    "ideas": [
+      "RSS feed monitoring for competitor blog topics — auto-adapt their angles",
+      "Video summary reel for each article — TikTok/Reels repurposing",
+      "Email newsletter using blog content as base — monthly digest"
+    ]
+  },
+  {
+    "id": "costa-feed-session",
+    "type": "session",
+    "project": "Costa Blanca",
+    "date": "Feb 17",
+    "ts": 20260217,
+    "_source": "cursor",
+    "status": "done",
+    "title": "XML feed parser — REDSP + Background Properties, 847 listings live",
+    "summary": "Built the full data pipeline. REDSP XML feed: 612 properties. Background Properties feed: 235. Town name normalisation: 140 aliases mapped to canonical names. Region mapping: 6 Costa Blanca regions (North, Central, South, Inland, Costa, Urban). Deduplication by ref number. 1-hour cache. Feed health dashboard showing last updated, record counts, parse errors.",
+    "chips": ["REDSP feed", "Background Properties", "847 listings", "Deduplication"],
+    "decisions": [
+      "Unified feed service — both sources normalised to same schema before hitting the UI",
+      "Region mapping lives in config, not code — easy to add new regions",
+      "1-hour cache with stale-while-revalidate — no API hammering, no stale data",
+      "Feed health dashboard visible to admin only — catch parse errors fast"
+    ],
+    "ideas": [
+      "Third feed source: Kyero.com — would add ~400 more properties",
+      "Price history tracking — store feed snapshots, show price changes over time",
+      "Webhook on new listing — auto-trigger social media post"
+    ]
+  },
+  {
+    "id": "decision-costa-content-moat",
+    "type": "decision",
+    "project": "Costa Blanca",
+    "title": "Content moat strategy — own every long-tail query in 9 languages",
+    "body": "Don't compete on homepage keywords. Own the long-tail: 'new build apartments Torrevieja under 200k', 'golf property La Manga 3 bedrooms', 'buying new build in Spain as a Swede'. 9 languages × every town × every property type × every buyer persona = thousands of indexed pages no single competitor can replicate manually.",
+    "rationale": "Every competitor targets the same 20 head keywords. The tail is undefended and converts better — someone searching this specifically is 3x more likely to be a real buyer.",
+    "ts": 20260210,
+    "confidence": "high"
+  },
+  {
+    "id": "costa-launch-session",
+    "type": "session",
+    "project": "Costa Blanca",
+    "date": "Feb 1",
+    "ts": 20260201,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "Site launch — Next.js 14, Vercel, first 50 property pages indexed",
+    "summary": "newbuildhomescostablanca.com went live. Next.js 14 with App Router. ISR on property pages (1 hour revalidation). Sitemap generated with 847 URLs. Google Search Console verified. First crawl showed 50 pages indexed within 24 hours. Core Web Vitals: LCP 1.2s, CLS 0, FID <50ms. All green.",
+    "chips": ["Next.js 14", "Vercel", "ISR", "Sitemap", "Search Console"],
+    "decisions": [
+      "Next.js 14 App Router — ISR is the right model for a property site: fresh but not real-time",
+      "Vercel for hosting — edge network, zero-config deploys, analytics included",
+      "ISR revalidation at 1 hour — matches feed update frequency",
+      "Sitemap auto-generated from feed at build time — always current"
+    ],
+    "ideas": [
+      "Property alert emails — users subscribe to area/price/type, get notified on new listings",
+      "Compare tool — side-by-side two properties",
+      "WhatsApp CTA on every property page — frictionless first contact"
+    ]
+  },
+  {
+    "id": "costa-architecture-decision",
+    "type": "decision",
+    "project": "Costa Blanca",
+    "title": "Single-domain multi-language strategy over subdomain approach",
+    "body": "All 9 languages live under newbuildhomescostablanca.com/[lang]/ using Next.js i18n routing with hreflang tags. No subdomains (sv.newbuild... etc). Single domain consolidates all link equity, easier to manage canonical URLs, and the /es/ path still ranks well in practice.",
+    "rationale": "Subdomain approach splits domain authority. With a new site, every point of authority matters. One domain, many language paths, proper hreflang — this is the Google-recommended approach anyway.",
+    "ts": 20260115,
+    "confidence": "high"
+  },
+  {
+    "id": "costa-initial-session",
+    "type": "session",
+    "project": "Costa Blanca",
+    "date": "Jan 15",
+    "ts": 20260115,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "Project kickoff — architecture, brand, domain, tech stack decided",
+    "summary": "New Build Homes Costa Blanca project started. Goal: rank #1 for new build property searches in Costa Blanca across 9 European languages. Tech stack: Next.js 14, Tailwind, Vercel, Anthropic SDK for AI content. Brand system: navy/gold/cream. Domain registered. Competitive analysis: 8 competitors, none with multilingual AI content. Gap identified.",
+    "chips": ["Project kickoff", "Tech stack", "Brand", "Competitive analysis"],
+    "decisions": [
+      "Next.js 14 App Router over Gatsby — better ISR story, active ecosystem",
+      "9 languages at launch: EN, SV, NL, DE, FR, ES, PL, NO, DA",
+      "AI content via Anthropic SDK at build time — not runtime, not a third-party CMS",
+      "Tailwind for styling — utility classes, no custom CSS framework to maintain"
+    ],
+    "ideas": [
+      "Remotion video reels for each property — TikTok/Reels content engine",
+      "Airtable as content calendar — blog, social, email all in one place",
+      "MailerLite for email — language-based segmentation from day one"
+    ]
+  },
+  {
+    "id": "idea-costa-video-reels",
+    "type": "idea",
+    "project": "Costa Blanca",
+    "date": "Jan 15",
+    "ts": 20260115,
+    "title": "💡 Remotion video reels — one property, four video formats",
+    "summary": "Each property auto-generates 4 Remotion video formats: PropertyShowcase (30s), PropertyCarousel, AreaGuide, InvestmentCase. Batch render → auto-post to TikTok, Instagram, Pinterest. One data entry point drives the entire content machine."
+  },
+  {
+    "id": "idea-costa-alerts",
+    "type": "idea",
+    "project": "Costa Blanca",
+    "date": "Feb 1",
+    "ts": 20260201,
+    "title": "💡 Property alert emails — subscribe to area + price + type",
+    "summary": "User sets criteria (area, max price, bedrooms, property type). Feed parser checks on every refresh. New match triggers MailerLite transactional email within 1 hour. The user who signed up for alerts is 10x more likely to book a viewing than a cold visitor."
+  },
+  {
+    "id": "opero-march-sprint",
+    "type": "session",
+    "project": "Opero Agency",
+    "date": "Mar 1",
+    "ts": 20260301,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "First client project — automation audit + 3 workflows shipped",
+    "summary": "Delivered first Opero client project: automation audit for a 12-person law firm. Found 8 automation opportunities. Built 3 workflows: client intake form → CRM + calendar invite, contract sent trigger → reminder sequence, invoice issued → payment follow-up chain. Client saved est. 11 hours/week. Case study approved for website.",
+    "chips": ["First client", "Law firm", "3 automations", "11 hrs/week saved"],
+    "decisions": [
+      "Audit-first model works — client felt heard before we sold anything",
+      "Make → Zapier → native tools hierarchy: Make for complex, Zapier for simple, native when possible",
+      "Automated intake saves ~4hrs/week alone — use this as the lead case study",
+      "Fixed-price deliverable over hourly — client trusted the scope, we moved fast"
+    ],
+    "ideas": [
+      "Automation ROI calculator for the sales process — show expected savings before discovery",
+      "Template library of the 8 most common law firm automations — productise the audit output",
+      "Quarterly business review with each client — show compounding value over time"
+    ]
+  },
+  {
+    "id": "hh-seo-session",
+    "type": "session",
+    "project": "H&H Costa Blanca",
+    "date": "Feb 10",
+    "ts": 20260210,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "hanssonhertzell.se — 15 FAQ pages, featured snippet sweep",
+    "summary": "Built 15 new FAQ pages for the H&H site using hh-seo-content skill. Each page: 15+ questions, featured snippet blocks, internal links to property listings. Topics: buying process in Spain, legal guide, area guides (Costa Blanca, Costa del Sol, Mallorca), financing options. Content audit tool confirmed all pages pass before publishing.",
+    "chips": ["15 FAQ pages", "hh-seo-content", "Featured snippets", "Content audit"],
+    "decisions": [
+      "FAQ structure: question as H2, answer in first sentence, detail in 3-4 sentences — targets snippet",
+      "Every page links to at least 3 property listing pages — FAQ as top-of-funnel, listings as conversion",
+      "Swedish-language pages first — H&H client base is 60% Swedish",
+      "Content audit gate runs before every publish — non-negotiable"
+    ],
+    "ideas": [
+      "FAQ schema on every page — Google rich results opportunity",
+      "Video FAQ format — short Loom-style explanations embedded on each page",
+      "Link from FAQ pages to blog posts for deeper reading"
+    ]
+  },
+  {
+    "id": "decision-hh-email-strategy",
+    "type": "decision",
+    "project": "H&H Costa Blanca",
+    "title": "Email strategy: language-based segmentation, monthly digest",
+    "body": "H&H subscriber list segmented into 4 language groups: Swedish (60%), English (25%), German (10%), Other (5%). Monthly digest per group with language-matched content: 3 new listings, 1 area feature, market update, 1 legal/buying tip. No generic newsletters — every email should feel locally relevant.",
+    "rationale": "Generic newsletters get 8% open rates. Language-matched, relevant content gets 24%+. A Swedish reader doesn't want to read about German mortgage rules.",
+    "ts": 20260108,
+    "confidence": "high"
+  },
+  {
+    "id": "hh-email-session",
+    "type": "session",
+    "project": "H&H Costa Blanca",
+    "date": "Jan 22",
+    "ts": 20260122,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "MailerLite setup — 4 language groups, H&H branded template",
+    "summary": "MailerLite account configured for H&H. Subscriber list imported and segmented: 847 Swedish, 312 English, 124 German, 67 Other. Branded HTML email template built: navy header, gold dividers, cream background. Unsubscribe in correct language per group. First campaign sent to Swedish list: 26.4% open rate, 4.1% CTR.",
+    "chips": ["MailerLite", "4 language segments", "H&H template", "26.4% open rate"],
+    "decisions": [
+      "Custom HTML template over drag-and-drop — brand consistency is non-negotiable",
+      "Table-based layout for email — Gmail and Outlook both render it correctly",
+      "Unsubscribe link text translated per language — legal requirement, also right thing to do",
+      "Send day: Tuesday 10am recipient timezone — highest open rates in testing"
+    ]
+  },
+  {
+    "id": "idea-hh-whatsapp",
+    "type": "idea",
+    "project": "H&H Costa Blanca",
+    "date": "Jan 22",
+    "ts": 20260122,
+    "title": "💡 WhatsApp CTA on every property page — frictionless first contact",
+    "summary": "Replace the contact form as primary CTA with a WhatsApp button. Pre-filled message: 'Hi, I'm interested in [property name] — can we talk?' Agents respond faster via WhatsApp, clients feel it's more personal. Data: WhatsApp CTAs convert 3x better than forms for property leads in Southern Europe."
+  },
+  {
+    "id": "hh-january-session",
+    "type": "session",
+    "project": "H&H Costa Blanca",
+    "date": "Jan 8",
+    "ts": 20260108,
+    "_source": "claude.ai",
+    "status": "done",
+    "title": "H&H brand system — colour tokens, typography, CMS component library",
+    "summary": "Defined the complete H&H brand system for digital use. Colours: Navy #1E2A38, Gold #B39960, Cream #FAF8F5. Typography: DM Sans for all weights. Component library: property card, agent card, CTA button styles, divider treatments, email section templates. Documented in hh-brand-kit skill for consistent reference.",
+    "chips": ["Brand system", "Colour tokens", "DM Sans", "Component library"],
+    "decisions": [
+      "Navy/Gold/Cream — classic, trustworthy, luxury without being cold",
+      "DM Sans over custom font — Google Fonts, loads fast, 9 weights available",
+      "Brand kit as a skill file — any future Claude session automatically stays on-brand",
+      "Gold only for accents and dividers, never for body text — preserve the premium feel"
+    ]
+  },
+  {
+    "id": "idea-hh-portal",
+    "type": "idea",
+    "project": "H&H Costa Blanca",
+    "date": "Feb 10",
+    "ts": 20260210,
+    "title": "💡 Client portal — track their property search in one place",
+    "summary": "Authenticated portal for H&H clients: saved searches, shortlisted properties, viewing appointments, document uploads, agent chat. Replaces the email thread chaos. Clients feel they have a professional process; agents have one place to manage everything. Build on Airtable as the data layer."
   }
 ]

@@ -1126,6 +1126,124 @@ body {
 @media (max-width: 480px) { .ideas-grid { grid-template-columns: 1fr; } }
 .idea-card { padding: 9px 11px; border-radius: 8px; font-size: 11px; line-height: 1.45; font-weight: 500; }
 
+/* ── DETAIL OVERLAY — edit + actions ────────────────────────── */
+.detail-meta-row {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  padding: 8px 20px 0;
+}
+.detail-type-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  padding: 3px 8px; border-radius: 20px; border: 1px solid;
+}
+.detail-source-badge {
+  font-size: 9px; font-weight: 600; color: var(--text-3);
+  padding: 3px 8px; border-radius: 20px; background: var(--bg); border: 1px solid var(--border);
+}
+.detail-title-edit {
+  font-size: 18px; font-weight: 800; letter-spacing: -.3px; line-height: 1.25;
+  margin-bottom: 4px; outline: none; border-radius: 6px;
+  padding: 2px 4px; margin-left: -4px;
+  transition: background .12s;
+  word-break: break-word;
+}
+.detail-title-edit:focus { background: var(--bg); }
+.detail-notes-wrap {
+  margin: 14px 20px 0;
+}
+.detail-notes-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--text-3); margin-bottom: 6px;
+}
+.detail-notes-edit {
+  width: 100%; min-height: 72px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 12px; font-size: 13px; line-height: 1.6; color: var(--text);
+  font-family: inherit; outline: none; transition: border-color .12s;
+}
+.detail-notes-edit:focus { border-color: var(--accent); }
+.detail-notes-edit::placeholder { color: var(--text-3); }
+.detail-actions {
+  display: flex; gap: 8px; padding: 14px 20px 20px; border-top: 1px solid var(--border);
+  margin-top: 14px; flex-wrap: wrap;
+}
+.detail-action-btn {
+  font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--text-2);
+  cursor: pointer; transition: all .12s; display: flex; align-items: center; gap: 5px;
+}
+.detail-action-btn:hover { background: var(--border); color: var(--text); }
+.detail-action-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.detail-action-btn.primary:hover { opacity: .88; }
+.detail-action-btn.danger { color: #f87171; }
+.detail-action-btn.danger:hover { background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.3); }
+.detail-save-indicator {
+  font-size: 11px; color: var(--green); margin-left: auto; align-self: center;
+  opacity: 0; transition: opacity .2s;
+}
+.detail-save-indicator.show { opacity: 1; }
+
+/* ── TIMELINE VIEW ───────────────────────────────────────────── */
+.tl-wrap { padding: 16px 20px 40px; }
+.tl-zoom-bar {
+  display: flex; gap: 6px; margin-bottom: 24px; align-items: center;
+}
+.tl-zoom-btn {
+  font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: transparent; color: var(--text-3);
+  cursor: pointer; transition: all .12s;
+}
+.tl-zoom-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tl-zoom-btn:hover:not(.on) { border-color: var(--text-3); color: var(--text-2); }
+.tl-year { margin-bottom: 32px; }
+.tl-year-label {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-3); margin-bottom: 12px;
+}
+.tl-months { display: flex; flex-direction: column; gap: 0; }
+.tl-month-row {
+  display: grid; align-items: start;
+  border-top: 1px solid var(--border);
+  padding: 10px 0;
+}
+.tl-month-row.zoom-year  { grid-template-columns: 48px 1fr; }
+.tl-month-row.zoom-month { grid-template-columns: 80px 1fr; }
+.tl-month-row.zoom-week  { grid-template-columns: 100px 1fr; }
+.tl-month-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--text-3); padding-top: 3px;
+  position: sticky; top: 56px;
+}
+.tl-blocks { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
+.tl-dot {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  border: 1px solid transparent;
+  max-width: 280px; transition: opacity .12s;
+}
+.tl-dot:hover { opacity: .78; }
+.tl-dot-color { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.tl-dot-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl-dot-type { font-size: 9px; opacity: .55; margin-left: 2px; flex-shrink: 0; }
+.tl-week-label {
+  font-size: 9px; color: var(--text-3); margin-bottom: 4px; font-weight: 600;
+  letter-spacing: .3px;
+}
+.tl-week-group { margin-bottom: 8px; }
+.tl-empty { font-size: 12px; color: var(--text-3); font-style: italic; padding: 6px 0; }
+.tl-heatmap-row { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 6px; }
+.tl-heat-cell {
+  width: 14px; height: 14px; border-radius: 3px;
+  cursor: pointer; transition: transform .1s;
+  position: relative;
+}
+.tl-heat-cell:hover { transform: scale(1.3); z-index: 1; }
+.tl-stats-bar {
+  display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.tl-stat { font-size: 12px; color: var(--text-3); }
+.tl-stat strong { color: var(--text); font-size: 15px; display: block; font-weight: 800; }
+
 /* ── CANVAS VIEW — project card grid ────────────────────────── */
 .canvas-grid {
   display: grid;
@@ -1248,6 +1366,20 @@ body {
   display: flex; align-items: center; gap: 8px;
 }
 .skills-cat-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.skills-cat-header { margin-bottom: 2px; }
+.skills-cat-intent {
+  font-size: 11px; color: var(--text-3); padding: 0 0 10px 0;
+  font-style: italic; line-height: 1.5; max-width: 600px;
+  display: flex; align-items: flex-start; gap: 6px;
+}
+.skills-cat-intent-text { flex: 1; cursor: text; }
+.skills-cat-intent-text:focus { outline: none; color: var(--text-2); }
+.skills-cat-edit-btn {
+  font-size: 10px; opacity: 0; transition: opacity 0.15s;
+  cursor: pointer; color: var(--text-3); padding: 1px 4px;
+  border: none; background: none; flex-shrink: 0; margin-top: 1px;
+}
+.skills-cat-header:hover .skills-cat-edit-btn { opacity: 1; }
 .skills-grid-inner {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -1299,15 +1431,121 @@ body {
   <div class="detail" id="detail-panel">
     <div class="detail-stripe" id="d-stripe"></div>
     <div class="detail-header">
-      <div>
+      <div style="flex:1;min-width:0">
         <div class="detail-proj" id="d-proj"></div>
-        <div class="detail-title" id="d-title"></div>
+        <div class="detail-title-edit" id="d-title" contenteditable="true"
+          onblur="saveDetailTitle()" onkeydown="if(event.key==='Enter'||event.key==='Escape'){this.blur();event.preventDefault();}"></div>
         <div class="detail-date" id="d-date"></div>
       </div>
       <button class="detail-close" onclick="closeDetail()">✕</button>
     </div>
+    <div class="detail-meta-row" id="d-meta"></div>
     <img class="detail-thumb" id="d-thumb" src="" alt="" style="display:none"/>
+    <div class="detail-notes-wrap" id="d-notes-wrap" style="display:none">
+      <div class="detail-notes-label">Notes</div>
+      <textarea class="detail-notes-edit" id="d-notes" placeholder="Add notes…" onblur="saveDetailNotes()"></textarea>
+    </div>
     <div class="detail-body" id="d-body"></div>
+    <div class="detail-actions" id="d-actions"></div>
+  </div>
+</div>
+
+<!-- CONTEXT HUB OVERLAY -->
+<div id="contextHubOverlay" onclick="if(event.target===this)closeContextHub()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:900;backdrop-filter:blur(6px);padding:40px 24px;overflow-y:auto">
+  <div style="max-width:960px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#7c6bff;margin-bottom:4px">⚡ Context Hub</div>
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.5px">Start your next chat — pick a project</div>
+        <div style="font-size:13px;color:var(--text-3);margin-top:4px">Each card shows the current context state. Click Seed → to copy a full brief to clipboard.</div>
+      </div>
+      <button onclick="closeContextHub()" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 14px;color:var(--text-2);font-size:13px;cursor:pointer">✕ Close</button>
+    </div>
+    <div id="contextHubGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
+  </div>
+</div>
+
+<!-- FIRST-TIME ONBOARDING OVERLAY -->
+<div id="onboardOverlay" style="display:none;position:fixed;inset:0;background:rgba(8,8,14,0.96);z-index:950;backdrop-filter:blur(12px);overflow-y:auto;padding:40px 24px">
+  <div style="max-width:680px;margin:0 auto;padding:20px 0 60px">
+
+    <!-- Logo + close -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px">
+      <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 40%,#7c6bff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">⬡ Storyboard</div>
+      <button onclick="dismissOnboard()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 14px;color:#7a7a9a;font-size:13px;cursor:pointer">Skip →</button>
+    </div>
+
+    <!-- Heading -->
+    <div style="margin-bottom:36px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7c6bff;margin-bottom:12px">Welcome</div>
+      <h1 style="font-size:clamp(28px,5vw,42px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px">
+        Your AI work,<br>finally visible.
+      </h1>
+      <p style="font-size:16px;color:#7a7a9a;line-height:1.65;max-width:500px">
+        Storyboard captures every session, decision and idea from your AI work — and seeds any new chat with full context instantly. Pick how you want to start:
+      </p>
+    </div>
+
+    <!-- Three paths -->
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:36px">
+
+      <!-- Path 1: Import git repo -->
+      <div id="obPath1" onclick="selectOnboardPath(1)" style="background:#16161f;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px 24px;cursor:pointer;transition:all .2s"
+        onmouseover="this.style.borderColor='rgba(124,107,255,0.4)';this.style.background='rgba(124,107,255,0.06)'"
+        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='#16161f'">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <span style="font-size:28px;flex-shrink:0">📦</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:16px;margin-bottom:5px">I have existing AI projects</div>
+            <div style="font-size:13px;color:#7a7a9a;line-height:1.55;margin-bottom:12px">Run <code style="background:rgba(255,255,255,0.06);padding:2px 7px;border-radius:4px;font-size:12px">import_project.py</code> on any git repo to rebuild your history retroactively — commits become sessions, README becomes context.</div>
+            <div id="obCmd1" style="display:none;background:#0e0e14;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;color:#c5c5e8;margin-top:8px">
+              python3 import_project.py /path/to/your/project --project-name "My Project"<br>
+              <span style="color:#56cfaa;margin-top:6px;display:block"># Then refresh this page — your history will appear</span>
+            </div>
+          </div>
+          <div id="obArrow1" style="font-size:18px;color:#7a7a9a;flex-shrink:0;margin-top:3px;transition:transform .2s">→</div>
+        </div>
+      </div>
+
+      <!-- Path 2: Start fresh -->
+      <div id="obPath2" onclick="selectOnboardPath(2)" style="background:#16161f;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px 24px;cursor:pointer;transition:all .2s"
+        onmouseover="this.style.borderColor='rgba(86,207,170,0.4)';this.style.background='rgba(86,207,170,0.04)'"
+        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='#16161f'">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <span style="font-size:28px;flex-shrink:0">✨</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:16px;margin-bottom:5px">Start capturing from today</div>
+            <div style="font-size:13px;color:#7a7a9a;line-height:1.55;margin-bottom:12px">Open a blank canvas and start adding sessions, decisions, and ideas manually. Use the + button to capture anything mid-session. Connect the MCP server to auto-capture Claude screenshots.</div>
+            <div id="obCmd2" style="display:none;background:#0e0e14;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;color:#c5c5e8;margin-top:8px">
+              node mcp-server.js<span style="color:#56cfaa;margin-left:12px"># Runs on :3847, auto-captures screenshots</span><br>
+              <span style="color:#7a7a9a;margin-top:6px;display:block"># Add to Claude Desktop config → restart → you're live</span>
+            </div>
+          </div>
+          <div id="obArrow2" style="font-size:18px;color:#7a7a9a;flex-shrink:0;margin-top:3px;transition:transform .2s">→</div>
+        </div>
+      </div>
+
+      <!-- Path 3: Explore demo data -->
+      <div onclick="loadDemoAndDismiss()" style="background:#16161f;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px 24px;cursor:pointer;transition:all .2s"
+        onmouseover="this.style.borderColor='rgba(255,209,102,0.4)';this.style.background='rgba(255,209,102,0.04)'"
+        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='#16161f'">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <span style="font-size:28px;flex-shrink:0">👀</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:16px;margin-bottom:5px">Explore with live data first</div>
+            <div style="font-size:13px;color:#7a7a9a;line-height:1.55">See the full dashboard with a real storyboard — 6 active projects, 100+ sessions, decisions, ideas, skills. Get the feel of it before importing your own work.</div>
+          </div>
+          <div style="font-size:18px;color:#7a7a9a;flex-shrink:0;margin-top:3px">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCP quick note -->
+    <div style="background:rgba(124,107,255,0.07);border:1px solid rgba(124,107,255,0.18);border-radius:12px;padding:16px 20px;font-size:13px;color:#9a9ab8;line-height:1.6">
+      <strong style="color:#c4b9ff">Claude Desktop MCP setup</strong> — Add to your <code style="background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:4px">claude_desktop_config.json</code>:<br>
+      <code style="display:block;margin-top:8px;font-size:11px;color:#7a7a9a">{ "mcpServers": { "storyboard": { "command": "node", "args": ["/path/to/storyboard/mcp-server.js"] } } }</code>
+    </div>
+
   </div>
 </div>
 
@@ -1430,6 +1668,12 @@ body {
       <div class="nav-label">Projects</div>
       <div id="nav-projects"></div>
     </div>
+    <!-- Context Hub button -->
+    <button class="ideas-btn" id="contextBtn" onclick="openContextHub()" style="background:linear-gradient(135deg,rgba(124,107,255,0.12),rgba(78,205,196,0.08));border:1px solid rgba(124,107,255,0.25)">
+      <span style="font-size:13px;flex-shrink:0">⚡</span>
+      <span style="font-weight:700">Context</span>
+      <span class="ideas-count" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
+    </button>
     <!-- Ideas filter button -->
     <button class="ideas-btn" id="ideasBtn" onclick="toggleIdeasView()">
       <span class="ideas-icon">💡</span>
@@ -1523,6 +1767,15 @@ body {
             <rect x="5" y="7.75" width="7" height="1.5" rx=".75" fill="currentColor"/>
           </svg>
         </button>
+        <button class="view-tab" id="timelineBtn" onclick="setView('timeline')" title="Timeline">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+            <circle cx="1.5" cy="5" r="1.5" fill="currentColor"/>
+            <circle cx="6.5" cy="5" r="1.5" fill="currentColor"/>
+            <circle cx="11.5" cy="5" r="1.5" fill="currentColor"/>
+            <rect x="3" y="4.25" width="3.5" height="1.5" rx=".75" fill="currentColor" opacity=".5"/>
+            <rect x="8" y="4.25" width="3.5" height="1.5" rx=".75" fill="currentColor" opacity=".5"/>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -1600,6 +1853,8 @@ body {
     <div class="rp-section" style="padding-top:14px">
       <button class="rp-seed-btn" onclick="seedSession()">⚡ Seed next chat</button>
       <button class="rp-flag-btn" id="flagBtn" onclick="flagMoment()">🚩 Flag This Moment</button>
+      <button class="rp-flag-btn" onclick="showSkillSuggestPrompt()" style="background:rgba(108,99,255,0.08);border-color:#6c63ff33;color:#6c63ff;margin-top:6px">💡 Suggest skills</button>
+      <button class="rp-flag-btn" id="pushBtn" onclick="gitPush()" style="background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25);color:#16a34a;margin-top:6px">🚀 Push to GitHub</button>
     </div>
 
     <!-- Session stats -->
@@ -1676,13 +1931,15 @@ body {
 // COLORS
 // ═══════════════════════════════════
 const PROJ = {
-  "New Build Homes":  { color:"#10b981", bg:"#f0fdf4", icon:"🏗️" },
-  "Hansson Hertzell": { color:"#B39960", bg:"#faf8f0", icon:"🏠" },
-  "Storyboard":       { color:"#6c63ff", bg:"#f5f3ff", icon:"🎬" },
-  "Opero Agency":     { color:"#6366f1", bg:"#eef2ff", icon:"🏢" },
-  "Curated Estate":   { color:"#0ea5e9", bg:"#f0f9ff", icon:"🏡" },
-  "PropertyOS":       { color:"#ec4899", bg:"#fdf2f8", icon:"📊" },
-  "Skills & Memory":  { color:"#8b5cf6", bg:"#f5f3ff", icon:"🧠" },
+  "New Build Homes":    { color:"#10b981", bg:"#f0fdf4", icon:"🏗️" },
+  "Hansson Hertzell":   { color:"#B39960", bg:"#faf8f0", icon:"🏠" },
+  "Storyboard":         { color:"#6c63ff", bg:"#f5f3ff", icon:"⬡" },
+  "Opero Agency":       { color:"#6366f1", bg:"#eef2ff", icon:"◈" },
+  "Curated Estate":     { color:"#0ea5e9", bg:"#f0f9ff", icon:"🏡" },
+  "PropertyOS":         { color:"#ec4899", bg:"#fdf2f8", icon:"📊" },
+  "Skills & Memory":    { color:"#8b5cf6", bg:"#f5f3ff", icon:"🧠" },
+  "Costa Blanca":       { color:"#f59e0b", bg:"#fffbeb", icon:"☀️" },
+  "H&H Costa Blanca":   { color:"#B39960", bg:"#faf8f0", icon:"🏠" },
 };
 
 const IDEA_BG = ["#fef9c3","#dbeafe","#dcfce7","#fce7f3","#ede9fe","#ffedd5"];
@@ -1811,6 +2068,24 @@ const PROJECT_META = {
     seeds: ["H&H is live. Key automations: Facebook group posting (2x daily, 88 groups), daily Gmail drafts (10/day), CRM outreach (Mon/Thu). Next: run client segmentation on updated Gmail archive, send next newsletter batch, check GSC for hanssonhertzell.se."],
     stats: [{ v:"hanssonhertzell.se", l:"LIVE" },{ v:"88", l:"FB groups" },{ v:"10/day", l:"email drafts" },{ v:"9", l:"languages" }],
   },
+  "Costa Blanca": {
+    northStar: "Ranking #1 for 'new build Costa Blanca' across 9 languages. 500+ organic leads/month.",
+    goal: "Own every long-tail new build property query in EN, SV, NL, DE, FR, ES, PL, NO, DA.",
+    desc: "newbuildhomescostablanca.com — Next.js 14, 9 languages, 847 live listings, AI-generated content, blog pipeline.",
+    deploy: "newbuildhomescostablanca.com (LIVE)",
+    latest: "Site live. 847 listings. 12 articles published at 100/100 AEO. XML feed parser live. SEO engine with 9-language AI descriptions.",
+    seeds: ["Continue from: 12 articles live in EN/SV/NL. Feed parser running. Next: video reels pipeline, MailerLite alerts, 9th language (DA)."],
+    stats: [{ v:"847", l:"listings" },{ v:"9", l:"languages" },{ v:"12", l:"articles" },{ v:"100/100", l:"AEO" }],
+  },
+  "H&H Costa Blanca": {
+    northStar: "3 new mandates from digital channels. Email open rate 25%+ across all language segments.",
+    goal: "Grow mandates and leads for Hansson & Hertzell through AI-first marketing.",
+    desc: "hanssonhertzell.se — Swedish agency, custom PHP CMS, 9 languages, MailerLite email pipeline, FAQ content machine.",
+    deploy: "hanssonhertzell.se (LIVE)",
+    latest: "15 FAQ pages live. MailerLite 4-language segments active. Swedish list: 26.4% open rate. H&H brand system documented.",
+    seeds: ["Continue from: FAQ pages live, MailerLite running. Next: FAQ schema markup, WhatsApp CTA on property pages, next newsletter batch."],
+    stats: [{ v:"847", l:"subscribers" },{ v:"26.4%", l:"open rate" },{ v:"15", l:"FAQ pages" },{ v:"4", l:"languages" }],
+  },
   "Skills & Memory": {
     goal: "Persistent context — Claude starts every session knowing exactly where to continue.",
     desc: "Auto-memory system, skills library, MEMORY.md index. Session workflow skill for start-of-session loading. Critical thinker skill.",
@@ -1878,6 +2153,19 @@ const SKILLS = [
   { name:"setup-cowork",                 cat:"Workflow",  icon:"🚀",  desc:"Guided Cowork setup — install plugin, try a skill, connect tools.",                                   projects:["Skills & Memory"] },
 ];
 
+// ── Skill category intents ─ the "steering" that must not drift ───────────────
+const SKILL_CATEGORY_INTENTS = {
+  Content:  "Own search in every language. Every page earns a featured snippet. Never publish without the audit gate.",
+  SEO:      "Technical foundation first. If Google can't crawl it, nothing else matters.",
+  Email:    "Our CRM list is our moat. Segment by language and signal. Every email should feel handwritten.",
+  Video:    "Reels are top-of-funnel. One property = four formats. Automate everything except the hook.",
+  Design:   "Brand consistency across every touchpoint. No ad-hoc design — always start from the system.",
+  Social:   "Consistent presence beats viral moments. Pipeline over manual posting. Always.",
+  Dev:      "Composable, single-file tools. No build steps unless they earn their complexity.",
+  Docs:     "Polished documents are a competitive edge in real estate. Never send something that looks like 1998.",
+  Workflow: "AI without memory is just a calculator. These skills are the operating system of everything else.",
+};
+
 // ═══════════════════════════════════
 // DATA
 // ═══════════════════════════════════
@@ -1886,9 +2174,11 @@ const SKILLS = [
 let liveBlocks = [];
 
 const BLOCKS = [
-  // ── STORYBOARD — v5 (latest, always on top)
+  // ── These are synced with blocks-data.json (fallback for offline / slow load) ──
+
+  // ── STORYBOARD
   { id:"sb-ui-v5-apr17-session3", type:"session", project:"Storyboard", date:"Apr 17", ts:20260417,
-    _live:true, _captured:"2026-04-17T16:00:00.000Z",
+    _source:"claude.ai", _captured:"2026-04-17T16:00:00.000Z",
     title:"Dashboard v5 — Search · FAB Speed-dial · Stats Bar · Dynamic Seed",
     summary:"Global search overlay (⌘K), FAB speed-dial (Idea/Decision/Block), stats bar in All view, decision+idea badges on block cards, session timer, North Star in right panel, localStorage persistence for captures, fully dynamic seed generator with live project data + North Stars.",
     chips:["⌘K Search","FAB Speed-dial","Stats Bar","localStorage","Dynamic seed","MCP git_push"],
@@ -2300,6 +2590,104 @@ const BLOCKS = [
     chips:["Auto-memory","Skills","MEMORY.md"],
     decisions:["MEMORY.md as index — stay lean","Session workflow skill for start-of-session loading"],
     ideas:["Critical thinker — think before executing, don't be a yes-man"] },
+
+  // ── PROPERTYOS — history
+  { id:"propertyos-map-session", type:"session", project:"PropertyOS", date:"Apr 7", ts:20260407,
+    _source:"cursor",
+    title:"Interactive map view — Leaflet.js + property pins live",
+    summary:"Properties plotted as colour-coded pins: green (below market), orange (at market), red (above market). 47 Costa Blanca properties loaded from XML feed. Filter panel: price, type, bedrooms, beach distance.",
+    chips:["Leaflet.js","Property pins","XML feed","Price filters"],
+    decisions:["Colour by price vs market — green/orange/red — instantly readable","OpenStreetMap tiles — free, no API key","Cluster pins at zoom-out — prevents overlap"],
+    ideas:["Heatmap layer showing avg price per area","Draw-a-zone tool","Save view as shareable link"] },
+  { id:"decision-propertyos-focus", type:"decision", project:"PropertyOS",
+    title:"PropertyOS scope: internal tool first, SaaS second",
+    body:"Start as internal tool for H&H agents. Prove accuracy. Launch SaaS after 6 months of live usage.",
+    rationale:"Too many SaaS products die building billing before the product. Internal use gives honest feedback and real data.",
+    ts:20260401, confidence:"high" },
+  { id:"propertyos-initial-session", type:"session", project:"PropertyOS", date:"Mar 24", ts:20260324,
+    _source:"claude.ai",
+    title:"PropertyOS kickoff — architecture, data sources, first scraper",
+    summary:"Goal: AI-powered property valuation for Costa Blanca. Built first pisos.com scraper. Python stack: requests + BeautifulSoup + pandas. Four data sources: Catastro, pisos.com, fotocasa, idealista.",
+    chips:["Architecture","pisos.com scraper","Python stack","Market research"],
+    decisions:["Costa Blanca only at launch — depth over breadth","Price per m² as the atomic unit"],
+    ideas:["Extend to whole Spain after Costa Blanca proven","Mobile app for agents at viewings"] },
+
+  // ── COSTA BLANCA
+  { id:"costa-seo-engine-session", type:"session", project:"Costa Blanca", date:"Mar 17", ts:20260317,
+    _source:"claude.ai",
+    title:"SEO engine — 9-language AI descriptions, JSON-LD schemas live",
+    summary:"Complete SEO content pipeline built. AI property descriptions in 9 languages via Anthropic SDK. 14 JSON-LD schema types. Voice-search optimised FAQs (15+ per page). hreflang for all 9 languages.",
+    chips:["9 languages","JSON-LD","AI descriptions","hreflang","FAQ engine"],
+    decisions:["AI descriptions at build time — not runtime, keeps TTFB fast","14 schema types — overkill feels right competing for featured snippets"],
+    ideas:["Dynamic pricing badges from live feed","Schema for upcoming developments"] },
+  { id:"costa-blog-session", type:"session", project:"Costa Blanca", date:"Mar 10", ts:20260310,
+    _source:"claude.ai",
+    title:"Blog pipeline — 12 articles published, 3 languages each",
+    summary:"12 articles across EN, SV, NL. Area guides, buying guides, golf property guides. AEO audit gate: 100/100 on all 12. Internal linking complete.",
+    chips:["12 articles","3 languages","AEO 100/100","Internal linking"],
+    decisions:["Article structure: intro → snippet block → 5 H2 → FAQ → CTA","Featured snippet block in first 100 words"],
+    ideas:["RSS monitoring for competitor topics","Video summary reel per article","Email newsletter from blog content"] },
+  { id:"costa-feed-session", type:"session", project:"Costa Blanca", date:"Feb 17", ts:20260217,
+    _source:"cursor",
+    title:"XML feed parser — REDSP + Background Properties, 847 listings live",
+    summary:"Full data pipeline built. REDSP: 612 properties. Background Properties: 235. Town normalisation: 140 aliases. 6 region mapping. Deduplication. 1-hour cache.",
+    chips:["REDSP feed","Background Properties","847 listings","Deduplication"],
+    decisions:["Unified feed service — both sources normalised before UI","1-hour cache with stale-while-revalidate"],
+    ideas:["Third feed source: Kyero.com (~400 more properties)","Price history tracking from feed snapshots"] },
+  { id:"decision-costa-content-moat", type:"decision", project:"Costa Blanca",
+    title:"Content moat — own every long-tail query in 9 languages",
+    body:"Don't compete on homepage keywords. Own the tail: 'new build apartments Torrevieja under 200k'. 9 languages × every town × every type = thousands of pages no competitor can replicate manually.",
+    rationale:"Competitors target the same 20 head keywords. The tail is undefended and converts 3x better.",
+    ts:20260210, confidence:"high" },
+  { id:"costa-launch-session", type:"session", project:"Costa Blanca", date:"Feb 1", ts:20260201,
+    _source:"claude.ai",
+    title:"Site launch — Next.js 14, Vercel, first 50 pages indexed",
+    summary:"newbuildhomescostablanca.com live. ISR on property pages (1hr revalidation). Sitemap: 847 URLs. GSC verified. Core Web Vitals: LCP 1.2s, CLS 0, FID <50ms. 50 pages indexed within 24 hours.",
+    chips:["Next.js 14","Vercel","ISR","Sitemap","GSC"],
+    decisions:["ISR revalidation at 1hr — matches feed update frequency","Vercel for hosting — edge network, zero-config deploys"] },
+  { id:"costa-initial-session", type:"session", project:"Costa Blanca", date:"Jan 15", ts:20260115,
+    _source:"claude.ai",
+    title:"Project kickoff — Next.js 14, 9 languages, competitive gap found",
+    summary:"Competitive analysis: 8 competitors, none with multilingual AI content. Gap identified. Stack: Next.js 14, Tailwind, Vercel, Anthropic SDK. 9 languages at launch. Brand: navy/gold/cream.",
+    chips:["Project kickoff","Tech stack","Competitive analysis","Brand"],
+    decisions:["Next.js 14 App Router — better ISR story","AI content at build time, not runtime","Single-domain i18n over subdomains — consolidates link equity"],
+    ideas:["Remotion video reels per property","Airtable as content calendar","MailerLite language segmentation from day one"] },
+
+  // ── H&H COSTA BLANCA
+  { id:"hh-seo-session", type:"session", project:"H&H Costa Blanca", date:"Feb 10", ts:20260210,
+    _source:"claude.ai",
+    title:"hanssonhertzell.se — 15 FAQ pages, featured snippet sweep",
+    summary:"15 FAQ pages using hh-seo-content skill. 15+ questions per page, featured snippet blocks, internal links. Swedish-language pages first. All pass content audit gate before publishing.",
+    chips:["15 FAQ pages","Featured snippets","Content audit"],
+    decisions:["FAQ structure: question as H2, answer in first sentence — targets snippet","Every page links to 3+ property listing pages"],
+    ideas:["FAQ schema markup for rich results","Video FAQ format embedded on pages"] },
+  { id:"hh-email-session", type:"session", project:"H&H Costa Blanca", date:"Jan 22", ts:20260122,
+    _source:"claude.ai",
+    title:"MailerLite setup — 4 language groups, 26.4% open rate",
+    summary:"847 Swedish, 312 English, 124 German, 67 Other subscribers. Branded HTML template: navy/gold/cream. First campaign to Swedish list: 26.4% open rate, 4.1% CTR.",
+    chips:["MailerLite","4 language segments","26.4% open rate"],
+    decisions:["Custom HTML template over drag-and-drop — brand consistency non-negotiable","Send: Tuesday 10am recipient timezone"],
+    ideas:["WhatsApp CTA replacing contact form — 3x conversion in Southern Europe"] },
+  { id:"hh-january-session", type:"session", project:"H&H Costa Blanca", date:"Jan 8", ts:20260108,
+    _source:"claude.ai",
+    title:"H&H brand system — Navy/Gold/Cream, DM Sans, component library",
+    summary:"Full digital brand system defined. Navy #1E2A38, Gold #B39960, Cream #FAF8F5. DM Sans typography. Component library: property card, agent card, CTA styles, email templates. Documented as hh-brand-kit skill.",
+    chips:["Brand system","Colour tokens","DM Sans","Component library"],
+    decisions:["Navy/Gold/Cream — trustworthy, luxury without being cold","Brand kit as skill file — every future session stays on-brand","Gold only for accents, never body text"] },
+
+  // ── OPERO AGENCY — history
+  { id:"opero-march-sprint", type:"session", project:"Opero Agency", date:"Mar 1", ts:20260301,
+    _source:"claude.ai",
+    title:"First client — law firm, 3 automations, 11 hrs/week saved",
+    summary:"Client intake form → CRM + calendar invite, contract sent → reminder sequence, invoice issued → payment follow-up. Client saved 11 hours/week. Case study approved.",
+    chips:["First client","Law firm","3 automations","11 hrs/week saved"],
+    decisions:["Audit-first model works — client felt heard before we sold anything","Fixed-price over hourly — client trusted scope, we moved fast"],
+    ideas:["ROI calculator for sales process","Template library of top 8 law firm automations"] },
+  { id:"decision-opero-niche", type:"decision", project:"Opero Agency",
+    title:"Opero niche: professional services + real estate first",
+    body:"Focus first 6 months on professional services firms and real estate agencies. High LTV, predictable workflows, genuine AI urgency. Avoid e-commerce — too much tooling, thin margins.",
+    rationale:"Better to be the obvious choice in two verticals than a vague option everywhere. Real estate is already our domain.",
+    ts:20260320, confidence:"high" },
 ];
 
 // ─── Skills quality data (loaded from skills-data.json) ──────────────────────
@@ -2348,14 +2736,16 @@ function periodTs() {
 function setView(v) {
   activeView = v;
   const feed = document.getElementById('feed');
-  feed.classList.toggle('list-view',   v === 'list');
-  feed.classList.toggle('board-view',  v === 'board');
-  document.getElementById('gridBtn').classList.toggle('on',   v === 'grid');
-  document.getElementById('boardBtn').classList.toggle('on',  v === 'board');
-  document.getElementById('canvasBtn').classList.toggle('on', v === 'canvas');
-  document.getElementById('listBtn').classList.toggle('on',   v === 'list');
-  // Canvas view — hide toolbar period tabs (canvas is always all-projects)
-  document.getElementById('periodTabs').style.visibility = v === 'canvas' ? 'hidden' : '';
+  feed.classList.toggle('list-view',     v === 'list');
+  feed.classList.toggle('board-view',    v === 'board');
+  feed.classList.toggle('timeline-view', v === 'timeline');
+  document.getElementById('gridBtn').classList.toggle('on',     v === 'grid');
+  document.getElementById('boardBtn').classList.toggle('on',    v === 'board');
+  document.getElementById('canvasBtn').classList.toggle('on',   v === 'canvas');
+  document.getElementById('listBtn').classList.toggle('on',     v === 'list');
+  document.getElementById('timelineBtn').classList.toggle('on', v === 'timeline');
+  // Canvas + Timeline hide the period tabs
+  document.getElementById('periodTabs').style.visibility = (v === 'canvas' || v === 'timeline') ? 'hidden' : '';
   renderFeed();
 }
 
@@ -2664,6 +3054,159 @@ function blockHTML(b, i, featured = false) {
 }
 
 // ═══════════════════════════════════
+// TIMELINE VIEW
+// ═══════════════════════════════════
+let tlZoom = 'month'; // 'year' | 'month' | 'week'
+
+function renderTimelineView() {
+  const feed = document.getElementById('feed');
+  const allBlocks = mergedBlocks();
+  const filtered = activeFilter === 'All' ? allBlocks : allBlocks.filter(b => b.project === activeFilter);
+
+  if (!filtered.length) {
+    feed.innerHTML = `<div style="padding:40px 20px;color:var(--text-3);font-size:13px">No blocks yet.</div>`;
+    return;
+  }
+
+  // Stats
+  const total = filtered.length;
+  const projects = new Set(filtered.map(b => b.project)).size;
+  const decisions = filtered.filter(b => b.type === 'decision').length;
+  const ideas = filtered.filter(b => b.type === 'idea' || b.type === 'session' && b.title?.startsWith('💡')).length;
+
+  // Group blocks by date
+  function tsToDate(b) {
+    const ts = b.ts || 0;
+    if (!ts) return null;
+    if (ts > 1e10) return new Date(ts); // ms
+    // yyyymmdd format like 20260417
+    const s = String(ts);
+    if (s.length === 8) return new Date(`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`);
+    return new Date(ts * 1000);
+  }
+
+  const dated = filtered.map(b => ({ b, d: tsToDate(b) })).filter(x => x.d);
+  dated.sort((a, b) => b.d - a.d);
+
+  // Group by month
+  const byMonth = {};
+  dated.forEach(({ b, d }) => {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if (!byMonth[key]) byMonth[key] = [];
+    byMonth[key].push({ b, d });
+  });
+
+  // Group by year for year zoom
+  const byYear = {};
+  dated.forEach(({ b, d }) => {
+    const key = String(d.getFullYear());
+    if (!byYear[key]) byYear[key] = [];
+    byYear[key].push({ b, d });
+  });
+
+  // Group by week for week zoom
+  function weekKey(d) {
+    const jan1 = new Date(d.getFullYear(), 0, 1);
+    const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+    return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
+  }
+  const byWeek = {};
+  dated.forEach(({ b, d }) => {
+    const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if (!byWeek[mk]) byWeek[mk] = {};
+    const wk = weekKey(d);
+    if (!byWeek[mk][wk]) byWeek[mk][wk] = [];
+    byWeek[mk][wk].push({ b, d });
+  });
+
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const TYPE_ICON = { session: '◈', decision: '✓', idea: '💡', feature: '★' };
+
+  function dotHTML(b) {
+    const p = PROJ[b.project] || { color: '#6c63ff' };
+    const icon = TYPE_ICON[b.type] || '◈';
+    const title = b.title.replace('💡 ','').replace('✓ ','');
+    return `<div class="tl-dot" style="background:${p.color}18;border-color:${p.color}30"
+      onclick="openDetail('${b.id}')" title="${title}">
+      <div class="tl-dot-color" style="background:${p.color}"></div>
+      <div class="tl-dot-text">${title}</div>
+      <div class="tl-dot-type">${icon}</div>
+    </div>`;
+  }
+
+  let rows = '';
+
+  if (tlZoom === 'year') {
+    Object.keys(byYear).sort().reverse().forEach(yr => {
+      const entries = byYear[yr];
+      // Heatmap: 12 cells = 12 months, colour by count
+      const monthCounts = {};
+      entries.forEach(({ d }) => { const m = d.getMonth(); monthCounts[m] = (monthCounts[m]||0) + 1; });
+      const max = Math.max(1, ...Object.values(monthCounts));
+      const heatCells = Array.from({length:12}, (_,i) => {
+        const cnt = monthCounts[i] || 0;
+        const alpha = cnt ? Math.max(0.12, cnt/max * 0.85) : 0;
+        const bg = cnt ? `rgba(124,107,255,${alpha.toFixed(2)})` : 'var(--border)';
+        return `<div class="tl-heat-cell" style="background:${bg}" title="${MONTH_NAMES[i]}: ${cnt} blocks"></div>`;
+      }).join('');
+      rows += `<div class="tl-year">
+        <div class="tl-year-label">${yr} <span style="font-weight:400;opacity:.5">${entries.length} blocks</span></div>
+        <div class="tl-heatmap-row">${heatCells}</div>
+        <div class="tl-blocks">${entries.slice(0,12).map(({b}) => dotHTML(b)).join('')}${entries.length>12?`<span class="tl-empty">+${entries.length-12} more</span>`:''}</div>
+      </div>`;
+    });
+  } else if (tlZoom === 'month') {
+    Object.keys(byMonth).sort().reverse().forEach(mk => {
+      const [yr, mo] = mk.split('-');
+      const label = `${MONTH_NAMES[parseInt(mo)-1]} ${yr}`;
+      const entries = byMonth[mk];
+      rows += `<div class="tl-month-row zoom-month">
+        <div class="tl-month-label">${label}</div>
+        <div class="tl-blocks">${entries.map(({b}) => dotHTML(b)).join('')}</div>
+      </div>`;
+    });
+  } else { // week
+    Object.keys(byMonth).sort().reverse().forEach(mk => {
+      const [yr, mo] = mk.split('-');
+      const label = `${MONTH_NAMES[parseInt(mo)-1]} ${yr}`;
+      const weekGroups = byWeek[mk] || {};
+      const weekRows = Object.keys(weekGroups).sort().reverse().map(wk => {
+        const entries = weekGroups[wk];
+        const weekNum = wk.split('W')[1];
+        return `<div class="tl-week-group">
+          <div class="tl-week-label">Week ${weekNum}</div>
+          <div class="tl-blocks">${entries.map(({b}) => dotHTML(b)).join('')}</div>
+        </div>`;
+      }).join('');
+      rows += `<div class="tl-month-row zoom-week">
+        <div class="tl-month-label">${label}</div>
+        <div>${weekRows || '<div class="tl-empty">No blocks</div>'}</div>
+      </div>`;
+    });
+  }
+
+  feed.innerHTML = `<div class="tl-wrap">
+    <div class="tl-stats-bar">
+      <div class="tl-stat"><strong>${total}</strong>total blocks</div>
+      <div class="tl-stat"><strong>${decisions}</strong>decisions</div>
+      <div class="tl-stat"><strong>${projects}</strong>projects</div>
+    </div>
+    <div class="tl-zoom-bar">
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-right:4px">Zoom</span>
+      <button class="tl-zoom-btn ${tlZoom==='year'?'on':''}"  onclick="setTlZoom('year')">Year</button>
+      <button class="tl-zoom-btn ${tlZoom==='month'?'on':''}" onclick="setTlZoom('month')">Month</button>
+      <button class="tl-zoom-btn ${tlZoom==='week'?'on':''}"  onclick="setTlZoom('week')">Week</button>
+    </div>
+    <div class="tl-months">${rows}</div>
+  </div>`;
+}
+
+function setTlZoom(z) {
+  tlZoom = z;
+  renderTimelineView();
+}
+
+// ═══════════════════════════════════
 // RENDER FEED
 // ═══════════════════════════════════
 function mergedBlocks() {
@@ -2681,6 +3224,8 @@ function renderFeed() {
   const baseBlocks = mergedBlocks();
   // Canvas view — workspace overview, managed by renderCanvasView()
   if (activeView === 'canvas') { renderCanvasView(); return; }
+  // Timeline view
+  if (activeView === 'timeline') { renderTimelineView(); return; }
   // Skills view — managed by renderSkillsView(), don't override
   if (skillsViewActive) { renderSkillsView(); return; }
   // Decisions view — managed by toggleDecisionsView(), don't override
@@ -3101,6 +3646,206 @@ function closeRoadmap() {
   document.body.style.overflow = '';
 }
 
+// ── Context Hub ─────────────────────────────────────────────────
+// Tracks when each project's context was last seeded (localStorage)
+function getLastSeeded(projectName) {
+  return parseInt(localStorage.getItem(`sb_seeded_${projectName}`) || '0');
+}
+function markSeeded(projectName) {
+  localStorage.setItem(`sb_seeded_${projectName}`, Date.now().toString());
+}
+
+function openContextHub() {
+  const overlay = document.getElementById('contextHubOverlay');
+  overlay.style.display = 'block';
+  renderContextHub();
+}
+function closeContextHub() {
+  document.getElementById('contextHubOverlay').style.display = 'none';
+}
+
+function renderContextHub() {
+  const grid = document.getElementById('contextHubGrid');
+  const allBlocks = [...liveBlocks, ...BLOCKS].filter((b, i, arr) => arr.findIndex(x => x.id === b.id) === i);
+  const now = Date.now();
+  const dayMs = 86400000;
+
+  // Build per-project summaries
+  const projectNames = Object.keys(PROJECT_META);
+  // Also pick up any project seen in blocks not in PROJECT_META
+  allBlocks.forEach(b => { if (b.project && !projectNames.includes(b.project)) projectNames.push(b.project); });
+
+  const cards = projectNames.map(name => {
+    const meta = PROJECT_META[name] || {};
+    const proj = PROJ[name] || { color: '#6c63ff', bg: '#f5f3ff', icon: '📁' };
+    const blocks = allBlocks.filter(b => b.project === name);
+
+    // Most recent session block
+    const sessions = blocks.filter(b => b.type === 'session').sort((a, b2) => (b2.ts || 0) - (a.ts || 0));
+    const lastSession = sessions[0];
+
+    // Decisions + ideas
+    const decisions = blocks.filter(b => b.type === 'decision');
+    const ideas = blocks.filter(b => b.type === 'idea');
+
+    // Staleness: sessions since last seeded
+    const lastSeededTs = getLastSeeded(name); // epoch ms
+    const lastSeededDate = lastSeededTs ? Math.floor((now - lastSeededTs) / dayMs) : null;
+    // Count sessions newer than last seeded
+    const unseen = lastSeededTs ? sessions.filter(s => {
+      // ts is YYYYMMDD, convert roughly
+      if (!s.ts) return false;
+      const y = Math.floor(s.ts / 10000), m = Math.floor((s.ts % 10000) / 100) - 1, d = s.ts % 100;
+      return new Date(y, m, d).getTime() > lastSeededTs;
+    }).length : sessions.length;
+
+    // Last session relative label
+    let lastLabel = 'No sessions yet';
+    if (lastSession) {
+      const ts = lastSession.ts;
+      if (ts) {
+        const y = Math.floor(ts / 10000), mo = Math.floor((ts % 10000) / 100) - 1, d = ts % 100;
+        const diffDays = Math.floor((now - new Date(y, mo, d).getTime()) / dayMs);
+        lastLabel = diffDays === 0 ? 'Today' : diffDays === 1 ? 'Yesterday' : `${diffDays}d ago`;
+      } else { lastLabel = lastSession.date || '—'; }
+    }
+
+    return { name, meta, proj, blocks, sessions, decisions, ideas, lastSession, lastLabel, unseen, lastSeededDate };
+  }).filter(c => c.blocks.length > 0 || c.meta.northStar);
+
+  // Sort: most recently active first
+  cards.sort((a, b2) => {
+    const aTs = a.lastSession?.ts || 0;
+    const bTs = b2.lastSession?.ts || 0;
+    return bTs - aTs;
+  });
+
+  // Update stale badge on Context button
+  const totalUnseen = cards.reduce((s, c) => s + (c.unseen > 0 ? 1 : 0), 0);
+  const staleBadge = document.getElementById('contextStaleBadge');
+  if (staleBadge) {
+    staleBadge.style.display = totalUnseen > 0 ? 'inline-flex' : 'none';
+    staleBadge.textContent = totalUnseen;
+  }
+
+  grid.innerHTML = cards.map(c => {
+    const staleHtml = c.unseen > 0
+      ? `<span style="background:#f97316;color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:100px">${c.unseen} new session${c.unseen>1?'s':''}</span>`
+      : c.lastSeededDate !== null
+        ? `<span style="background:rgba(86,207,170,0.15);color:#56cfaa;font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px">✓ seeded ${c.lastSeededDate === 0 ? 'today' : c.lastSeededDate + 'd ago'}</span>`
+        : `<span style="background:rgba(255,255,255,0.06);color:var(--text-3);font-size:9px;padding:2px 7px;border-radius:100px">Never seeded</span>`;
+
+    const openDecisions = c.decisions.slice(0, 2).map(d =>
+      `<div style="font-size:11px;color:var(--text-2);padding:3px 0;border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">✓ ${d.title}</div>`
+    ).join('');
+
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s"
+      onmouseover="this.style.borderColor='${c.proj.color}44'" onmouseout="this.style.borderColor='var(--border)'">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:22px;flex-shrink:0">${c.proj.icon || '📁'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:800;font-size:15px;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:1px">Last session: ${c.lastLabel} · ${c.sessions.length} total</div>
+        </div>
+        ${staleHtml}
+      </div>
+
+      <!-- North star -->
+      ${c.meta.northStar ? `<div style="font-size:12px;color:${c.proj.color};font-style:italic;line-height:1.4;padding:8px 10px;background:${c.proj.color}0d;border-radius:8px;border-left:2px solid ${c.proj.color}44">🎯 ${c.meta.northStar}</div>` : ''}
+
+      <!-- Stats row -->
+      <div style="display:flex;gap:8px">
+        <span style="font-size:11px;font-weight:700;color:var(--text-3)">📦 ${c.blocks.length} blocks</span>
+        <span style="font-size:11px;color:var(--border2)">·</span>
+        <span style="font-size:11px;font-weight:700;color:var(--text-3)">✓ ${c.decisions.length}</span>
+        <span style="font-size:11px;color:var(--border2)">·</span>
+        <span style="font-size:11px;font-weight:700;color:var(--text-3)">💡 ${c.ideas.length}</span>
+      </div>
+
+      <!-- Recent decisions preview -->
+      ${openDecisions ? `<div style="border-top:1px solid var(--border);padding-top:10px">${openDecisions}</div>` : ''}
+
+      <!-- Seed button -->
+      <button onclick="seedProjectContext('${c.name}')"
+        style="width:100%;padding:10px;border-radius:10px;background:${c.proj.color}18;border:1px solid ${c.proj.color}44;color:${c.proj.color};font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:-.2px"
+        onmouseover="this.style.background='${c.proj.color}28'" onmouseout="this.style.background='${c.proj.color}18'">
+        ⚡ Seed context for ${c.name.split(' ')[0]} →
+      </button>
+    </div>`;
+  }).join('');
+
+  if (!cards.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-3);font-size:14px">No projects found. Add some blocks to get started.</div>`;
+  }
+}
+
+function seedProjectContext(projectName) {
+  // Generate a focused seed for the specific project
+  const allBlocks = [...liveBlocks, ...BLOCKS].filter((b, i, arr) => arr.findIndex(x => x.id === b.id) === i);
+  const meta = PROJECT_META[projectName] || {};
+  const blocks = allBlocks.filter(b => b.project === projectName);
+  const sessions = blocks.filter(b => b.type === 'session').sort((a, b2) => (b2.ts || 0) - (a.ts || 0));
+  const decisions = blocks.filter(b => b.type === 'decision');
+  const ideas = [...(capturedIdeas || []).filter(i => i.project === projectName), ...blocks.filter(b => b.type === 'idea')];
+
+  const now = Date.now();
+  const dayMs = 86400000;
+  function relTs(ts) {
+    if (!ts) return '';
+    const y = Math.floor(ts/10000), m = Math.floor((ts%10000)/100)-1, d = ts%100;
+    const diff = Math.floor((now - new Date(y,m,d).getTime()) / dayMs);
+    return diff === 0 ? 'today' : diff === 1 ? 'yesterday' : `${diff}d ago`;
+  }
+
+  let out = `🧠 Context Brief — ${projectName}\n`;
+  out += `${'━'.repeat(40)}\n\n`;
+
+  if (meta.northStar) out += `🎯 NORTH STAR\n   ${meta.northStar}\n\n`;
+  if (meta.goal)      out += `📌 GOAL\n   ${meta.goal}\n\n`;
+
+  if (sessions.length) {
+    out += `📋 RECENT SESSIONS (${sessions.length} total)\n`;
+    sessions.slice(0, 5).forEach(s => out += `   ▸ ${s.title} (${relTs(s.ts)})\n`);
+    out += '\n';
+  }
+
+  if (decisions.length) {
+    out += `✓ KEY DECISIONS (${decisions.length})\n`;
+    decisions.slice(0, 6).forEach(d => {
+      out += `   ▸ ${d.title}\n`;
+      if (d.rationale) out += `     Why: ${d.rationale}\n`;
+    });
+    // Also flatten decisions array inside session blocks
+    sessions.slice(0,3).forEach(s => {
+      (s.decisions || []).slice(0,3).forEach(d => out += `   ▸ ${d} (from "${s.title.substring(0,35)}…")\n`);
+    });
+    out += '\n';
+  }
+
+  if (ideas.length) {
+    out += `💡 OPEN IDEAS\n`;
+    ideas.slice(0, 5).forEach(i => out += `   ▸ ${i.title || i.text || i}${(i.heat === 'hot') ? ' 🔥' : ''}\n`);
+    out += '\n';
+  }
+
+  if (meta.seeds?.length) {
+    out += `🚀 HOW TO USE THIS BRIEF\n`;
+    meta.seeds.slice(0, 3).forEach(s => out += `   ${s}\n`);
+    out += '\n';
+  }
+
+  out += `─────────────────────────────────────────\n`;
+  out += `Start with: "Let's continue work on ${projectName}. What should we tackle next based on this context?"`;
+
+  copyToClipboard(out);
+  markSeeded(projectName);
+  showToast(`⚡ ${projectName} context copied to clipboard`);
+  // Refresh hub to update stale badges
+  setTimeout(() => renderContextHub(), 300);
+}
+
 // ── Skills browser ──────────────────────────────────────────────
 let skillsViewActive = false;
 let skillsSearch = '';
@@ -3141,11 +3886,7 @@ function renderSkillsView(query) {
     return matchesSearch && matchesProject;
   });
 
-  // Group by category
-  const cats = {};
-  filteredFinal.forEach(s => { (cats[s.cat] = cats[s.cat]||[]).push(s); });
   const catOrder = ['Content','SEO','Email','Video','Design','Social','Dev','Docs','Workflow'];
-
   const catColors = {
     Content:'#6c63ff', SEO:'#10b981', Email:'#f59e0b', Video:'#ec4899',
     Design:'#8b5cf6', Social:'#06b6d4', Dev:'#f97316', Docs:'#64748b', Workflow:'#0ea5e9',
@@ -3166,10 +3907,13 @@ function renderSkillsView(query) {
       <span style="margin-left:auto;font-size:10px;color:var(--text-3)">${allScored.length} scored</span>
     </div>` : '';
 
-  // Weak filter override
+  // Weak filter override — must come before group-by-cat
   const weakNames = new Set(allScored.filter(s=>s.score<70).map(s=>s.name));
-  const filteredFinal = (q === '__weak__') ? filtered.filter(s => weakNames.has(s.name)) :
-    (q ? filtered : filtered);
+  const filteredFinal = (q === '__weak__') ? filtered.filter(s => weakNames.has(s.name)) : filtered;
+
+  // Group by category
+  const cats = {};
+  filteredFinal.forEach(s => { (cats[s.cat] = cats[s.cat]||[]).push(s); });
 
   let html = `<div class="skills-wrap">
     ${summaryBar}
@@ -3183,7 +3927,20 @@ function renderSkillsView(query) {
     const group = cats[cat];
     if (!group) return;
     const col = catColors[cat] || '#6c63ff';
-    html += `<div class="skills-cat-label" style="color:${col}">${cat} (${group.length})</div>
+    // Load saved intent from localStorage, fallback to default
+    const storedIntent = localStorage.getItem(`sb_intent_${cat}`);
+    const intentText = storedIntent !== null ? storedIntent : (SKILL_CATEGORY_INTENTS[cat] || '');
+    const intentHtml = `<div class="skills-cat-intent">
+      <span class="skills-cat-intent-text" id="intent-${cat}"
+        contenteditable="true"
+        onblur="saveSkillIntent('${cat}', this.innerText)"
+        title="Click to edit this category's intent">${intentText}</span>
+      <button class="skills-cat-edit-btn" onclick="document.getElementById('intent-${cat}').focus()" title="Edit intent">✏️</button>
+    </div>`;
+    html += `<div class="skills-cat-header">
+      <div class="skills-cat-label" style="color:${col}">${cat} <span style="opacity:0.5">(${group.length})</span></div>
+      ${intentHtml}
+    </div>
     <div class="skills-grid-inner">`;
 
     group.forEach(s => {
@@ -3235,6 +3992,94 @@ function renderSkillsView(query) {
   // Restore focus to search box if active
   const searchEl = document.getElementById('skillsSearch');
   if (searchEl && skillsSearch) { searchEl.focus(); searchEl.setSelectionRange(9999,9999); }
+}
+
+// ── Save category intent to localStorage ──
+function saveSkillIntent(cat, text) {
+  const trimmed = text.trim();
+  if (trimmed) localStorage.setItem(`sb_intent_${cat}`, trimmed);
+  else localStorage.removeItem(`sb_intent_${cat}`);
+  showToast(`Intent saved for ${cat}`);
+}
+
+// ── Suggest skills for a given task description ──────────────────────────────
+// Called from "Suggest skills" button or from the right panel when a block is open
+function suggestSkillsForTask(taskText, projectName) {
+  const query = (taskText + ' ' + (projectName||'')).toLowerCase();
+  const scores = SKILLS.map(s => {
+    let score = 0;
+    // Name match
+    if (query.includes(s.name.replace(/-/g,' '))) score += 40;
+    // Category keyword match
+    const catKeywords = {
+      Content: ['blog','article','write','content','post','seo text','copy'],
+      SEO: ['seo','rank','google','search','crawl','sitemap','hreflang','meta'],
+      Email: ['email','newsletter','mailerlite','campaign','subscriber','crm'],
+      Video: ['video','reel','tiktok','instagram','remotion','render','short'],
+      Design: ['design','brand','logo','pdf','poster','visual','color'],
+      Social: ['social','schedule','postiz','facebook','linkedin','twitter','post'],
+      Dev: ['build','code','api','mcp','server','next','python','script','tool'],
+      Docs: ['document','word','docx','pptx','excel','spreadsheet','presentation'],
+      Workflow: ['session','memory','skill','context','brief','capture','plan'],
+    };
+    const kws = catKeywords[s.cat] || [];
+    kws.forEach(kw => { if (query.includes(kw)) score += 15; });
+    // Description word match
+    const descWords = s.desc.toLowerCase().split(/\W+/);
+    descWords.forEach(w => { if (w.length > 4 && query.includes(w)) score += 5; });
+    // Project match
+    if (projectName && s.projects.some(p => p === projectName)) score += 20;
+    return { skill: s, score };
+  }).filter(x => x.score > 0)
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 5);
+
+  if (!scores.length) return null;
+  return scores.map(x => x.skill);
+}
+
+// ── Show skill suggestions in a toast-style bar ──
+function showSkillSuggestions(taskText, projectName) {
+  const suggestions = suggestSkillsForTask(taskText, projectName);
+  if (!suggestions || !suggestions.length) { showToast('No matching skills found'); return; }
+
+  const existing = document.getElementById('skillSuggestBar');
+  if (existing) existing.remove();
+
+  const bar = document.createElement('div');
+  bar.id = 'skillSuggestBar';
+  bar.style.cssText = `
+    position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:12px 16px;box-shadow:var(--shadow-lg);z-index:800;
+    max-width:560px;width:90%;animation:slideUp .25s ease;
+  `;
+  bar.innerHTML = `
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:10px">
+      💡 Suggested skills for this task
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      ${suggestions.map(s => `
+        <button onclick="copySkill('${s.name}');document.getElementById('skillSuggestBar').remove()"
+          style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;
+                 background:var(--bg);border:1px solid var(--border);font-size:12px;
+                 font-weight:600;color:var(--text);cursor:pointer;transition:border-color .15s"
+          onmouseover="this.style.borderColor='#6c63ff44'"
+          onmouseout="this.style.borderColor='var(--border)'">
+          <span>${s.icon}</span><span>${s.name}</span>
+        </button>`).join('')}
+    </div>
+    <button onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-3);font-size:14px;cursor:pointer;padding:2px 6px">✕</button>
+  `;
+  document.body.appendChild(bar);
+  setTimeout(() => { if (bar.parentElement) bar.remove(); }, 8000);
+}
+
+// ── Prompt user for task, then show suggestions ──
+function showSkillSuggestPrompt() {
+  const task = prompt('What are you working on? (Brief description)', '');
+  if (!task || !task.trim()) return;
+  showSkillSuggestions(task, activeFilter !== 'All' ? activeFilter : '');
 }
 
 // ── Skill Inspector — show full quality breakdown ──
@@ -3341,6 +4186,36 @@ function toggleDecisionsView() {
 
 // ── flagMoment — capture current state as a named moment ──
 let _flagMomentActive = false;
+function gitPush() {
+  const btn = document.getElementById('pushBtn');
+  btn.textContent = '⏳ Pushing…';
+  btn.disabled = true;
+  const msg = `Storyboard update — ${new Date().toLocaleString('en-GB', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`;
+  fetch('http://localhost:3847/git-push', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: msg })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      btn.textContent = '✓ Pushed!';
+      btn.style.background = 'rgba(34,197,94,0.18)';
+      showToast('🚀 Pushed to GitHub');
+      setTimeout(() => { btn.textContent = '🚀 Push to GitHub'; btn.style.background=''; btn.disabled=false; }, 3000);
+    } else {
+      btn.textContent = '⚠️ Push failed';
+      showToast('Push failed: ' + (data.error || 'unknown error'));
+      setTimeout(() => { btn.textContent = '🚀 Push to GitHub'; btn.disabled=false; }, 3000);
+    }
+  })
+  .catch(() => {
+    btn.textContent = '⚠️ Server offline';
+    showToast('MCP server not running — start it with: node mcp-server.js');
+    setTimeout(() => { btn.textContent = '🚀 Push to GitHub'; btn.disabled=false; }, 3000);
+  });
+}
+
 function flagMoment() {
   const btn = document.getElementById('flagBtn');
   if (_flagMomentActive) {
@@ -3393,9 +4268,13 @@ Paste this into a new chat to resume exactly where you stopped.`;
 // ═══════════════════════════════════
 // DETAIL OVERLAY
 // ═══════════════════════════════════
+// track which block is open so save functions know what to update
+let _detailOpenId = null;
+
 function openDetail(id) {
   const b = mergedBlocks().find(x => x.id === id) || capturedIdeas.find(x => x.id === id);
   if (!b) return;
+  _detailOpenId = id;
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
 
   document.getElementById('d-stripe').style.background = p.color;
@@ -3403,6 +4282,24 @@ function openDetail(id) {
   document.getElementById('d-proj').textContent = `${p.icon} ${b.project}`;
   document.getElementById('d-title').textContent = b.title.replace('💡 ','');
   document.getElementById('d-date').textContent = blockTimestamp(b);
+
+  // Meta badges
+  const TYPE_COLORS = {
+    session:  { bg:'rgba(124,107,255,.12)', border:'rgba(124,107,255,.35)', text:'#7c6bff' },
+    decision: { bg:'rgba(34,197,94,.1)',    border:'rgba(34,197,94,.3)',    text:'#22c55e' },
+    idea:     { bg:'rgba(251,191,36,.1)',   border:'rgba(251,191,36,.3)',   text:'#f59e0b' },
+    feature:  { bg:'rgba(78,205,196,.1)',   border:'rgba(78,205,196,.3)',   text:'#4ecdc4' },
+  };
+  const tc = TYPE_COLORS[b.type] || TYPE_COLORS.session;
+  let meta = `<span class="detail-type-badge" style="background:${tc.bg};border-color:${tc.border};color:${tc.text}">${b.type||'session'}</span>`;
+  if (b._source) meta += `<span class="detail-source-badge">via ${b._source}</span>`;
+  document.getElementById('d-meta').innerHTML = meta;
+
+  // Notes (user-editable, stored in localStorage keyed by block id)
+  const storedNotes = localStorage.getItem(`sb_notes_${id}`) || b.notes || '';
+  const notesWrap = document.getElementById('d-notes-wrap');
+  document.getElementById('d-notes').value = storedNotes;
+  notesWrap.style.display = 'block';
 
   const thumb = document.getElementById('d-thumb');
   if (b.thumb) { thumb.src = b.thumb; thumb.style.display = 'block'; thumb.onerror = () => { thumb.style.display='none'; }; }
@@ -3445,9 +4342,68 @@ function openDetail(id) {
       <p style="font-size:13px;line-height:1.65;color:var(--text-2)">${b.summary}</p>
     </div>`;
   }
-  document.getElementById('d-body').innerHTML = body || `<p style="color:var(--text-3);font-size:13px">No details yet.</p>`;
+  if (b.rationale) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">Rationale</div>
+      <p style="font-size:13px;line-height:1.65;color:var(--text-2)">${b.rationale}</p>
+    </div>`;
+  }
+  document.getElementById('d-body').innerHTML = body || '';
+
+  // Action bar
+  let actions = `<span class="detail-save-indicator" id="d-save-indicator">✓ Saved</span>`;
+  if (b.seed) {
+    actions += `<button class="detail-action-btn primary" onclick="seedBlock('${id}');showDetailSaved('Seeded!')">⚡ Seed Chat</button>`;
+  }
+  actions += `<button class="detail-action-btn" onclick="deleteDetailBlock('${id}')">🗑 Delete</button>`;
+  document.getElementById('d-actions').innerHTML = actions;
+
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+}
+
+function saveDetailTitle() {
+  if (!_detailOpenId) return;
+  const el = document.getElementById('d-title');
+  const newTitle = el.textContent.trim();
+  if (!newTitle) return;
+  // update in capturedIdeas if it's a local block
+  const idx = capturedIdeas.findIndex(x => x.id === _detailOpenId);
+  if (idx !== -1) {
+    capturedIdeas[idx].title = newTitle;
+    localStorage.setItem('sb_ideas', JSON.stringify(capturedIdeas));
+    showDetailSaved();
+    renderFeed();
+  }
+}
+
+function saveDetailNotes() {
+  if (!_detailOpenId) return;
+  const notes = document.getElementById('d-notes').value.trim();
+  if (notes) localStorage.setItem(`sb_notes_${_detailOpenId}`, notes);
+  else localStorage.removeItem(`sb_notes_${_detailOpenId}`);
+  showDetailSaved();
+}
+
+function showDetailSaved(msg) {
+  const el = document.getElementById('d-save-indicator');
+  if (!el) return;
+  el.textContent = msg || '✓ Saved';
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+function deleteDetailBlock(id) {
+  if (!confirm('Delete this block?')) return;
+  const idx = capturedIdeas.findIndex(x => x.id === id);
+  if (idx !== -1) {
+    capturedIdeas.splice(idx, 1);
+    localStorage.setItem('sb_ideas', JSON.stringify(capturedIdeas));
+    closeDetail();
+    renderFeed();
+    showToast('Block deleted');
+  }
 }
 
 function closeDetail() {
@@ -3485,59 +4441,126 @@ function seedBlock(id) {
 // ═══════════════════════════════════
 function seedNewChat() {
   const all = mergedBlocks();
-  const nowTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
-  const today = all.filter(b => (b.ts||0) >= nowTs && b.type !== 'idea');
+  const date = new Date();
+  const dateStr = date.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
 
-  // Active projects — sorted by block count
-  const projCounts = {};
-  all.filter(b=>b.type!=='idea').forEach(b => { projCounts[b.project]=(projCounts[b.project]||0)+1; });
-  const activeProjs = Object.entries(projCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  // ── Helper: format relative time ──
+  function relTs(ts) {
+    if (!ts) return '';
+    const ms = ts > 99999999 ? ts : ts * 1000;
+    const diff = Date.now() - ms;
+    const d = Math.floor(diff / 86400000);
+    if (d === 0) return 'today';
+    if (d === 1) return 'yesterday';
+    if (d < 7) return `${d} days ago`;
+    if (d < 30) return `${Math.floor(d/7)} week${Math.floor(d/7)>1?'s':''} ago`;
+    return `${Math.floor(d/30)} month${Math.floor(d/30)>1?'s':''} ago`;
+  }
 
-  const projLines = activeProjs.map(([name, cnt]) => {
-    const m = PROJECT_META[name] || {};
-    const ns = m.northStar ? ` 🎯 ${m.northStar}` : '';
-    return `- ${name} (${cnt} blocks)${ns}`;
-  }).join('\n');
-
-  // Recent decisions across all projects
-  const recentDecs = [];
-  [...all].sort((a,b)=>(b.ts||0)-(a.ts||0)).forEach(b => {
-    (b.decisions||[]).forEach(d => { if (recentDecs.length < 8) recentDecs.push(d); });
+  // ── Focus project (most blocks, most recent activity) ──
+  const projMap = {};
+  all.filter(b=>b.project).forEach(b => {
+    if (!projMap[b.project]) projMap[b.project] = { blocks:[], decisions:[], ideas:[] };
+    projMap[b.project].blocks.push(b);
+    (b.decisions||[]).forEach(d => projMap[b.project].decisions.push(d));
+    (b.ideas||[]).forEach(i => projMap[b.project].ideas.push(i));
+  });
+  const projsSorted = Object.entries(projMap).sort((a,b) => {
+    const aLast = Math.max(...a[1].blocks.map(bl=>bl.ts||0));
+    const bLast = Math.max(...b[1].blocks.map(bl=>bl.ts||0));
+    return bLast - aLast;
   });
 
-  // Today's work
-  const todayLines = today.slice(0,5).map(b=>`- [${b.project}] ${b.title}`).join('\n');
+  const focusName = activeFilter !== 'All' ? activeFilter : (projsSorted[0]?.[0] || '');
+  const focusData = projMap[focusName] || {};
+  const focusMeta = PROJECT_META[focusName] || {};
+  const focusRecent = [...(focusData.blocks||[])].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3);
+  const focusDecs = focusData.decisions?.slice(0,5) || [];
+  const focusIdeas = focusData.ideas?.slice(0,3) || [];
 
-  // Pending ideas
-  const ideas = [...all.filter(b=>b.type==='idea'), ...capturedIdeas].slice(0,5);
-  const ideaLines = ideas.map(i=>`- ${i.title.replace('💡 ','')}`).join('\n');
+  // ── All projects summary ──
+  const projSummary = projsSorted.slice(0,6).map(([name, data]) => {
+    const m = PROJECT_META[name] || {};
+    const lastBlock = [...data.blocks].sort((a,b)=>(b.ts||0)-(a.ts||0))[0];
+    const ns = m.northStar ? `\n    🎯 ${m.northStar}` : '';
+    const last = lastBlock ? ` · last active ${relTs(lastBlock.ts)}` : '';
+    return `- **${name}** (${data.blocks.length} blocks, ${data.decisions.length} decisions)${last}${ns}`;
+  }).join('\n');
 
-  const date = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
-  const seed = `# Storyboard Session Seed — ${date}
+  // ── Recent cross-project decisions ──
+  const allDecs = [];
+  [...all].sort((a,b)=>(b.ts||0)-(a.ts||0)).forEach(b => {
+    (b.decisions||[]).forEach(d => { if(allDecs.length<8) allDecs.push({text:d, project:b.project, ts:b.ts}); });
+  });
 
-## Active projects
-${projLines}
+  // ── Open ideas (from captured + blocks) ──
+  const allIdeas = [
+    ...capturedIdeas.slice(0,4).map(i=>({title:i.title, project:i.project||''})),
+    ...all.filter(b=>b.type==='idea').slice(0,4).map(b=>({title:b.title, project:b.project}))
+  ].slice(0,6);
 
-## Decisions on record
-${recentDecs.slice(0,6).map(d=>`- ✓ ${d}`).join('\n') || '— none yet'}
+  // ── Today's blocks ──
+  const todayYYYY = parseInt(date.toISOString().slice(0,10).replace(/-/g,''));
+  const todayBlocks = all.filter(b=>(b.ts||0)>=todayYYYY && b.type!=='idea').slice(0,4);
 
-## Today's work
-${todayLines || '— nothing logged today yet'}
+  // ── Skills with weak scores ──
+  const weakSkills = typeof SKILLS_DATA !== 'undefined'
+    ? (SKILLS_DATA||[]).filter(s=>s.score<70).slice(0,3).map(s=>`${s.name} (${s.score}/100)`)
+    : [];
 
-## Open ideas
-${ideaLines || '— no ideas captured'}
+  // ── BUILD THE SEED ──
+  const seed = `# 🧠 Storyboard Context Brief — ${dateStr}
 
-## Context
-Storyboard is a visual AI memory dashboard. Blocks = work sessions. Decisions live inside blocks. Ideas captured with 💡 FAB button. Skills view scores all SKILL.md files. North Stars define what success looks like per project.
+You are picking up an ongoing body of AI-assisted work. This brief contains everything you need to continue without re-explaining. Read it fully before responding.
 
-Pick up where you left off.`;
+---
+
+## 🎯 Current Focus: ${focusName || 'All projects'}
+${focusMeta.northStar ? `North Star: "${focusMeta.northStar}"` : ''}
+${focusMeta.goal ? `Goal: ${focusMeta.goal}` : ''}
+${focusRecent.length ? `\nRecent work:\n${focusRecent.map(b=>`- ${b.title} (${relTs(b.ts)})`).join('\n')}` : ''}
+${focusDecs.length ? `\nKey decisions made:\n${focusDecs.map(d=>`- ✓ ${d}`).join('\n')}` : ''}
+${focusIdeas.length ? `\nOpen threads to explore:\n${focusIdeas.map(i=>`- 💡 ${i}`).join('\n')}` : ''}
+
+---
+
+## 📁 All Active Projects
+${projSummary}
+
+---
+
+## ✓ Recent Decisions (across all projects)
+${allDecs.length ? allDecs.map(d=>`- [${d.project}] ${d.text}`).join('\n') : '— no decisions recorded yet'}
+
+---
+${todayBlocks.length ? `## 📅 Today's Work
+${todayBlocks.map(b=>`- [${b.project}] ${b.title}`).join('\n')}
+
+---
+` : ''}
+## 💡 Open Ideas (not yet actioned)
+${allIdeas.length ? allIdeas.map(i=>`- ${i.title}${i.project ? ` [${i.project}]` : ''}`).join('\n') : '— no ideas captured yet'}
+
+---
+${weakSkills.length ? `## ⚠️ Skills Needing Attention
+${weakSkills.map(s=>`- ${s}`).join('\n')}
+
+---
+` : ''}
+## 🔧 How to Use This Brief
+- Continue work on **${focusName || 'the active project'}** directly — full context is above
+- Reference any project by name to get specific context
+- If I say "storyboard this decision", it means log it as a formal decision
+- If I say "capture that", add it to the ideas list
+- Start with: "What should we work on in **${focusName || 'this project'}** next?"`;
 
   navigator.clipboard.writeText(seed).then(() => {
-    const btn = document.querySelector('.seed-btn');
+    const btn = document.querySelector('.seed-btn, .rp-seed-btn');
+    if (!btn) return;
     const prev = btn.textContent;
     btn.textContent = '✓ Copied!';
     btn.style.background = '#10b981';
-    setTimeout(() => { btn.textContent = prev; btn.style.background = '#6c63ff'; }, 2200);
+    setTimeout(() => { btn.textContent = prev; btn.style.background = ''; }, 2500);
   });
 }
 
@@ -3576,7 +4599,7 @@ function renderProjectHeader(projName) {
   const ideas = mergedBlocks().filter(b => b.type === 'idea' && b.project === projName);
   const ideasHtml = ideas.length ? `
     <div class="proj-ideas-row">
-      ${ideas.map(b => `<div class="proj-idea-pill" onclick="openBlock('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}
+      ${ideas.map(b => `<div class="proj-idea-pill" onclick="openDetail('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}
     </div>` : '';
 
   // Stats
@@ -3940,6 +4963,57 @@ function updateTimer() {
 setInterval(updateTimer, 1000);
 
 // ═══════════════════════════════════
+// FIRST-TIME ONBOARDING
+// ═══════════════════════════════════
+function checkFirstRun() {
+  // Show onboarding if user has never dismissed it AND has no captured data
+  const dismissed = localStorage.getItem('sb_onboard_done');
+  if (dismissed) return;
+  // If ?demo=1 or ?skip= in URL, skip onboarding
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('skip') || params.get('demo')) return;
+  // Show after a short delay so the dashboard renders first (feels more real)
+  setTimeout(() => {
+    document.getElementById('onboardOverlay').style.display = 'block';
+  }, 600);
+}
+
+let _selectedPath = null;
+function selectOnboardPath(path) {
+  // Toggle expand/collapse command for the selected path
+  if (_selectedPath === path) {
+    document.getElementById(`obCmd${path}`).style.display = 'none';
+    document.getElementById(`obArrow${path}`).style.transform = 'none';
+    _selectedPath = null;
+    return;
+  }
+  // Collapse any open path
+  [1, 2].forEach(p => {
+    const cmd = document.getElementById(`obCmd${p}`);
+    const arrow = document.getElementById(`obArrow${p}`);
+    if (cmd) cmd.style.display = 'none';
+    if (arrow) arrow.style.transform = 'none';
+  });
+  _selectedPath = path;
+  document.getElementById(`obCmd${path}`).style.display = 'block';
+  document.getElementById(`obArrow${path}`).style.transform = 'rotate(90deg)';
+}
+
+function dismissOnboard() {
+  localStorage.setItem('sb_onboard_done', '1');
+  const overlay = document.getElementById('onboardOverlay');
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity .3s';
+  setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '1'; }, 300);
+}
+
+function loadDemoAndDismiss() {
+  dismissOnboard();
+  // Nothing extra needed — the dashboard already has all demo blocks loaded
+  showToast('👀 Exploring with live data — use + to start adding your own');
+}
+
+// ═══════════════════════════════════
 // INIT
 // ═══════════════════════════════════
 buildNav();
@@ -3947,393 +5021,33 @@ renderFeed();
 buildRightPanel();
 updateIdeasCount();
 updateTimer();
+// Compute stale badge on load
+setTimeout(() => {
+  const allBlocks = [...liveBlocks, ...BLOCKS].filter((b, i, arr) => arr.findIndex(x => x.id === b.id) === i);
+  const projectNames = Object.keys(PROJECT_META);
+  const now = Date.now();
+  let staleCount = 0;
+  projectNames.forEach(name => {
+    const lastSeededTs = getLastSeeded(name);
+    const sessions = allBlocks.filter(b => b.project === name && b.type === 'session');
+    const unseen = lastSeededTs ? sessions.filter(s => {
+      if (!s.ts) return false;
+      const y = Math.floor(s.ts / 10000), mo = Math.floor((s.ts % 10000) / 100) - 1, d = s.ts % 100;
+      return new Date(y, mo, d).getTime() > lastSeededTs;
+    }).length : sessions.length;
+    if (unseen > 0) staleCount++;
+  });
+  const staleBadge = document.getElementById('contextStaleBadge');
+  if (staleBadge && staleCount > 0) {
+    staleBadge.style.display = 'inline-flex';
+    staleBadge.textContent = staleCount;
+  }
+}, 200);
 // Load inspect data immediately on open
 pollData();
+// First-time onboarding check
+checkFirstRun();
 
-// ═══════════════════════════════════
-// ONBOARDING TOUR — fires once for new visitors
-// ═══════════════════════════════════
-const TOUR_STEPS = [
-  {
-    selector: null, // centre modal
-    title: '👋 Welcome to Storyboard',
-    body: 'Your AI work — every session, decision, and idea — captured and permanently visible. This is your project memory layer. Let\'s show you the three things that matter.',
-    cta: 'Show me around →'
-  },
-  {
-    selector: '.canvas-grid, .feed-area',
-    title: '🗂️ Your project canvas',
-    body: 'Every card is a <strong>block</strong> — a session, feature, bug fix, or milestone captured from your AI work. Filter by project, time, or type using the tabs above.',
-    cta: 'Next →',
-    highlight: '.period-tabs'
-  },
-  {
-    selector: null,
-    anchor: '#fabBtn',
-    title: '+ Capture anything',
-    body: 'Hit the <strong>+</strong> button (bottom right) to capture an idea, log a decision, or add a block manually. Press <kbd style="background:rgba(255,255,255,0.1);padding:1px 6px;border-radius:4px;font-size:11px">⌘K</kbd> to search everything.',
-    cta: 'Next →',
-    highlight: '#fabWrap'
-  },
-  {
-    selector: null,
-    anchor: '.rp-seed-btn',
-    title: '💉 Seed New Chat',
-    body: 'This is the core mechanic. Click <strong>"Seed New Chat →"</strong> in the right panel and your full project context — north star, recent work, open decisions — is copied to clipboard. Paste it into any AI chat to start with full memory. Zero re-explaining.',
-    cta: 'Got it, let\'s go!'
-  }
-];
-
-let _tourStep = 0;
-let _tourEl = null;
-
-function tourNext() {
-  _tourStep++;
-  if (_tourStep >= TOUR_STEPS.length) { endTour(); return; }
-  renderTourStep();
-}
-
-function endTour() {
-  if (_tourEl) { _tourEl.remove(); _tourEl = null; }
-  const overlay = document.getElementById('tourOverlay');
-  if (overlay) overlay.remove();
-  localStorage.setItem('sb_tour_done', '1');
-}
-
-function renderTourStep() {
-  const step = TOUR_STEPS[_tourStep];
-  const overlay = document.getElementById('tourOverlay');
-
-  // Remove previous tooltip
-  const prev = document.getElementById('tourTooltip');
-  if (prev) prev.remove();
-
-  // Highlight element
-  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
-  if (step.highlight) {
-    const hi = document.querySelector(step.highlight);
-    if (hi) hi.classList.add('tour-highlight');
-  }
-
-  // Build tooltip
-  const tip = document.createElement('div');
-  tip.id = 'tourTooltip';
-  tip.style.cssText = `
-    position: fixed; z-index: 10001;
-    background: #1a1a2e; border: 1px solid rgba(124,107,255,0.4);
-    border-radius: 16px; padding: 24px 28px; width: 340px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,107,255,0.2);
-    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-  `;
-
-  // Position: anchor to element or centre
-  let anchorEl = step.anchor ? document.querySelector(step.anchor) : null;
-  if (anchorEl) {
-    const rect = anchorEl.getBoundingClientRect();
-    tip.style.bottom = (window.innerHeight - rect.top + 16) + 'px';
-    tip.style.right = (window.innerWidth - rect.right - 20) + 'px';
-  } else {
-    tip.style.top = '50%';
-    tip.style.left = '50%';
-    tip.style.transform = 'translate(-50%, -50%)';
-  }
-
-  const stepNum = `<div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7c6bff;margin-bottom:10px">Step ${_tourStep + 1} of ${TOUR_STEPS.length}</div>`;
-  const title = `<div style="font-size:17px;font-weight:800;color:#f0f0f5;margin-bottom:10px;line-height:1.3">${step.title}</div>`;
-  const body = `<div style="font-size:14px;color:#94a3b8;line-height:1.6;margin-bottom:20px">${step.body}</div>`;
-  const progress = TOUR_STEPS.map((_, i) =>
-    `<div style="width:${i === _tourStep ? 20 : 6}px;height:6px;border-radius:3px;background:${i === _tourStep ? '#7c6bff' : 'rgba(255,255,255,0.15)'}; transition:all 0.3s"></div>`
-  ).join('');
-  const footer = `
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;gap:6px;align-items:center">${progress}</div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <span onclick="endTour()" style="font-size:12px;color:#475569;cursor:pointer;text-decoration:underline">Skip</span>
-        <button onclick="tourNext()" style="background:#7c6bff;color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">${step.cta}</button>
-      </div>
-    </div>`;
-
-  tip.innerHTML = stepNum + title + body + footer;
-  document.body.appendChild(tip);
-  _tourEl = tip;
-}
-
-function startTour() {
-  if (localStorage.getItem('sb_tour_done')) return;
-
-  // Dark overlay (clickable to skip)
-  const overlay = document.createElement('div');
-  overlay.id = 'tourOverlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.55);backdrop-filter:blur(2px)';
-  overlay.onclick = endTour;
-  document.body.appendChild(overlay);
-
-  _tourStep = 0;
-  renderTourStep();
-}
-
-// CSS for tour highlight
-const tourStyle = document.createElement('style');
-tourStyle.textContent = `
-  .tour-highlight {
-    position: relative;
-    z-index: 10001 !important;
-    box-shadow: 0 0 0 3px #7c6bff, 0 0 30px rgba(124,107,255,0.4) !important;
-    border-radius: 10px;
-    pointer-events: none;
-  }
-  #tourTooltip button:hover { opacity: 0.85; }
-`;
-document.head.appendChild(tourStyle);
-
-// Fire 800ms after load (let UI settle first)
-setTimeout(startTour, 800);
-
-// ═══════════════════════════════════
-// DEMO MODE — cinematic interactive walkthrough
-// Triggered from landing page via ?demo=1 or the "Take a tour" button
-// ═══════════════════════════════════
-const DEMO_SCRIPT = [
-  {
-    id: 'welcome',
-    title: "This is Storyboard",
-    subtitle: "Your AI work, finally visible",
-    body: "Every session, decision and idea you build with AI — captured here automatically. Let me show you what this dashboard can do.",
-    layout: 'center',
-    action: null,
-    visual: `<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px">
-      ${['🧠 Sessions','✓ Decisions','💡 Ideas','🔧 Features','🎯 North Stars'].map(t=>`<span style="background:rgba(124,107,255,0.15);border:1px solid rgba(124,107,255,0.3);color:#c4b9ff;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600">${t}</span>`).join('')}
-    </div>`
-  },
-  {
-    id: 'canvas',
-    title: "Every project on one canvas",
-    subtitle: "Canvas view",
-    body: "Six projects, all their work, visible at a glance. Each card shows blocks, decisions and ideas — the story of what got built and why.",
-    layout: 'top-right',
-    highlight: '.canvas-grid',
-    arrow: 'down-left',
-    action: () => {
-      // Switch to Canvas view
-      const canvasBtn = [...document.querySelectorAll('.view-tab, button')].find(b => b.textContent.includes('Canvas'));
-      if (canvasBtn) canvasBtn.click();
-    }
-  },
-  {
-    id: 'filter',
-    title: "Filter by project, time, anything",
-    subtitle: "Smart filtering",
-    body: "Click any project in the left nav to zoom in. Switch between Canvas, Feed, Ideas, Decisions. Filter by This Week or Today to see exactly what's moving.",
-    layout: 'right',
-    highlight: '.left-nav',
-    arrow: 'right'
-  },
-  {
-    id: 'search',
-    title: "Search everything with ⌘K",
-    subtitle: "Instant search",
-    body: "Every block, decision and idea across all your projects — searchable in under 100ms. Type a keyword and Storyboard finds it regardless of which project it lives in.",
-    layout: 'center',
-    action: () => { try { openSearch(); } catch(e){} },
-    closeAction: () => { try { closeSearch(); } catch(e){} }
-  },
-  {
-    id: 'seed',
-    title: "Seed any AI chat instantly",
-    subtitle: "The core mechanic",
-    body: "Hit 'Seed New Chat' and your full project context — north star, recent sessions, open decisions — is copied to clipboard. Paste into Claude, ChatGPT, anything. Zero re-explaining, every time.",
-    layout: 'left',
-    highlight: '.rp-seed-btn, .context-stitcher',
-    arrow: 'left',
-    pulse: true
-  },
-  {
-    id: 'skills',
-    title: "Your skill library — with steering",
-    subtitle: "Skills by category",
-    body: "35+ skills organized by domain — Content, SEO, Email, Video, Dev, and more. Each category has an intent statement: the strategic 'why' that keeps your AI work from drifting. Click any skill to copy it into a new chat.",
-    layout: 'center',
-    action: () => {
-      // Open skills view
-      try {
-        const btn = document.getElementById('promptsBtn');
-        if (btn && !btn.classList.contains('active')) btn.click();
-      } catch(e) {}
-    },
-    visual: `<div style="margin-top:16px;background:rgba(14,14,20,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;font-size:12px;max-width:460px;margin-left:auto;margin-right:auto">
-      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6c63ff;display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        Content <span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span>
-      </div>
-      <div style="font-size:11px;color:#94a3b8;font-style:italic;margin-bottom:10px">Own search in every language. Every page earns a featured snippet. Never publish without the audit gate.</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        ${[['✍️','real-estate-blog-writer'],['📄','newbuild-landing-pages'],['🚦','content-audit-gate'],['🔭','content-scout']].map(([i,n])=>`<span style="background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.2);color:#c4b9ff;padding:4px 10px;border-radius:6px;font-size:11px">${i} ${n}</span>`).join('')}
-      </div>
-    </div>`
-  },
-  {
-    id: 'vision',
-    title: "Where this is going",
-    subtitle: "The vision",
-    body: "This is Day 1. What you're seeing is 10% of what Storyboard becomes.",
-    layout: 'center',
-    isVision: true,
-    visionItems: [
-      { icon: '📊', title: 'Live business metrics', desc: 'Revenue, deployments, uptime — all tracked inside your storyboard' },
-      { icon: '🤝', title: 'Team storyboards', desc: 'Share context with collaborators. Everyone sees the same story.' },
-      { icon: '🔌', title: 'Connect any AI tool', desc: 'Claude, Cursor, ChatGPT, Replit — all sessions captured automatically' },
-      { icon: '🏪', title: 'AI economy dashboard', desc: 'Track every product your AI setup builds and ships' }
-    ]
-  }
-];
-
-let _demoStep = 0;
-let _demoActive = false;
-
-function startDemo() {
-  _demoStep = 0;
-  _demoActive = true;
-  // End basic tour if running
-  endTour();
-  renderDemoStep();
-}
-
-function demoNext() {
-  // Run close action of current step if any
-  const step = DEMO_SCRIPT[_demoStep];
-  if (step.closeAction) step.closeAction();
-  _demoStep++;
-  if (_demoStep >= DEMO_SCRIPT.length) { endDemo(); return; }
-  renderDemoStep();
-}
-
-function demoPrev() {
-  if (_demoStep > 0) { _demoStep--; renderDemoStep(); }
-}
-
-function endDemo() {
-  _demoActive = false;
-  const el = document.getElementById('demoOverlay');
-  if (el) el.remove();
-  document.querySelectorAll('.demo-highlight').forEach(e => e.classList.remove('demo-highlight'));
-  localStorage.setItem('sb_demo_done', '1');
-  localStorage.setItem('sb_tour_done', '1');
-}
-
-function renderDemoStep() {
-  const step = DEMO_SCRIPT[_demoStep];
-
-  // Run step action
-  if (step.action) { try { step.action(); } catch(e){} }
-
-  // Highlight
-  document.querySelectorAll('.demo-highlight').forEach(e => e.classList.remove('demo-highlight'));
-  if (step.highlight) {
-    const el = document.querySelector(step.highlight);
-    if (el) el.classList.add('demo-highlight');
-  }
-
-  // Build / update overlay
-  let overlay = document.getElementById('demoOverlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'demoOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none';
-    document.body.appendChild(overlay);
-  }
-
-  // Progress bar
-  const pct = Math.round((_demoStep / (DEMO_SCRIPT.length - 1)) * 100);
-
-  // Vision card HTML
-  let visionHtml = '';
-  if (step.isVision && step.visionItems) {
-    visionHtml = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0">
-      ${step.visionItems.map(v => `
-        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px">
-          <div style="font-size:22px;margin-bottom:8px">${v.icon}</div>
-          <div style="font-size:13px;font-weight:700;color:#f0f0f5;margin-bottom:4px">${v.title}</div>
-          <div style="font-size:12px;color:#64748b;line-height:1.5">${v.desc}</div>
-        </div>`).join('')}
-    </div>
-    <div style="font-size:12px;color:#475569;text-align:center;margin-top:4px">Research preview · Day ${Math.ceil((Date.now() - new Date('2026-04-17').getTime())/(1000*60*60*24))+1} of 10</div>`;
-  }
-
-  const isLast = _demoStep === DEMO_SCRIPT.length - 1;
-  const isFirst = _demoStep === 0;
-
-  overlay.innerHTML = `
-    <div style="pointer-events:all">
-      <!-- Dark scrim -->
-      <div style="position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px)"></div>
-
-      <!-- Progress bar at top -->
-      <div style="position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.1);z-index:10001">
-        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#7c6bff,#4ecdc4);transition:width 0.4s ease"></div>
-      </div>
-
-      <!-- Step label top-right -->
-      <div style="position:fixed;top:16px;right:20px;z-index:10002;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.4)">
-        ${_demoStep + 1} / ${DEMO_SCRIPT.length} &nbsp;·&nbsp;
-        <span onclick="endDemo()" style="cursor:pointer;text-decoration:underline;color:rgba(255,255,255,0.3)">Exit demo</span>
-      </div>
-
-      <!-- Main card — centre screen -->
-      <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10002;
-        width:min(520px,90vw);
-        background:linear-gradient(145deg,#1a1a2e,#16162a);
-        border:1px solid rgba(124,107,255,0.35);
-        border-radius:20px;padding:36px 40px;
-        box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(124,107,255,0.15),0 0 60px rgba(124,107,255,0.1)">
-
-        <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#7c6bff;margin-bottom:12px">${step.subtitle || ''}</div>
-        <div style="font-size:clamp(22px,3vw,28px);font-weight:800;color:#f0f0f5;line-height:1.2;margin-bottom:14px">${step.title}</div>
-        <div style="font-size:15px;color:#94a3b8;line-height:1.65;margin-bottom:${step.visual||step.isVision?'0':'28px'}">${step.body}</div>
-
-        ${step.visual || ''}
-        ${visionHtml}
-
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px">
-          <button onclick="demoPrev()" style="background:transparent;color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;font-family:inherit;${isFirst?'opacity:0;pointer-events:none':''}"
-          >← Back</button>
-
-          <div style="display:flex;gap:6px">
-            ${DEMO_SCRIPT.map((_, i) => `<div style="width:${i===_demoStep?'20px':'6px'};height:6px;border-radius:3px;background:${i===_demoStep?'#7c6bff':i<_demoStep?'rgba(124,107,255,0.4)':'rgba(255,255,255,0.12)'};transition:all 0.3s"></div>`).join('')}
-          </div>
-
-          <button onclick="demoNext()" style="background:${isLast?'linear-gradient(135deg,#7c6bff,#4ecdc4)':'#7c6bff'};color:#fff;border:none;border-radius:10px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(124,107,255,0.4)">
-            ${isLast ? '🚀 Try it yourself' : 'Next →'}
-          </button>
-        </div>
-      </div>
-    </div>`;
-}
-
-// Demo mode CSS
-const demoStyle = document.createElement('style');
-demoStyle.textContent = `
-  .demo-highlight {
-    position: relative !important;
-    z-index: 10000 !important;
-    box-shadow: 0 0 0 3px #7c6bff, 0 0 40px rgba(124,107,255,0.5) !important;
-    border-radius: 12px;
-    pointer-events: none;
-    animation: demoPulse 2s ease-in-out infinite;
-  }
-  @keyframes demoPulse {
-    0%,100% { box-shadow: 0 0 0 3px #7c6bff, 0 0 40px rgba(124,107,255,0.5); }
-    50% { box-shadow: 0 0 0 5px #7c6bff, 0 0 60px rgba(124,107,255,0.7); }
-  }
-  #demoOverlay button:hover { opacity: 0.85; transform: translateY(-1px); transition: all 0.15s; }
-`;
-document.head.appendChild(demoStyle);
-
-// Auto-start demo if ?demo=1 in URL
-if (new URLSearchParams(window.location.search).get('demo') === '1') {
-  setTimeout(startDemo, 600);
-}
-
-// Also expose globally so landing page can trigger it
-window.startDemo = startDemo;
 </script>
 </body>
 </html>

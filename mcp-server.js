@@ -408,6 +408,61 @@ const httpServer = createServer((req, res) => {
 
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
 
+  if (req.method === "GET" && req.url === "/ping") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ ok: true, version: "1.0.0" }));
+    return;
+  }
+
+  // Browser extension capture — receives blocks from any AI tool tab
+  if (req.method === "POST" && req.url === "/capture-web") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const block = JSON.parse(body);
+        // Validate minimum fields
+        if (!block.title || !block.project || !block.type) {
+          res.writeHead(400); res.end(JSON.stringify({ error: "Missing title, project or type" }));
+          return;
+        }
+        // Build a clean block record
+        const now = new Date();
+        const ts = block.ts || parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+        const id = `web-${block.type}-${Date.now()}`;
+        const newBlock = {
+          id,
+          type:    block.type,
+          project: block.project,
+          title:   block.title.substring(0, 120),
+          summary: block.summary || block.context
+            ? `${block.summary || ""}${block.context ? "\n\n[Context from " + (block.source || "browser") + "]\n" + block.context.substring(0, 600) : ""}`.trim()
+            : undefined,
+          date:     block.date || now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
+          ts,
+          _captured: block._captured || now.toISOString(),
+          _source:  block.source || "browser-extension",
+          _url:     block.url || undefined,
+          heat:     block.type === "idea" ? "hot" : undefined,
+        };
+        // Remove undefined keys
+        Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
+
+        // Prepend to blocks-data.json
+        const blocks = readJSON(BLOCKS_FILE, []);
+        blocks.unshift(newBlock);
+        writeJSON(BLOCKS_FILE, blocks);
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ ok: true, id, block: newBlock }));
+        process.stderr.write(`🧩 Web capture: [${block.type}] "${block.title}" → ${block.project}\n`);
+      } catch (e) {
+        res.writeHead(400); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   if (req.method === "POST" && req.url === "/screenshot") {
     let body = "";
     req.on("data", chunk => { body += chunk; });
@@ -430,6 +485,46 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
+  // ── /git-push — trigger commit + push from dashboard or Claude in Chrome ──────
+  if (req.method === "POST" && req.url === "/git-push") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const { message } = JSON.parse(body || "{}");
+        const msg = (message || `Storyboard update — ${new Date().toLocaleString("en-GB")}`).replace(/"/g, "'");
+        // Remove stale lock files
+        try { execSync(`rm -f "${STORYBOARD_DIR}/.git/index.lock" "${STORYBOARD_DIR}/.git/HEAD.lock"`); } catch(_) {}
+        // Stage all changes
+        execSync(`git -C "${STORYBOARD_DIR}" add -A`, { encoding: "utf8" });
+        // Check if there's anything to commit
+        const diff = execSync(`git -C "${STORYBOARD_DIR}" diff --cached --stat`, { encoding: "utf8" });
+        if (!diff.trim()) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ ok: true, message: "Nothing to commit — already up to date." }));
+          return;
+        }
+        execSync(`git -C "${STORYBOARD_DIR}" commit -m "${msg}"`, { encoding: "utf8" });
+        const pushOut = execSync(`git -C "${STORYBOARD_DIR}" push`, { encoding: "utf8", timeout: 30000 });
+        const result = `✅ Pushed: "${msg}"\n${diff}${pushOut}`;
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: true, message: result }));
+        process.stderr.write(`🚀 Git push: "${msg}"\n`);
+      } catch (e) {
+        res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: false, error: e.message.slice(0, 500) }));
+      }
+    });
+    return;
+  }
+
+  // CORS preflight for /git-push (called from dashboard)
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST,GET", "Access-Control-Allow-Headers": "Content-Type" });
+    res.end();
+    return;
+  }
+
   res.writeHead(404); res.end();
 });
 
@@ -447,7 +542,7 @@ const MIME = {
 
 const staticServer = createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  let filePath = join(STORYBOARD_DIR, req.url === "/" ? "index.html" : req.url.split("?")[0]);
+  let filePath = join(STORYBOARD_DIR, req.url === "/" ? "app.html" : req.url.split("?")[0]);
   try {
     const data = readFileSync(filePath);
     const mime = MIME[extname(filePath)] || "application/octet-stream";
