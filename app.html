@@ -410,6 +410,80 @@ body {
 .rp-decision-check { color: #22c55e; font-size: 11px; padding-top: 1px; flex-shrink: 0; }
 .rp-decision-text { font-size: 11px; color: var(--text-2); line-height: 1.45; flex: 1; }
 
+/* ── Project drawer ─────────────────────────────────────── */
+.pd-band { height:5px; width:100%; }
+.pd-header {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:22px 22px 16px;
+}
+.pd-icon { font-size:28px; line-height:1; flex-shrink:0; margin-top:2px; }
+.pd-name { font-size:20px; font-weight:800; letter-spacing:-.4px; margin-bottom:2px; }
+.pd-goal { font-size:12px; color:var(--text-2); line-height:1.5; font-weight:500; }
+.pd-ns { font-size:11px; margin-top:4px; font-style:italic; }
+.pd-close {
+  margin-left:auto; flex-shrink:0; background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; width:28px; height:28px; display:flex; align-items:center;
+  justify-content:center; cursor:pointer; font-size:13px; color:var(--text-3);
+}
+.pd-close:hover { background:var(--border); color:var(--text); }
+.pd-stats {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  padding:0 22px 16px; gap:2px;
+}
+.pd-stat { text-align:center; padding:10px 0; }
+.pd-stat-v { display:block; font-size:22px; font-weight:800; letter-spacing:-.5px; line-height:1; }
+.pd-stat-l { display:block; font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text-3); margin-top:3px; }
+.pd-divider { height:1px; background:var(--border); margin:0 22px 14px; }
+.pd-section-title {
+  font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.7px;
+  color:var(--text-3); padding:0 22px 8px;
+}
+.pd-block-row {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:8px 22px; cursor:pointer; transition:background .1s;
+}
+.pd-block-row:hover { background:var(--bg); }
+.pd-block-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.pd-block-title { font-size:12px; font-weight:600; color:var(--text); line-height:1.35; }
+.pd-block-meta { font-size:10px; color:var(--text-3); margin-top:2px; }
+.pd-decision-row {
+  display:flex; align-items:flex-start; gap:8px;
+  padding:6px 22px; font-size:11.5px; color:var(--text-2); line-height:1.45;
+}
+.pd-decision-check { color:#22c55e; font-size:11px; flex-shrink:0; padding-top:1px; }
+.pd-idea-pill {
+  display:inline-block; padding:4px 10px; border-radius:20px;
+  font-size:11px; font-weight:600; cursor:pointer; margin:0 4px 6px 0;
+}
+.pd-auto-row {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 22px; font-size:11px;
+}
+.pd-auto-dot { width:6px; height:6px; border-radius:50%; background:#10b981; flex-shrink:0; }
+.pd-auto-name { font-weight:600; color:var(--text); flex:1; }
+.pd-auto-sched { font-size:10px; color:var(--text-3); }
+
+/* ── Roadmap in project drawer ───────────────────────────── */
+.pd-roadmap-grid { display:flex; flex-direction:column; gap:8px; padding:0 22px 4px; }
+.pd-rm-card {
+  background:var(--bg); border:1.5px solid var(--border); border-radius:10px;
+  padding:10px 12px; cursor:default; transition:border-color .15s;
+}
+.pd-rm-card:hover { border-color:var(--rm-color, #6c63ff); }
+.pd-rm-top { display:flex; align-items:flex-start; gap:8px; margin-bottom:4px; }
+.pd-rm-badge {
+  font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
+  padding:2px 8px; border-radius:20px; flex-shrink:0; margin-top:1px;
+}
+.pd-rm-badge.next  { background:#dcfce7; color:#15803d; }
+.pd-rm-badge.soon  { background:#dbeafe; color:#1d4ed8; }
+.pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
+.pd-rm-title { font-size:12px; font-weight:700; color:var(--text); line-height:1.35; flex:1; }
+.pd-rm-summary { font-size:11px; color:var(--text-2); line-height:1.5; margin-bottom:6px; }
+.pd-rm-chips { display:flex; flex-wrap:wrap; gap:4px; }
+.pd-rm-chip { font-size:9.5px; font-weight:600; padding:2px 8px; border-radius:20px; }
+.pd-rm-effort { font-size:9px; color:var(--text-3); margin-left:auto; flex-shrink:0; padding-top:2px; }
+
 /* ── Velocity chart ─────────────────────────────────────── */
 .vel-wrap { display:flex; align-items:flex-end; gap:3px; height:52px; padding:0 2px; }
 .vel-bar-col { display:flex; flex-direction:column; align-items:center; flex:1; gap:2px; }
@@ -1461,6 +1535,12 @@ body {
     <div class="detail-body" id="d-body"></div>
     <div class="detail-actions" id="d-actions"></div>
   </div>
+</div>
+
+<!-- PROJECT DETAIL DRAWER -->
+<div id="projDrawerBackdrop" onclick="closeProjDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:800;backdrop-filter:blur(3px)"></div>
+<div id="projDrawer" style="display:none;position:fixed;top:0;right:0;height:100%;width:520px;max-width:95vw;background:var(--card);border-left:1px solid var(--border);z-index:801;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,0.18);transition:transform .25s ease">
+  <div id="projDrawerInner" style="min-height:100%"></div>
 </div>
 
 <!-- CONTEXT HUB OVERLAY -->
@@ -2711,6 +2791,67 @@ const BLOCKS = [
     body:"Focus first 6 months on professional services firms and real estate agencies. High LTV, predictable workflows, genuine AI urgency. Avoid e-commerce — too much tooling, thin margins.",
     rationale:"Better to be the obvious choice in two verticals than a vague option everywhere. Real estate is already our domain.",
     ts:20260320, confidence:"high" },
+
+  // ── ROADMAP ITEMS — decided, committed, not yet built ──────────────────────
+  // Storyboard roadmap
+  { id:"rm-sb-1", type:"roadmap", project:"Storyboard", status:"next",
+    title:"Coder mode — git-linked sessions",
+    summary:"Every AI session links to the commit it produced. See exactly which conversation shipped which change. Terminal-aesthetic interface: dense rows, monospace, diff previews.",
+    chips:["Coder mode","Git integration","Next sprint"], effort:"2d" },
+  { id:"rm-sb-2", type:"roadmap", project:"Storyboard", status:"next",
+    title:"Browser extension — Chrome Web Store submission",
+    summary:"Package the extension, write store listing, submit. Unlocks 'Add to Chrome' for non-developer users. Bridges ChatGPT, Gemini, Perplexity into the same board.",
+    chips:["Extension","Distribution","Chrome Store"], effort:"1d" },
+  { id:"rm-sb-3", type:"roadmap", project:"Storyboard", status:"soon",
+    title:"Student / knowledge worker mode",
+    summary:"Lighter onboarding path — 'I use AI for research/study'. Browser extension only, no MCP needed. Dashboard backed by localStorage or lightweight cloud sync. Separate TAM from builder market.",
+    chips:["Student mode","Browser-only","Lightweight"], effort:"3d" },
+  { id:"rm-sb-4", type:"roadmap", project:"Storyboard", status:"soon",
+    title:"Team storyboards — shared canvas",
+    summary:"Multiple contributors, one board. See which team member's AI session produced which block. Essential for agencies running AI-first workflows.",
+    chips:["Multi-user","Team","Shared canvas"], effort:"5d" },
+  { id:"rm-sb-5", type:"roadmap", project:"Storyboard", status:"later",
+    title:"storyboard.ai — branded domain + landing page",
+    summary:"Single landing page for both audiences. Onboarding detects 'I use Cowork / I use browser' and routes into the right setup. Sign in → dashboard, no folder needed.",
+    chips:["Landing page","Product name","Marketing"], effort:"2d" },
+
+  // PropertyOS roadmap
+  { id:"rm-pos-1", type:"roadmap", project:"PropertyOS", status:"next",
+    title:"Web form + deploy",
+    summary:"Flask form that accepts address or Catastro ref. Returns valuation range, Catastro m², comparables, interactive map. Deployed to propertyos.es or similar.",
+    chips:["Flask","Web form","Deploy"], effort:"½d" },
+  { id:"rm-pos-2", type:"roadmap", project:"PropertyOS", status:"next",
+    title:"Property images + exact geocoding",
+    summary:"Pull Street View or Idealista images for the valuation PDF cover. Exact lat/lng from address lookup for the interactive map pin.",
+    chips:["Street View","Geocoding","Images"], effort:"1d" },
+  { id:"rm-pos-3", type:"roadmap", project:"PropertyOS", status:"soon",
+    title:"Agent presentation builder",
+    summary:"Paste Idealista/pisos.com URLs → branded PDF with photos, data, comparables. Sent with agent logo. Saves 30 min per buyer presentation.",
+    chips:["PDF builder","Agent tool","Branded"], effort:"2-3d" },
+  { id:"rm-pos-4", type:"roadmap", project:"PropertyOS", status:"later",
+    title:"Agency marketplace — bid on motivated sellers",
+    summary:"34 local agencies notified when seller goes to market. They see full asset pack and bid. Seller chooses: 5% standard OR 1.5% from bidding agency. Platform takes cut of commission.",
+    chips:["Marketplace","Commission split","Agency bids"], effort:"1-2wk" },
+
+  // New Build Homes roadmap
+  { id:"rm-nb-1", type:"roadmap", project:"New Build Homes", status:"next",
+    title:"PageSpeed / Core Web Vitals pass",
+    summary:"Run PageSpeed API across all 9 language variants. Fix render-blocking assets, image sizes, LCP. Target 90+ on mobile before next link-building push.",
+    chips:["Core Web Vitals","PageSpeed","Performance"], effort:"1d" },
+  { id:"rm-nb-2", type:"roadmap", project:"New Build Homes", status:"soon",
+    title:"Video reels — property spotlight shorts",
+    summary:"Remotion-rendered 15-30s property showcase videos. Auto-distribute to TikTok, Instagram Reels, YouTube Shorts. Batch render from XML feed.",
+    chips:["Remotion","Video reels","Social media"], effort:"2d" },
+
+  // Opero roadmap
+  { id:"rm-op-1", type:"roadmap", project:"Opero Agency", status:"next",
+    title:"ROI calculator for sales process",
+    summary:"Prospect enters: team size, hours on manual tasks, average hourly rate. Gets: monthly savings estimate, payback period. Embeds on opero.ai and used in proposals.",
+    chips:["ROI calculator","Lead gen","Sales"], effort:"1d" },
+  { id:"rm-op-2", type:"roadmap", project:"Opero Agency", status:"soon",
+    title:"Case study PDF generator",
+    summary:"Template: problem → solution → result. Auto-filled from client data. Branded PDF. Used in prospecting, LinkedIn posts, and proposal appendix.",
+    chips:["Case studies","PDF","Branded"], effort:"½d" },
 ];
 
 // ─── Skills quality data (loaded from skills-data.json) ──────────────────────
@@ -3385,7 +3526,7 @@ function renderCanvasView() {
     const deployLabel = isLive ? '🟢 Live' : '⚫ Not deployed';
     const deployClass = isLive ? 'canvas-card-deploy live' : 'canvas-card-deploy';
 
-    return `<div class="canvas-card" style="--card-color:${p.color};--card-bg:${p.bg}" onclick="navClick('${name}')">
+    return `<div class="canvas-card" style="--card-color:${p.color};--card-bg:${p.bg}" onclick="openProjectDetail('${name}')">
       <div class="canvas-card-band"></div>
       <div class="canvas-card-body">
         <div class="canvas-card-top">
@@ -3440,6 +3581,159 @@ function renderCanvasView() {
   });
 
   el.innerHTML = `<div class="canvas-grid">${cards.join('')}</div>`;
+}
+
+// ═══════════════════════════════════
+// PROJECT DETAIL DRAWER
+// ═══════════════════════════════════
+function openProjectDetail(name) {
+  const p  = PROJ[name] || { color:'#6c63ff', bg:'#f5f3ff', icon:'⬡' };
+  const m  = PROJECT_META[name] || {};
+  const all = mergedBlocks();
+  const projBlocks = all.filter(b => b.project === name);
+  const blocks   = projBlocks.filter(b => b.type !== 'idea' && b.type !== 'roadmap').sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const ideas    = projBlocks.filter(b => b.type === 'idea');
+  const roadmap  = projBlocks.filter(b => b.type === 'roadmap').sort((a,_b) => {
+    const order = { next:0, soon:1, later:2 };
+    return (order[a.status]??9) - (order[_b.status]??9);
+  });
+  const autos    = AUTOMATIONS.filter(a => a.project === name && a.enabled);
+
+  const allDecisions = [];
+  blocks.forEach(b => (b.decisions||[]).forEach(d => allDecisions.push({ text:d, block:b })));
+
+  const isLive  = m.deploy && m.deploy.toLowerCase().includes('live');
+  const deployBadge = isLive
+    ? `<span style="font-size:9px;font-weight:700;background:#dcfce7;color:#15803d;border-radius:20px;padding:3px 10px">🟢 Live</span>`
+    : `<span style="font-size:9px;font-weight:700;background:var(--bg);color:var(--text-3);border-radius:20px;padding:3px 10px;border:1px solid var(--border)">⚫ Not deployed</span>`;
+
+  const blocksHTML = blocks.slice(0,12).map(b => `
+    <div class="pd-block-row" onclick="openDetail('${b.id}')">
+      <div class="pd-block-dot" style="background:${p.color}"></div>
+      <div>
+        <div class="pd-block-title">${b.title}</div>
+        <div class="pd-block-meta">${blockTimestamp(b)} · ${b.type||'session'}</div>
+      </div>
+    </div>`).join('') || `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No blocks yet.</div>`;
+
+  const decisionsHTML = allDecisions.slice(0,10).map(d => `
+    <div class="pd-decision-row">
+      <span class="pd-decision-check">✓</span>
+      <span>${d.text}</span>
+    </div>`).join('') || `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No decisions logged.</div>`;
+
+  const ideasHTML = ideas.length
+    ? `<div style="padding:0 22px 4px;display:flex;flex-wrap:wrap">${ideas.map((b,i)=>`
+        <div class="pd-idea-pill" style="background:${IDEA_BG[i%IDEA_BG.length]};color:#333" onclick="openDetail('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}</div>`
+    : `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No ideas yet.</div>`;
+
+  const autosHTML = autos.length
+    ? autos.map(a => `
+      <div class="pd-auto-row">
+        <div class="pd-auto-dot"></div>
+        <div class="pd-auto-name">${a.title}</div>
+        <div class="pd-auto-sched">${a.schedule}</div>
+      </div>`).join('')
+    : `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No automations.</div>`;
+
+  const BADGE = { next:'next', soon:'soon', later:'later' };
+  const STATUS_LABEL = { next:'NEXT', soon:'SOON', later:'LATER' };
+  const roadmapHTML = roadmap.length
+    ? `<div class="pd-roadmap-grid">${roadmap.map(r => {
+        const badge = BADGE[r.status] || 'later';
+        const chips = (r.chips||[]).map(c => `<span class="pd-rm-chip" style="background:${p.bg};color:${p.color}">${c}</span>`).join('');
+        return `<div class="pd-rm-card" style="--rm-color:${p.color}">
+          <div class="pd-rm-top">
+            <span class="pd-rm-badge ${badge}">${STATUS_LABEL[r.status]||'LATER'}</span>
+            <span class="pd-rm-title">${r.title}</span>
+            ${r.effort ? `<span class="pd-rm-effort">${r.effort}</span>` : ''}
+          </div>
+          ${r.summary ? `<div class="pd-rm-summary">${r.summary}</div>` : ''}
+          ${chips ? `<div class="pd-rm-chips">${chips}</div>` : ''}
+        </div>`;
+      }).join('')}</div>`
+    : `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No roadmap items yet — decide on an idea to add one.</div>`;
+
+  const latestChips = blocks[0]?.chips?.length
+    ? `<div style="display:flex;flex-wrap:wrap;gap:4px;padding:0 22px 12px">${(blocks[0].chips||[]).map(c=>`<span style="font-size:10px;background:${p.bg};color:${p.color};border-radius:20px;padding:2px 9px;font-weight:600">${c}</span>`).join('')}</div>`
+    : '';
+
+  document.getElementById('projDrawerInner').innerHTML = `
+    <div class="pd-band" style="background:${p.color}"></div>
+    <div class="pd-header">
+      <div class="pd-icon">${p.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="pd-name" style="color:${p.color}">${name}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:3px">${deployBadge}</div>
+        ${m.goal ? `<div class="pd-goal" style="margin-top:5px">${m.goal}</div>` : ''}
+        ${m.northStar ? `<div class="pd-ns" style="color:${p.color}">🎯 ${m.northStar}</div>` : ''}
+      </div>
+      <button class="pd-close" onclick="closeProjDrawer()">✕</button>
+    </div>
+
+    <div class="pd-stats">
+      <div class="pd-stat">
+        <span class="pd-stat-v">${blocks.length}</span>
+        <span class="pd-stat-l">Blocks</span>
+      </div>
+      <div class="pd-stat">
+        <span class="pd-stat-v" style="color:#22c55e">${allDecisions.length}</span>
+        <span class="pd-stat-l">Decisions</span>
+      </div>
+      <div class="pd-stat">
+        <span class="pd-stat-v" style="color:#6c63ff">${roadmap.length}</span>
+        <span class="pd-stat-l">Roadmap</span>
+      </div>
+      <div class="pd-stat">
+        <span class="pd-stat-v" style="color:#f59e0b">${ideas.length}</span>
+        <span class="pd-stat-l">Ideas</span>
+      </div>
+    </div>
+
+    <div class="pd-divider"></div>
+
+    <div class="pd-section-title">Recent work</div>
+    ${latestChips}
+    ${blocksHTML}
+
+    ${allDecisions.length ? `<div class="pd-divider" style="margin-top:8px"></div>
+    <div class="pd-section-title">Decisions</div>
+    ${decisionsHTML}` : ''}
+
+    ${ideas.length ? `<div class="pd-divider" style="margin-top:8px"></div>
+    <div class="pd-section-title">Ideas</div>
+    ${ideasHTML}` : ''}
+
+    <div class="pd-divider" style="margin-top:8px"></div>
+    <div class="pd-section-title" style="display:flex;align-items:center;justify-content:space-between;padding-right:22px">
+      <span>Roadmap</span>
+      <span style="font-size:9px;color:var(--text-3)">decided · not yet built</span>
+    </div>
+    ${roadmapHTML}
+
+    ${autos.length ? `<div class="pd-divider" style="margin-top:8px"></div>
+    <div class="pd-section-title">Automations</div>
+    ${autosHTML}` : ''}
+
+    <div style="height:40px"></div>
+  `;
+
+  const backdrop = document.getElementById('projDrawerBackdrop');
+  const drawer   = document.getElementById('projDrawer');
+  backdrop.style.display = '';
+  drawer.style.display = '';
+  drawer.style.transform = 'translateX(100%)';
+  requestAnimationFrame(() => { drawer.style.transform = 'translateX(0)'; });
+}
+
+function closeProjDrawer() {
+  const drawer   = document.getElementById('projDrawer');
+  const backdrop = document.getElementById('projDrawerBackdrop');
+  drawer.style.transform = 'translateX(100%)';
+  setTimeout(() => {
+    drawer.style.display = 'none';
+    backdrop.style.display = 'none';
+  }, 250);
 }
 
 // ═══════════════════════════════════
@@ -4981,7 +5275,7 @@ function showToast(msg) {
 // KEYBOARD
 // ═══════════════════════════════════
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeDetail(); closeIdeaModal(); closeRoadmap(); closeSkillInspector(); }
+  if (e.key === 'Escape') { closeDetail(); closeIdeaModal(); closeRoadmap(); closeSkillInspector(); closeProjDrawer(); }
   // I = open idea capture (when no input focused)
   if (e.key === 'i' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
     openIdeaModal();
