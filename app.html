@@ -1850,6 +1850,22 @@ body {
         <div id="syncDot" style="width:6px;height:6px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s"></div>
         <span id="syncLabel">—</span>
       </div>
+      <!-- Sprint progress pill -->
+      <div id="sprintPill" title="10-day build-in-public sprint" style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(124,107,255,0.1);border:1px solid rgba(124,107,255,0.25);cursor:default">
+        <div style="display:flex;gap:2px;align-items:center">
+          <div style="width:4px;height:12px;border-radius:2px;background:#6c63ff"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:#6c63ff"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
+        </div>
+        <span style="font-size:10px;font-weight:700;color:#6c63ff">Day 2/10</span>
+      </div>
       <button class="seed-btn" onclick="seedNewChat()">⚡ Seed new chat</button>
       <button class="panel-btn" id="panelBtn" onclick="toggleRight()" title="Activity panel">
         <svg width="13" height="12" viewBox="0 0 13 12" fill="none">
@@ -2501,6 +2517,18 @@ const BLOCKS = [
       "Products.html + pitch.html linked from nav and footer"
     ],
     ideas:["Formspree or Airtable webhook to capture real waitlist emails","Twitter/X thread showing each Day's progress — Barcelona meetup distribution"] },
+
+  { id:"sb-apr18-session3", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T11:30:00.000Z",
+    title:"Day 2 (afternoon) — Journal view · Block card redesign · Sprint log on landing",
+    summary:"Added journal/narrative view for project pages — vertical timeline with day headers, type icons, decision/idea pills. Fixed empty block cards: type badges, graceful fallbacks for missing fields, undefined filter. Landing page now has Day-by-Day sprint log section (Day 1 & 2 shipped, Days 3-10 placeholder). Waitlist POSTs to mcp-server.js /waitlist endpoint.",
+    chips:["Journal view","Block cards","Sprint log","Waitlist backend","Type badges"],
+    decisions:[
+      "Journal view replaces grid/list for single-project browsing — feels like a story",
+      "Block cards must show type badge so each card is instantly scannable without opening it",
+      "Landing page sprint log = ongoing story that updates daily — build-in-public hook"
+    ],
+    ideas:["QR code on landing page for meetup handoff","Auto-update sprint log each day from session blocks","Tweet thread per day linking to sprint log section"] },
 
   { id:"sb-ui-v4-apr17-session2", type:"session", project:"Storyboard", date:"Apr 17", ts:20260417,
     _live:true, _captured:"2026-04-17T14:00:00.000Z",
@@ -4522,24 +4550,63 @@ function renderSearchResults(q) {
     results = all.sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12);
   }
 
-  const typeColors = { session:'#6c63ff', idea:'#f59e0b', decision:'#22c55e', auto:'#10b981' };
-  el.innerHTML = results.map(b => {
-    const p = PROJ[b.project] || { color:'#6c63ff' };
-    const tc = typeColors[b.type] || p.color;
-    const typeBg = tc + '18';
-    const snippet = b.summary ? b.summary.slice(0,80) + (b.summary.length>80?'…':'') : '';
-    return `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
-      <div class="sri-dot" style="background:${p.color}"></div>
-      <div style="flex:1;min-width:0">
-        <div class="sri-title">${b.title.replace('💡 ','')}</div>
-        ${snippet ? `<div class="sri-meta">${snippet}</div>` : ''}
-        <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
-          <span class="sri-type" style="background:${typeBg};color:${tc}">${b.type||'block'}</span>
-          <span class="sri-meta" style="margin-top:0">${b.project} · ${relTime(b.ts)||b.date||''}</span>
+  const typeColors = { session:'#6c63ff', idea:'#f59e0b', decision:'#22c55e', roadmap:'#15803d', feature:'#4ecdc4', automation:'#10b981' };
+  const typeIcons2 = { session:'🧠', idea:'💡', decision:'✓', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚' };
+
+  // Group by type for organized display
+  if (query) {
+    // Flat results when searching
+    el.innerHTML = results.map(b => {
+      const p = PROJ[b.project] || { color:'#6c63ff' };
+      const tc = typeColors[b.type] || p.color;
+      const typeBg = tc + '18';
+      const snippet = (b.summary||b.body||'').replace('undefined','').slice(0,90).trim();
+      return `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
+        <span style="font-size:14px;flex-shrink:0">${typeIcons2[b.type]||'◈'}</span>
+        <div style="flex:1;min-width:0">
+          <div class="sri-title">${(b.title||'Untitled').replace('💡 ','')}</div>
+          ${snippet ? `<div class="sri-meta">${snippet}${snippet.length>=90?'…':''}</div>` : ''}
+          <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+            <span class="sri-type" style="background:${typeBg};color:${tc}">${b.type||'block'}</span>
+            <span class="sri-meta" style="margin-top:0">${b.project} · ${relTime(b.ts)||b.date||''}</span>
+          </div>
         </div>
-      </div>
-    </div>`;
-  }).join('');
+      </div>`;
+    }).join('');
+  } else {
+    // Grouped by type when no query (recent activity)
+    const grouped = {};
+    results.forEach(b => { const t = b.type||'block'; if (!grouped[t]) grouped[t]=[]; grouped[t].push(b); });
+    const order = ['session','decision','roadmap','idea','feature','automation'];
+    let html = '';
+    order.forEach(type => {
+      const items = grouped[type];
+      if (!items?.length) return;
+      const tc = typeColors[type] || '#6c63ff';
+      html += `<div style="padding:6px 12px 2px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">${typeIcons2[type]||'◈'} Recent ${type}s</div>`;
+      html += items.slice(0,4).map(b => {
+        const p = PROJ[b.project] || { color:'#6c63ff' };
+        return `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
+          <div class="sri-dot" style="background:${tc}"></div>
+          <div style="flex:1;min-width:0">
+            <div class="sri-title">${(b.title||'Untitled').replace('💡 ','')}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+              <span class="sri-meta" style="margin-top:0">${b.project} · ${relTime(b.ts)||b.date||''}</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    });
+    // Add remaining types
+    Object.keys(grouped).filter(t => !order.includes(t)).forEach(type => {
+      const items = grouped[type];
+      html += items.slice(0,3).map(b => `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
+        <div class="sri-dot" style="background:var(--text-3)"></div>
+        <div style="flex:1;min-width:0"><div class="sri-title">${(b.title||'Untitled').replace('💡 ','')}</div></div>
+      </div>`).join('');
+    });
+    el.innerHTML = html || `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">No recent activity</div>`;
+  }
 }
 
 // Keyboard shortcuts

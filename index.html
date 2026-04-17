@@ -1082,6 +1082,26 @@
   <p class="cta-note">Research preview · Free to use · No account needed · <a href="https://github.com/oskar-del/storyboard" target="_blank" style="color:var(--muted);text-decoration:underline">View source on GitHub</a></p>
 </div>
 
+<!-- QR / Share strip -->
+<div style="background:var(--surface);border-top:1px solid var(--border);padding:32px 48px">
+  <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:8px">Share Storyboard</div>
+      <div style="font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px">oskar-del.github.io/storyboard</div>
+      <div style="font-size:13px;color:var(--muted2)">Open the live dashboard · Browse the sprint · Join the waitlist</div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button onclick="navigator.clipboard.writeText('https://oskar-del.github.io/storyboard').then(()=>{this.textContent='✓ Copied!';setTimeout(()=>{this.textContent='Copy link'},2000)})" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Copy link</button>
+        <a href="https://github.com/oskar-del/storyboard" target="_blank" style="display:flex;align-items:center;gap:6px;padding:9px 18px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:8px;font-size:13px;font-weight:600;color:var(--text2);text-decoration:none" onmouseover="this.style.borderColor='rgba(255,255,255,.25)'" onmouseout="this.style.borderColor='var(--border2)'">⭐ Star on GitHub</a>
+      </div>
+    </div>
+    <!-- QR code via Google Charts API -->
+    <div style="flex-shrink:0;text-align:center">
+      <img src="https://chart.googleapis.com/chart?cht=qr&chs=120x120&chl=https%3A%2F%2Foskar-del.github.io%2Fstoryboard&choe=UTF-8&chld=M|2" alt="QR code" style="border-radius:10px;border:2px solid var(--border2);display:block;image-rendering:pixelated" width="120" height="120">
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;font-weight:600">Scan to open</div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div>⬡ <strong>Storyboard</strong> — Visual memory layer for AI work · Built in 10 days · Day 2</div>
   <div class="footer-links">
@@ -1102,9 +1122,17 @@
       if (input) { input.style.borderColor = 'rgba(255,107,157,0.6)'; input.focus(); }
       return;
     }
-    // Store locally
-    const list = JSON.parse(localStorage.getItem('sb_waitlist') || '[]');
-    if (!list.includes(email)) { list.push(email); localStorage.setItem('sb_waitlist', JSON.stringify(list)); }
+    // Store locally as fallback
+    try {
+      const list = JSON.parse(localStorage.getItem('sb_waitlist') || '[]');
+      if (!list.includes(email)) { list.push(email); localStorage.setItem('sb_waitlist', JSON.stringify(list)); }
+    } catch(_) {}
+    // POST to local MCP server (if running)
+    fetch('http://localhost:3847/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'landing-page' })
+    }).catch(() => {}); // silent fail — localStorage is the fallback
     // Show success
     document.getElementById('waitlistForm').style.display = 'none';
     document.getElementById('waitlistSuccess').style.display = 'block';
