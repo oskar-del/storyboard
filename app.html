@@ -3481,7 +3481,6 @@ function blockHTML(b, i, featured = false) {
         ${summary ? `<div class="block-summary">${summary}</div>` : ''}
         ${chips.length ? `<div class="block-chips">${chips.map(c=>`<span class="bchip">${c}</span>`).join('')}</div>` : ''}
         ${footPills ? `<div style="display:flex;gap:6px;margin-top:6px">${footPills}</div>` : ''}
-        </div>` : ''}
       </div>
       ${b.stats ? `<div class="block-stats">
         ${b.stats.commits ? `<div class="bstat"><span class="bstat-v" style="color:${p.color}">${b.stats.commits}</span><span class="bstat-l">Commits</span></div>` : ''}
