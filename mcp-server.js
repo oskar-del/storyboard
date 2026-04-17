@@ -518,6 +518,27 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
+  // ── /git-status — check for uncommitted or unpushed changes ─────────────────
+  if (req.method === "GET" && req.url === "/git-status") {
+    try {
+      // Staged or unstaged changes
+      const diff = execSync(`git -C "${STORYBOARD_DIR}" status --porcelain`, { encoding: "utf8" }).trim();
+      // Commits ahead of origin
+      let ahead = 0;
+      try {
+        const rev = execSync(`git -C "${STORYBOARD_DIR}" rev-list @{u}..HEAD --count`, { encoding: "utf8" }).trim();
+        ahead = parseInt(rev) || 0;
+      } catch(_) {}
+      const dirty = diff.length > 0 || ahead > 0;
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ dirty, uncommitted: diff.length > 0, unpushed: ahead > 0, ahead }));
+    } catch(e) {
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ dirty: false, error: e.message.slice(0,200) }));
+    }
+    return;
+  }
+
   // CORS preflight for /git-push (called from dashboard)
   if (req.method === "OPTIONS") {
     res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST,GET", "Access-Control-Allow-Headers": "Content-Type" });

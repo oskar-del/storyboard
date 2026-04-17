@@ -410,6 +410,48 @@ body {
 .rp-decision-check { color: #22c55e; font-size: 11px; padding-top: 1px; flex-shrink: 0; }
 .rp-decision-text { font-size: 11px; color: var(--text-2); line-height: 1.45; flex: 1; }
 
+/* ── Pipeline view ──────────────────────────────────────── */
+.pipeline-wrap {
+  display:flex; align-items:flex-start; gap:0;
+  padding:20px 16px 40px; overflow-x:auto; min-height:calc(100vh - var(--top-h) - 80px);
+}
+.pipeline-wrap::-webkit-scrollbar { height:4px; }
+.pipeline-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.pipeline-stage {
+  flex-shrink:0; width:220px; display:flex; flex-direction:column;
+}
+.pipeline-arrow {
+  flex-shrink:0; display:flex; align-items:flex-start; padding-top:52px;
+  color:var(--text-3); font-size:18px; padding-left:4px; padding-right:4px;
+  opacity:.5;
+}
+.pipeline-stage-head {
+  padding:14px 12px 10px; margin-bottom:4px;
+  border-radius:var(--r) var(--r) 0 0;
+}
+.pipeline-stage-icon { font-size:16px; line-height:1; margin-bottom:6px; }
+.pipeline-stage-name { font-size:13px; font-weight:800; letter-spacing:-.2px; }
+.pipeline-stage-count { font-size:10px; font-weight:700; opacity:.6; margin-top:2px; }
+.pipeline-stage-desc { font-size:9.5px; opacity:.65; margin-top:2px; line-height:1.4; }
+.pipeline-cards { display:flex; flex-direction:column; gap:6px; padding:0 4px 8px; }
+.pipeline-item {
+  background:var(--card); border:1.5px solid var(--border); border-radius:10px;
+  padding:9px 11px; cursor:pointer; transition:border-color .12s, transform .12s;
+  border-left:3px solid var(--item-color, #6c63ff);
+}
+.pipeline-item:hover { border-color:var(--item-color, #6c63ff); transform:translateX(2px); }
+.pipeline-item-title { font-size:11px; font-weight:700; color:var(--text); line-height:1.35; margin-bottom:3px; }
+.pipeline-item-proj { font-size:9px; color:var(--text-3); font-weight:600; }
+.pipeline-item-date { font-size:9px; color:var(--text-3); margin-top:1px; }
+.pipeline-loop {
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center;
+  padding:14px 8px 0; gap:6px;
+}
+.pipeline-loop-arrow {
+  font-size:22px; color:var(--text-3); opacity:.4; writing-mode:vertical-rl;
+  text-orientation:mixed; transform:rotate(180deg);
+}
+
 /* ── Project drawer ─────────────────────────────────────── */
 .pd-band { height:5px; width:100%; }
 .pd-header {
@@ -1867,6 +1909,15 @@ body {
             <rect x="8" y="4.25" width="3.5" height="1.5" rx=".75" fill="currentColor" opacity=".5"/>
           </svg>
         </button>
+        <button class="view-tab" id="pipelineBtn" onclick="setView('pipeline')" title="Pipeline — idea → roadmap → built → automated">
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+            <rect x="0" y="2" width="2.5" height="6" rx="1" fill="currentColor" opacity=".4"/>
+            <rect x="3.5" y="1" width="2.5" height="7" rx="1" fill="currentColor" opacity=".6"/>
+            <rect x="7" y="0" width="2.5" height="9" rx="1" fill="currentColor" opacity=".8"/>
+            <rect x="10.5" y="2" width="2.5" height="6" rx="1" fill="currentColor"/>
+            <rect x="13" y="4" width="1" height="2" rx=".5" fill="currentColor" opacity=".4"/>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -1945,7 +1996,18 @@ body {
       <button class="rp-seed-btn" onclick="seedSession()">⚡ Seed next chat</button>
       <button class="rp-flag-btn" id="flagBtn" onclick="flagMoment()">🚩 Flag This Moment</button>
       <button class="rp-flag-btn" onclick="showSkillSuggestPrompt()" style="background:rgba(108,99,255,0.08);border-color:#6c63ff33;color:#6c63ff;margin-top:6px">💡 Suggest skills</button>
-      <button class="rp-flag-btn" id="pushBtn" onclick="gitPush()" style="background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25);color:#16a34a;margin-top:6px">🚀 Push to GitHub</button>
+      <div style="position:relative;margin-top:6px" id="pushBtnWrap"
+        onmouseenter="showPushTooltip()" onmouseleave="hidePushTooltip()">
+        <button class="rp-flag-btn" id="pushBtn" onclick="gitPush()" style="width:100%;transition:background .3s,border-color .3s,color .3s">🚀 Push to GitHub</button>
+        <div id="pushTooltip" style="
+          display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+          background:#1a1a2e; border:1px solid rgba(255,255,255,.12); border-radius:8px;
+          padding:8px 12px; min-width:190px; max-width:240px; z-index:999;
+          font-size:11px; line-height:1.55; color:#e2e8f0;
+          box-shadow:0 8px 24px rgba(0,0,0,.4); pointer-events:none;
+          white-space:pre-line;
+        "></div>
+      </div>
     </div>
 
     <!-- Session stats -->
@@ -2903,13 +2965,14 @@ function setView(v) {
   feed.classList.toggle('list-view',     v === 'list');
   feed.classList.toggle('board-view',    v === 'board');
   feed.classList.toggle('timeline-view', v === 'timeline');
-  document.getElementById('gridBtn').classList.toggle('on',     v === 'grid');
-  document.getElementById('boardBtn').classList.toggle('on',    v === 'board');
-  document.getElementById('canvasBtn').classList.toggle('on',   v === 'canvas');
-  document.getElementById('listBtn').classList.toggle('on',     v === 'list');
-  document.getElementById('timelineBtn').classList.toggle('on', v === 'timeline');
-  // Canvas + Timeline hide the period tabs
-  document.getElementById('periodTabs').style.visibility = (v === 'canvas' || v === 'timeline') ? 'hidden' : '';
+  document.getElementById('gridBtn').classList.toggle('on',      v === 'grid');
+  document.getElementById('boardBtn').classList.toggle('on',     v === 'board');
+  document.getElementById('canvasBtn').classList.toggle('on',    v === 'canvas');
+  document.getElementById('listBtn').classList.toggle('on',      v === 'list');
+  document.getElementById('timelineBtn').classList.toggle('on',  v === 'timeline');
+  document.getElementById('pipelineBtn').classList.toggle('on',  v === 'pipeline');
+  // Canvas + Timeline + Pipeline hide the period tabs
+  document.getElementById('periodTabs').style.visibility = (v === 'canvas' || v === 'timeline' || v === 'pipeline') ? 'hidden' : '';
   renderFeed();
 }
 
@@ -3387,9 +3450,9 @@ function renderFeed() {
   const el = document.getElementById('feed');
   const baseBlocks = mergedBlocks();
   // Canvas view — workspace overview, managed by renderCanvasView()
-  if (activeView === 'canvas') { renderCanvasView(); return; }
-  // Timeline view
+  if (activeView === 'canvas')   { renderCanvasView();   return; }
   if (activeView === 'timeline') { renderTimelineView(); return; }
+  if (activeView === 'pipeline') { renderPipelineView(); return; }
   // Skills view — managed by renderSkillsView(), don't override
   if (skillsViewActive) { renderSkillsView(); return; }
   // Decisions view — managed by toggleDecisionsView(), don't override
@@ -3581,6 +3644,152 @@ function renderCanvasView() {
   });
 
   el.innerHTML = `<div class="canvas-grid">${cards.join('')}</div>`;
+}
+
+// ═══════════════════════════════════
+// PIPELINE VIEW — idea → roadmap → building → automated → ↩ learning
+// ═══════════════════════════════════
+function renderPipelineView() {
+  const el  = document.getElementById('feed');
+  const all = mergedBlocks();
+
+  // Filter by active project if set
+  const pool = activeFilter === 'All' ? all : all.filter(b => b.project === activeFilter);
+
+  // ── Stage 1: Ideas
+  const ideas = pool.filter(b => b.type === 'idea');
+
+  // ── Stage 2: Roadmap (decided, not yet built)
+  const roadmap = pool.filter(b => b.type === 'roadmap')
+    .sort((a,b) => { const o={next:0,soon:1,later:2}; return (o[a.status]??9)-(o[b.status]??9); });
+
+  // ── Stage 3: Building — most recent sessions/blocks (last 30 days)
+  const cutoff = parseInt(new Date(Date.now()-30*86400000).toISOString().slice(0,10).replace(/-/g,''));
+  const building = pool.filter(b => b.type !== 'idea' && b.type !== 'roadmap' && b.type !== 'decision' && (b.ts||0) >= cutoff)
+    .sort((a,b) => (b.ts||0)-(a.ts||0)).slice(0,12);
+
+  // ── Stage 4: Automated — live automations
+  const autoPool = activeFilter === 'All'
+    ? AUTOMATIONS.filter(a => a.enabled)
+    : AUTOMATIONS.filter(a => a.enabled && a.project === activeFilter);
+
+  // ── Stage 5: Learning — skills touched
+  const skillNames = [...new Set(pool.flatMap(b => (b.chips||[]).filter(c => SKILLS && SKILLS.find(s => s.name === c))))].slice(0,8);
+
+  function stageCard(items, fn) {
+    if (!items.length) return `<div style="font-size:10px;color:var(--text-3);padding:8px 4px;font-style:italic">Nothing here yet</div>`;
+    return `<div class="pipeline-cards">${items.map(fn).join('')}</div>`;
+  }
+
+  const ideasCards = stageCard(ideas.slice(0,10), b => {
+    const p = PROJ[b.project] || { color:'#f59e0b' };
+    return `<div class="pipeline-item" style="--item-color:${p.color}" onclick="openDetail('${b.id}')">
+      <div class="pipeline-item-title">${b.title.replace('💡 ','')}</div>
+      <div class="pipeline-item-proj">${b.project}</div>
+    </div>`;
+  });
+
+  const STATUS_COL = { next:'#22c55e', soon:'#3b82f6', later:'#94a3b8' };
+  const roadmapCards = stageCard(roadmap.slice(0,10), b => {
+    const p = PROJ[b.project] || { color:'#6c63ff' };
+    const sc = STATUS_COL[b.status] || '#94a3b8';
+    return `<div class="pipeline-item" style="--item-color:${p.color}" onclick="openDetail('${b.id}')">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+        <span style="font-size:8px;font-weight:800;background:${sc}22;color:${sc};border-radius:20px;padding:1px 7px;text-transform:uppercase">${(b.status||'soon').toUpperCase()}</span>
+        ${b.effort ? `<span style="font-size:8.5px;color:var(--text-3)">${b.effort}</span>` : ''}
+      </div>
+      <div class="pipeline-item-title">${b.title}</div>
+      <div class="pipeline-item-proj">${b.project}</div>
+    </div>`;
+  });
+
+  const buildingCards = stageCard(building, b => {
+    const p = PROJ[b.project] || { color:'#6c63ff' };
+    return `<div class="pipeline-item" style="--item-color:${p.color}" onclick="openDetail('${b.id}')">
+      <div class="pipeline-item-title">${b.title}</div>
+      <div class="pipeline-item-proj">${b.project}</div>
+      <div class="pipeline-item-date">${blockTimestamp(b)}</div>
+    </div>`;
+  });
+
+  const autoCards = stageCard(autoPool.slice(0,10), a => {
+    const p = PROJ[a.project] || { color:'#10b981' };
+    return `<div class="pipeline-item" style="--item-color:${p.color}">
+      <div class="pipeline-item-title">${a.title}</div>
+      <div class="pipeline-item-proj">${a.project}</div>
+      <div class="pipeline-item-date">${a.schedule}</div>
+    </div>`;
+  });
+
+  const learningCards = skillNames.length
+    ? `<div class="pipeline-cards">${skillNames.map(s => `
+      <div class="pipeline-item" style="--item-color:#8b5cf6">
+        <div class="pipeline-item-title" style="font-size:10.5px">${s}</div>
+      </div>`).join('')}</div>`
+    : `<div style="font-size:10px;color:var(--text-3);padding:8px 4px;font-style:italic">Skills auto-improve as you build</div>`;
+
+  function stageHead(icon, name, count, desc, color) {
+    return `<div class="pipeline-stage-head" style="background:${color}14;border-bottom:2px solid ${color}44">
+      <div class="pipeline-stage-icon">${icon}</div>
+      <div class="pipeline-stage-name" style="color:${color}">${name}</div>
+      <div class="pipeline-stage-count" style="color:${color}">${count} items</div>
+      <div class="pipeline-stage-desc" style="color:${color}">${desc}</div>
+    </div>`;
+  }
+
+  el.innerHTML = `
+  <div style="padding:16px 20px 6px;font-size:11px;color:var(--text-3)">
+    ${activeFilter !== 'All' ? `<span style="font-weight:700;color:${(PROJ[activeFilter]||{}).color||'#6c63ff'}">${activeFilter}</span> · ` : ''}
+    How ideas flow from thought to automation
+    <span style="float:right;font-size:10px">← scroll for full pipeline →</span>
+  </div>
+  <div class="pipeline-wrap">
+
+    <!-- Ideas -->
+    <div class="pipeline-stage">
+      ${stageHead('💡','Ideas', ideas.length, 'floating thoughts, not yet committed', '#f59e0b')}
+      ${ideasCards}
+    </div>
+
+    <div class="pipeline-arrow">→</div>
+
+    <!-- Roadmap -->
+    <div class="pipeline-stage">
+      ${stageHead('📋','Roadmap', roadmap.length, 'decided · committed · not yet built', '#6c63ff')}
+      ${roadmapCards}
+    </div>
+
+    <div class="pipeline-arrow">→</div>
+
+    <!-- Building -->
+    <div class="pipeline-stage">
+      ${stageHead('🔨','Building', building.length, 'active AI sessions · last 30 days', '#3b82f6')}
+      ${buildingCards}
+    </div>
+
+    <div class="pipeline-arrow">→</div>
+
+    <!-- Automated -->
+    <div class="pipeline-stage">
+      ${stageHead('⚙️','Automated', autoPool.length, 'running autonomously · no manual work', '#10b981')}
+      ${autoCards}
+    </div>
+
+    <div class="pipeline-arrow">→</div>
+
+    <!-- Learning -->
+    <div class="pipeline-stage">
+      ${stageHead('🧠','Learning', skillNames.length, 'skills built from sessions · auto-improve', '#8b5cf6')}
+      ${learningCards}
+    </div>
+
+    <!-- Loop back arrow -->
+    <div class="pipeline-loop">
+      <div style="font-size:9px;color:var(--text-3);writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.5px;font-weight:700;text-transform:uppercase;opacity:.5">feeds back</div>
+      <div style="font-size:20px;color:var(--text-3);opacity:.3">↺</div>
+    </div>
+
+  </div>`;
 }
 
 // ═══════════════════════════════════
@@ -4599,10 +4808,87 @@ function toggleDecisionsView() {
 
 // ── flagMoment — capture current state as a named moment ──
 let _flagMomentActive = false;
+// ── Push button colour states ──────────────────────────────
+function setPushBtnState(state) {
+  // state: 'dirty' | 'clean' | 'pushing' | 'offline'
+  const btn = document.getElementById('pushBtn');
+  if (!btn) return;
+  const styles = {
+    dirty:   { bg:'rgba(239,68,68,0.12)',  border:'rgba(239,68,68,0.45)',  color:'#dc2626', text:'🔴 Push to GitHub', disabled:false },
+    clean:   { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.35)',  color:'#16a34a', text:'✓ Up to date',      disabled:false },
+    pushing: { bg:'rgba(251,191,36,0.10)', border:'rgba(251,191,36,0.35)', color:'#b45309', text:'⏳ Pushing…',       disabled:true  },
+    offline: { bg:'rgba(148,163,184,0.08)',border:'rgba(148,163,184,0.2)', color:'#94a3b8', text:'🚀 Push to GitHub',  disabled:false },
+  };
+  const s = styles[state] || styles.offline;
+  btn.style.background   = s.bg;
+  btn.style.borderColor  = s.border;
+  btn.style.color        = s.color;
+  btn.textContent        = s.text;
+  btn.disabled           = s.disabled;
+}
+
+let _gitStatusData = null;
+
+function pollGitStatus() {
+  fetch('http://localhost:3847/git-status')
+    .then(r => r.json())
+    .then(d => {
+      _gitStatusData = d;
+      setPushBtnState(d.dirty ? 'dirty' : 'clean');
+      // Update tooltip
+      const btn = document.getElementById('pushBtn');
+      if (btn) {
+        if (d.dirty) {
+          const parts = [];
+          if (d.uncommitted) parts.push('Uncommitted changes');
+          if (d.unpushed)    parts.push(`${d.ahead} commit${d.ahead>1?'s':''} not pushed`);
+          btn.title = parts.join(' · ') + '\nClick to push to GitHub →';
+        } else {
+          btn.title = 'Everything pushed · repo is clean ✓';
+        }
+      }
+    })
+    .catch(() => {
+      _gitStatusData = null;
+      setPushBtnState('offline');
+      const btn = document.getElementById('pushBtn');
+      if (btn) btn.title = 'MCP server offline — start with: node mcp-server.js';
+    });
+}
+
+function showPushTooltip() {
+  const tip = document.getElementById('pushTooltip');
+  if (!tip) return;
+  const d = _gitStatusData;
+  let html = '';
+  if (!d) {
+    html = '⚫ MCP server offline\nStart with: node mcp-server.js';
+  } else if (!d.dirty) {
+    html = '✅ Repo is clean\nEverything has been pushed to GitHub.';
+  } else {
+    const lines = [];
+    if (d.uncommitted) lines.push('📝 Uncommitted changes');
+    if (d.unpushed)    lines.push(`⬆️ ${d.ahead} commit${d.ahead>1?'s':''} not yet pushed`);
+    lines.push('\nClick to commit & push →');
+    html = lines.join('\n');
+  }
+  tip.textContent = html;
+  tip.style.display = 'block';
+}
+
+function hidePushTooltip() {
+  const tip = document.getElementById('pushTooltip');
+  if (tip) tip.style.display = 'none';
+}
+
+// Poll every 30 seconds
+setInterval(pollGitStatus, 30000);
+// Also poll once on load (after 2s to let server start)
+setTimeout(pollGitStatus, 2000);
+
 function gitPush() {
   const btn = document.getElementById('pushBtn');
-  btn.textContent = '⏳ Pushing…';
-  btn.disabled = true;
+  setPushBtnState('pushing');
   const msg = `Storyboard update — ${new Date().toLocaleString('en-GB', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`;
   fetch('http://localhost:3847/git-push', {
     method: 'POST',
@@ -4612,20 +4898,16 @@ function gitPush() {
   .then(r => r.json())
   .then(data => {
     if (data.ok) {
-      btn.textContent = '✓ Pushed!';
-      btn.style.background = 'rgba(34,197,94,0.18)';
       showToast('🚀 Pushed to GitHub');
-      setTimeout(() => { btn.textContent = '🚀 Push to GitHub'; btn.style.background=''; btn.disabled=false; }, 3000);
+      setPushBtnState('clean');
     } else {
-      btn.textContent = '⚠️ Push failed';
       showToast('Push failed: ' + (data.error || 'unknown error'));
-      setTimeout(() => { btn.textContent = '🚀 Push to GitHub'; btn.disabled=false; }, 3000);
+      setPushBtnState('dirty');
     }
   })
   .catch(() => {
-    btn.textContent = '⚠️ Server offline';
     showToast('MCP server not running — start it with: node mcp-server.js');
-    setTimeout(() => { btn.textContent = '🚀 Push to GitHub'; btn.disabled=false; }, 3000);
+    setPushBtnState('offline');
   });
 }
 
