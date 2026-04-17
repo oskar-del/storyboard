@@ -138,6 +138,21 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         },
       },
     },
+    {
+      name: "git_push",
+      description: "Commits all storyboard changes and pushes to GitHub. Use at the end of a session or when asked to 'push to GitHub'. Requires git remote to be configured.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          message: { type: "string", description: "Commit message. If omitted, auto-generates from latest session block title." },
+        },
+      },
+    },
+    {
+      name: "score_skills",
+      description: "Runs score_skills.py to re-score all skills and update skills-data.json. Use when you want to check skill quality or after editing SKILL.md files.",
+      inputSchema: { type: "object", properties: {} },
+    },
   ],
 }));
 
@@ -309,7 +324,68 @@ Model guidance: Sonnet for sprint work, Opus for architecture decisions only.`;
       const out  = execSync(`python3 "${POPULATE_SCRIPT}" ${flag}`, {
         cwd: STORYBOARD_DIR, timeout: 30000, encoding: "utf8",
       });
-      return { content: [{ type: "text", text: `✅ Storyboard populated:\n${out.slice(-400)}` }] };
+
+      // Auto-run skill scorer after populate so skills-data.json stays fresh
+      const SCORE_SCRIPT = join(STORYBOARD_DIR, "score_skills.py");
+      let scoreOut = "";
+      try {
+        scoreOut = execSync(`python3 "${SCORE_SCRIPT}"`, {
+          cwd: STORYBOARD_DIR, timeout: 30000, encoding: "utf8",
+        });
+        // Extract summary line
+        const summaryLine = scoreOut.split("\n").find(l => l.includes("Skills scored:")) || "";
+        scoreOut = `\n📊 Skills scored: ${summaryLine.trim()}`;
+      } catch (se) {
+        scoreOut = `\n⚠️ Skill scorer failed: ${se.message.slice(0, 120)}`;
+      }
+
+      return { content: [{ type: "text", text: `✅ Storyboard populated:\n${out.slice(-400)}${scoreOut}` }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `Error: ${e.message}` }] };
+    }
+  }
+
+  // ── git_push ───────────────────────────────────────────────────────────────
+  if (name === "git_push") {
+    try {
+      // Auto-generate message from latest session block if none provided
+      let msg = args.message;
+      if (!msg) {
+        try {
+          const blocks = JSON.parse(readFileSync(join(STORYBOARD_DIR, "blocks-data.json"), "utf8"));
+          const latest = blocks.find(b => b.type === "session");
+          msg = latest ? `Storyboard: ${latest.title}` : `Storyboard update ${new Date().toISOString().slice(0,10)}`;
+        } catch { msg = `Storyboard update ${new Date().toISOString().slice(0,10)}`; }
+      }
+      const gitDir = STORYBOARD_DIR;
+      // Stage all tracked + new files (excluding gitignored)
+      execSync(`git -C "${gitDir}" add -A`, { encoding: "utf8" });
+      const diffStat = execSync(`git -C "${gitDir}" diff --cached --stat`, { encoding: "utf8" });
+      if (!diffStat.trim()) {
+        return { content: [{ type: "text", text: "Nothing to commit — working tree clean." }] };
+      }
+      execSync(`git -C "${gitDir}" commit -m "${msg.replace(/"/g, "'")}"`, { encoding: "utf8" });
+      let pushOut = "";
+      try {
+        pushOut = execSync(`git -C "${gitDir}" push`, { encoding: "utf8", timeout: 30000 });
+      } catch (pe) {
+        pushOut = `\n⚠️ Push failed (may need gh auth or remote): ${pe.message.slice(0,200)}`;
+      }
+      return { content: [{ type: "text", text: `✅ Committed: "${msg}"\n${diffStat}${pushOut}` }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `Error: ${e.message}` }] };
+    }
+  }
+
+  // ── score_skills ───────────────────────────────────────────────────────────
+  if (name === "score_skills") {
+    try {
+      const SCORE_SCRIPT = join(STORYBOARD_DIR, "score_skills.py");
+      const out = execSync(`python3 "${SCORE_SCRIPT}"`, {
+        cwd: STORYBOARD_DIR, timeout: 30000, encoding: "utf8",
+      });
+      const summaryLine = out.split("\n").find(l => l.includes("Skills scored:")) || "";
+      return { content: [{ type: "text", text: `✅ Skills scored\n${summaryLine}\n\nFull output:\n${out.slice(-600)}` }] };
     } catch (e) {
       return { content: [{ type: "text", text: `Error: ${e.message}` }] };
     }

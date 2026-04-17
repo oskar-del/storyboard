@@ -1,5 +1,71 @@
 [
   {
+    "id": "sb-ui-v5-apr17-session3",
+    "type": "session",
+    "project": "Storyboard",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T16:00:00.000Z",
+    "status": "done",
+    "title": "Dashboard v5 — Search · FAB Speed-dial · Stats Bar · Dynamic Seed",
+    "summary": "Third sprint on Apr 17. Added global search overlay (⌘K shortcut, fuzzy block search). FAB speed-dial (+) replaces single idea button — opens to Idea/Decision/Block capture. Stats bar in All view shows total blocks/decisions/ideas/automations/projects/today counts. Block cards show decision+idea count badges. Session timer in right panel. North Star in right panel when project selected. capturedIdeas persist via localStorage. seedNewChat() is now fully dynamic — pulls live projects with North Stars, recent decisions, today's work. MCP: git_push and score_skills tools added. v5 snapshot saved.",
+    "chips": ["⌘K Search", "FAB Speed-dial", "Stats Bar", "localStorage persist", "Dynamic seed", "MCP git_push"],
+    "decisions": [
+      "Global search built as overlay (not inline) — keeps feed clean, ⌘K is familiar",
+      "FAB becomes speed-dial with + icon (not emoji) — rotates to × when open",
+      "Stats bar only shows in All-time All-projects view — avoids redundancy when filtered",
+      "capturedIdeas persisted to localStorage — survive page refreshes without MCP",
+      "seedNewChat() now dynamic — reads live data instead of hardcoded text",
+      "Decision/idea count badges on block cards — visible without clicking through"
+    ],
+    "ideas": [
+      "Mobile PWA install flow — show 'Add to Home Screen' prompt on first visit",
+      "Keyboard shortcut guide modal — show all shortcuts (?)",
+      "Export whole storyboard as markdown doc — for handoff or backup"
+    ],
+    "seed": "Storyboard v5 — Apr 17 Session 3\n\nBuilt today:\n- Global search overlay (⌘K / Ctrl+K, Esc to close)\n- FAB speed-dial: + button → Idea / Decision / Block options\n- Stats bar in All view: blocks / decisions / ideas / automations / projects / today\n- Block card decision+idea count badges\n- Session timer in right panel header\n- North Star display in right panel when project focused\n- capturedIdeas → localStorage persistence\n- seedNewChat() dynamic: live projects + northStars + decisions + today + ideas\n- MCP: git_push tool + score_skills tool added\n- versions/v5-dynamic-seed-fab-persist-20260417.html snapshot\n\nPending:\n- GitHub auth (gh auth login) + first push\n- Weak skill rewrites (consolidate-memory 46, hh-brand-kit 53) — skills dir read-only\n- Mobile PWA install prompt"
+  },
+  {
+    "id": "sb-ui-v4-apr17-session2",
+    "type": "session",
+    "project": "Storyboard",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T14:00:00.000Z",
+    "status": "done",
+    "title": "Dashboard v4 — North Star · Skills Health · Canvas Live Times",
+    "summary": "Second sprint session on Apr 17. Added North Star display to both canvas cards and project headers — every project now shows its measurable success statement. Skills view upgraded with library health bar (avg score, A-grade count, 'needs work' quick-filter). Canvas cards show relative timestamps for last activity. relTime() utility function added. score_skills.py now runs automatically after every MCP populate call. v4 snapshot saved.",
+    "chips": ["North Star", "Skills Health Bar", "relTime", "Canvas timestamps", "Auto skill scoring", "v4 snapshot"],
+    "decisions": [
+      "North Star on canvas = small colored line under goal text (project accent color, italic)",
+      "North Star on project header = left-bordered callout block with 🎯 icon — stands out from desc",
+      "Skills library health bar shows avg/100, A-count, weak-count with one-click filter",
+      "score_skills.py wired into MCP populate tool — skills-data.json stays fresh automatically",
+      "relTime() handles both ms timestamps and YYYYMMDD integer formats"
+    ],
+    "ideas": [
+      "Progress ring / % complete per project based on northStar milestone checklist",
+      "Session timer in right panel — how long this session has been running",
+      "GitHub auto-push via MCP tool after populate — code always backed up"
+    ],
+    "seed": "Storyboard v4 — Apr 17 Session 2\n\nBuilt today:\n- North Star display on canvas cards (colored italic line under goal)\n- North Star callout block in project headers (bordered, 🎯 icon)\n- Skills & Memory northStar added to PROJECT_META\n- Skills view: library health bar with avg score, A count, weak-filter button\n- relTime() function for human-friendly relative timestamps\n- Canvas cards show last-active time\n- score_skills.py now auto-runs after MCP populate\n- v4 snapshot: versions/v4-northstar-skills-20260417.html\n\nFiles changed: index.html, mcp-server.js, blocks-data.json"
+  },
+  {
+    "id": "idea-skill-marketplace",
+    "type": "idea",
+    "project": "Opero Agency",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_live": true,
+    "_captured": "2026-04-18T10:00:00.000Z",
+    "status": "not_started",
+    "title": "💡 Skill Marketplace — curated skill packs for sale",
+    "summary": "Most Claude users don't know what a good skill looks like. We curate, score, and sell them. Agency wants Facebook targeting? Buy the paid-ads skill pack. Real estate agency? Buy the property marketing bundle. Opero angle: sell curated skill packs per industry — verified, scored 90+/100, ready to install. Distribution: skill library built into Storyboard dashboard is the shop window. The inspector scores tell people their skills are bad — we sell the fix.",
+    "chips": ["💡 Idea", "Opero Agency", "Marketplace", "Skills", "Revenue stream"]
+  },
+  {
     "id": "sb-versions",
     "type": "session",
     "project": "Storyboard",
