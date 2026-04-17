@@ -1063,14 +1063,82 @@ body {
 }
 
 .block-body { padding: 11px 13px 12px; }
-.block-meta { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+.block-meta { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; flex-wrap: wrap; }
 .block-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .block-proj { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; }
 .block-date { margin-left: auto; font-size: 10px; color: var(--text-3); }
-.block-title { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 5px; }
-.block-summary { font-size: 11px; color: var(--text-2); line-height: 1.5; margin-bottom: 9px;
+/* Type badge on block cards */
+.block-type-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  padding: 2px 7px; border-radius: 20px;
+  background: var(--block-bg, #f5f3ff); color: var(--block-color, #6c63ff);
+  border: 1px solid var(--block-color, #6c63ff); opacity: .8;
+  flex-shrink: 0;
+}
+.block-title { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 5px; }
+.block-summary { font-size: 11px; color: var(--text-2); line-height: 1.55; margin-bottom: 8px;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .block-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* ── JOURNAL VIEW — project narrative timeline ── */
+.journal-view { padding: 0; }
+.journal-day { margin-bottom: 4px; }
+.journal-day-label {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px 6px;
+  font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .6px;
+}
+.journal-day-line { flex: 1; height: 1px; background: var(--border); }
+.journal-entry {
+  display: grid; grid-template-columns: 52px 1fr;
+  gap: 0; margin: 0 8px 8px;
+  cursor: pointer; border-radius: 10px;
+  transition: background .12s;
+  position: relative;
+}
+.journal-entry:hover { background: rgba(108,99,255,.04); }
+.journal-entry-left {
+  display: flex; flex-direction: column; align-items: center; padding-top: 14px; gap: 0;
+}
+.journal-entry-icon {
+  width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+  background: var(--block-bg, #f5f3ff); border: 1.5px solid var(--block-color, #6c63ff);
+}
+.journal-entry-line {
+  width: 1.5px; flex: 1; min-height: 20px; background: var(--border); margin-top: 4px;
+}
+.journal-entry-right {
+  padding: 12px 12px 12px 6px;
+}
+.journal-entry-type {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--block-color, #6c63ff); margin-bottom: 3px;
+}
+.journal-entry-title {
+  font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 5px;
+}
+.journal-entry-summary {
+  font-size: 12px; color: var(--text-2); line-height: 1.55; margin-bottom: 8px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.journal-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 6px; }
+.journal-chip {
+  font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+  background: var(--block-bg, #f5f3ff); color: var(--block-color, #6c63ff);
+  border: 1px solid var(--block-color, #6c63ff); opacity: .75;
+}
+.journal-entry-foot {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.journal-foot-pill {
+  font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+}
+.jfp-decision { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.jfp-idea     { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+.jfp-next     { background: #dcfce7; color: #15803d; }
+.jfp-soon     { background: #dbeafe; color: #1d4ed8; }
+.jfp-later    { background: #f3f4f6; color: #6b7280; }
 .bchip {
   font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
   background: var(--block-bg); color: var(--block-color);
@@ -1778,6 +1846,10 @@ body {
         <div class="mode-toggle-opt active" id="modeOS">OS</div>
         <div class="mode-toggle-opt" id="modeAI">AI</div>
       </div>
+      <div id="syncIndicator" title="Last synced with MCP server" style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--text-3);padding:4px 8px;border-radius:20px;border:1px solid transparent;transition:all .3s;cursor:default">
+        <div id="syncDot" style="width:6px;height:6px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s"></div>
+        <span id="syncLabel">—</span>
+      </div>
       <button class="seed-btn" onclick="seedNewChat()">⚡ Seed new chat</button>
       <button class="panel-btn" id="panelBtn" onclick="toggleRight()" title="Activity panel">
         <svg width="13" height="12" viewBox="0 0 13 12" fill="none">
@@ -2399,6 +2471,37 @@ const BLOCKS = [
       "Keyboard shortcut guide modal (?)",
       "Export full storyboard as markdown backup"
     ] },
+  // ── TODAY (Apr 18) — Day 2 sprint
+  { id:"sb-apr18-session1", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T01:00:00.000Z",
+    title:"Day 2 — Pipeline view · Project drawer · Roadmap type · Velocity chart",
+    summary:"Pipeline view added (Idea→Roadmap→Building→Automated→Learning). Project detail drawer from canvas cards. New 'roadmap' block type. Velocity chart in right panel. Push button red/green with /git-status endpoint. Sync indicator in header.",
+    chips:["Pipeline view","Project drawer","Roadmap","Velocity chart","Push status"],
+    decisions:[
+      "Roadmap = decided but not built — sits between idea and block",
+      "Pipeline view shows the whole flow, not just done work",
+      "Connectors, Lens, Blueprints = three future products in the Storyboard family"
+    ],
+    ideas:["Context window alert for browser extension users","Model comparison UI — Lens product"] },
+  { id:"sb-apr18-concepts", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"Three-product family: Connect + Lens + Blueprints",
+    body:"Storyboard Core is the memory layer. Connect = one-click MCP connector UI (Web 2.0 → AI bridge). Lens = multi-model intelligence layer that builds your personal model map passively. Blueprints = expert playbooks that surface what you don't know to ask about.",
+    rationale:"Each product makes the others more valuable. Connect brings in your existing files. Lens tells you which AI to use. Blueprints tells you what you should be doing.",
+    confidence:"high" },
+
+  { id:"sb-apr18-session2", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T10:00:00.000Z",
+    title:"Day 2 (continued) — Landing page overhaul · Waitlist · Product family section",
+    summary:"index.html overhauled for meetup distribution: email waitlist with success state, product family section (Connect/Lens/Blueprints), updated features to include pipeline/roadmap/velocity, fixed demo links, Day 2 stats, new nav/footer links to products.html and pitch.html.",
+    chips:["Waitlist","Landing page","Product family","Distribution prep"],
+    decisions:[
+      "Email capture via localStorage — no backend needed for sprint",
+      "CTA changed from 'interactive demo' to live dashboard — dashboard.html not production-ready",
+      "Products.html + pitch.html linked from nav and footer"
+    ],
+    ideas:["Formspree or Airtable webhook to capture real waitlist emails","Twitter/X thread showing each Day's progress — Barcelona meetup distribution"] },
+
   { id:"sb-ui-v4-apr17-session2", type:"session", project:"Storyboard", date:"Apr 17", ts:20260417,
     _live:true, _captured:"2026-04-17T14:00:00.000Z",
     title:"Dashboard v4 — North Star · Skills Health · Canvas Timestamps",
@@ -3293,23 +3396,43 @@ function blockTimestamp(b) {
 // ═══════════════════════════════════
 // BLOCK HTML (shared between views)
 // ═══════════════════════════════════
+// Type label map
+const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill' };
+const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚' };
+
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
   const style = `--block-color:${p.color};--block-bg:${p.bg}`;
   const idx = i % IDEA_BG.length;
   const featuredClass = featured ? ' block-featured' : '';
+  const typeLabel = TYPE_LABELS[b.type] || (b.type||'Block');
+  const typeIcon  = TYPE_ICONS[b.type]  || '◈';
+  const displayDate = b.date || (b.ts ? relTime(b.ts) : '');
+  const summary = b.summary && b.summary !== 'undefined' ? b.summary :
+                  b.body    && b.body    !== 'undefined' ? b.body    : '';
+  const chips = (b.chips||[]).filter(c=>c);
+  const dCount = b.decisions?.length || 0;
+  const iCount = b.ideas?.length || 0;
+
+  const footPills = [
+    dCount ? `<span class="journal-foot-pill jfp-decision">✓ ${dCount} decision${dCount>1?'s':''}</span>` : '',
+    iCount ? `<span class="journal-foot-pill jfp-idea">💡 ${iCount} idea${iCount>1?'s':''}</span>` : '',
+    b.status === 'next'  ? `<span class="journal-foot-pill jfp-next">Next up</span>` : '',
+    b.status === 'soon'  ? `<span class="journal-foot-pill jfp-soon">Soon</span>` : '',
+    b.status === 'later' ? `<span class="journal-foot-pill jfp-later">Later</span>` : '',
+  ].join('');
 
     if (b.type === 'idea') {
       return `<div class="block" style="${style};background:${IDEA_BG[idx]};border-color:${IDEA_BD[idx]}" onclick="openDetail('${b.id}')">
         <div class="block-body">
           <div class="block-meta">
             <span class="block-dot" style="background:${p.color}"></span>
-            <span class="block-proj">${b.project}</span>
-            <span class="block-date">${blockTimestamp(b)}</span>
+            <span class="block-type-badge" style="background:${IDEA_BG[idx]};color:#d97706;border-color:#fde68a">💡 Idea</span>
+            <span class="block-date">${displayDate}</span>
           </div>
-          <div class="block-title">${b.title}</div>
-          <div class="block-summary">${b.summary}</div>
-          <div class="block-chips">${(b.chips||[]).map(c=>`<span class="bchip">${c}</span>`).join('')}</div>
+          <div class="block-title">${b.title||'Untitled idea'}</div>
+          ${summary ? `<div class="block-summary">${summary}</div>` : ''}
+          ${chips.length ? `<div class="block-chips">${chips.map(c=>`<span class="bchip">${c}</span>`).join('')}</div>` : ''}
         </div>
       </div>`;
     }
@@ -3317,21 +3440,19 @@ function blockHTML(b, i, featured = false) {
     return `<div class="block ${b.big?'block-lg':''}${featuredClass}" style="${style}" onclick="openDetail('${b.id}')">
       <div class="block-stripe"></div>
       ${b.thumb
-        ? `<img class="block-thumb" src="${b.thumb}" alt="${b.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        ? `<img class="block-thumb" src="${b.thumb}" alt="${b.title||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
            <div class="block-thumb-ph" style="display:none">${p.icon}</div>`
-        : `<div class="block-icon-band"><span class="block-icon-band-icon">${p.icon}</span><span class="block-icon-band-label">${b.project}</span></div>`}
+        : `<div class="block-icon-band"><span class="block-icon-band-icon">${typeIcon}</span><span class="block-icon-band-label">${typeLabel}</span></div>`}
       <div class="block-body">
         <div class="block-meta">
           <span class="block-dot" style="background:${p.color}"></span>
-          <span class="block-proj">${b.project}</span>
-          <span class="block-date">${b.date}</span>
+          <span class="block-proj">${b.project||''}</span>
+          <span class="block-date">${displayDate}</span>
         </div>
-        <div class="block-title">${b.title}</div>
-        <div class="block-summary">${b.summary}</div>
-        <div class="block-chips">${(b.chips||[]).map(c=>`<span class="bchip">${c}</span>`).join('')}</div>
-        ${(b.decisions?.length || b.ideas?.length) ? `<div style="display:flex;gap:6px;margin-top:6px">
-          ${b.decisions?.length ? `<span style="font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0">✓ ${b.decisions.length} decision${b.decisions.length>1?'s':''}</span>` : ''}
-          ${b.ideas?.length ? `<span style="font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;background:#fffbeb;color:#d97706;border:1px solid #fde68a">💡 ${b.ideas.length} idea${b.ideas.length>1?'s':''}</span>` : ''}
+        <div class="block-title">${b.title||'Untitled'}</div>
+        ${summary ? `<div class="block-summary">${summary}</div>` : ''}
+        ${chips.length ? `<div class="block-chips">${chips.map(c=>`<span class="bchip">${c}</span>`).join('')}</div>` : ''}
+        ${footPills ? `<div style="display:flex;gap:6px;margin-top:6px">${footPills}</div>` : ''}
         </div>` : ''}
       </div>
       ${b.stats ? `<div class="block-stats">
@@ -3511,6 +3632,96 @@ function mergedBlocks() {
   return merged;
 }
 
+// ═══════════════════════════════════
+// JOURNAL VIEW — project narrative timeline
+// ═══════════════════════════════════
+function renderJournalView(projName) {
+  const feed = document.getElementById('feed');
+  const allBlocks = mergedBlocks();
+  const projBlocks = allBlocks.filter(b => b.project === projName)
+    .sort((a,b) => (b.ts||0) - (a.ts||0));
+
+  if (!projBlocks.length) {
+    feed.innerHTML = `<div style="padding:48px 24px;text-align:center;color:var(--text-3);font-size:14px">No blocks yet for ${projName}.</div>`;
+    return;
+  }
+
+  // Group by date
+  function tsDay(b) {
+    const ts = b.ts || 0;
+    if (!ts) return 'Unknown date';
+    const s = String(ts);
+    if (ts > 1e10) {
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    }
+    if (s.length === 8) {
+      const d = new Date(`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`);
+      return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    }
+    return b.date || 'Unknown date';
+  }
+
+  const days = {};
+  projBlocks.forEach(b => {
+    const day = tsDay(b);
+    if (!days[day]) days[day] = [];
+    days[day].push(b);
+  });
+
+  const p = PROJ[projName] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
+  const headerHtml = renderProjectHeader(projName);
+
+  let html = headerHtml + `<div class="journal-view">`;
+
+  Object.entries(days).forEach(([day, dayBlocks], di) => {
+    html += `<div class="journal-day">
+      <div class="journal-day-label">
+        <span>${day}</span>
+        <span class="journal-day-line"></span>
+        <span style="flex-shrink:0;font-size:10px">${dayBlocks.length} entr${dayBlocks.length===1?'y':'ies'}</span>
+      </div>`;
+
+    dayBlocks.forEach((b, bi) => {
+      const typeLabel = TYPE_LABELS[b.type] || (b.type||'Block');
+      const typeIcon  = TYPE_ICONS[b.type]  || '◈';
+      const summary = b.summary && b.summary !== 'undefined' ? b.summary :
+                      b.body    && b.body    !== 'undefined' ? b.body    : '';
+      const chips = (b.chips||[]).filter(c=>c);
+      const dCount = b.decisions?.length || 0;
+      const iCount = b.ideas?.length || 0;
+      const isLast = bi === dayBlocks.length - 1 && di === Object.entries(days).length - 1;
+
+      const footPills = [
+        dCount ? `<span class="journal-foot-pill jfp-decision">✓ ${dCount} decision${dCount>1?'s':''}</span>` : '',
+        iCount ? `<span class="journal-foot-pill jfp-idea">💡 ${iCount} idea${iCount>1?'s':''}</span>` : '',
+        b.status === 'next'  ? `<span class="journal-foot-pill jfp-next">Next up</span>` : '',
+        b.status === 'soon'  ? `<span class="journal-foot-pill jfp-soon">Soon</span>` : '',
+        b.status === 'later' ? `<span class="journal-foot-pill jfp-later">Later</span>` : '',
+      ].join('');
+
+      html += `<div class="journal-entry" style="--block-color:${p.color};--block-bg:${p.bg}" onclick="openDetail('${b.id}')">
+        <div class="journal-entry-left">
+          <div class="journal-entry-icon" style="background:${p.bg};border-color:${p.color}">${typeIcon}</div>
+          ${!isLast ? `<div class="journal-entry-line"></div>` : ''}
+        </div>
+        <div class="journal-entry-right">
+          <div class="journal-entry-type" style="color:${p.color}">${typeLabel}</div>
+          <div class="journal-entry-title">${b.title||'Untitled'}</div>
+          ${summary ? `<div class="journal-entry-summary">${summary}</div>` : ''}
+          ${chips.length ? `<div class="journal-chips">${chips.map(c=>`<span class="journal-chip" style="background:${p.bg};color:${p.color};border-color:${p.color}">${c}</span>`).join('')}</div>` : ''}
+          ${footPills ? `<div class="journal-entry-foot">${footPills}</div>` : ''}
+        </div>
+      </div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+  feed.innerHTML = html;
+}
+
 function renderFeed() {
   const el = document.getElementById('feed');
   const baseBlocks = mergedBlocks();
@@ -3626,6 +3837,11 @@ function renderFeed() {
           : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">Nothing logged ${label.toLowerCase()}.</div>`);
     }
   } else {
+    // Project-specific view: use journal/narrative layout for grid and list views
+    if (activeView === 'grid' || activeView === 'list') {
+      renderJournalView(activeFilter);
+      return;
+    }
     el.innerHTML = headerHtml + blocks.map((b, i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
   }
 }
@@ -4937,15 +5153,25 @@ function toggleDecisionsView() {
 // ── flagMoment — capture current state as a named moment ──
 let _flagMomentActive = false;
 // ── Push button colour states ──────────────────────────────
+let _lastKnownPushState = 'offline'; // persist across polls
+
 function setPushBtnState(state) {
-  // state: 'dirty' | 'clean' | 'pushing' | 'offline'
   const btn = document.getElementById('pushBtn');
   if (!btn) return;
+  // Don't overwrite a meaningful state with offline if we already know the repo state
+  if (state === 'offline' && (_lastKnownPushState === 'clean' || _lastKnownPushState === 'dirty')) {
+    // Server went offline after we knew the state — keep showing last known, just dim slightly
+    btn.style.opacity = '0.55';
+    btn.title = 'MCP server offline — showing last known state';
+    return;
+  }
+  btn.style.opacity = '1';
+  _lastKnownPushState = state;
   const styles = {
-    dirty:   { bg:'rgba(239,68,68,0.12)',  border:'rgba(239,68,68,0.45)',  color:'#dc2626', text:'🔴 Push to GitHub', disabled:false },
-    clean:   { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.35)',  color:'#16a34a', text:'✓ Up to date',      disabled:false },
+    dirty:   { bg:'rgba(239,68,68,0.12)',  border:'rgba(239,68,68,0.5)',   color:'#dc2626', text:'🔴 Push to GitHub', disabled:false },
+    clean:   { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.4)',   color:'#16a34a', text:'✓ Up to date',      disabled:false },
     pushing: { bg:'rgba(251,191,36,0.10)', border:'rgba(251,191,36,0.35)', color:'#b45309', text:'⏳ Pushing…',       disabled:true  },
-    offline: { bg:'rgba(148,163,184,0.08)',border:'rgba(148,163,184,0.2)', color:'#94a3b8', text:'🚀 Push to GitHub',  disabled:false },
+    offline: { bg:'rgba(148,163,184,0.06)',border:'rgba(148,163,184,0.15)',color:'#94a3b8', text:'🚀 Push to GitHub',  disabled:false },
   };
   const s = styles[state] || styles.offline;
   btn.style.background   = s.bg;
@@ -5727,6 +5953,33 @@ function autoScreenshot(label) {
 // blocks-data.json: written by MCP server in real-time (capture_idea, capture_block)
 // storyboard-data.json: written by populate_storyboard.py at end-of-session
 // ═══════════════════════════════════
+function setSyncIndicator(state) {
+  // state: 'live' | 'idle' | 'offline'
+  const dot   = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  const wrap  = document.getElementById('syncIndicator');
+  if (!dot || !label) return;
+  const now = new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+  if (state === 'live') {
+    dot.style.background = '#22c55e';
+    dot.style.boxShadow  = '0 0 0 3px rgba(34,197,94,.2)';
+    label.textContent    = 'Live · ' + now;
+    wrap.style.color     = '#16a34a';
+    // Flash pulse then settle
+    setTimeout(() => { dot.style.boxShadow = 'none'; wrap.style.color = 'var(--text-3)'; }, 2000);
+  } else if (state === 'idle') {
+    dot.style.background = '#22c55e';
+    dot.style.boxShadow  = 'none';
+    label.textContent    = now;
+    wrap.style.color     = 'var(--text-3)';
+  } else {
+    dot.style.background = '#94a3b8';
+    dot.style.boxShadow  = 'none';
+    label.textContent    = 'offline';
+    wrap.style.color     = 'var(--text-3)';
+  }
+}
+
 function pollData() {
   const ts = Date.now();
 
@@ -5734,7 +5987,7 @@ function pollData() {
   fetch('blocks-data.json?t=' + ts)
     .then(r => r.ok ? r.json() : null)
     .then(data => {
-      if (!Array.isArray(data) || !data.length) return;
+      if (!Array.isArray(data) || !data.length) { setSyncIndicator('idle'); return; }
       // Only re-render if the live block set has actually changed
       const newIds = data.map(b => b.id).join(',');
       const oldIds = liveBlocks.map(b => b.id).join(',');
@@ -5744,9 +5997,12 @@ function pollData() {
         renderFeed();
         buildNav();
         buildRightPanel();
-        autoScreenshot('live'); // snapshot whenever MCP pushes new blocks
+        autoScreenshot('live');
+        setSyncIndicator('live'); // pulse green when new data arrives
+      } else {
+        setSyncIndicator('idle');
       }
-    }).catch(() => {});
+    }).catch(() => { setSyncIndicator('offline'); });
 
   // Poll skills-data.json — written by score_skills.py
   fetch('skills-data.json?t=' + ts)

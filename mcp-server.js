@@ -539,7 +539,53 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
-  // CORS preflight for /git-push (called from dashboard)
+  // ── /waitlist — save email from landing page signup ────────────────────────
+  if (req.method === "POST" && req.url === "/waitlist") {
+    let body = "";
+    req.on("data", d => body += d);
+    req.on("end", () => {
+      try {
+        const { email, source } = JSON.parse(body);
+        const headers = { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" };
+        if (!email || !email.includes("@")) {
+          res.writeHead(400, headers);
+          res.end(JSON.stringify({ ok: false, error: "Invalid email" }));
+          return;
+        }
+        const wlPath = path.join(STORYBOARD_DIR, "waitlist.json");
+        let list = [];
+        try { list = JSON.parse(fs.readFileSync(wlPath, "utf8")); } catch(_) {}
+        const already = list.find(e => e.email === email);
+        if (!already) {
+          list.push({ email, source: source || "landing", ts: new Date().toISOString() });
+          fs.writeFileSync(wlPath, JSON.stringify(list, null, 2));
+          process.stderr.write(`📬 Waitlist signup: ${email}\n`);
+        }
+        res.writeHead(200, headers);
+        res.end(JSON.stringify({ ok: true, count: list.length }));
+      } catch(e) {
+        res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+
+  // ── /waitlist GET — view signups ─────────────────────────────────────────────
+  if (req.method === "GET" && req.url === "/waitlist") {
+    try {
+      const wlPath = path.join(STORYBOARD_DIR, "waitlist.json");
+      let list = [];
+      try { list = JSON.parse(fs.readFileSync(wlPath, "utf8")); } catch(_) {}
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ ok: true, count: list.length, signups: list }));
+    } catch(e) {
+      res.writeHead(500); res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
+    return;
+  }
+
+  // CORS preflight for /git-push, /waitlist (called from dashboard/landing)
   if (req.method === "OPTIONS") {
     res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST,GET", "Access-Control-Allow-Headers": "Content-Type" });
     res.end();
