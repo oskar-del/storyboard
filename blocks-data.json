@@ -1,0 +1,510 @@
+[
+  {
+    "id": "sb-versions",
+    "type": "session",
+    "project": "Storyboard",
+    "date": "Apr 17–18",
+    "ts": 20260418,
+    "_live": true,
+    "_captured": "2026-04-18T09:00:00.000Z",
+    "status": "done",
+    "title": "Version History — v1 → v2 → v3",
+    "summary": "Three versions of the Storyboard dashboard built in a single sprint. v1: basic app shell + masonry grid. v2: UI redesign with dark theme + right panel rebuilt. v3: Canvas view, Decisions nav, Flag This Moment, Roadmap overlay, PWA.",
+    "chips": ["v1", "v2", "v3", "Sprint", "Visual history"],
+    "filmstripTitle": "Dashboard versions",
+    "filmstrip": [
+      {
+        "thumb": "thumbnails/storyboard-v1-sm.png",
+        "label": "v1 — App Shell",
+        "sub": "Apr 17 · 02:45"
+      },
+      {
+        "thumb": "thumbnails/storyboard-v2-sm.png",
+        "label": "v2 — UI Redesign",
+        "sub": "Apr 17 · 02:48"
+      },
+      {
+        "thumb": "thumbnails/storyboard-v3-sm.png",
+        "label": "v3 — Canvas + PWA",
+        "sub": "Apr 18 · morning"
+      }
+    ],
+    "decisions": [
+      "Each version snapshot saved to versions/ folder before making breaking changes",
+      "Auto-screenshot via html2canvas on every MCP live block — no terminal needed",
+      "Version thumbnails generated with Python PIL as visual placeholders"
+    ],
+    "ideas": [
+      "Real browser screenshots via html2canvas when MCP server is running",
+      "Diff view between versions — highlight what changed visually"
+    ]
+  },
+  {
+    "id": "sb-ui-v3-apr17",
+    "type": "session",
+    "project": "Storyboard",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_captured": "2026-04-17T23:00:00.000Z",
+    "_live": true,
+    "status": "done",
+    "title": "Dashboard v3 — OS/AI Mode · Decisions · Flag This Moment",
+    "summary": "Major UI sprint. Rebuilt the dashboard to match the dark v1 vision: OS/AI mode toggle (white vs dark theme, persisted), time lanes (Today/This week/Older), period tabs that actually filter, FOCUS card in nav with pulsing dot, right panel as session summary (Seed Next Chat CTA + today's work + ideas). Added missing v1 sections: Decisions nav item with live count + decisions view, Files nav item, Flag This Moment button (captures timestamped snapshot to clipboard), Recent Decisions in right panel. MCP server wired: HTTP server on port 3847 receives auto-screenshots from html2canvas. Roadmap overlay CSS scaffolded. package.json module type fixed. Claude Desktop config snippet written with correct path.",
+    "chips": ["OS/AI Mode", "Decisions nav", "Flag This Moment", "Period filtering", "Time lanes", "FOCUS card", "MCP HTTP server", "Auto-screenshot"],
+    "decisions": [
+      "OS Mode = white/light theme (default), AI Mode = dark theme — toggled in header, persisted via localStorage",
+      "No terminal ever — screenshots happen in-browser via html2canvas → POST to MCP HTTP server port 3847",
+      "Decisions and Files as nav items with live counts pulled from block data",
+      "Flag This Moment = timestamped context snapshot → clipboard, for mid-session handoffs",
+      "Period tabs filter the feed; time lanes (Today/This week/Older) show in All time view only",
+      "Featured blocks = most recent block from top 3 most active projects gets visual LATEST treatment",
+      "FOCUS card = most active project by block count, pulsing live dot"
+    ],
+    "ideas": [
+      "Canvas view — project card grid with files/ideas/decisions counts (still pending)",
+      "Roadmap overlay — View Roadmap button on project header (CSS done, HTML+JS pending)",
+      "PWA manifest for mobile home screen install",
+      "Version snapshot blocks with thumbnails in feed"
+    ],
+    "seed": "Storyboard Dashboard v3 — Apr 17\n\nBuilt today:\n- OS/AI mode toggle (header, localStorage persist)\n- Period tab filtering (today/week/month/all actually works)\n- Time lanes (Today / This week / Older) in All view\n- FOCUS card in left nav (most active project, pulsing dot)\n- Right panel rebuilt: Seed Next Chat CTA, Flag This Moment, Today's work, Recent Decisions, Ideas\n- Decisions nav item (live count, click to filter feed to decision-bearing blocks)\n- Files nav item (count from stats)\n- MCP HTTP server port 3847 (auto-screenshot receiver)\n- html2canvas auto-screenshots on live block change\n- package.json type:module fixed\n- Claude Desktop config snippet at storyboard/claude-desktop-config-snippet.json\n\nPending:\n- Roadmap overlay (CSS done, need HTML overlay element + openRoadmap() JS + button in renderProjectHeader)\n- Canvas view (project card grid, v1 had it)\n- PWA manifest\n- GitHub portfolio push\n\nFiles: storyboard/index.html, storyboard/mcp-server.js, storyboard/package.json, storyboard/claude-desktop-config-snippet.json\nVersions saved: versions/v1-before-ui-redesign-20260417-0245.html, versions/v2-ui-redesign-20260417-0248.html"
+  },
+  {
+    "id": "idea-storyboard-api-layer",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 Storyboard as open API layer \u2014 sits between all tools and Claude",
+    "summary": "Storyboard becomes the middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product \u2014 a universal AI memory layer. The layer between where you work and where Claude thinks.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Product vision",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T03:30:00.581394"
+  },
+  {
+    "id": "idea-skills-mcp",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 MCP scans skills folder \u2014 shows which skills each project uses",
+    "summary": "MCP tool that reads .claude/skills/, maps each skill to projects. Shows gaps: tasks running without relevant skills.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T03:11:50.674312"
+  },
+  {
+    "id": "idea-skills-prompts",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 Skills library under Prompts \u2014 browse, improve, activate",
+    "summary": "Prompts section becomes a skills browser. See all installed skills, which projects use them, quality score. One-click to improve.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T03:11:50.674356"
+  },
+  {
+    "id": "idea-skill-recommender",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 Skill recommender \u2014 flag tasks running without relevant skills",
+    "summary": "Detect when work is being done without a matching skill active. Proactively suggest: this task could use the hh-seo-content skill.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T03:11:50.674357"
+  },
+  {
+    "id": "idea-skill-library-scrape",
+    "project": "Opero Agency",
+    "title": "\ud83d\udca1 Public skill library \u2014 scrape + curate all Claude skills online",
+    "summary": "Scrape GitHub and community repos for skills. Searchable library. Auto-propose per project type. Opero product angle: sell curated skill packs per industry.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Opero Agency",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T03:11:50.674358"
+  },
+  {
+    "id": "idea-skills-mcp",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 MCP scans skills folder \u2014 shows which skills each project uses",
+    "summary": "MCP tool that reads .claude/skills/, maps each skill to projects by checking which tasks reference them. Shows gaps: tasks running without relevant skills.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T01:11:50.654Z"
+  },
+  {
+    "id": "idea-skills-prompts",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 Skills library under Prompts \u2014 browse, improve, activate skills",
+    "summary": "Prompts section in left nav becomes a skills browser. See all installed skills, which projects use them, quality score each one. One-click to improve a skill.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T01:11:50.655Z"
+  },
+  {
+    "id": "idea-skill-recommender",
+    "project": "Storyboard",
+    "title": "\ud83d\udca1 Skill recommender \u2014 if a task runs without a relevant skill, flag it",
+    "summary": "Detect when work is being done in a project area that has a matching skill not being used. Proactively suggest: this task could use the hh-seo-content skill.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Storyboard",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T01:11:50.655Z"
+  },
+  {
+    "id": "idea-skill-library-scrape",
+    "project": "Opero Agency",
+    "title": "\ud83d\udca1 Public skill library \u2014 scrape + curate all Claude skills on the web",
+    "summary": "Scrape GitHub, Claude forums, community repos for skills. Build a searchable library. Auto-propose relevant skills per project type. Opero product angle: sell curated skill packs per industry.",
+    "chips": [
+      "\ud83d\udca1 Idea",
+      "Opero Agency",
+      "Not started"
+    ],
+    "type": "idea",
+    "status": "not_started",
+    "date": "Apr 17",
+    "ts": 20260417,
+    "_live": true,
+    "_captured": "2026-04-17T01:11:50.655Z"
+  },
+  {
+    "id": "prog-1",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "1",
+    "label": "Opero Airtable",
+    "date": "April 5, 2026",
+    "ts": 20260401,
+    "title": "Task 1 \u2014 Opero Airtable",
+    "summary": "April 5, 2026: Base `appelHcx7WtRwa8pB` created. Table `tblfMLyB2DO11WSK3` created with 18 fields. Test record confirmed.",
+    "status": "done",
+    "status_emoji": "\u2705",
+    "chips": [
+      "Task 1",
+      "\u2705 Done",
+      "2 files"
+    ],
+    "decisions": [
+      "April 5, 2026: Base `appelHcx7WtRwa8pB` created. Table `tblfMLyB2DO11WSK3` created with 18 fields. Test record confirmed."
+    ],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 1 Progress\n\n**Status: \u2705 Complete**\n\n- April 5, 2026: Base `appelHcx7WtRwa8pB` created. Table `tblfMLyB2DO11WSK3` created with 18 fields. Test record confirmed."
+  },
+  {
+    "id": "prog-2",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "2",
+    "label": "Opero Landing Page",
+    "date": "April 5, 2026",
+    "ts": 20260402,
+    "title": "Task 2 \u2014 Opero Landing Page",
+    "summary": "Built by a standalone Sonnet task window reading SETUP.md",
+    "status": "done",
+    "status_emoji": "\u2705",
+    "chips": [
+      "Task 2",
+      "\u2705 Done",
+      "4 files"
+    ],
+    "decisions": [
+      "Built by a standalone Sonnet task window reading SETUP.md",
+      "HTML file at: `AGENCY /opero-landing-mvp.html`",
+      "Airtable token injected (was left as placeholder \u2014 fixed in brain session)",
+      "All sections live: nav, hero, email capture, 3 feature cards, social proof, footer, JSON-LD schema"
+    ],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md",
+      "index.html",
+      "opero-landing-mvp.html"
+    ],
+    "raw_progress": "# Task 2 Progress\n\n**Status: \u2705 Complete \u2014 April 5, 2026**\n\n---\n\n## April 5, 2026\n- Built by a standalone Sonnet task window reading SETUP.md\n- HTML file at: `AGENCY /opero-landing-mvp.html`\n- Airtable token injected (was left as placeholder \u2014 fixed in brain session)\n- All sections live: nav, hero, email capture, 3 feature cards, social proof, footer, JSON-LD schema\n\n**Known issue resolved:** Task window mounted the task subfolder instead of the full AGENCY folder \u2014 output was copied to correct l"
+  },
+  {
+    "id": "prog-3",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "3",
+    "label": "Opero AEO Checker",
+    "date": "Apr 2026",
+    "ts": 20260403,
+    "title": "Task 3 \u2014 Opero AEO Checker",
+    "summary": "# Task 3 \u2014 AEO Checker (Tool 1)\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 3\u20134 hours**\n**Prerequisite",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task 3",
+      "\ud83d\udd34 Not Started",
+      "2 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 3 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
+  },
+  {
+    "id": "prog-4",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "4",
+    "label": "Opero XML Analyser",
+    "date": "Apr 2026",
+    "ts": 20260404,
+    "title": "Task 4 \u2014 Opero XML Analyser",
+    "summary": "# Task 4 \u2014 XML Feed Analyser (Tool 2)\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 3\u20134 hours**\n**Prereq",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task 4",
+      "\ud83d\udd34 Not Started",
+      "2 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 4 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
+  },
+  {
+    "id": "prog-5",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "5",
+    "label": "Opero MailerLite",
+    "date": "Apr 2026",
+    "ts": 20260405,
+    "title": "Task 5 \u2014 Opero MailerLite",
+    "summary": "# Task 5 \u2014 MailerLite Lead Nurture Sequence\n**Model: Sonnet 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 1\u20132 hours**\n",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task 5",
+      "\ud83d\udd34 Not Started",
+      "2 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 5 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
+  },
+  {
+    "id": "prog-6",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "6",
+    "label": "Opero Valuation Reports",
+    "date": "Apr 2026",
+    "ts": 20260406,
+    "title": "Task 6 \u2014 Opero Valuation Reports",
+    "summary": "# Task 6 \u2014 Property Valuation Report Generator\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 3\u20134 hours**",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task 6",
+      "\ud83d\udd34 Not Started",
+      "2 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 6 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
+  },
+  {
+    "id": "prog-7",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "7",
+    "label": "Opero Showcase Deck",
+    "date": "Apr 2026",
+    "ts": 20260407,
+    "title": "Task 7 \u2014 Opero Showcase Deck",
+    "summary": "# Task 7 \u2014 Showcase Deck: Add 3 Missing Slides\n**Model: Sonnet 4.6 | Status: \ud83d\udd34 Not Started**\n**Estimated time: 1\u20132 hours",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task 7",
+      "\ud83d\udd34 Not Started",
+      "2 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 7 Progress\n\n**Status: \ud83d\udd34 Not Started**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
+  },
+  {
+    "id": "prog-8",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "8",
+    "label": "Opero Website",
+    "date": "Apr 2026",
+    "ts": 20260408,
+    "title": "Task 8 \u2014 Opero Website",
+    "summary": "# Task 8 \u2014 Full opero.ai Website\n**Model: Opus 4.6 | Status: \ud83d\udd34 Not Started \u2014 DO THIS LAST**\n**Estimated time: 1\u20132 days**",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task 8",
+      "\ud83d\udd34 Not Started",
+      "2 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "PROGRESS.md",
+      "SETUP.md"
+    ],
+    "raw_progress": "# Task 8 Progress\n\n**Status: \ud83d\udd34 Not Started \u2014 Do this LAST (after Tasks 1\u20136)**\n\n---\n\n*Update this file as you work. Add a dated entry each session.*"
+  },
+  {
+    "id": "prog-?",
+    "type": "session",
+    "source": "progression",
+    "project": "Opero Agency",
+    "track": "?",
+    "label": "Audit System",
+    "date": "Apr 2026",
+    "ts": 20260400,
+    "title": "Task ? \u2014 Audit System",
+    "summary": "",
+    "status": "not_started",
+    "status_emoji": "\ud83d\udd34",
+    "chips": [
+      "Task ?",
+      "\ud83d\udd34 Not Started",
+      "6 files"
+    ],
+    "decisions": [],
+    "files_in_folder": [
+      "audit.py",
+      "build-bd-pitch-v11-master.js",
+      "build-bd-pitch-v2.js",
+      "build-bd-pitch.js",
+      "foxtons-verified.json",
+      "generate_report.py"
+    ],
+    "raw_progress": ""
+  },
+  {
+    "id": "op-audit-protocol",
+    "type": "session",
+    "source": "scan",
+    "project": "Opero Agency",
+    "date": "Apr 2026",
+    "ts": 20260413,
+    "title": "Audit Pipeline \u2014 11 clients \u00b7 Template \u00b7 Generator",
+    "summary": "Universal audit protocol. Template deck + scripts (agency-audit-template.js, b2b-lead-gen-template.js). 11 client audits: Bronsfastigheter, Chestertons, Eklof, EquityUnion, Foxtons, Hamptons....",
+    "chips": [
+      "11 clients",
+      "Template",
+      "Generator",
+      "Audit protocol"
+    ],
+    "decisions": [
+      "Audit score on the cover \u2014 undeniable before the meeting starts",
+      "Same template per client \u2014 repeatable and scalable",
+      "Audit is the wedge \u2014 give it away to earn the retainer"
+    ],
+    "ideas": [
+      "Universal audit: any website, any industry",
+      "Currently: 11 real estate agencies audited"
+    ],
+    "clients": [
+      "Bronsfastigheter",
+      "Chestertons",
+      "Eklof",
+      "EquityUnion",
+      "Foxtons",
+      "Hamptons",
+      "KnightFrank",
+      "Savills",
+      "SevenGables",
+      "SuccessBusinessAdvisors",
+      "Winkworth"
+    ],
+    "scripts": [
+      "agency-audit-template.js",
+      "b2b-lead-gen-template.js",
+      "bronsen-audit-v2.js",
+      "eklof-property-audit-v1.js",
+      "equityunion-audit.js",
+      "sba-audit.js",
+      "sevengables-audit.js"
+    ]
+  }
+]
