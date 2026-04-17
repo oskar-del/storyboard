@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storyboard — Product Universe</title>
+<style>
+  :root {
+    --bg: #08080e;
+    --surface: #12121c;
+    --surface2: #1a1a28;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f8;
+    --muted: #6a6a8a;
+    --muted2: #9090b8;
+
+    --core:       #7c6bff;
+    --connect:    #10b981;
+    --lens:       #f59e0b;
+    --blueprints: #ec4899;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    line-height: 1.6; min-height: 100vh; padding: 0 0 80px;
+  }
+
+  /* NAV */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,14,.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px; display: flex; align-items: center; gap: 32px;
+  }
+  .nav-logo { font-size: 16px; font-weight: 800; letter-spacing: -.3px; color: var(--core); }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; }
+  .nav-link { font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; text-decoration: none; transition: color .15s; }
+  .nav-link:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    max-width: 860px; margin: 0 auto; padding: 72px 40px 48px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--core); margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -.8px;
+    line-height: 1.1; margin-bottom: 20px;
+  }
+  .hero-sub {
+    font-size: 17px; color: var(--muted2); max-width: 580px; margin: 0 auto 32px;
+    line-height: 1.65;
+  }
+  .hero-flow {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    flex-wrap: wrap; margin-top: 8px;
+  }
+  .hf-node {
+    padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    border: 1.5px solid;
+  }
+  .hf-arrow { color: var(--muted); font-size: 16px; }
+
+  /* SECTION */
+  .section { max-width: 1040px; margin: 0 auto; padding: 0 40px 64px; }
+  .section-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--muted); margin-bottom: 28px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* PRODUCT CARD */
+  .prod-card {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 16px; padding: 36px; margin-bottom: 24px;
+    border-top: 3px solid var(--c);
+    transition: border-color .2s;
+  }
+  .prod-card:hover { border-color: var(--c); }
+  .prod-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 24px; }
+  .prod-icon { font-size: 32px; line-height: 1; flex-shrink: 0; }
+  .prod-tag {
+    font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 6px;
+    background: color-mix(in srgb, var(--c) 15%, transparent);
+    color: var(--c);
+  }
+  .prod-name { font-size: 24px; font-weight: 800; letter-spacing: -.4px; color: var(--c); }
+  .prod-tagline { font-size: 14px; color: var(--muted2); margin-top: 4px; line-height: 1.5; }
+
+  .prod-body { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 680px) { .prod-body { grid-template-columns: 1fr; } }
+
+  .prod-section-title {
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .prod-desc { font-size: 14px; color: var(--muted2); line-height: 1.7; }
+
+  .feat-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .feat-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13px; color: var(--text); line-height: 1.4;
+  }
+  .feat-list li::before {
+    content: '→'; color: var(--c); font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .moat-box {
+    background: color-mix(in srgb, var(--c) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c) 25%, transparent);
+    border-radius: 10px; padding: 16px; margin-top: 16px;
+  }
+  .moat-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--c); margin-bottom: 6px; }
+  .moat-text { font-size: 13px; color: var(--muted2); line-height: 1.55; }
+
+  /* TIER TABLE */
+  .tier-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-top: 8px;
+  }
+  @media (max-width: 700px) { .tier-grid { grid-template-columns: 1fr 1fr; } }
+  .tier-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 18px;
+  }
+  .tier-num { font-size: 28px; font-weight: 900; opacity: .18; line-height: 1; margin-bottom: 8px; }
+  .tier-name { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .tier-items { font-size: 11px; color: var(--muted2); line-height: 1.7; }
+  .tier-when { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-top: 8px; }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .compare-table th, .compare-table td {
+    padding: 12px 16px; text-align: left;
+    border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .compare-table th { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+  .compare-table td:first-child { color: var(--muted2); }
+  .compare-table .winner { color: var(--lens); font-weight: 700; }
+  .compare-table .loser { color: var(--muted); }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 0 40px 64px; max-width: 1040px; margin-left: auto; margin-right: auto; }
+
+  /* BACK LINK */
+  .back-link {
+    display: inline-block; margin: 32px 40px 0;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    text-decoration: none; transition: color .15s;
+  }
+  .back-link:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-logo">⬡ Storyboard</div>
+  <div class="nav-links">
+    <a class="nav-link" href="app.html">Dashboard</a>
+    <a class="nav-link" href="pitch.html">Pitch</a>
+    <a class="nav-link" href="#connect">Connect</a>
+    <a class="nav-link" href="#lens">Lens</a>
+    <a class="nav-link" href="#blueprints">Blueprints</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Product Universe — Storyboard Family</div>
+  <h1 class="hero-title">One platform.<br>Three products. One moat.</h1>
+  <p class="hero-sub">Storyboard is the memory layer for AI work. But memory alone isn't enough — you need connectors, intelligence, and expert knowledge baked in.</p>
+  <div class="hero-flow">
+    <span class="hf-node" style="color:var(--core);border-color:var(--core)33;background:var(--core)10">⬡ Storyboard Core</span>
+    <span class="hf-arrow">+</span>
+    <span class="hf-node" style="color:var(--connect);border-color:var(--connect)33;background:var(--connect)10">🔌 Connect</span>
+    <span class="hf-arrow">+</span>
+    <span class="hf-node" style="color:var(--lens);border-color:var(--lens)33;background:var(--lens)10">🔭 Lens</span>
+    <span class="hf-arrow">+</span>
+    <span class="hf-node" style="color:var(--blueprints);border-color:var(--blueprints)33;background:var(--blueprints)10">📋 Blueprints</span>
+  </div>
+</div>
+
+<!-- TIER MAP -->
+<div class="section">
+  <div class="section-label">Feature Tiers — what gets built when</div>
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-num" style="color:var(--core)">1</div>
+      <div class="tier-name" style="color:var(--core)">Core — Now</div>
+      <div class="tier-items">Memory layer · Blocks · Sessions · Decisions · Ideas · Roadmap · Context seeding · Pipeline view · Project canvas</div>
+      <div class="tier-when" style="color:var(--core)">10-day sprint · live</div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-num" style="color:var(--connect)">2</div>
+      <div class="tier-name" style="color:var(--connect)">Connect + Blueprints — 30–60 days</div>
+      <div class="tier-items">One-click OAuth connectors · Agent maps existing files → projects · Context window intelligence for browser users · Expert playbooks for business types</div>
+      <div class="tier-when" style="color:var(--connect)">Key differentiator</div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-num" style="color:var(--lens)">3</div>
+      <div class="tier-name" style="color:var(--lens)">Lens — 60–180 days</div>
+      <div class="tier-items">Multi-model routing · Side-by-side comparison · Personal model intelligence map · Prompt versioning + re-run with new models · API markup revenue</div>
+      <div class="tier-when" style="color:var(--lens)">Growth + monetisation</div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-num" style="color:var(--blueprints)">4</div>
+      <div class="tier-name" style="color:var(--blueprints)">Enterprise — later</div>
+      <div class="tier-items">Company brain · Team storyboards · Compliance + audit trail · Model governance · Org-level AI visibility · Platform API</div>
+      <div class="tier-when" style="color:var(--blueprints)">Enterprise revenue</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CONNECT -->
+<div class="section" id="connect">
+  <div class="section-label">Product 1</div>
+  <div class="prod-card" style="--c: var(--connect)">
+    <div class="prod-header">
+      <div class="prod-icon">🔌</div>
+      <div>
+        <div class="prod-tag">Storyboard Connect</div>
+        <div class="prod-name">One-click MCP connector UI</div>
+        <div class="prod-tagline">The Web 2.0 → AI bridge. Connect any tool to your AI environment without touching a config file.</div>
+      </div>
+    </div>
+
+    <div class="prod-body">
+      <div>
+        <div class="prod-section-title">The problem</div>
+        <p class="prod-desc">Every professional has their work locked in Web 2.0 containers — Dropbox, Google Drive, Notion, Slack, Evernote. AI agents can access all of these via MCP, but setup requires editing JSON config files and restarting apps. An architect firm can't do that. Neither can an estate agent, a teacher, or a founder without a technical co-founder.</p>
+        <div class="moat-box">
+          <div class="moat-label">The gap nobody has filled</div>
+          <div class="moat-text">The MCP ecosystem has connectors for every major tool. The GUI to set them up in one click doesn't exist. Storyboard Connect is that GUI.</div>
+        </div>
+      </div>
+      <div>
+        <div class="prod-section-title">How it works</div>
+        <ul class="feat-list">
+          <li>Click "Connect Dropbox" → OAuth in browser → agent maps folders to projects</li>
+          <li>"I found 8 project folders. Create a Storyboard project for each?" → Yes → done</li>
+          <li>Files, docs, and notes become context — referenced automatically in AI sessions</li>
+          <li>Ongoing sync: new files tagged to the right project without manual work</li>
+          <li>Connector marketplace: Dropbox, Drive, Notion, Slack, GitHub, Gmail, Evernote</li>
+        </ul>
+        <div class="moat-box" style="margin-top:16px">
+          <div class="moat-label">Why this makes you sticky</div>
+          <div class="moat-text">Once your Dropbox is wired in, leaving Storyboard means losing every connection. Each connector added increases switching cost exponentially.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- LENS -->
+<div class="section" id="lens">
+  <div class="section-label">Product 2</div>
+  <div class="prod-card" style="--c: var(--lens)">
+    <div class="prod-header">
+      <div class="prod-icon">🔭</div>
+      <div>
+        <div class="prod-tag">Storyboard Lens</div>
+        <div class="prod-name">Multi-model intelligence layer</div>
+        <div class="prod-tagline">Run any task across all AI models simultaneously. Build a personal map of which model wins at which type of work — passively, from your own usage.</div>
+      </div>
+    </div>
+
+    <div class="prod-body">
+      <div>
+        <div class="prod-section-title">The problem</div>
+        <p class="prod-desc">Every AI model has different strengths. Claude is better at reasoning and long-form content. GPT-4o wins on code. Gemini is faster for quick lookups. But nobody knows this from their own work — they just pick one model and stick with it. The data to make better decisions exists, but nobody is collecting it.</p>
+
+        <div class="moat-box">
+          <div class="moat-label">Why only Storyboard can do this</div>
+          <div class="moat-text">Storyboard already sees all your work across all sessions. No other tool has this cross-session, cross-model view. The intelligence builds passively — you don't have to do anything extra.</div>
+        </div>
+      </div>
+      <div>
+        <div class="prod-section-title">How it works</div>
+        <ul class="feat-list">
+          <li>Run any saved prompt or skill → sends to Claude, GPT-4o, Gemini simultaneously</li>
+          <li>Side-by-side results — pick the best, Storyboard remembers the choice</li>
+          <li>After 10–20 comparisons: personal model map auto-generates</li>
+          <li>Re-run historical tasks when a new model launches — see if it improves your results</li>
+          <li>Storyboard holds the API keys — users don't need accounts on every platform</li>
+        </ul>
+
+        <div style="margin-top:16px">
+          <div class="prod-section-title">Example — your model map after 4 weeks</div>
+          <table class="compare-table">
+            <tr><th>Task type</th><th>Best model</th><th>Win rate</th></tr>
+            <tr><td>SEO content</td><td class="winner">Claude Sonnet</td><td class="winner">74%</td></tr>
+            <tr><td>Code generation</td><td class="winner">GPT-4o</td><td class="winner">68%</td></tr>
+            <tr><td>Quick summaries</td><td class="winner">Gemini Flash</td><td class="winner">61%</td></tr>
+            <tr><td>Strategic thinking</td><td class="winner">Claude Opus</td><td class="winner">81%</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- BLUEPRINTS -->
+<div class="section" id="blueprints">
+  <div class="section-label">Product 3</div>
+  <div class="prod-card" style="--c: var(--blueprints)">
+    <div class="prod-header">
+      <div class="prod-icon">📋</div>
+      <div>
+        <div class="prod-tag">Storyboard Blueprints</div>
+        <div class="prod-name">Expert playbooks for any business type</div>
+        <div class="prod-tagline">The things experts know that beginners don't know to ask about. Every step, every connection, every "don't forget this" — already baked in.</div>
+      </div>
+    </div>
+
+    <div class="prod-body">
+      <div>
+        <div class="prod-section-title">The problem</div>
+        <p class="prod-desc">AI is reactive — it answers what you ask. Someone building their first e-commerce store asks "how do I set up a website?" and gets a perfectly good answer. They never ask about the Facebook Pixel. They spend €2,000 on ads with no retargeting audience. An expert would have put the pixel in on day one before spending a cent. That gap — between what you know to ask and what you need to know — is where beginners fail even with AI.</p>
+        <div class="moat-box">
+          <div class="moat-label">The real moat</div>
+          <div class="moat-text">Blueprints are codified expert knowledge from real campaigns. Not theory — actual lessons from running 500+ real estate transactions, 13,000 lead gen sites, and agency clients across verticals. That expertise takes years to accumulate and can't be faked.</div>
+        </div>
+      </div>
+      <div>
+        <div class="prod-section-title">Example — "I want to sell T-shirts online"</div>
+        <ul class="feat-list">
+          <li>Domain + Shopify setup (15 min)</li>
+          <li>Google Search Console + Analytics wired up before launch</li>
+          <li><strong style="color:var(--blueprints)">Facebook Pixel installed before first ad spend</strong> ← most people miss this</li>
+          <li>Product photography spec sheet for Meta ads (aspect ratios, file sizes)</li>
+          <li>Email capture from day one — not after traction</li>
+          <li>Abandoned cart sequence (recovers ~15% of lost sales)</li>
+          <li>Retargeting audiences built while organic traffic grows</li>
+          <li>Canonical URLs set before Google indexes anything</li>
+        </ul>
+        <div class="moat-box" style="margin-top:16px">
+          <div class="moat-label">Each blueprint maps to skills + connectors</div>
+          <div class="moat-text">Every step in a blueprint triggers the right Storyboard skill and, where available, the relevant connector — Shopify MCP, Meta Ads MCP, Search Console MCP. The playbook executes itself.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 40px 0">
+  <div style="font-size:11px;color:var(--muted)">⬡ Storyboard — built during a 10-day sprint, Apr 2026</div>
+  <div style="display:flex;justify-content:center;gap:20px;margin-top:12px">
+    <a href="app.html" class="nav-link" style="font-size:12px">→ Open Dashboard</a>
+    <a href="pitch.html" class="nav-link" style="font-size:12px">→ Investor Brief</a>
+  </div>
+</div>
+
+</body>
+</html>

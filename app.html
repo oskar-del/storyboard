@@ -410,6 +410,33 @@ body {
 .rp-decision-check { color: #22c55e; font-size: 11px; padding-top: 1px; flex-shrink: 0; }
 .rp-decision-text { font-size: 11px; color: var(--text-2); line-height: 1.45; flex: 1; }
 
+/* ── Project nav hover menu ─────────────────────────────── */
+.nav-proj-item { position: relative; }
+.nav-proj-menu-btn {
+  display: none; margin-left: auto; flex-shrink: 0;
+  background: none; border: none; padding: 0 4px; cursor: pointer;
+  font-size: 13px; color: var(--text-3); letter-spacing: 1px; line-height: 1;
+  border-radius: 4px;
+}
+.nav-proj-menu-btn:hover { background: var(--border); color: var(--text); }
+.nav-proj-item:hover .nav-proj-menu-btn { display: block; }
+.nav-proj-item:hover .nav-count { display: none; }
+.nav-proj-menu {
+  display: none; position: absolute; left: 12px; top: calc(100% + 2px);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 4px; z-index: 500; min-width: 170px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.14); animation: fadeIn .1s ease;
+}
+.nav-proj-menu.open { display: block; }
+.npm-item {
+  padding: 7px 10px; border-radius: 7px; font-size: 12px; font-weight: 500;
+  color: var(--text-2); cursor: pointer; transition: background .1s;
+}
+.npm-item:hover { background: var(--bg); color: var(--text); }
+.npm-danger { color: #ef4444; }
+.npm-danger:hover { background: #fef2f2; color: #dc2626; }
+.npm-divider { height: 1px; background: var(--border); margin: 3px 0; }
+
 /* ── Pipeline view ──────────────────────────────────────── */
 .pipeline-wrap {
   display:flex; align-items:flex-start; gap:0;
@@ -1083,7 +1110,6 @@ body {
   z-index: 150;
   transform: translateX(100%);
   transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
-  overflow: hidden;
 }
 .right-panel.open {
   transform: translateX(0);
@@ -1091,6 +1117,8 @@ body {
 }
 .right-panel-inner {
   flex: 1; overflow-y: auto; padding: 14px 0;
+  scrollbar-width: thin;
+  min-height: 0;
 }
 .right-panel-inner::-webkit-scrollbar { width: 3px; }
 .right-panel-inner::-webkit-scrollbar-thumb { background: var(--border); }
@@ -2088,6 +2116,17 @@ body {
       </div>
     </div>
 
+    <div class="rp-divider"></div>
+
+    <!-- Quick links -->
+    <div class="rp-section">
+      <div class="rp-title">Pages</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <a href="products.html" target="_blank" style="font-size:11px;font-weight:600;color:#10b981;text-decoration:none;padding:5px 0;display:flex;align-items:center;gap:5px">🔌 Product Universe →</a>
+        <a href="pitch.html" target="_blank" style="font-size:11px;font-weight:600;color:#6c63ff;text-decoration:none;padding:5px 0;display:flex;align-items:center;gap:5px">⬡ Pitch deck →</a>
+      </div>
+    </div>
+
   </div>
 </aside>
 
@@ -2914,6 +2953,22 @@ const BLOCKS = [
     title:"Case study PDF generator",
     summary:"Template: problem → solution → result. Auto-filled from client data. Branded PDF. Used in prospecting, LinkedIn posts, and proposal appendix.",
     chips:["Case studies","PDF","Branded"], effort:"½d" },
+
+  // ── PRODUCT CONCEPTS — new standalone products in the Storyboard family ──────
+  { id:"concept-connect", type:"roadmap", project:"Storyboard", status:"later",
+    title:"Storyboard Connect — one-click MCP connector UI",
+    summary:"The Web 2.0 → AI bridge. OAuth-based connectors for Dropbox, Google Drive, Notion, Slack, Evernote, GitHub. Agent maps your existing files/folders into Storyboard projects. No config files, no terminal. The connector layer nobody has built at consumer level. Potential standalone product.",
+    chips:["Product concept","MCP layer","Connectors","Web2→AI"], effort:"??" },
+
+  { id:"concept-lens", type:"roadmap", project:"Storyboard", status:"later",
+    title:"Storyboard Lens — multi-model intelligence layer",
+    summary:"Run any prompt/skill against Claude, GPT-4o, Gemini, Mistral simultaneously. Side-by-side results. Storyboard tracks every comparison and builds a personal model intelligence map: 'for SEO tasks, Claude wins. For code, GPT-4o wins.' No other tool does this because no other tool sees all your work across all models. Monetise via API markup. Potential standalone product.",
+    chips:["Product concept","Model routing","LLM comparison","Intelligence layer"], effort:"??" },
+
+  { id:"concept-blueprints", type:"roadmap", project:"Storyboard", status:"later",
+    title:"Storyboard Blueprints — expert playbooks for any business type",
+    summary:"Someone says 'I want to sell T-shirts online' and Storyboard surfaces the complete expert playbook — including the Facebook Pixel before you spend on ads, the abandoned cart sequence, the canonical URLs. The things experts know that beginners don't ask about. Each blueprint is a structured roadmap with skills pre-mapped. Oskar's agency knowledge codified at scale.",
+    chips:["Product concept","Blueprints","Playbooks","Expert knowledge"], effort:"??" },
 ];
 
 // ─── Skills quality data (loaded from skills-data.json) ──────────────────────
@@ -3161,10 +3216,20 @@ function buildNav() {
 
   document.getElementById('nav-projects').innerHTML = Object.entries(PROJ).map(([name, p]) => {
     const sid = name.replace(/ /g,'-');
-    return `<div class="nav-item" id="nav-${sid}" onclick="navClick('${name}')">
+    const enc = encodeURIComponent(name);
+    return `<div class="nav-item nav-proj-item" id="nav-${sid}" onclick="navClick('${name}')">
       <div class="nav-dot" style="background:${p.color}"></div>
       <span class="nav-item-text">${name}</span>
       <span class="nav-count">${counts[name]||0}</span>
+      <button class="nav-proj-menu-btn" onclick="event.stopPropagation();toggleProjMenu('${enc}')" title="Project options">···</button>
+      <div class="nav-proj-menu" id="projmenu-${sid}">
+        <div class="npm-item" onclick="event.stopPropagation();openProjectDetail('${name}');closeProjMenus()">📋 Open details</div>
+        <div class="npm-item" onclick="event.stopPropagation();renameProjPrompt('${enc}')">✏️ Rename</div>
+        <div class="npm-item" onclick="event.stopPropagation();mergeProjPrompt('${enc}')">⇄ Merge into…</div>
+        <div class="npm-divider"></div>
+        <div class="npm-item npm-danger" onclick="event.stopPropagation();archiveProjPrompt('${enc}')">🗂 Archive</div>
+        <div class="npm-item npm-danger" onclick="event.stopPropagation();deleteProjPrompt('${enc}')">🗑 Delete</div>
+      </div>
     </div>`;
   }).join('');
 
@@ -3933,6 +3998,69 @@ function openProjectDetail(name) {
   drawer.style.display = '';
   drawer.style.transform = 'translateX(100%)';
   requestAnimationFrame(() => { drawer.style.transform = 'translateX(0)'; });
+}
+
+// ── Project nav menu ──────────────────────────────────────
+function toggleProjMenu(enc) {
+  const name = decodeURIComponent(enc);
+  const sid  = name.replace(/ /g,'-');
+  const menu = document.getElementById('projmenu-' + sid);
+  if (!menu) return;
+  const isOpen = menu.classList.contains('open');
+  closeProjMenus();
+  if (!isOpen) {
+    menu.classList.add('open');
+    // Close when clicking outside
+    setTimeout(() => document.addEventListener('click', closeProjMenus, { once: true }), 10);
+  }
+}
+
+function closeProjMenus() {
+  document.querySelectorAll('.nav-proj-menu.open').forEach(m => m.classList.remove('open'));
+}
+
+function renameProjPrompt(enc) {
+  closeProjMenus();
+  const name = decodeURIComponent(enc);
+  const newName = prompt(`Rename "${name}" to:`, name);
+  if (!newName || newName === name) return;
+  // Update PROJ key and all blocks
+  PROJ[newName] = PROJ[name]; delete PROJ[name];
+  BLOCKS.forEach(b => { if (b.project === name) b.project = newName; });
+  liveBlocks.forEach(b => { if (b.project === name) b.project = newName; });
+  buildNav(); renderFeed(); showToast(`✏️ Renamed to "${newName}"`);
+}
+
+function mergeProjPrompt(enc) {
+  closeProjMenus();
+  const name = decodeURIComponent(enc);
+  const others = Object.keys(PROJ).filter(p => p !== name);
+  const target = prompt(`Merge "${name}" into which project?\n\n${others.map((p,i)=>`${i+1}. ${p}`).join('\n')}\n\nEnter project name:`);
+  if (!target || !PROJ[target]) { if (target) showToast('Project not found'); return; }
+  BLOCKS.forEach(b => { if (b.project === name) b.project = target; });
+  liveBlocks.forEach(b => { if (b.project === name) b.project = target; });
+  delete PROJ[name];
+  buildNav(); renderFeed(); showToast(`⇄ Merged "${name}" → "${target}"`);
+}
+
+function archiveProjPrompt(enc) {
+  closeProjMenus();
+  const name = decodeURIComponent(enc);
+  if (!confirm(`Archive "${name}"? It will be hidden from the nav but blocks are kept.`)) return;
+  // Add to archived list in localStorage
+  const archived = JSON.parse(localStorage.getItem('sb_archived_projs') || '[]');
+  if (!archived.includes(name)) archived.push(name);
+  localStorage.setItem('sb_archived_projs', JSON.stringify(archived));
+  delete PROJ[name];
+  buildNav(); renderFeed(); showToast(`🗂 "${name}" archived`);
+}
+
+function deleteProjPrompt(enc) {
+  closeProjMenus();
+  const name = decodeURIComponent(enc);
+  if (!confirm(`Delete "${name}"? This removes it from the nav. Blocks are kept but unassigned.`)) return;
+  delete PROJ[name];
+  buildNav(); renderFeed(); showToast(`🗑 "${name}" removed from nav`);
 }
 
 function closeProjDrawer() {
