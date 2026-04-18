@@ -8439,7 +8439,7 @@ function renderOverviewStrip() {
   ));
 
   // Next up items from memory
-  const nextItems = ['Cross-tool demo (ChatGPT → Claude)', 'Plain-English tagline for normals', 'First meetup outreach'];
+  const nextItems = ['Plain-English hero copy live', 'Demo mode for meetup visitors', 'GitHub Pages public URL confirmed'];
 
   el.className = 'overview-strip';
   el.innerHTML = `
@@ -10125,12 +10125,23 @@ function setSyncIndicator(state) {
   } else {
     dot.style.background = '#94a3b8';
     dot.style.boxShadow  = 'none';
-    label.textContent    = 'server off';
+    // On GitHub Pages or any non-localhost: show "Demo" not "server off"
+    const isDemo = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') && window.location.hostname !== '';
+    label.textContent    = isDemo ? 'Demo' : 'server off';
     wrap.style.color     = 'var(--text-3)';
+    wrap.title           = isDemo ? 'Viewing sprint data in demo mode — run locally to capture live' : 'MCP server offline — start with: node mcp-server.js';
   }
 }
 
 const SB_MCP = 'http://127.0.0.1:3847'; // declared here so pollData() can reference it at call time
+const IS_DEMO = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') && window.location.hostname !== '';
+// Hide push button and MCP-only controls on GitHub Pages / demo mode
+if (IS_DEMO) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const pushBtn = document.getElementById('pushBtn');
+    if (pushBtn) pushBtn.style.display = 'none';
+  });
+}
 
 function pollData() {
   const ts = Date.now();

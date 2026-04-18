@@ -1,5 +1,20 @@
 [
   {
+    "id": "sb-apr18-decision-public-url",
+    "type": "decision",
+    "project": "Storyboard",
+    "title": "Public URL confirmed live — oskar-del.github.io/storyboard",
+    "summary": "GitHub Pages is serving the sprint at https://oskar-del.github.io/storyboard/. Visitors get blocks-data.json loaded as static data — full sprint history visible without running the MCP server. App shows 'Demo' instead of 'server off' on GitHub Pages. Push button hidden in demo mode. This is the URL to hand out at Claude meetups.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "decisions": [
+      "GitHub Pages = the demo/meetup URL — always current after every push",
+      "Demo mode: shows 'Demo' not 'server off', hides push button",
+      "blocks-data.json is the static data layer — loads on GitHub Pages without MCP"
+    ],
+    "_source": "claude.ai"
+  },
+  {
     "id": "sb-apr18-session-dashboard-ux-fixes",
     "type": "session",
     "project": "Storyboard",
