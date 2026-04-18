@@ -1,5 +1,22 @@
 [
   {
+    "id": "sb-apr18-session-dashboard-ux-fixes",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 4 — dashboard UX overhaul + compounding context visual",
+    "summary": "Overview strip now persists across project views and shows project-scoped stats (STORYBOARD · TODAY). Canvas view respects activeFilter — clicking a project lands on the project profile, all view toggles stay filtered to that project. Mobile sidebar fixed — closes immediately on tap, not after renders. Skills 'needs work' button fixed — __weak__ sentinel was leaking into search, now bypasses text match. Sprint next-up items updated. Compounding context visual built (compounding-context.html). Agent Preview marked complete. Go-to-market, outbound agent, and 'built with Storyboard' blocks captured.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "chips": ["Dashboard", "UX", "Mobile", "Visual"],
+    "decisions": [
+      "Overview strip stays visible on project views, scoped to project stats",
+      "Project click → Canvas view as default landing (not grid dump)",
+      "Mobile sidebar closes first, renders after — never blocks interaction",
+      "Compounding context visual is a marketing asset, not just a feature demo"
+    ],
+    "_source": "claude.ai"
+  },
+  {
     "id": "sb-apr18-discussion-built-with-storyboard",
     "type": "discussion",
     "project": "Storyboard",
