@@ -13,52 +13,65 @@
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/* ══════════════════════════════════════════
+   DARK THEME IS THE DEFAULT — always
+   Light mode is the opt-in exception.
+══════════════════════════════════════════ */
 :root {
-  --bg: #f0f2f8;
-  --white: #ffffff;
-  --border: #e2e6f0;
-  --text: #0f1120;
-  --text-2: #505575;
-  --text-3: #9fa8c4;
-  --r: 14px;
-  --shadow: 0 1px 4px rgba(20,40,100,0.06), 0 4px 14px rgba(20,40,100,0.04);
-  --shadow-lg: 0 8px 32px rgba(20,40,100,0.13), 0 2px 8px rgba(20,40,100,0.06);
-  --nav-w: 210px;
-  --nav-w-sm: 52px;
-  --top-h: 48px;
-  --right-w: 268px;
-}
-
-/* ── AI MODE — dark theme ── */
-body.ai-mode {
   --bg:       #0d1117;
   --white:    #161b27;
   --border:   rgba(255,255,255,.08);
   --text:     #e8eaf6;
   --text-2:   #94a3b8;
   --text-3:   #475569;
-  --shadow:    0 1px 4px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.25);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3);
+  --r:        14px;
+  --shadow:   0 1px 4px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.25);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3);
+  --nav-w:    210px;
+  --nav-w-sm: 52px;
+  --top-h:    48px;
+  --right-w:  268px;
+  --accent:   #6c63ff;
 }
-body.ai-mode .header          { background: #0d1117; border-color: rgba(255,255,255,.06); }
-body.ai-mode .left-nav        { background: #0d1117; border-color: rgba(255,255,255,.06); }
-body.ai-mode .right-panel     { background: #0d1117; border-color: rgba(255,255,255,.06); }
-body.ai-mode .inspect-panel   { background: #0d1117; }
-body.ai-mode .block           { background: var(--white); border-color: rgba(255,255,255,.08); }
-body.ai-mode .block:hover     { border-color: var(--block-color, #6c63ff); }
-body.ai-mode .block-featured  { border-color: var(--block-color, #6c63ff) !important; }
-body.ai-mode .nav-focus       { background: linear-gradient(135deg,rgba(108,99,255,.15),rgba(108,99,255,.08)); }
-body.ai-mode .proj-header     { background: var(--white); }
-body.ai-mode .rp-today-block  { background: rgba(255,255,255,.04); }
-body.ai-mode .period-tabs     { background: rgba(255,255,255,.05); }
-body.ai-mode .period-tab      { color: var(--text-2); }
-body.ai-mode .period-tab.on   { background: rgba(255,255,255,.1); color: var(--text); }
-body.ai-mode .detail-overlay  { background: #0d1117; }
+
+/* ── LIGHT MODE — opt-in override ───────────────────────────────── */
+body.light-mode {
+  --bg:       #f0f2f8;
+  --white:    #ffffff;
+  --border:   #e2e6f0;
+  --text:     #0f1120;
+  --text-2:   #505575;
+  --text-3:   #9fa8c4;
+  --shadow:   0 1px 4px rgba(20,40,100,.06), 0 4px 14px rgba(20,40,100,.04);
+  --shadow-lg:0 8px 32px rgba(20,40,100,.13), 0 2px 8px rgba(20,40,100,.06);
+}
+body.light-mode .header          { background: #ffffff; border-color: #e2e6f0; }
+body.light-mode .left-nav        { background: #ffffff; border-color: #e2e6f0; }
+body.light-mode .right-panel     { background: #ffffff; border-color: #e2e6f0; }
+body.light-mode .inspect-panel   { background: #f7f8fa; }
+body.light-mode .block           { background: #ffffff; border-color: #e2e6f0; }
+body.light-mode .block:hover     { border-color: var(--block-color, #6c63ff); box-shadow: 0 2px 8px rgba(20,40,100,.08); }
+body.light-mode .nav-focus       { background: linear-gradient(135deg,rgba(108,99,255,.08),rgba(108,99,255,.04)); }
+body.light-mode .proj-header     { background: #ffffff; }
+body.light-mode .rp-today-block  { background: #f7f8fa; }
+body.light-mode .period-tabs     { background: #f0f2f8; }
+body.light-mode .period-tab      { color: #505575; }
+body.light-mode .period-tab.on   { background: #ffffff; color: #0f1120; }
+body.light-mode .detail-overlay  { background: #ffffff; }
+body.light-mode .ctx-fault-card  { background: rgba(108,99,255,.04); border-color: rgba(108,99,255,.12); }
+body.light-mode .ctx-banner      { background: rgba(108,99,255,.04); border-color: rgba(108,99,255,.15); }
+body.light-mode .ctx-window-card { background: #ffffff; border-color: #e2e6f0; }
+body.light-mode .ctx-window-num  { background: #f7f8fa; border-color: #e2e6f0; }
+body.light-mode .mode-toggle-opt.active { background: #ffffff; color: #0f1120; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+body.light-mode .topbar          { background: #ffffff; border-color: #e2e6f0; }
+body.light-mode .nav-tool-item:hover { background: rgba(0,0,0,.04); }
+body.light-mode .nav-proj-row:hover  { background: rgba(0,0,0,.04); }
+body.light-mode .nav-proj-row.active { background: rgba(108,99,255,.08); }
 
 /* Mode toggle button */
 .mode-toggle {
   display: flex; align-items: center; gap: 3px;
-  background: var(--bg); border: 1.5px solid var(--border);
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
   border-radius: 20px; padding: 3px; cursor: pointer;
   transition: all .2s; flex-shrink: 0;
 }
@@ -68,13 +81,12 @@ body.ai-mode .detail-overlay  { background: #0d1117; }
   color: var(--text-3); transition: all .15s; white-space: nowrap;
 }
 .mode-toggle-opt.active {
-  background: var(--white);
-  color: var(--text);
-  box-shadow: 0 1px 4px rgba(0,0,0,.1);
-}
-body.ai-mode .mode-toggle-opt.active {
   background: #6c63ff;
   color: #fff;
+  box-shadow: 0 1px 4px rgba(108,99,255,.4);
+}
+body.light-mode .mode-toggle {
+  background: var(--bg); border-color: var(--border);
 }
 html, body { height: 100%; }
 body {
@@ -109,13 +121,16 @@ body {
 /* ── TOPBAR ── */
 .topbar {
   grid-column: 1 / -1;
-  background: rgba(255,255,255,0.96);
+  background: rgba(13,17,23,0.96);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center;
   position: sticky; top: 0; z-index: 60;
   height: var(--top-h);
+}
+body.light-mode .topbar {
+  background: rgba(255,255,255,0.96);
 }
 
 .top-logo-area {
@@ -239,6 +254,94 @@ body {
 }
 .nav-collapsed .nav-label { opacity: 0; }
 
+/* ── Design-V2 section labels ──────────────────────────────────── */
+.nav-sec-label {
+  font-size: 9px; font-weight: 800; letter-spacing: .9px; text-transform: uppercase;
+  color: var(--text-3); padding: 14px 18px 5px 14px; white-space: nowrap;
+  transition: opacity .15s;
+}
+.nav-sec-label:first-child { padding-top: 10px; }
+.nav-collapsed .nav-sec-label { opacity: 0; }
+
+/* ── Project status dots ───────────────────────────────────────── */
+.proj-status-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  transition: background .3s;
+}
+.proj-status-dot.running { background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,.2); }
+.proj-status-dot.paused  { background: #f59e0b; }
+.proj-status-dot.idle    { background: var(--text-3); }
+
+/* ── Nav project row (design-v2 style) ─────────────────────────── */
+.nav-proj-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px 6px 14px; margin: 0 4px 1px;
+  border-radius: 8px; cursor: pointer; transition: background .12s;
+  position: relative;
+}
+.nav-proj-row:hover { background: rgba(255,255,255,.04); }
+.nav-proj-row.active {
+  background: rgba(108,99,255,.1);
+}
+.nav-proj-row.active::before {
+  content: ''; position: absolute; left: 0; top: 5px; bottom: 5px;
+  width: 2px; border-radius: 0 2px 2px 0; background: #6c63ff;
+}
+.nav-proj-name {
+  font-size: 12px; color: var(--text-2); flex: 1;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  transition: opacity .15s;
+}
+.nav-proj-row.active .nav-proj-name { color: var(--text); font-weight: 600; }
+.nav-proj-tag {
+  font-size: 9px; font-weight: 700; color: var(--text-3); flex-shrink: 0;
+  transition: opacity .15s;
+}
+.nav-proj-tag.live { color: #10b981; }
+.nav-collapsed .nav-proj-name,
+.nav-collapsed .nav-proj-tag { opacity: 0; }
+
+/* ── Show more projects toggle ─────────────────────────────────── */
+.nav-show-more-btn {
+  font-size: 11px; color: var(--text-3);
+  padding: 4px 14px 4px 34px; cursor: pointer;
+  transition: color .12s; margin: 0 4px;
+  border-radius: 6px; background: none; border: none; text-align: left;
+  width: calc(100% - 8px);
+}
+.nav-show-more-btn:hover { color: #6c63ff; }
+.nav-collapsed .nav-show-more-btn { display: none; }
+
+/* ── Unified nav button (for Capture / Intelligence / Tools) ───── */
+.nav-tool-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px 7px 14px; margin: 0 4px 1px;
+  border-radius: 8px; cursor: pointer;
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+  transition: background .12s, color .12s; white-space: nowrap;
+  background: none; border: none; width: calc(100% - 8px); text-align: left;
+  position: relative;
+}
+.nav-tool-item:hover { background: rgba(255,255,255,.04); color: var(--text); }
+.nav-tool-item.active {
+  background: rgba(108,99,255,.1); color: var(--text);
+}
+.nav-tool-item.active::before {
+  content: ''; position: absolute; left: 0; top: 5px; bottom: 5px;
+  width: 2px; border-radius: 0 2px 2px 0; background: #6c63ff;
+}
+.nav-tool-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-tool-label { flex: 1; overflow: hidden; white-space: nowrap; transition: opacity .15s; }
+.nav-collapsed .nav-tool-label { opacity: 0; }
+.nav-tool-badge {
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 10px; background: rgba(255,255,255,.06); color: var(--text-3);
+  flex-shrink: 0;
+}
+.nav-tool-badge.accent { background: rgba(108,99,255,.15); color: #6c63ff; }
+.nav-tool-badge.green  { background: rgba(16,185,129,.12); color: #10b981; }
+.nav-tool-badge.yellow { background: rgba(245,158,11,.12); color: #f59e0b; }
+
 .nav-item {
   display: flex; align-items: center; gap: 9px;
   padding: 7px 8px; border-radius: 9px;
@@ -318,6 +421,188 @@ body {
 .time-lane::after {
   content: ''; flex: 1; height: 1px; background: var(--border);
 }
+
+/* ── Context Fault Lines (session block dividers) ──────────────── */
+.ctx-fault {
+  width: 100%; margin: 6px 0 10px; cursor: pointer; user-select: none;
+}
+.ctx-fault-sep {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
+}
+.ctx-fault-sep-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, rgba(108,99,255,.3), rgba(108,99,255,.04));
+}
+.ctx-fault-sep-line-r {
+  flex: 1; height: 1px;
+  background: linear-gradient(to left, rgba(108,99,255,.3), rgba(108,99,255,.04));
+}
+.ctx-fault-sep-badge {
+  font-size: 9px; font-weight: 800; color: #6c63ff; letter-spacing: .6px;
+  text-transform: uppercase; flex-shrink: 0; opacity: .65;
+}
+.ctx-fault-card {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  background: rgba(108,99,255,.04);
+  border: 1px solid rgba(108,99,255,.13);
+  border-radius: 10px; transition: all .15s;
+}
+.ctx-fault:hover .ctx-fault-card {
+  background: rgba(108,99,255,.07); border-color: rgba(108,99,255,.28);
+}
+.ctx-fault-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.ctx-fault-info { flex: 1; min-width: 0; }
+.ctx-fault-title {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ctx-fault-meta {
+  font-size: 11px; color: var(--text-3); margin-top: 2px; line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ctx-fault-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.ctx-fault-pill {
+  font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px;
+}
+.ctx-fault-pill-d { background: rgba(34,197,94,.12); color: #22c55e; }
+.ctx-fault-pill-i { background: rgba(245,158,11,.12); color: #f59e0b; }
+
+/* ── Feature 2: Last-captured badge ───────────────────────────────── */
+.block-last-in-ctx {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 700; letter-spacing: .4px;
+  color: #6c63ff; background: rgba(108,99,255,.1);
+  border: 1px solid rgba(108,99,255,.22); border-radius: 8px;
+  padding: 2px 6px; margin-left: 4px; white-space: nowrap;
+}
+
+/* ── Feature 3: Seed trail connector on fault lines ───────────────── */
+.ctx-fault-trail {
+  display: flex; align-items: center; gap: 6px; margin-top: 6px;
+  font-size: 10px; color: var(--text-3);
+}
+.ctx-fault-trail-label { font-weight: 700; color: #6c63ff; }
+.ctx-fault-trail-block {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: rgba(108,99,255,.1); border: 1px solid rgba(108,99,255,.2);
+  border-radius: 6px; padding: 2px 7px; font-size: 10px; font-weight: 600;
+  color: var(--text-2); cursor: pointer; transition: all .12s;
+}
+.ctx-fault-trail-block:hover { background: rgba(108,99,255,.18); color: var(--text); }
+.ctx-fault-trail-arrow { color: var(--text-3); font-size: 11px; }
+
+/* ── Feature 5: Gap warning (no seed used) ────────────────────────── */
+.ctx-fault-gap {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.18);
+  border-radius: 8px; padding: 5px 10px; margin-top: 6px;
+  font-size: 10px; color: #f87171;
+}
+.ctx-fault-gap-icon { flex-shrink: 0; }
+.ctx-fault-gap-text { font-weight: 600; }
+.ctx-fault-date { font-size: 10px; color: var(--text-3); flex-shrink: 0; margin-top: 2px; }
+.ctx-fault-seed {
+  font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 7px;
+  background: rgba(108,99,255,.1); color: #6c63ff;
+  border: 1px solid rgba(108,99,255,.2); cursor: pointer; flex-shrink: 0;
+  white-space: nowrap; transition: all .15s; align-self: center;
+}
+.ctx-fault-seed:hover { background: rgba(108,99,255,.18); border-color: rgba(108,99,255,.4); }
+
+/* ── Context Banner (top of All Work feed) ─────────────────────── */
+.ctx-banner {
+  background: linear-gradient(135deg,rgba(108,99,255,.06),rgba(16,185,129,.02));
+  border: 1.5px solid rgba(108,99,255,.18); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 14px; cursor: pointer; transition: all .15s;
+}
+.ctx-banner:hover { border-color: rgba(108,99,255,.35); }
+.ctx-banner-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
+}
+.ctx-banner-eyebrow {
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .8px; color: #6c63ff; opacity: .8;
+}
+.ctx-banner-date { font-size: 10px; color: var(--text-3); margin-left: auto; }
+.ctx-banner-seed {
+  font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 7px;
+  background: rgba(108,99,255,.1); color: #6c63ff;
+  border: 1px solid rgba(108,99,255,.2); cursor: pointer; flex-shrink: 0;
+  transition: all .15s;
+}
+.ctx-banner-seed:hover { background: rgba(108,99,255,.18); }
+.ctx-banner-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.ctx-banner-summary { font-size: 11px; color: var(--text-2); line-height: 1.5; margin-bottom: 7px; }
+.ctx-banner-pills { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.ctx-banner-proj {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px;
+}
+
+/* ── Context Windows view ──────────────────────────────────────── */
+.ctx-windows-wrap { max-width: 700px; margin: 0 auto; }
+.ctx-windows-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0 10px;
+}
+.ctx-windows-title {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--text-3);
+}
+.ctx-window-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 13px 15px; margin-bottom: 7px;
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 12px; cursor: pointer; transition: all .15s;
+}
+.ctx-window-card:hover {
+  border-color: rgba(108,99,255,.35); transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108,99,255,.07);
+}
+.ctx-window-num {
+  font-size: 11px; font-weight: 800; color: var(--text-3);
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 7px; flex-shrink: 0;
+  margin-top: 1px; font-variant-numeric: tabular-nums; min-width: 28px; text-align: center;
+}
+.ctx-window-body { flex: 1; min-width: 0; }
+.ctx-window-proj-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 3px;
+}
+.ctx-window-proj {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px;
+}
+.ctx-window-date { font-size: 10px; color: var(--text-3); margin-left: auto; }
+.ctx-window-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.ctx-window-summary {
+  font-size: 11px; color: var(--text-2); margin-top: 3px; line-height: 1.5;
+}
+
+/* ── Context fill meter (topbar) ───────────────────────────────── */
+.ctx-fill-meter {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 20px;
+  background: rgba(108,99,255,.07); border: 1px solid rgba(108,99,255,.18);
+  cursor: default; transition: all .3s;
+}
+.ctx-fill-bar-wrap {
+  width: 40px; height: 4px; background: rgba(108,99,255,.15);
+  border-radius: 3px; overflow: hidden;
+}
+.ctx-fill-bar {
+  height: 100%; border-radius: 3px; transition: width .5s, background .5s;
+  background: #6c63ff;
+}
+.ctx-fill-label {
+  font-size: 10px; font-weight: 700; color: #6c63ff;
+  white-space: nowrap; letter-spacing: .2px;
+}
+.ctx-fill-meter.amber { background: rgba(245,158,11,.07); border-color: rgba(245,158,11,.25); }
+.ctx-fill-meter.amber .ctx-fill-bar { background: #f59e0b; }
+.ctx-fill-meter.amber .ctx-fill-label { color: #d97706; }
+.ctx-fill-meter.red { background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.25); }
+.ctx-fill-meter.red .ctx-fill-bar { background: #ef4444; }
+.ctx-fill-meter.red .ctx-fill-label { color: #dc2626; }
 
 /* ── Prompts nav button ───────────────────────────────── */
 .prompts-btn {
@@ -544,9 +829,12 @@ body {
   font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
   padding:2px 8px; border-radius:20px; flex-shrink:0; margin-top:1px;
 }
-.pd-rm-badge.next  { background:#dcfce7; color:#15803d; }
-.pd-rm-badge.soon  { background:#dbeafe; color:#1d4ed8; }
-.pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
+.pd-rm-badge.next  { background:rgba(34,197,94,.12); color:#22c55e; }
+.pd-rm-badge.soon  { background:rgba(59,130,246,.12); color:#60a5fa; }
+.pd-rm-badge.later { background:rgba(148,163,184,.1); color:var(--text-3); }
+body.light-mode .pd-rm-badge.next  { background:#dcfce7; color:#15803d; }
+body.light-mode .pd-rm-badge.soon  { background:#dbeafe; color:#1d4ed8; }
+body.light-mode .pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
 .pd-rm-title { font-size:12px; font-weight:700; color:var(--text); line-height:1.35; flex:1; }
 .pd-rm-summary { font-size:11px; color:var(--text-2); line-height:1.5; margin-bottom:6px; }
 .pd-rm-chips { display:flex; flex-wrap:wrap; gap:4px; }
@@ -683,13 +971,13 @@ body {
   width: 52px; height: 52px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-direction: column; flex-shrink: 0;
-  background: conic-gradient(var(--score-color) var(--score-pct), #f0f0f8 0);
+  background: conic-gradient(var(--score-color) var(--score-pct), rgba(255,255,255,.08) 0);
   position: relative;
 }
 .inspect-score-ring::after {
   content: '';
   position: absolute; inset: 6px;
-  background: white; border-radius: 50%;
+  background: var(--white); border-radius: 50%;
 }
 .inspect-score-num {
   position: relative; z-index: 1;
@@ -878,8 +1166,9 @@ body {
   background: var(--bg); color: var(--text-3); border: 1px solid var(--border);
 }
 .proj-header-deploy.live {
-  background: #f0fdf4; color: #059669; border-color: #bbf7d0;
+  background: rgba(16,185,129,.1); color: #10b981; border-color: rgba(16,185,129,.3);
 }
+body.light-mode .proj-header-deploy.live { background: #f0fdf4; color: #059669; border-color: #bbf7d0; }
 .proj-header-desc {
   font-size: 12.5px; color: var(--text-2); line-height: 1.6;
   margin-bottom: 12px;
@@ -928,7 +1217,7 @@ body {
   border: 1px solid var(--border); cursor: pointer;
   transition: background .12s, border-color .12s;
 }
-.proj-seed-item:hover { background: #f5f3ff; border-color: #c4b5fd; }
+.proj-seed-item:hover { background: rgba(108,99,255,.1); border-color: rgba(108,99,255,.4); }
 .proj-seed-copy { font-size: 11px; margin-left: auto; flex-shrink: 0; opacity: .5; }
 .proj-ideas-row {
   display: flex; flex-wrap: wrap; gap: 6px;
@@ -949,7 +1238,7 @@ body {
 .block-icon-band {
   width: 100%;
   height: 44px;
-  background: var(--block-bg, #f5f3ff);
+  background: var(--block-bg, rgba(108,99,255,.07));
   display: flex; align-items: center; padding: 0 14px; gap: 8px;
 }
 .block-icon-band-icon { font-size: 18px; line-height: 1; }
@@ -992,7 +1281,7 @@ body {
 .board-col-name { font-size: 12px; font-weight: 700; color: var(--col-color); flex: 1; }
 .board-col-count {
   font-size: 10px; font-weight: 600; color: var(--col-color);
-  background: rgba(255,255,255,.7); border-radius: 20px; padding: 1px 7px;
+  background: rgba(255,255,255,.1); border-radius: 20px; padding: 1px 7px;
 }
 .board-col-blocks {
   display: flex; flex-direction: column; gap: 8px;
@@ -1034,11 +1323,11 @@ body {
 
 .block-thumb {
   width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
-  background: var(--block-bg, #f5f3ff);
+  background: var(--block-bg, rgba(108,99,255,.07));
 }
 .block-thumb-ph {
   width: 100%; aspect-ratio: 16/9;
-  background: var(--block-bg, #f5f3ff);
+  background: var(--block-bg, rgba(108,99,255,.07));
   display: flex; align-items: center; justify-content: center; font-size: 24px;
 }
 .block-lg .block-thumb, .block-lg .block-thumb-ph { aspect-ratio: 4/3; }
@@ -1071,7 +1360,7 @@ body {
 .block-type-badge {
   font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
   padding: 2px 7px; border-radius: 20px;
-  background: var(--block-bg, #f5f3ff); color: var(--block-color, #6c63ff);
+  background: var(--block-bg, rgba(108,99,255,.07)); color: var(--block-color, #6c63ff);
   border: 1px solid var(--block-color, #6c63ff); opacity: .8;
   flex-shrink: 0;
 }
@@ -1103,7 +1392,7 @@ body {
 .journal-entry-icon {
   width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
   font-size: 13px; flex-shrink: 0;
-  background: var(--block-bg, #f5f3ff); border: 1.5px solid var(--block-color, #6c63ff);
+  background: var(--block-bg, rgba(108,99,255,.07)); border: 1.5px solid var(--block-color, #6c63ff);
 }
 .journal-entry-line {
   width: 1.5px; flex: 1; min-height: 20px; background: var(--border); margin-top: 4px;
@@ -1125,7 +1414,7 @@ body {
 .journal-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 6px; }
 .journal-chip {
   font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
-  background: var(--block-bg, #f5f3ff); color: var(--block-color, #6c63ff);
+  background: var(--block-bg, rgba(108,99,255,.07)); color: var(--block-color, #6c63ff);
   border: 1px solid var(--block-color, #6c63ff); opacity: .75;
 }
 .journal-entry-foot {
@@ -1134,11 +1423,16 @@ body {
 .journal-foot-pill {
   font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
 }
-.jfp-decision { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-.jfp-idea     { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
-.jfp-next     { background: #dcfce7; color: #15803d; }
-.jfp-soon     { background: #dbeafe; color: #1d4ed8; }
-.jfp-later    { background: #f3f4f6; color: #6b7280; }
+.jfp-decision { background: rgba(16,185,129,.1); color: #10b981; border: 1px solid rgba(16,185,129,.25); }
+.jfp-idea     { background: rgba(245,158,11,.1); color: #f59e0b; border: 1px solid rgba(245,158,11,.25); }
+.jfp-next     { background: rgba(16,185,129,.1); color: #10b981; }
+.jfp-soon     { background: rgba(59,130,246,.1); color: #60a5fa; }
+.jfp-later    { background: rgba(148,163,184,.1); color: var(--text-3); }
+body.light-mode .jfp-decision { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+body.light-mode .jfp-idea     { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+body.light-mode .jfp-next     { background: #dcfce7; color: #15803d; }
+body.light-mode .jfp-soon     { background: #dbeafe; color: #1d4ed8; }
+body.light-mode .jfp-later    { background: #f3f4f6; color: #6b7280; }
 .bchip {
   font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
   background: var(--block-bg); color: var(--block-color);
@@ -1152,7 +1446,7 @@ body {
   cursor: pointer;
   transition: background .12s;
 }
-.block-continue:hover { background: var(--block-bg, #f5f3ff); }
+.block-continue:hover { background: var(--block-bg, rgba(108,99,255,.07)); }
 .block-continue-label {
   font-size: 10px; font-weight: 700; color: var(--block-color, #6c63ff);
   letter-spacing: .2px;
@@ -1343,9 +1637,10 @@ body {
 .decisions { display: flex; flex-direction: column; gap: 5px; }
 .decision {
   display: flex; gap: 8px; align-items: flex-start;
-  padding: 7px 9px; background: #f0fdf4; border-radius: 8px;
-  border: 1px solid #bbf7d0; font-size: 12px; line-height: 1.45;
+  padding: 7px 9px; background: rgba(16,185,129,.07); border-radius: 8px;
+  border: 1px solid rgba(16,185,129,.2); font-size: 12px; line-height: 1.45;
 }
+body.light-mode .decision { background: #f0fdf4; border-color: #bbf7d0; }
 .decision-check { color: #22c55e; flex-shrink: 0; font-size: 10px; padding-top: 2px; }
 .ideas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 @media (max-width: 480px) { .ideas-grid { grid-template-columns: 1fr; } }
@@ -1519,7 +1814,8 @@ body {
   background: var(--bg); color: var(--text-3); border: 1px solid var(--border);
   white-space: nowrap;
 }
-.canvas-card-deploy.live { background: #f0fdf4; color: #059669; border-color: #bbf7d0; }
+.canvas-card-deploy.live { background: rgba(16,185,129,.1); color: #10b981; border-color: rgba(16,185,129,.3); }
+body.light-mode .canvas-card-deploy.live { background: #f0fdf4; color: #059669; border-color: #bbf7d0; }
 .canvas-card-stats {
   display: flex; gap: 0; border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border); margin: 0 -16px 12px; padding: 0 16px;
@@ -1642,7 +1938,7 @@ body {
   white-space: nowrap;
 }
 .skill-copy-btn:hover { background: #0ea5e912; border-color: #0ea5e988; }
-.skill-copy-btn.copied { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
+.skill-copy-btn.copied { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.4); color: #22c55e; }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -1980,10 +2276,15 @@ body {
           <line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
+      <!-- Context fill meter -->
+      <div class="ctx-fill-meter" id="ctxFillMeter" title="Estimated context window usage for this session">
+        <div class="ctx-fill-bar-wrap"><div class="ctx-fill-bar" id="ctxFillBar" style="width:5%"></div></div>
+        <span class="ctx-fill-label" id="ctxFillLabel">Context</span>
+      </div>
       <!-- OS / AI mode toggle -->
-      <div class="mode-toggle" onclick="toggleMode()" title="Switch between OS mode and AI mode">
-        <div class="mode-toggle-opt active" id="modeOS">OS</div>
-        <div class="mode-toggle-opt" id="modeAI">AI</div>
+      <div class="mode-toggle" onclick="toggleMode()" title="Switch between Light and Dark mode">
+        <div class="mode-toggle-opt" id="modeOS">Light</div>
+        <div class="mode-toggle-opt active" id="modeAI">Dark</div>
       </div>
       <div id="syncIndicator" title="Last synced with MCP server" style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--text-3);padding:4px 8px;border-radius:20px;border:1px solid transparent;transition:all .3s;cursor:default">
         <div id="syncDot" style="width:6px;height:6px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s"></div>
@@ -2034,63 +2335,70 @@ body {
 
   <!-- LEFT NAV -->
   <nav class="left-nav" id="leftNav">
-    <!-- FOCUS — most active project, pulsing live dot -->
-    <div class="nav-focus" id="navFocus" onclick="navFocusClick()">
-      <div class="nav-focus-dot" id="navFocusDot"></div>
-      <div class="nav-focus-text">
-        <div class="nav-focus-label">Focus</div>
-        <div class="nav-focus-proj" id="navFocusProj">—</div>
-      </div>
-      <span class="nav-focus-count" id="navFocusCount">—</span>
+
+    <!-- ── OVERVIEW ────────────────────────────────── -->
+    <div class="nav-sec-label">Overview</div>
+    <div class="nav-item active" id="nav-All" onclick="navClick('All')">
+      <div class="nav-dot" style="background:var(--text-3)"></div>
+      <span class="nav-item-text">All work</span>
+      <span class="nav-count" id="cnt-All">—</span>
     </div>
 
-    <div class="nav-section">
-      <div class="nav-item active" id="nav-All" onclick="navClick('All')">
-        <div class="nav-dot" style="background:var(--text-3)"></div>
-        <span class="nav-item-text">All work</span>
-        <span class="nav-count" id="cnt-All">—</span>
-      </div>
-    </div>
-    <div class="nav-divider"></div>
-    <div class="nav-section">
-      <div class="nav-label">Projects</div>
-      <div id="nav-projects"></div>
-    </div>
-    <!-- Context Hub button -->
-    <button class="ideas-btn" id="contextBtn" onclick="openContextHub()" style="background:linear-gradient(135deg,rgba(124,107,255,0.12),rgba(78,205,196,0.08));border:1px solid rgba(124,107,255,0.25)">
-      <span style="font-size:13px;flex-shrink:0">⚡</span>
-      <span style="font-weight:700">Context</span>
-      <span class="ideas-count" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
+    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+
+    <!-- ── ACTIVE PROJECTS ────────────────────────── -->
+    <div class="nav-sec-label">Active projects</div>
+    <div id="nav-active-projects"></div>
+    <div id="nav-projects" style="display:none"></div>
+    <button class="nav-show-more-btn" id="navShowMoreBtn" onclick="toggleMoreProjects()" style="display:none"></button>
+
+    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+
+    <!-- ── CAPTURE ────────────────────────────────── -->
+    <div class="nav-sec-label">Capture</div>
+    <button class="nav-tool-item" id="ideasBtn" onclick="toggleIdeasView()">
+      <span class="nav-tool-icon">💡</span>
+      <span class="nav-tool-label">Ideas</span>
+      <span class="nav-tool-badge yellow" id="ideasCount">0</span>
     </button>
-    <!-- Ideas filter button -->
-    <button class="ideas-btn" id="ideasBtn" onclick="toggleIdeasView()">
-      <span class="ideas-icon">💡</span>
-      <span>Ideas</span>
-      <span class="ideas-count" id="ideasCount">0</span>
+    <button class="nav-tool-item" id="decisionsBtn" onclick="toggleDecisionsView()">
+      <span class="nav-tool-icon" style="font-size:13px">✓</span>
+      <span class="nav-tool-label">Decisions</span>
+      <span class="nav-tool-badge green" id="decisionsCount">0</span>
     </button>
-    <!-- Skills browser button -->
-    <button class="prompts-btn" id="promptsBtn" onclick="togglePromptsView()">
-      <span class="prompts-icon">⚙️</span>
-      <span>Skills</span>
-      <span class="ideas-count" style="background:#0ea5e922;color:#0284c7" id="skillsCountBadge">35</span>
+
+    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+
+    <!-- ── INTELLIGENCE ───────────────────────────── -->
+    <div class="nav-sec-label">Intelligence</div>
+    <button class="nav-tool-item" id="agentBtn" onclick="openAgentPreview()">
+      <span class="nav-tool-icon">🤖</span>
+      <span class="nav-tool-label">Agents</span>
+      <span class="nav-tool-badge accent" id="agentSimCount">4</span>
     </button>
-    <!-- Decisions -->
-    <button class="decisions-btn" id="decisionsBtn" onclick="toggleDecisionsView()">
-      <span style="font-size:13px;flex-shrink:0">✓</span>
-      <span>Decisions</span>
-      <span class="decisions-count" id="decisionsCount">0</span>
+    <button class="nav-tool-item" id="contextBtn" onclick="openContextHub()">
+      <span class="nav-tool-icon">⚡</span>
+      <span class="nav-tool-label">Context</span>
+      <span class="nav-tool-badge" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
     </button>
-    <!-- Agent Preview -->
-    <button class="decisions-btn" id="agentBtn" onclick="openAgentPreview()" style="background:linear-gradient(135deg,rgba(108,99,255,0.10),rgba(16,185,129,0.06));border:1px solid rgba(108,99,255,0.22)">
-      <span style="font-size:13px;flex-shrink:0">🤖</span>
-      <span>Agents</span>
-      <span class="decisions-count" id="agentSimCount" style="background:rgba(108,99,255,0.15);color:#6c63ff">4</span>
+    <button class="nav-tool-item" id="inspectBtn2" onclick="toggleInspect()">
+      <span class="nav-tool-icon">🔍</span>
+      <span class="nav-tool-label">Inspect</span>
     </button>
-    <!-- Files -->
-    <button class="files-btn" id="filesBtn">
-      <span style="font-size:13px;flex-shrink:0">📁</span>
-      <span>Files</span>
-      <span class="files-count" id="filesCount">0</span>
+
+    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+
+    <!-- ── TOOLS ──────────────────────────────────── -->
+    <div class="nav-sec-label">Tools</div>
+    <button class="nav-tool-item" id="promptsBtn" onclick="togglePromptsView()">
+      <span class="nav-tool-icon">📚</span>
+      <span class="nav-tool-label">Skills</span>
+      <span class="nav-tool-badge" id="skillsCountBadge">35</span>
+    </button>
+    <button class="nav-tool-item" id="filesBtn">
+      <span class="nav-tool-icon">📁</span>
+      <span class="nav-tool-label">Files</span>
+      <span class="nav-tool-badge" id="filesCount">—</span>
     </button>
     <!-- Inspect button -->
     <button class="inspect-btn" id="inspectBtn" onclick="toggleInspect()">
@@ -2344,7 +2652,7 @@ body {
     <div class="rp-section">
       <div class="rp-title">Model</div>
       <div class="rp-model">
-        <div class="rp-model-badge" style="background:#ede9fe;color:#6c63ff">✦ Sonnet 4.6</div>
+        <div class="rp-model-badge" style="background:rgba(108,99,255,.12);color:#a5b4fc">✦ Sonnet 4.6</div>
         <div class="rp-model-task" style="margin-top:4px;margin-bottom:0">Arch decisions → <strong style="color:#15803d">Opus</strong> &nbsp;|&nbsp; Batch → <strong style="color:#475569">Haiku</strong></div>
       </div>
     </div>
@@ -2379,7 +2687,18 @@ const PROJ = {
   "H&H Costa Blanca":   { color:"#B39960", bg:"#faf8f0", icon:"🏠" },
 };
 
-const IDEA_BG = ["#fef9c3","#dbeafe","#dcfce7","#fce7f3","#ede9fe","#ffedd5"];
+// Idea colors — dark (default) and light mode variants
+const IDEA_BG_DARK  = ['rgba(245,158,11,.09)','rgba(59,130,246,.09)','rgba(34,197,94,.07)','rgba(236,72,153,.08)','rgba(139,92,246,.09)','rgba(249,115,22,.08)'];
+const IDEA_BD_DARK  = ['rgba(245,158,11,.22)','rgba(59,130,246,.2)','rgba(34,197,94,.18)','rgba(236,72,153,.2)','rgba(139,92,246,.2)','rgba(249,115,22,.2)'];
+const IDEA_BG_LIGHT = ["#fef9c3","#dbeafe","#dcfce7","#fce7f3","#ede9fe","#ffedd5"];
+const IDEA_BD_LIGHT = ["#fde68a","#bfdbfe","#bbf7d0","#fbcfe8","#ddd6fe","#fed7aa"];
+// Legacy aliases — kept for any stray references; getters are preferred
+const IDEA_BG = IDEA_BG_DARK;
+const IDEA_BD = IDEA_BD_DARK;
+function ideaBg(i) { return (typeof lightMode !== 'undefined' && lightMode) ? IDEA_BG_LIGHT[i % 6] : IDEA_BG_DARK[i % 6]; }
+function ideaBd(i) { return (typeof lightMode !== 'undefined' && lightMode) ? IDEA_BD_LIGHT[i % 6] : IDEA_BD_DARK[i % 6]; }
+function ideaTextColor()  { return (typeof lightMode !== 'undefined' && lightMode) ? '#92400e' : 'var(--text)'; }
+function ideaBadgeColor() { return (typeof lightMode !== 'undefined' && lightMode) ? '#d97706' : 'var(--text)'; }
 
 // ─── Scheduled automations (from live MCP — last synced Apr 17 2026) ──────────
 // lastRun = most recent execution. status: "ok" | "disabled" | "manual"
@@ -2533,7 +2852,23 @@ const PROJECT_META = {
     northStar: "36 skills averaging 85+/100. Every session auto-loads context. No re-explaining ever needed.",
   },
 };
-const IDEA_BD = ["#fde68a","#bfdbfe","#bbf7d0","#fbcfe8","#ddd6fe","#fed7aa"];
+// Dark project block backgrounds — subtle rgba tints for dark mode
+const PROJ_DARK_BG = {
+  "New Build Homes":    "rgba(16,185,129,.07)",
+  "Hansson Hertzell":   "rgba(179,153,96,.07)",
+  "Storyboard":         "rgba(108,99,255,.07)",
+  "Opero Agency":       "rgba(99,102,241,.07)",
+  "Curated Estate":     "rgba(14,165,233,.07)",
+  "PropertyOS":         "rgba(236,72,153,.07)",
+  "Skills & Memory":    "rgba(139,92,246,.07)",
+  "Costa Blanca":       "rgba(245,158,11,.07)",
+  "H&H Costa Blanca":   "rgba(179,153,96,.07)",
+};
+function projBg(name) {
+  const p = PROJ[name];
+  if (!p) return (typeof lightMode !== 'undefined' && lightMode) ? '#f5f3ff' : 'rgba(108,99,255,.07)';
+  return (typeof lightMode !== 'undefined' && lightMode) ? p.bg : (PROJ_DARK_BG[name] || 'rgba(108,99,255,.07)');
+}
 
 // ─── Skills library ────────────────────────────────────────────────────────────
 const SKILLS = [
@@ -2675,8 +3010,91 @@ const BLOCKS = [
     ],
     ideas:["QR code on landing page for meetup handoff","Auto-update sprint log each day from session blocks","Tweet thread per day linking to sprint log section"] },
 
+  { id:"sb-apr18-session7", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T18:00:00.000Z",
+    title:"Day 2 — Nav redesign: 4-section structure (design-v2 implemented)",
+    summary:"Left nav rebuilt to design-v2 spec: Overview / Active Projects (top 3 with status dots + show more) / Capture (Ideas, Decisions) / Intelligence (Agents, Context, Inspect) / Tools (Skills, Files). Status dots: green = active today, amber = this week, gray = idle. Project list sorted by most recent session. Ideas captured: file system connections (Google Drive, Dropbox, Evernote) as first tool integrations. Marketing showcase dashboard planned: main board → 'coming ideas' section with all big vision items.",
+    chips:["Nav redesign","Design-V2","Active projects","Status dots","Show more","4-section nav"],
+    decisions:[
+      "Nav = 4 sections: Overview, Active Projects, Capture, Intelligence, Tools",
+      "Only top 3 most-recently-active projects visible — rest behind 'show more'",
+      "Status dots communicate project health at a glance (running/paused/idle)",
+      "Dark mode is now the permanent default — Light is the toggle option",
+      "File connections (Google Drive, Dropbox, Evernote) = priority tier-1 integrations"
+    ],
+    ideas:[
+      "Google Drive / Dropbox / Evernote MCP as first non-AI tool integrations",
+      "Gmail → emails as blocks, filterable by label/sender/project",
+      "MailerLite campaign previews visible in Storyboard dashboard",
+      "Property feed (H&H, NBHCB) → blocks auto-audited by SEO skill on arrival",
+      "Marketing showcase dashboard: main board done → 'Coming ideas' section at bottom",
+      "Block thumbnails need rethinking — current approach too rough for visual content"
+    ] },
+
+  { id:"sb-apr18-session6", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T17:30:00.000Z",
+    title:"Day 2 — North Star expanded: Storyboard as visual OS for all your tools",
+    summary:"Conceptual breakthrough: Storyboard isn't just for AI sessions. It's the visual layer for every tool you use. Gmail emails → blocks. Slack threads → blocks. WhatsApp conversations → blocks. Each block is actionable: set automations, route to agents, connect to projects. MCP provides the pipes; Storyboard is the visual interface. Dark mode made the default. Context fill meter live in topbar.",
+    chips:["North Star","Visual OS","Gmail","Slack","WhatsApp","Agents","MCP layer"],
+    decisions:[
+      "Storyboard = visual OS for agentic work, not just AI session capture",
+      "Any tool with MCP or API can pipe events into Storyboard as blocks",
+      "Blocks from any tool (email, message, task) can trigger automations and agents",
+      "Dark mode is the default experience — light is the toggle, not the other way",
+      "Context windows must be visible everywhere, not just in copy"
+    ],
+    ideas:[
+      "Gmail MCP integration: emails appear as blocks, filtered/labeled by agent",
+      "Slack MCP: threads become blocks, agents reply from Storyboard",
+      "WhatsApp via Twilio API: conversations as blocks, agents handle responses",
+      "Block actions: snooze, assign to agent, escalate, reply, archive",
+      "Tool connection onboarding: 'connect your first tool' as day-1 hook"
+    ] },
+
+  { id:"sb-apr18-session8", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T20:00:00.000Z",
+    seed:true,
+    seedBlocks:[{id:"sb-apr18-session5",title:"Context Windows view"},{id:"sb-apr18-session7",title:"Nav redesign + dark mode fix"}],
+    title:"Day 2 (end) — Full dark mode fix + 5 context window features",
+    summary:"Comprehensive dark-mode audit: IDEA_BG / IDEA_BD replaced with dark rgba tints (getter functions ideaBg/ideaBd dynamically return light pastels in light mode). PROJ.bg computed via projBg() function per mode. All hardcoded light colors (jfp-decision, jfp-idea, pd-rm-badge, canvas-card-deploy, decision cards, Live badge, score ring) now dark-first with body.light-mode overrides. Context window features 2+3+5 shipped: 📍 last-in-context badge on the final block before each fault line; seed trail shows which blocks kept the thread alive across windows; gap warning on sessions that ended without seeding.",
+    chips:["Dark Mode","Context Windows","Seed Trail","Gap Warning","Last-In-Context"],
+    decisions:[
+      "Root CSS stays dark by default — light mode is an opt-in override only",
+      "IDEA_BG/BD are now getter functions, not static arrays — mode-aware",
+      "PROJ.bg computed via projBg() — dark rgba tints default, light pastels in light mode",
+      "All light badge/pill classes now dark-first + body.light-mode override",
+      "📍 last-in-context badge marks final block captured before context window ended",
+      "Seed trail on fault lines shows which blocks kept the thread alive",
+      "⚠️ Gap warning when a session started with no seed — thread may have drifted"
+    ],
+    ideas:[
+      "Feature 4: parallel context lanes — side-by-side threads like git branches",
+      "Animated fill meter that pulses when nearing the context limit",
+      "Auto-capture suggestion toast at 85% fill"
+    ] },
+
+  { id:"sb-apr18-session5", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T16:00:00.000Z",
+    title:"Day 2 (cont.) — Context Windows: fault lines, fill meter, dedicated view",
+    summary:"Context windows are now visible. Session blocks render as 'context fault lines' — full-width dividers in the feed showing exactly where each context window ended and a new one began. Context fill meter in topbar estimates how full the current session is (time + block count), turns amber at 60%, red at 85% with a capture warning. ⚡ Context nav button now opens a dedicated 'Context Windows' timeline view — all sessions as numbered chapters. 'Latest context window' banner appears at the top of the All Work feed.",
+    chips:["Context Windows","Fault Lines","Fill Meter","Context View","Context-first UX"],
+    decisions:[
+      "Session blocks → context fault lines: full-width dividers not cards",
+      "Context fill meter in topbar: turns red at 85%, warns user to capture",
+      "⚡ Context button → Context Windows view (all sessions as chapters)",
+      "Latest context window banner always at top of All Work feed",
+      "Context window concept must be visible everywhere in the UI, not just in copy"
+    ],
+    ideas:[
+      "Capture-now shortcut triggered when fill meter turns red",
+      "Multi-window view: parallel context tracks for power users",
+      "Seed trail: show which blocks were used to resume each session"
+    ] },
+
   { id:"sb-apr18-session4", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
     _live:true, _captured:"2026-04-18T14:00:00.000Z",
+    seed:true,
+    seedBlocks:[{id:"sb-ui-v4-apr17-session2",title:"Dashboard v4 snapshot"},{id:"sb-1",title:"Dashboard v1 — App shell"}],
     title:"Day 2 (late) — Agents view: Persona Simulation + Full Opero Audit pipeline wired in",
     summary:"Added Agents nav (🤖) with two tabs: (1) Persona Simulation — 4 AI user types score your live storyboard; (2) Website Audit — enter URL + optional competitor domain, audit.py runs the full 5-category pipeline (AEO, SEO, listings, social, content), real scores displayed with competitive delta. Findings save as decision blocks. MCP server /audit endpoint calls audit.py directly.",
     chips:["Agents","Persona Sim","Website Audit","Onboarding","AEO"],
@@ -2710,6 +3128,7 @@ const BLOCKS = [
     ] },
   // ── STORYBOARD
   { id:"sb-1", type:"session", project:"Storyboard", date:"Apr 17", ts:20260417,
+    gap:true,
     title:"Dashboard v1 — App shell + grid",
     summary:"Product ideation → architecture locked → visual dashboard from real session data. Context stitcher live. Masonry grid + collapsible nav + right panel.",
     chips:["Architecture","Dashboard","Sprint"],
@@ -3453,7 +3872,8 @@ function closeAll() {
 // ═══════════════════════════════════
 function setFilter(f) {
   activeFilter = f;
-  document.querySelectorAll('.nav-item').forEach(el => {
+  // Update both .nav-item and .nav-proj-row active states
+  document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => {
     el.classList.toggle('active', el.id === `nav-${f.replace(/ /g,'-')}`);
   });
   const bc = document.getElementById('breadcrumb');
@@ -3466,7 +3886,7 @@ function setFilter(f) {
 }
 
 function navClick(f) {
-  // Exit ideas / decisions views when clicking a project
+  // Exit ideas / decisions / context views when clicking a project
   if (ideasViewActive) {
     ideasViewActive = false;
     document.getElementById('ideasBtn').classList.remove('active');
@@ -3480,6 +3900,10 @@ function navClick(f) {
     skillsSearch = '';
     document.getElementById('promptsBtn').classList.remove('active');
   }
+  if (contextWindowsViewActive) {
+    contextWindowsViewActive = false;
+    document.getElementById('contextBtn')?.classList.remove('active');
+  }
   // When filtering to a specific project, board view would show just one column — auto-switch to grid
   if (f !== 'All' && activeView === 'board') setView('grid');
   setFilter(f);
@@ -3489,13 +3913,53 @@ function navClick(f) {
 // ═══════════════════════════════════
 // BUILD NAV
 // ═══════════════════════════════════
+let navMoreExpanded = false;
+const NAV_TOP_PROJECTS = 3; // show top N active projects before "show more"
+
+function projectStatus(name, all) {
+  // Determine status based on most recent block timestamp
+  const todayTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+  const weekAgoTs = (() => { const d = new Date(); d.setDate(d.getDate()-7); return parseInt(d.toISOString().slice(0,10).replace(/-/g,'')); })();
+  const projBlocks = all.filter(b => b.project === name && b.type === 'session');
+  const maxTs = Math.max(...projBlocks.map(b => b.ts||0), 0);
+  if (maxTs >= todayTs) return 'running';
+  if (maxTs >= weekAgoTs) return 'paused';
+  return 'idle';
+}
+
+function buildProjRow(name, status, tag, activeFilter) {
+  const sid = name.replace(/ /g,'-');
+  const enc = encodeURIComponent(name);
+  const isActive = activeFilter === name;
+  const tagClass = tag === 'Live' ? ' live' : '';
+  return `<div class="nav-proj-row${isActive?' active':''}" id="nav-${sid}" onclick="navClick('${name}')">
+    <div class="proj-status-dot ${status}"></div>
+    <span class="nav-proj-name">${name}</span>
+    <span class="nav-proj-tag${tagClass}">${tag}</span>
+    <button class="nav-proj-menu-btn" onclick="event.stopPropagation();toggleProjMenu('${enc}')" title="Project options" style="opacity:0;transition:opacity .12s">···</button>
+    <div class="nav-proj-menu" id="projmenu-${sid}">
+      <div class="npm-item" onclick="event.stopPropagation();openProjectDetail('${name}');closeProjMenus()">📋 Open details</div>
+      <div class="npm-item" onclick="event.stopPropagation();renameProjPrompt('${enc}')">✏️ Rename</div>
+      <div class="npm-item" onclick="event.stopPropagation();mergeProjPrompt('${enc}')">⇄ Merge into…</div>
+      <div class="npm-divider"></div>
+      <div class="npm-item npm-danger" onclick="event.stopPropagation();archiveProjPrompt('${enc}')">🗂 Archive</div>
+      <div class="npm-item npm-danger" onclick="event.stopPropagation();deleteProjPrompt('${enc}')">🗑 Delete</div>
+    </div>
+  </div>`;
+}
+
+function toggleMoreProjects() {
+  navMoreExpanded = !navMoreExpanded;
+  buildNav();
+}
+
 function buildNav() {
   const all = mergedBlocks();
   const counts = {};
   all.forEach(b => { counts[b.project] = (counts[b.project]||0) + 1; });
   document.getElementById('cnt-All').textContent = all.length;
 
-  // Decisions count — total across all blocks
+  // Decisions count
   const decisionsTotal = all.reduce((n, b) => n + (b.decisions ? b.decisions.length : 0), 0);
   document.getElementById('decisionsCount').textContent = decisionsTotal;
 
@@ -3503,48 +3967,69 @@ function buildNav() {
   const skillsBadge = document.getElementById('skillsCountBadge');
   if (skillsBadge) skillsBadge.textContent = SKILLS.length;
 
-  // Files count — sum of files stats across blocks
+  // Files count
   const filesTotal = all.reduce((n, b) => n + (b.stats?.files || 0), 0);
-  // If no stats files, use a baseline from commits (meaningful proxy)
   document.getElementById('filesCount').textContent = filesTotal || '—';
 
-  document.getElementById('nav-projects').innerHTML = Object.entries(PROJ).map(([name, p]) => {
-    const sid = name.replace(/ /g,'-');
-    const enc = encodeURIComponent(name);
-    return `<div class="nav-item nav-proj-item" id="nav-${sid}" onclick="navClick('${name}')">
-      <div class="nav-dot" style="background:${p.color}"></div>
-      <span class="nav-item-text">${name}</span>
-      <span class="nav-count">${counts[name]||0}</span>
-      <button class="nav-proj-menu-btn" onclick="event.stopPropagation();toggleProjMenu('${enc}')" title="Project options">···</button>
-      <div class="nav-proj-menu" id="projmenu-${sid}">
-        <div class="npm-item" onclick="event.stopPropagation();openProjectDetail('${name}');closeProjMenus()">📋 Open details</div>
-        <div class="npm-item" onclick="event.stopPropagation();renameProjPrompt('${enc}')">✏️ Rename</div>
-        <div class="npm-item" onclick="event.stopPropagation();mergeProjPrompt('${enc}')">⇄ Merge into…</div>
-        <div class="npm-divider"></div>
-        <div class="npm-item npm-danger" onclick="event.stopPropagation();archiveProjPrompt('${enc}')">🗂 Archive</div>
-        <div class="npm-item npm-danger" onclick="event.stopPropagation();deleteProjPrompt('${enc}')">🗑 Delete</div>
-      </div>
-    </div>`;
-  }).join('');
+  // ── Active Projects section (design-v2 style) ──────────────────
+  // Sort projects by most recent session timestamp
+  const todayTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+  const projList = Object.keys(PROJ).map(name => {
+    const sessions = all.filter(b => b.project === name && b.type === 'session');
+    const maxTs = Math.max(...sessions.map(b => b.ts||0), 0);
+    return { name, maxTs, count: counts[name]||0 };
+  }).sort((a, b) => b.maxTs - a.maxTs);
 
-  // ── Update FOCUS card: most active project by block count ──
-  const topProj = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
-  if (topProj) {
-    const [name, count] = topProj;
-    const p = PROJ[name] || { color:'#6c63ff' };
-    const focus = document.getElementById('navFocus');
-    const dot   = document.getElementById('navFocusDot');
-    document.getElementById('navFocusProj').textContent  = name;
-    document.getElementById('navFocusCount').textContent = count + ' blocks';
-    focus.style.setProperty('--focus-color', p.color);
-    focus.style.setProperty('--focus-bg',    p.bg || '#f5f3ff');
-    focus.style.setProperty('--focus-bg2',   p.bg || '#ede9fe');
-    dot.style.background = p.color;
-    focus._focusProject = name;
-    // Show northStar as title tooltip
-    const m = PROJECT_META[name] || {};
-    if (m.northStar) focus.title = '🎯 ' + m.northStar;
+  const topN = projList.slice(0, NAV_TOP_PROJECTS);
+  const rest = projList.slice(NAV_TOP_PROJECTS);
+
+  // Build tag label for a project
+  function projTag(name, maxTs) {
+    if (!maxTs) return '—';
+    if (maxTs >= todayTs) return 'Today';
+    const diffDays = Math.floor((Date.now() - new Date(String(maxTs).slice(0,4)+'-'+String(maxTs).slice(4,6)+'-'+String(maxTs).slice(6,8)).getTime()) / 86400000);
+    if (diffDays <= 1) return 'Yesterday';
+    if (diffDays <= 7) return `${diffDays}d`;
+    return (maxTs ? String(maxTs).slice(4,6)+'/'+String(maxTs).slice(6,8) : '—');
   }
+
+  // Render top N
+  const activeProjectsEl = document.getElementById('nav-active-projects');
+  if (activeProjectsEl) {
+    activeProjectsEl.innerHTML = topN.map(({ name, maxTs }) => {
+      const status = projectStatus(name, all);
+      return buildProjRow(name, status, projTag(name, maxTs), activeFilter);
+    }).join('');
+  }
+
+  // Render rest (hidden by default)
+  const projectsEl = document.getElementById('nav-projects');
+  if (projectsEl) {
+    projectsEl.innerHTML = rest.map(({ name, maxTs }) => {
+      const status = projectStatus(name, all);
+      return buildProjRow(name, status, projTag(name, maxTs), activeFilter);
+    }).join('');
+    projectsEl.style.display = navMoreExpanded && rest.length ? 'block' : 'none';
+  }
+
+  // Show/hide "show more" button
+  const showMoreBtn = document.getElementById('navShowMoreBtn');
+  if (showMoreBtn) {
+    if (rest.length > 0) {
+      showMoreBtn.style.display = 'block';
+      showMoreBtn.textContent = navMoreExpanded ? '↑ Show fewer' : `+ ${rest.length} more project${rest.length>1?'s':''}`;
+    } else {
+      showMoreBtn.style.display = 'none';
+    }
+  }
+
+  // Hover effect on proj row menu buttons
+  document.querySelectorAll('.nav-proj-row').forEach(row => {
+    const menuBtn = row.querySelector('.nav-proj-menu-btn');
+    if (!menuBtn) return;
+    row.addEventListener('mouseenter', () => { menuBtn.style.opacity = '1'; });
+    row.addEventListener('mouseleave', () => { menuBtn.style.opacity = '0'; });
+  });
 }
 
 function navFocusClick() {
@@ -3593,8 +4078,9 @@ const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋
 
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
-  const style = `--block-color:${p.color};--block-bg:${p.bg}`;
-  const idx = i % IDEA_BG.length;
+  const pbg = projBg(b.project);
+  const style = `--block-color:${p.color};--block-bg:${pbg}`;
+  const idx = i % 6;
   const featuredClass = featured ? ' block-featured' : '';
   const typeLabel = TYPE_LABELS[b.type] || (b.type||'Block');
   const typeIcon  = TYPE_ICONS[b.type]  || '◈';
@@ -3613,12 +4099,62 @@ function blockHTML(b, i, featured = false) {
     b.status === 'later' ? `<span class="journal-foot-pill jfp-later">Later</span>` : '',
   ].join('');
 
+    // ── Context Fault Line — session blocks render as context window dividers ──
+    if (b.type === 'session') {
+      const dCount2 = b.decisions?.length || 0;
+      const iCount2 = b.ideas?.length || 0;
+      const chips2  = (b.chips||[]).filter(c=>c);
+      const date2   = b.date || (b.ts ? relTime(b.ts) : '');
+      const sum2    = b.summary && b.summary !== 'undefined' ? b.summary :
+                      b.body    && b.body    !== 'undefined' ? b.body    : '';
+      const pillsHTML = [
+        dCount2 ? `<span class="ctx-fault-pill ctx-fault-pill-d">✓ ${dCount2} decision${dCount2>1?'s':''}</span>` : '',
+        iCount2 ? `<span class="ctx-fault-pill ctx-fault-pill-i">💡 ${iCount2} idea${iCount2>1?'s':''}</span>` : '',
+        ...chips2.slice(0,3).map(c=>`<span class="ctx-fault-pill" style="background:rgba(108,99,255,.1);color:#a5b4fc">${c}</span>`),
+      ].filter(Boolean).join('');
+
+      // Feature 3: Seed trail — which blocks were used to resume?
+      const seedTrail = b.seedBlocks && b.seedBlocks.length
+        ? `<div class="ctx-fault-trail">
+            <span class="ctx-fault-trail-label">seeded with</span>
+            ${b.seedBlocks.map(sb=>`<span class="ctx-fault-trail-block" onclick="event.stopPropagation();openDetail('${sb.id}')">📍 ${sb.title||'block'}</span>`).join('')}
+            <span class="ctx-fault-trail-arrow">→ thread continues</span>
+          </div>` : '';
+
+      // Feature 5: Gap warning — context ended with no seed
+      const gapWarn = (!b.seed && !b.seedBlocks?.length && b.gap)
+        ? `<div class="ctx-fault-gap">
+            <span class="ctx-fault-gap-icon">⚠️</span>
+            <span class="ctx-fault-gap-text">No seed used — this thread may have drifted</span>
+          </div>` : '';
+
+      return `<div class="ctx-fault" onclick="openDetail('${b.id}')">
+        <div class="ctx-fault-sep">
+          <div class="ctx-fault-sep-line"></div>
+          <span class="ctx-fault-sep-badge">✦ context window</span>
+          <div class="ctx-fault-sep-line-r"></div>
+        </div>
+        <div class="ctx-fault-card">
+          <span class="ctx-fault-icon">🧠</span>
+          <div class="ctx-fault-info">
+            <div class="ctx-fault-title">${b.title||'Session'}</div>
+            ${sum2 ? `<div class="ctx-fault-meta">${sum2.slice(0,120)}${sum2.length>120?'…':''}</div>` : ''}
+            ${pillsHTML ? `<div class="ctx-fault-pills">${pillsHTML}</div>` : ''}
+            ${seedTrail}
+            ${gapWarn}
+          </div>
+          <div class="ctx-fault-date">${date2}</div>
+          ${b.seed ? `<button class="ctx-fault-seed" onclick="event.stopPropagation();seedBlock('${b.id}')">⚡ Seed →</button>` : ''}
+        </div>
+      </div>`;
+    }
+
     if (b.type === 'idea') {
-      return `<div class="block" style="${style};background:${IDEA_BG[idx]};border-color:${IDEA_BD[idx]}" onclick="openDetail('${b.id}')">
+      return `<div class="block" style="${style};background:${ideaBg(idx)};border-color:${ideaBd(idx)}" onclick="openDetail('${b.id}')">
         <div class="block-body">
           <div class="block-meta">
             <span class="block-dot" style="background:${p.color}"></span>
-            <span class="block-type-badge" style="background:${IDEA_BG[idx]};color:#d97706;border-color:#fde68a">💡 Idea</span>
+            <span class="block-type-badge" style="background:${ideaBg(idx)};color:${ideaBadgeColor()};border-color:${ideaBd(idx)}">💡 Idea</span>
             <span class="block-date">${displayDate}</span>
           </div>
           <div class="block-title">${b.title||'Untitled idea'}</div>
@@ -3639,6 +4175,7 @@ function blockHTML(b, i, featured = false) {
           <span class="block-dot" style="background:${p.color}"></span>
           <span class="block-proj">${b.project||''}</span>
           <span class="block-date">${displayDate}</span>
+          ${b._lastInCtx ? `<span class="block-last-in-ctx">📍 last in context</span>` : ''}
         </div>
         <div class="block-title">${b.title||'Untitled'}</div>
         ${summary ? `<div class="block-summary">${summary}</div>` : ''}
@@ -3923,6 +4460,8 @@ function renderFeed() {
   if (skillsViewActive) { renderSkillsView(); return; }
   // Decisions view — managed by toggleDecisionsView(), don't override
   if (decisionsViewActive) return;
+  // Context Windows view — managed by openContextHub(), don't override
+  if (contextWindowsViewActive) { renderContextWindowsView(); return; }
   // Ideas view: show all ideas (static + captured), ignore project filter
   if (ideasViewActive) {
     const minTs = periodTs();
@@ -3991,6 +4530,48 @@ function renderFeed() {
       const toWeek   = blocks.filter(b => (b.ts||0) >= weekAgo && (b.ts||0) < nowTs);
       const toOlder  = blocks.filter(b => (b.ts||0) < weekAgo);
 
+      // Feature 2: Mark "last captured in context" — the block just before each session fault line
+      (function markLastInCtx(arr) {
+        for (let k = 1; k < arr.length; k++) {
+          if (arr[k].type === 'session') {
+            // Find the nearest non-session block before this session
+            for (let j = k - 1; j >= 0; j--) {
+              if (arr[j].type !== 'session') { arr[j]._lastInCtx = true; break; }
+            }
+          }
+        }
+      })([...toToday, ...toWeek, ...toOlder]);
+
+      // Build "latest context window" banner
+      const allSessions2 = allBlocks.filter(b => b.type === 'session')
+        .sort((a, b) => (b.ts||0) - (a.ts||0));
+      const recentCtx = allSessions2[0];
+      let ctxBannerHtml = '';
+      if (recentCtx) {
+        const cp = PROJ[recentCtx.project] || { color:'#6c63ff' };
+        const cSum = recentCtx.summary && recentCtx.summary !== 'undefined' ? recentCtx.summary :
+                     recentCtx.body    && recentCtx.body    !== 'undefined' ? recentCtx.body    : '';
+        const cDec  = recentCtx.decisions?.length || 0;
+        const cIdea = recentCtx.ideas?.length || 0;
+        const cDate = recentCtx.date || '';
+        const cChips = (recentCtx.chips||[]).filter(c=>c).slice(0,3);
+        ctxBannerHtml = `<div class="ctx-banner" onclick="openDetail('${recentCtx.id}')">
+          <div class="ctx-banner-header">
+            <span class="ctx-banner-eyebrow">Latest context window</span>
+            <span class="ctx-banner-date">${cDate}</span>
+            ${recentCtx.seed ? `<button class="ctx-banner-seed" onclick="event.stopPropagation();seedBlock('${recentCtx.id}')">⚡ Seed next session</button>` : ''}
+          </div>
+          <div class="ctx-banner-title">${recentCtx.title||'Session'}</div>
+          ${cSum ? `<div class="ctx-banner-summary">${cSum.slice(0,200)}${cSum.length>200?'…':''}</div>` : ''}
+          <div class="ctx-banner-pills">
+            <span class="ctx-banner-proj" style="color:${cp.color}">${recentCtx.project}</span>
+            ${cDec  ? `<span class="ctx-fault-pill ctx-fault-pill-d">✓ ${cDec} decision${cDec>1?'s':''}</span>` : ''}
+            ${cIdea ? `<span class="ctx-fault-pill ctx-fault-pill-i">💡 ${cIdea} idea${cIdea>1?'s':''}</span>` : ''}
+            ${cChips.map(c=>`<span class="ctx-fault-pill" style="background:rgba(108,99,255,.1);color:#a5b4fc">${c}</span>`).join('')}
+          </div>
+        </div>`;
+      }
+
       // Build summary bar for All-time All-projects view
       const totalDecisions = allBlocks.reduce((n,b) => n+(b.decisions?.length||0), 0);
       const totalIdeas = allBlocks.filter(b=>b.type==='idea').length + capturedIdeas.length;
@@ -4014,7 +4595,7 @@ function renderFeed() {
         </div>
       </div>`;
 
-      let html = summaryBarHtml;
+      let html = ctxBannerHtml + summaryBarHtml;
       if (toToday.length) html += `<div class="time-lane">Today</div>` + toToday.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
       if (toWeek.length)  html += `<div class="time-lane">This week</div>` + toWeek.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
       if (toOlder.length) html += `<div class="time-lane">Older</div>` + toOlder.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
@@ -4284,7 +4865,7 @@ function openProjectDetail(name) {
 
   const isLive  = m.deploy && m.deploy.toLowerCase().includes('live');
   const deployBadge = isLive
-    ? `<span style="font-size:9px;font-weight:700;background:#dcfce7;color:#15803d;border-radius:20px;padding:3px 10px">🟢 Live</span>`
+    ? `<span style="font-size:9px;font-weight:700;background:rgba(34,197,94,.12);color:#22c55e;border-radius:20px;padding:3px 10px">🟢 Live</span>`
     : `<span style="font-size:9px;font-weight:700;background:var(--bg);color:var(--text-3);border-radius:20px;padding:3px 10px;border:1px solid var(--border)">⚫ Not deployed</span>`;
 
   const blocksHTML = blocks.slice(0,12).map(b => `
@@ -4304,7 +4885,7 @@ function openProjectDetail(name) {
 
   const ideasHTML = ideas.length
     ? `<div style="padding:0 22px 4px;display:flex;flex-wrap:wrap">${ideas.map((b,i)=>`
-        <div class="pd-idea-pill" style="background:${IDEA_BG[i%IDEA_BG.length]};color:#333" onclick="openDetail('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}</div>`
+        <div class="pd-idea-pill" style="background:${ideaBg(i)};color:${ideaTextColor()}" onclick="openDetail('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}</div>`
     : `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No ideas yet.</div>`;
 
   const autosHTML = autos.length
@@ -4549,7 +5130,7 @@ function buildRightPanel() {
   // Ideas
   const ideas = all.filter(b => b.type === 'idea').slice(0,5);
   document.getElementById('rp-ideas').innerHTML = ideas.map((b,i) => `
-    <div class="rp-idea" style="background:${IDEA_BG[i%IDEA_BG.length]};border-color:${IDEA_BD[i%IDEA_BD.length]};color:#333" onclick="openDetail('${b.id}')">
+    <div class="rp-idea" style="background:${ideaBg(i)};border-color:${ideaBd(i)};color:${ideaTextColor()}" onclick="openDetail('${b.id}')">
       ${b.title.replace('💡 ','')}
     </div>`).join('');
 
@@ -4788,23 +5369,31 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ── OS / AI mode toggle ──
-let aiMode = false;
+// ── Dark (default) / Light mode toggle ──────────────────────────
+// Dark is the root. Light is the class that overrides it.
+let lightMode = false;
+let aiMode = false; // keep alias so old references don't break
 function toggleMode() {
-  aiMode = !aiMode;
-  document.body.classList.toggle('ai-mode', aiMode);
-  document.getElementById('modeOS').classList.toggle('active', !aiMode);
-  document.getElementById('modeAI').classList.toggle('active',  aiMode);
-  // Persist preference
-  try { localStorage.setItem('sb-mode', aiMode ? 'ai' : 'os'); } catch {}
-  // Auto-screenshot the mode switch as a new version
-  autoScreenshot(aiMode ? 'ai-mode' : 'os-mode');
+  lightMode = !lightMode;
+  aiMode = !lightMode; // alias
+  document.body.classList.toggle('light-mode', lightMode);
+  document.getElementById('modeOS').classList.toggle('active', lightMode);  // Light btn
+  document.getElementById('modeAI').classList.toggle('active', !lightMode); // Dark btn
+  try { localStorage.setItem('sb-mode', lightMode ? 'light' : 'dark'); } catch {}
+  autoScreenshot(lightMode ? 'light-mode' : 'dark-mode');
 }
-// Restore preference on load
+// On load: dark by default, restore saved preference
 try {
-  if (localStorage.getItem('sb-mode') === 'ai') {
-    aiMode = true;
-    document.body.classList.add('ai-mode');
+  const savedMode = localStorage.getItem('sb-mode');
+  if (savedMode === 'light') {
+    lightMode = true; aiMode = false;
+    document.body.classList.add('light-mode');
+    document.getElementById('modeOS').classList.add('active');
+    document.getElementById('modeAI').classList.remove('active');
+  } else {
+    // Default: dark — no class needed
+    lightMode = false; aiMode = true;
+    document.body.classList.remove('light-mode');
     document.getElementById('modeOS').classList.remove('active');
     document.getElementById('modeAI').classList.add('active');
   }
@@ -4850,13 +5439,99 @@ function markSeeded(projectName) {
   localStorage.setItem(`sb_seeded_${projectName}`, Date.now().toString());
 }
 
+let contextWindowsViewActive = false;
 function openContextHub() {
+  // Toggle between inline Context Windows view and the overlay hub
+  contextWindowsViewActive = !contextWindowsViewActive;
+  const btn = document.getElementById('contextBtn');
+  btn.classList.toggle('active', contextWindowsViewActive);
+
+  if (contextWindowsViewActive) {
+    // Deactivate other view modes
+    if (typeof ideasViewActive !== 'undefined') { ideasViewActive = false; document.getElementById('ideasBtn')?.classList.remove('active'); }
+    if (typeof decisionsViewActive !== 'undefined') { decisionsViewActive = false; document.getElementById('decisionsBtn')?.classList.remove('active'); }
+    if (typeof skillsViewActive !== 'undefined') { skillsViewActive = false; document.getElementById('promptsBtn')?.classList.remove('active'); }
+    renderContextWindowsView();
+  } else {
+    renderFeed();
+  }
+}
+function openContextHubOverlay() {
   const overlay = document.getElementById('contextHubOverlay');
   overlay.style.display = 'block';
   renderContextHub();
 }
 function closeContextHub() {
   document.getElementById('contextHubOverlay').style.display = 'none';
+}
+
+// ── Context Windows View — all sessions as a timeline ────────────
+function renderContextWindowsView() {
+  const feed = document.getElementById('feed');
+  const allBlocks = mergedBlocks();
+  const sessions = allBlocks.filter(b => b.type === 'session')
+    .sort((a, b) => (b.ts||0) - (a.ts||0));
+
+  if (!sessions.length) {
+    feed.innerHTML = `<div style="padding:48px 24px;text-align:center;color:var(--text-3);font-size:13px">No context windows captured yet. Sessions will appear here as you work.</div>`;
+    return;
+  }
+
+  const projectCount = new Set(sessions.map(s => s.project)).size;
+  let html = `<div class="ctx-windows-wrap">
+    <div class="ctx-windows-header">
+      <span class="ctx-windows-title">Context Windows · ${sessions.length} total</span>
+      <span style="font-size:11px;color:var(--text-3)">${projectCount} project${projectCount>1?'s':''}</span>
+    </div>`;
+
+  sessions.forEach((s, si) => {
+    const p   = PROJ[s.project] || { color:'#6c63ff' };
+    const sum = s.summary && s.summary !== 'undefined' ? s.summary :
+                s.body    && s.body    !== 'undefined' ? s.body    : '';
+    const dCount = s.decisions?.length || 0;
+    const iCount = s.ideas?.length || 0;
+    const date   = s.date || (s.ts ? relTime(s.ts) : '');
+    const chips  = (s.chips||[]).filter(c=>c).slice(0,3);
+    const num    = sessions.length - si;
+
+    // Feature 3: seed trail
+    const trailHtml = s.seedBlocks?.length
+      ? `<div class="ctx-fault-trail" style="margin-top:8px">
+          <span class="ctx-fault-trail-label">seeded with</span>
+          ${s.seedBlocks.map(sb=>`<span class="ctx-fault-trail-block" onclick="event.stopPropagation();openDetail('${sb.id}')">📍 ${sb.title||'block'}</span>`).join('')}
+          <span class="ctx-fault-trail-arrow">→ thread continues</span>
+        </div>` : '';
+
+    // Feature 5: gap warning
+    const gapHtml = (!s.seed && !s.seedBlocks?.length && s.gap)
+      ? `<div class="ctx-fault-gap" style="margin-top:8px">
+          <span class="ctx-fault-gap-icon">⚠️</span>
+          <span class="ctx-fault-gap-text">No seed used — this thread may have drifted</span>
+        </div>` : '';
+
+    html += `<div class="ctx-window-card" onclick="openDetail('${s.id}')">
+      <div class="ctx-window-num">#${num}</div>
+      <div class="ctx-window-body">
+        <div class="ctx-window-proj-row">
+          <span class="ctx-window-proj" style="color:${p.color}">${s.project}</span>
+          <span class="ctx-window-date">${date}</span>
+        </div>
+        <div class="ctx-window-title">${s.title||'Session'}</div>
+        ${sum ? `<div class="ctx-window-summary">${sum.slice(0,160)}${sum.length>160?'…':''}</div>` : ''}
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+          ${dCount ? `<span class="ctx-fault-pill ctx-fault-pill-d">✓ ${dCount} decision${dCount>1?'s':''}</span>` : ''}
+          ${iCount ? `<span class="ctx-fault-pill ctx-fault-pill-i">💡 ${iCount} idea${iCount>1?'s':''}</span>` : ''}
+          ${chips.map(c=>`<span class="ctx-fault-pill" style="background:rgba(108,99,255,.1);color:#a5b4fc">${c}</span>`).join('')}
+        </div>
+        ${trailHtml}
+        ${gapHtml}
+      </div>
+      ${s.seed ? `<button class="ctx-fault-seed" onclick="event.stopPropagation();seedBlock('${s.id}')">⚡ Seed →</button>` : ''}
+    </div>`;
+  });
+
+  html += `</div>`;
+  feed.innerHTML = html;
 }
 
 function renderContextHub() {
@@ -4872,7 +5547,7 @@ function renderContextHub() {
 
   const cards = projectNames.map(name => {
     const meta = PROJECT_META[name] || {};
-    const proj = PROJ[name] || { color: '#6c63ff', bg: '#f5f3ff', icon: '📁' };
+    const proj = PROJ[name] || { color: '#6c63ff', bg: 'rgba(108,99,255,.07)', icon: '📁' };
     const blocks = allBlocks.filter(b => b.project === name);
 
     // Most recent session block
@@ -5054,7 +5729,7 @@ function togglePromptsView() {
     if (ideasViewActive)     { ideasViewActive = false;     document.getElementById('ideasBtn').classList.remove('active'); }
     if (decisionsViewActive) { decisionsViewActive = false; document.getElementById('decisionsBtn').classList.remove('active'); }
     activeFilter = 'All';
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
     bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
@@ -5121,8 +5796,9 @@ function openAgentPreview(tab) {
   const feed = document.getElementById('feed');
   // Clear other view states
   skillsViewActive = false; decisionsViewActive = false; ideasViewActive = false;
+  contextWindowsViewActive = false; document.getElementById('contextBtn')?.classList.remove('active');
   // Deselect nav items
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
   document.getElementById('agentBtn')?.classList.add('active');
 
   feed.innerHTML = `
@@ -5844,7 +6520,7 @@ function renderSkillsView(query) {
       <span style="font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Library health</span>
       <span style="font-size:13px;font-weight:800;color:${avgColor}">${avgScore}/100 avg</span>
       <span style="font-size:11px;color:#10b981;font-weight:700">${aCount} A-grade</span>
-      ${weakCount>0?`<button onclick="renderSkillsView(''); document.getElementById('skillsSearch').value=''; window._weakFilter=!window._weakFilter; renderSkillsView(window._weakFilter?'__weak__':'')" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#fef2f2;color:#ef4444;border:1px solid #fca5a544;cursor:pointer">${weakCount} need work ↓</button>`:''}
+      ${weakCount>0?`<button onclick="renderSkillsView(''); document.getElementById('skillsSearch').value=''; window._weakFilter=!window._weakFilter; renderSkillsView(window._weakFilter?'__weak__':'')" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25);cursor:pointer">${weakCount} need work ↓</button>`:''}
       <span style="margin-left:auto;font-size:10px;color:var(--text-3)">${allScored.length} scored</span>
     </div>` : '';
 
@@ -6105,7 +6781,7 @@ function toggleDecisionsView() {
     activeFilter = 'All';
     ideasViewActive = false;
     document.getElementById('ideasBtn').classList.remove('active');
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
     bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
@@ -6356,7 +7032,7 @@ function openDetail(id) {
     body += `<div class="detail-section">
       <div class="detail-section-title">Ideas captured</div>
       <div class="ideas-grid">${b.ideas.map((idea,i)=>`
-        <div class="idea-card" style="background:${IDEA_BG[i%IDEA_BG.length]};border:1px solid ${IDEA_BD[i%IDEA_BD.length]}">💡 ${idea}</div>`).join('')}
+        <div class="idea-card" style="background:${ideaBg(i)};border:1px solid ${ideaBd(i)};color:${ideaTextColor()}">💡 ${idea}</div>`).join('')}
       </div>
     </div>`;
   }
@@ -6863,7 +7539,7 @@ function toggleIdeasView() {
   if (ideasViewActive) {
     // Deactivate project filters, show all ideas
     activeFilter = 'All';
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
     bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
@@ -7001,8 +7677,12 @@ function pollData() {
 // Poll every 10s so MCP-captured ideas appear within ~10 seconds
 setInterval(pollData, 10000);
 
-// ── Session timer ─────────────────────────────────────────────────────────────
+// ── Session timer + Context fill meter ───────────────────────────────────────
 const SESSION_START = Date.now();
+// Rough heuristic: typical Cowork AI session with tools fills 200k context in ~75 min
+// Show fill meter based on elapsed time, boosted by block count
+const CTX_FULL_MS = 75 * 60 * 1000; // 75 minutes ≈ full context
+
 function updateTimer() {
   const el = document.getElementById('rp-timer');
   if (!el) return;
@@ -7013,8 +7693,35 @@ function updateTimer() {
   el.textContent = h > 0
     ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
     : `${m}:${String(s).padStart(2,'0')}`;
+
+  // Update context fill meter
+  const meter   = document.getElementById('ctxFillMeter');
+  const bar     = document.getElementById('ctxFillBar');
+  const label   = document.getElementById('ctxFillLabel');
+  if (!meter || !bar || !label) return;
+
+  // Estimate: time-based (60%) + block count boost (up to 40%)
+  const timeFill  = Math.min(diff / CTX_FULL_MS, 1);
+  const blockBoost = Math.min((liveBlocks.length + mergedBlocks().filter(b=>b.ts>=20260418).length) * 0.015, 0.4);
+  const pct = Math.min(timeFill * 0.6 + blockBoost, 0.99);
+  const pctInt = Math.round(pct * 100);
+
+  bar.style.width = pctInt + '%';
+  meter.className = 'ctx-fill-meter' + (pct >= 0.85 ? ' red' : pct >= 0.60 ? ' amber' : '');
+
+  if (pct >= 0.85) {
+    label.textContent = `${pctInt}% — capture now!`;
+    // Flash warning once at 85%
+    if (pctInt === 85) showToast('⚠️ Context ~85% full — consider capturing key blocks before the window ends', 5000);
+  } else if (pct >= 0.60) {
+    label.textContent = `${pctInt}% context`;
+  } else {
+    const minLeft = Math.round((CTX_FULL_MS - diff) / 60000);
+    label.textContent = minLeft > 60 ? 'Context' : `~${minLeft}m left`;
+  }
 }
-setInterval(updateTimer, 1000);
+setInterval(updateTimer, 5000);
+updateTimer(); // Run immediately on load
 
 // ═══════════════════════════════════
 // FIRST-TIME ONBOARDING
