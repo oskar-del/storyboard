@@ -585,7 +585,52 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
-  // CORS preflight for /git-push, /waitlist (called from dashboard/landing)
+  // ── /audit — crawl a URL and return real structural signals ─────────────────
+  if (req.method === "POST" && req.url === "/audit") {
+    let body = "";
+    req.on("data", d => body += d);
+    req.on("end", async () => {
+      try {
+        const { url, categories } = JSON.parse(body || "{}");
+        if (!url) { res.writeHead(400); res.end(JSON.stringify({ error: "url required" })); return; }
+
+        // Fetch the page
+        let pageHtml = "";
+        let fetchError = null;
+        try {
+          const targetUrl = url.startsWith("http") ? url : "https://" + url;
+          const r = await fetch(targetUrl, { signal: AbortSignal.timeout(8000), headers: { "User-Agent": "Storyboard-Audit/1.0" } });
+          pageHtml = await r.text();
+        } catch (e) { fetchError = e.message; }
+
+        // Extract signals from HTML
+        const signals = {};
+        if (pageHtml) {
+          signals.title       = (pageHtml.match(/<title[^>]*>(.*?)<\/title>/is) || [])[1]?.trim() || null;
+          signals.metaDesc    = (pageHtml.match(/name=["']description["'][^>]*content=["']([^"']+)/i) || pageHtml.match(/content=["']([^"']+)["'][^>]*name=["']description["']/i) || [])[1] || null;
+          signals.h1s         = [...pageHtml.matchAll(/<h1[^>]*>(.*?)<\/h1>/gis)].map(m => m[1].replace(/<[^>]+>/g,"").trim()).filter(Boolean);
+          signals.h2s         = [...pageHtml.matchAll(/<h2[^>]*>(.*?)<\/h2>/gis)].map(m => m[1].replace(/<[^>]+>/g,"").trim()).filter(Boolean).slice(0,8);
+          signals.hasSchema   = /application\/ld\+json/i.test(pageHtml);
+          signals.hasFAQ      = /FAQPage|faqpage/i.test(pageHtml);
+          signals.hasOG       = /property=["']og:/i.test(pageHtml);
+          signals.hasCanonical= /rel=["']canonical/i.test(pageHtml);
+          signals.imgCount    = (pageHtml.match(/<img/gi) || []).length;
+          signals.lazyImgs    = (pageHtml.match(/loading=["']lazy/gi) || []).length;
+          signals.wordCount   = pageHtml.replace(/<[^>]+>/g," ").replace(/\s+/g," ").split(" ").length;
+          signals.hasHTTPS    = url.startsWith("https");
+        }
+
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: true, signals, fetchError, crawledAt: new Date().toISOString() }));
+        process.stderr.write(`🔎 Audited: ${url}\n`);
+      } catch(e) {
+        res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
+  // CORS preflight for /git-push, /waitlist, /audit (called from dashboard/landing)
   if (req.method === "OPTIONS") {
     res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST,GET", "Access-Control-Allow-Headers": "Content-Type" });
     res.end();

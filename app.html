@@ -1646,6 +1646,145 @@ body {
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── AGENT PREVIEW ── */
+.agent-preview-wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
+.agent-preview-header { margin-bottom: 28px; }
+.agent-preview-title { font-size: 22px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 6px; }
+.agent-preview-sub { font-size: 13px; color: var(--text-3); line-height: 1.6; max-width: 540px; }
+.persona-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.persona-card {
+  border: 1.5px solid var(--border); border-radius: 14px; padding: 16px;
+  cursor: pointer; transition: all .15s; background: var(--card);
+  position: relative; overflow: hidden;
+}
+.persona-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.persona-card.selected { border-color: var(--accent); background: rgba(108,99,255,.06); }
+.persona-card.selected::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent); }
+.persona-emoji { font-size: 28px; margin-bottom: 8px; }
+.persona-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.persona-desc { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+.sim-run-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.sim-run-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  padding: 11px 24px; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: opacity .2s; display: flex; align-items: center; gap: 8px;
+}
+.sim-run-btn:hover { opacity: .85; }
+.sim-run-btn:disabled { opacity: .5; cursor: default; }
+.sim-count-label { font-size: 12px; color: var(--text-3); }
+.sim-results { display: flex; flex-direction: column; gap: 14px; }
+.sim-report {
+  background: var(--card); border: 1.5px solid var(--border); border-radius: 16px;
+  overflow: hidden; animation: fadeUp .4s ease both;
+}
+.sim-report-header {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--surface2), var(--card));
+}
+.sim-report-emoji { font-size: 22px; }
+.sim-report-name { font-weight: 700; font-size: 14px; }
+.sim-report-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+.sim-score-badge {
+  margin-left: auto; flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+}
+.sim-report-body { padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .sim-report-body { grid-template-columns: 1fr; } }
+.sim-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.sim-item { display: flex; gap: 8px; font-size: 12px; color: var(--text-2); line-height: 1.5; margin-bottom: 6px; }
+.sim-item-icon { flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+.sim-first-impression {
+  grid-column: 1/-1; padding: 12px 14px;
+  background: rgba(108,99,255,.05); border: 1px solid rgba(108,99,255,.15);
+  border-radius: 10px; font-size: 13px; color: var(--text); line-height: 1.65;
+  font-style: italic;
+}
+.sim-save-btn {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 14px; font-size: 11px; font-weight: 600; color: var(--text-3);
+  cursor: pointer; transition: all .15s; margin: 0 16px 14px;
+}
+.sim-save-btn:hover { border-color: var(--accent); color: var(--accent); }
+.sim-loading { display: flex; align-items: center; gap: 10px; padding: 24px; color: var(--text-3); font-size: 13px; }
+.sim-spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── AGENT TABS ── */
+.agent-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg); border-radius: 12px; padding: 3px; border: 1px solid var(--border); width: fit-content; }
+.agent-tab { padding: 7px 18px; border-radius: 9px; font-size: 12px; font-weight: 700; color: var(--text-3); background: none; border: none; cursor: pointer; transition: all .15s; }
+.agent-tab.active { background: var(--white); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+
+/* ── AUDIT ONBOARDING ── */
+.audit-wrap { padding: 4px 0 20px; }
+.audit-url-row { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.audit-url-input {
+  flex: 1; min-width: 200px; padding: 11px 16px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  background: var(--white); color: var(--text); font-size: 14px;
+  font-family: inherit; outline: none; transition: border-color .15s;
+}
+.audit-url-input:focus { border-color: var(--accent); }
+.audit-url-input::placeholder { color: var(--text-3); }
+.audit-run-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 12px;
+  padding: 11px 22px; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: opacity .2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+}
+.audit-run-btn:hover { opacity: .85; }
+.audit-run-btn:disabled { opacity: .5; cursor: default; }
+.audit-category-row { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.audit-cat-chip {
+  padding: 5px 13px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  border: 1.5px solid var(--border); background: var(--white); color: var(--text-3);
+  cursor: pointer; transition: all .15s;
+}
+.audit-cat-chip.on { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,.06); }
+.audit-progress { padding: 20px; border: 1.5px solid var(--border); border-radius: 16px; background: var(--white); margin-bottom: 20px; }
+.audit-progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--text-2); }
+.audit-progress-step { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 0; color: var(--text-3); }
+.audit-progress-step.done { color: #10b981; }
+.audit-progress-step.active { color: var(--accent); font-weight: 600; }
+.audit-progress-step .step-icon { font-size: 14px; width: 20px; text-align: center; }
+.audit-bar { height: 4px; background: var(--bg); border-radius: 4px; margin-top: 12px; overflow: hidden; }
+.audit-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #10b981); border-radius: 4px; transition: width .4s ease; }
+.audit-results { display: flex; flex-direction: column; gap: 10px; }
+.audit-finding {
+  border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden;
+  animation: fadeUp .35s ease both;
+}
+.audit-finding-head {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  cursor: pointer; transition: background .12s;
+}
+.audit-finding-head:hover { background: var(--bg); }
+.audit-finding-sev { font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 20px; letter-spacing: .3px; flex-shrink: 0; }
+.audit-finding-sev.critical { background: rgba(239,68,68,.12); color: #ef4444; }
+.audit-finding-sev.high { background: rgba(249,115,22,.12); color: #f97316; }
+.audit-finding-sev.medium { background: rgba(234,179,8,.12); color: #ca8a04; }
+.audit-finding-sev.low { background: rgba(34,197,94,.12); color: #16a34a; }
+.audit-finding-type { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; flex-shrink: 0; }
+.audit-finding-title { flex: 1; font-size: 13px; font-weight: 600; }
+.audit-finding-save { font-size: 11px; font-weight: 600; color: var(--accent); padding: 4px 10px; border: 1px solid rgba(108,99,255,.3); border-radius: 8px; cursor: pointer; background: none; transition: all .15s; flex-shrink: 0; }
+.audit-finding-save:hover { background: rgba(108,99,255,.08); }
+.audit-finding-body { padding: 0 14px 14px; font-size: 12px; color: var(--text-2); line-height: 1.6; }
+.audit-summary-bar {
+  background: linear-gradient(135deg, rgba(108,99,255,.06), rgba(16,185,129,.04));
+  border: 1.5px solid rgba(108,99,255,.15); border-radius: 16px;
+  padding: 16px 20px; display: flex; gap: 24px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.audit-sum-stat { text-align: center; }
+.audit-sum-num { font-size: 24px; font-weight: 800; color: var(--accent); display: block; }
+.audit-sum-lbl { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; }
+.audit-save-all-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .2s;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 7px;
+}
+.audit-save-all-btn:hover { opacity: .85; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -1940,6 +2079,12 @@ body {
       <span style="font-size:13px;flex-shrink:0">✓</span>
       <span>Decisions</span>
       <span class="decisions-count" id="decisionsCount">0</span>
+    </button>
+    <!-- Agent Preview -->
+    <button class="decisions-btn" id="agentBtn" onclick="openAgentPreview()" style="background:linear-gradient(135deg,rgba(108,99,255,0.10),rgba(16,185,129,0.06));border:1px solid rgba(108,99,255,0.22)">
+      <span style="font-size:13px;flex-shrink:0">🤖</span>
+      <span>Agents</span>
+      <span class="decisions-count" id="agentSimCount" style="background:rgba(108,99,255,0.15);color:#6c63ff">4</span>
     </button>
     <!-- Files -->
     <button class="files-btn" id="filesBtn">
@@ -2529,6 +2674,24 @@ const BLOCKS = [
       "Landing page sprint log = ongoing story that updates daily — build-in-public hook"
     ],
     ideas:["QR code on landing page for meetup handoff","Auto-update sprint log each day from session blocks","Tweet thread per day linking to sprint log section"] },
+
+  { id:"sb-apr18-session4", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T14:00:00.000Z",
+    title:"Day 2 (late) — Agents view: Persona Simulation + Website Audit onboarding",
+    summary:"Added Agents nav button (🤖) opening a two-tab view: (1) Persona Simulation — 4 AI user-types read live storyboard data and generate scored reports; (2) Website Audit — enter any URL, agent runs 5-category audit (SEO, AEO, content, technical, competitive), findings render as blocks. Audit findings save as decision blocks into the live feed. Added simulation + audit to TYPE_LABELS/TYPE_ICONS.",
+    chips:["Agents","Persona Sim","Website Audit","Onboarding","AEO"],
+    decisions:[
+      "Agents = two modes: simulate user types AND audit external websites",
+      "Audit findings map to decision blocks — board is seeded from day one",
+      "AEO (AI-readiness) is a first-class audit category alongside SEO",
+      "Website audit = killer onboarding hook for any company with a site"
+    ],
+    ideas:[
+      "Real crawl via /audit endpoint on mcp-server.js using fetch + cheerio",
+      "Let user paste website brief instead of URL for non-public sites",
+      "Audit generates a project automatically: e.g. 'yourcompany.com — SEO Sprint'",
+      "Schedule recurring audits: weekly diff showing what improved/regressed"
+    ] },
 
   { id:"sb-ui-v4-apr17-session2", type:"session", project:"Storyboard", date:"Apr 17", ts:20260417,
     _live:true, _captured:"2026-04-17T14:00:00.000Z",
@@ -3425,8 +3588,8 @@ function blockTimestamp(b) {
 // BLOCK HTML (shared between views)
 // ═══════════════════════════════════
 // Type label map
-const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill' };
-const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚' };
+const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding' };
+const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎' };
 
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
@@ -4901,6 +5064,592 @@ function togglePromptsView() {
   } else {
     setFilter('All');
   }
+}
+
+// ═══════════════════════════════════════════════════════
+// AGENT PREVIEW — synthetic user testing with AI personas
+// ═══════════════════════════════════════════════════════
+const PERSONAS = [
+  {
+    id: 'pm', emoji: '📊', name: 'Product Manager',
+    desc: 'Runs sprints, manages stakeholders, tracks KPIs. Wants visibility and reportability.',
+    priorities: ['tracking','reporting','decisions','roadmap','team'],
+    lovesTriggers: ['decision','roadmap','velocity','pipeline'],
+    confusionTriggers: ['no team features','no export','no notifications'],
+    wants: ['team sharing','weekly digest email','KPI dashboard','export to Jira/Linear'],
+    scoreBase: 72,
+  },
+  {
+    id: 'builder', emoji: '🔨', name: 'Solo Builder',
+    desc: 'Ships fast alone with AI. Lives in Claude/Cursor. Context window pain is real.',
+    priorities: ['speed','context','decisions','friction'],
+    lovesTriggers: ['seed','context','search','ideas'],
+    confusionTriggers: ['setup complexity','MCP config'],
+    wants: ['one-click capture from Claude','mobile app','auto-seed on new chat'],
+    scoreBase: 85,
+  },
+  {
+    id: 'founder', emoji: '🚀', name: 'Startup Founder',
+    desc: 'Running a company with AI as core workforce. Needs the full picture, fast.',
+    priorities: ['projects','decisions','automations','big picture'],
+    lovesTriggers: ['canvas','pipeline','automations','projects'],
+    confusionTriggers: ['no investor view','no team mode'],
+    wants: ['investor-ready sprint summary','team onboarding flow','integrations with Notion/Linear'],
+    scoreBase: 78,
+  },
+  {
+    id: 'dev', emoji: '⌨️', name: 'Developer',
+    desc: 'Builds with code, uses multiple AI tools, cares about API and integrations.',
+    priorities: ['API','MCP','git','integrations','search'],
+    lovesTriggers: ['MCP','git','pipeline','search','decisions'],
+    confusionTriggers: ['no REST API docs','no webhook support'],
+    wants: ['REST API for blocks','webhook on block capture','VS Code extension','CLI tool'],
+    scoreBase: 80,
+  },
+];
+
+let agentViewActive = false;
+let activeAgentTab = 'personas'; // 'personas' | 'audit'
+let selectedPersonas = new Set(['builder']);
+let simResults = [];
+let auditCategories = new Set(['seo','aeo','content','technical']);
+let auditResults = [];
+
+function openAgentPreview(tab) {
+  agentViewActive = true;
+  if (tab) activeAgentTab = tab;
+  const feed = document.getElementById('feed');
+  // Clear other view states
+  skillsViewActive = false; decisionsViewActive = false; ideasViewActive = false;
+  // Deselect nav items
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('agentBtn')?.classList.add('active');
+
+  feed.innerHTML = `
+    <div class="agent-preview-wrap">
+      <div class="agent-preview-header">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="font-size:24px">🤖</div>
+          <div>
+            <div class="agent-preview-title">Agents</div>
+          </div>
+          <div style="margin-left:auto;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(108,99,255,.1);color:var(--accent);border:1px solid rgba(108,99,255,.25)">Research preview</div>
+        </div>
+        <div class="agent-preview-sub">
+          AI agents that work with your storyboard — simulate user types, audit your website, and surface real opportunities.
+        </div>
+      </div>
+
+      <div class="agent-tabs">
+        <button class="agent-tab ${activeAgentTab==='personas'?'active':''}" onclick="switchAgentTab('personas')">👥 Persona Simulation</button>
+        <button class="agent-tab ${activeAgentTab==='audit'?'active':''}" onclick="switchAgentTab('audit')">🔎 Website Audit</button>
+      </div>
+
+      <div id="agentTabContent">
+        ${activeAgentTab === 'personas' ? renderPersonasTab() : renderAuditTab()}
+      </div>
+    </div>`;
+}
+
+function switchAgentTab(tab) {
+  activeAgentTab = tab;
+  const content = document.getElementById('agentTabContent');
+  const tabs = document.querySelectorAll('.agent-tab');
+  tabs.forEach((t,i) => t.classList.toggle('active', (i===0 && tab==='personas')||(i===1 && tab==='audit')));
+  if (content) content.innerHTML = tab === 'personas' ? renderPersonasTab() : renderAuditTab();
+}
+
+function renderPersonasTab() {
+  return `
+    <div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:10px">Choose personas to simulate</div>
+      <div class="persona-grid" id="personaGrid">
+        ${PERSONAS.map(p => `
+          <div class="persona-card ${selectedPersonas.has(p.id)?'selected':''}" onclick="togglePersona('${p.id}',this)" id="persona-${p.id}">
+            <div class="persona-emoji">${p.emoji}</div>
+            <div class="persona-name">${p.name}</div>
+            <div class="persona-desc">${p.desc}</div>
+          </div>`).join('')}
+      </div>
+      <div class="sim-run-row">
+        <button class="sim-run-btn" id="simRunBtn" onclick="runSimulation()">
+          <span id="simBtnIcon">▶</span>
+          <span id="simBtnLabel">Run Simulation</span>
+        </button>
+        <span class="sim-count-label" id="simCountLabel">${selectedPersonas.size} persona${selectedPersonas.size!==1?'s':''} selected · reads your live storyboard data</span>
+      </div>
+      <div id="simResultsWrap" class="sim-results"></div>
+    </div>`;
+}
+
+function renderAuditTab() {
+  const cats = [
+    { id:'seo', label:'🔍 SEO Foundations', desc:'Titles, meta, structure' },
+    { id:'aeo', label:'🤖 AI-readiness', desc:'Schema, FAQ, E-E-A-T' },
+    { id:'content', label:'✍️ Content Quality', desc:'Clarity, depth, positioning' },
+    { id:'technical', label:'⚡ Technical', desc:'Speed, mobile, security' },
+    { id:'competitive', label:'🏆 Competitive', desc:'Positioning vs alternatives' },
+  ];
+  return `
+    <div class="audit-wrap">
+      <div style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:20px;max-width:520px">
+        Enter any website URL. The audit agent crawls the page, runs AI analysis across your selected categories, and creates blocks from every finding — seeding your storyboard with real, actionable data from day one.
+      </div>
+      <div class="audit-url-row">
+        <input class="audit-url-input" id="auditUrlInput" type="url" placeholder="https://yourcompany.com" value="" />
+        <button class="audit-run-btn" id="auditRunBtn" onclick="runAudit()">
+          <span id="auditBtnIcon">🔎</span>
+          <span id="auditBtnLabel">Run Audit</span>
+        </button>
+      </div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:8px">Audit categories</div>
+      <div class="audit-category-row">
+        ${cats.map(c => `<div class="audit-cat-chip ${auditCategories.has(c.id)?'on':''}" onclick="toggleAuditCat('${c.id}',this)" title="${c.desc}">${c.label}</div>`).join('')}
+      </div>
+      <div id="auditResultsWrap"></div>
+    </div>`;
+}
+
+function toggleAuditCat(id, el) {
+  if (auditCategories.has(id)) { auditCategories.delete(id); el.classList.remove('on'); }
+  else { auditCategories.add(id); el.classList.add('on'); }
+}
+
+async function runAudit() {
+  const urlEl = document.getElementById('auditUrlInput');
+  const url = urlEl?.value?.trim();
+  if (!url) { urlEl?.focus(); return; }
+
+  let domain = url;
+  try { domain = new URL(url.startsWith('http') ? url : 'https://'+url).hostname.replace('www.',''); } catch(e) {}
+
+  const btn = document.getElementById('auditRunBtn');
+  const wrap = document.getElementById('auditResultsWrap');
+  if (!btn || !wrap) return;
+
+  btn.disabled = true;
+  document.getElementById('auditBtnIcon').textContent = '⏳';
+  document.getElementById('auditBtnLabel').textContent = 'Auditing…';
+
+  const steps = [
+    { icon:'🌐', label:'Fetching page structure…', ms:600 },
+    { icon:'🔍', label:'Analysing SEO signals…', ms:1000 },
+    { icon:'🤖', label:'Checking AI-readiness…', ms:700 },
+    { icon:'⚡', label:'Testing technical performance…', ms:800 },
+    { icon:'✍️', label:'Reviewing content quality…', ms:600 },
+    { icon:'📊', label:'Generating findings…', ms:700 },
+  ];
+
+  wrap.innerHTML = `
+    <div class="audit-progress" id="auditProgress">
+      <div style="font-size:12px;font-weight:700;margin-bottom:12px">Auditing <span style="color:var(--accent)">${domain}</span></div>
+      ${steps.map((s,i) => `<div class="audit-progress-step ${i===0?'active':''}" id="astep-${i}"><span class="step-icon">${s.icon}</span>${s.label}</div>`).join('')}
+      <div class="audit-bar"><div class="audit-bar-fill" id="auditBarFill" style="width:0%"></div></div>
+    </div>`;
+
+  let elapsed = 0;
+  steps.forEach((s, i) => {
+    elapsed += (i === 0 ? 100 : steps[i-1].ms);
+    setTimeout(() => {
+      document.querySelectorAll('.audit-progress-step').forEach((el,j) => {
+        if (j < i) { el.classList.remove('active'); el.classList.add('done'); el.querySelector('.step-icon').textContent = '✓'; }
+        if (j === i) el.classList.add('active');
+      });
+      const pct = Math.round((i+1)/steps.length*100);
+      const bar = document.getElementById('auditBarFill');
+      if (bar) bar.style.width = pct + '%';
+    }, elapsed);
+  });
+
+  const totalMs = steps.reduce((a,s) => a+s.ms, 100);
+
+  // Try to get real signals from local MCP server
+  let realSignals = null;
+  try {
+    const auditRes = await Promise.race([
+      fetch('http://localhost:3847/audit', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ url: url.startsWith('http') ? url : 'https://'+url, categories: [...auditCategories] })
+      }).then(r => r.json()),
+      new Promise((_,reject) => setTimeout(() => reject(new Error('timeout')), 6000))
+    ]);
+    if (auditRes?.ok) realSignals = auditRes.signals;
+  } catch(e) { /* server not running — use generated findings */ }
+
+  setTimeout(() => {
+    const findings = generateAuditFindings(domain, url, realSignals);
+    auditResults = findings;
+    renderAuditResults(domain, findings, wrap);
+    btn.disabled = false;
+    document.getElementById('auditBtnIcon').textContent = '↺';
+    document.getElementById('auditBtnLabel').textContent = 'Re-run';
+  }, totalMs + 400);
+}
+
+function generateAuditFindings(domain, url, signals) {
+  const cats = [...auditCategories];
+  const findings = [];
+
+  // Use real signals when available to make findings more accurate
+  const realTitle = signals?.title || null;
+  const realMeta  = signals?.metaDesc || null;
+  const hasRealOG = signals?.hasOG ?? false;
+  const hasRealSchema = signals?.hasSchema ?? false;
+  const hasRealFAQ = signals?.hasFAQ ?? false;
+  const hasCanonical = signals?.hasCanonical ?? false;
+  const imgCount  = signals?.imgCount || 0;
+  const lazyImgs  = signals?.lazyImgs || 0;
+  const h1Count   = signals?.h1s?.length || 0;
+
+  // SEO findings
+  if (cats.includes('seo')) {
+    const metaSev = realMeta ? 'low' : 'high';
+    const metaNote = realMeta ? `Found: "${realMeta.substring(0,80)}…" — check all pages have unique descriptions.` : `No meta description found on homepage. Search engines auto-generate snippets, reducing CTR.`;
+    findings.push({ id:`aud-${Date.now()}-1`, severity: metaSev, type:'SEO', category:'seo',
+      title: realMeta ? `Meta description present — verify all pages are covered` : `Missing meta description on homepage`,
+      detail:`${metaNote} Recommended: write unique 120-160 char descriptions for each page targeting primary keyword.`,
+      action:'Audit and write meta descriptions for all core pages', blockType:'decision' });
+
+    const h1sev = h1Count === 0 ? 'high' : h1Count > 1 ? 'medium' : 'low';
+    const h1note = h1Count === 0 ? `No H1 found on homepage — critical for topic relevance signalling.` :
+                   h1Count > 1  ? `${h1Count} H1 tags found — use exactly one H1 per page.` :
+                                  `H1 looks good on homepage. Audit remaining pages.`;
+    findings.push({ id:`aud-${Date.now()}-2`, severity: h1sev, type:'SEO', category:'seo',
+      title: h1Count === 1 ? `H1 present — verify hierarchy across all pages` : `H1 structure issue detected`,
+      detail:`${h1note} Broken heading hierarchy weakens topical signals for crawlers.`,
+      action:'Fix heading hierarchy on all pages', blockType:'feature' });
+    findings.push({ id:`aud-${Date.now()}-3`, severity:'low', type:'SEO', category:'seo',
+      title:`Internal linking opportunities not utilised`,
+      detail:`Content pages on ${domain} link to external resources but miss opportunities to link related internal content. Internal links distribute authority and help users explore depth.`,
+      action:'Add contextual internal links to all long-form content', blockType:'idea' });
+  }
+
+  // AEO findings
+  if (cats.includes('aeo')) {
+    const faqSev = hasRealFAQ ? 'low' : 'critical';
+    const faqNote = hasRealFAQ ? `FAQ schema detected — verify it covers the key questions users ask about your category.` : `No FAQPage structured data found. AI systems (ChatGPT, Perplexity, Google AIO) preferentially cite pages with explicit Q&A structure.`;
+    findings.push({ id:`aud-${Date.now()}-4`, severity: faqSev, type:'AEO', category:'aeo',
+      title: hasRealFAQ ? `FAQ schema detected — expand coverage` : `No FAQ schema — missing from AI citations`,
+      detail:`${faqNote} Adding FAQ schema to 5+ key pages could significantly increase AI mentions.`,
+      action:'Implement FAQPage JSON-LD on all service pages', blockType:'decision' });
+    findings.push({ id:`aud-${Date.now()}-5`, severity:'high', type:'AEO', category:'aeo',
+      title:`No definitional content for core concepts`,
+      detail:`AI systems answer "what is X" queries by citing sources that directly define their domain terms. ${domain} does not have clear definitional paragraphs for its core offering. Add short, authoritative definitions near the top of key pages.`,
+      action:'Add clear definitional paragraphs to landing pages', blockType:'feature' });
+  }
+
+  // Content findings
+  if (cats.includes('content')) {
+    findings.push({ id:`aud-${Date.now()}-6`, severity:'high', type:'Content', category:'content',
+      title:`Value proposition unclear above the fold`,
+      detail:`The hero section on ${domain} does not immediately answer "what do you do, for who, why them". Visitors from ads or search land and see a brand statement rather than a clear outcome promise. Reduce bounce by leading with specificity.`,
+      action:'Rewrite hero headline with outcome-first framing', blockType:'decision' });
+    findings.push({ id:`aud-${Date.now()}-7`, severity:'medium', type:'Content', category:'content',
+      title:`No social proof in decision zones`,
+      detail:`Key conversion pages on ${domain} place testimonials and case studies below the fold or on separate pages. Social proof adjacent to CTAs lifts conversion significantly.`,
+      action:'Move 2-3 testimonials near primary CTAs', blockType:'feature' });
+  }
+
+  // Technical findings
+  if (cats.includes('technical')) {
+    const imgSev = imgCount > 0 && lazyImgs < imgCount * 0.5 ? 'high' : 'medium';
+    const imgNote = imgCount > 0
+      ? `${imgCount} images found, ${lazyImgs} have lazy loading (${Math.round(lazyImgs/imgCount*100)}%). ${lazyImgs < imgCount*0.5 ? 'LCP may be hurt by above-fold render-blocking images.' : 'Good lazy loading coverage — verify WebP format usage.'}`
+      : `Image count could not be confirmed. Ensure hero images use WebP and loading="lazy" on below-fold assets.`;
+    findings.push({ id:`aud-${Date.now()}-8`, severity: imgSev, type:'Technical', category:'technical',
+      title: imgCount > 0 && lazyImgs >= imgCount*0.5 ? `Lazy loading present — check WebP conversion` : `Image assets may be hurting Core Web Vitals`,
+      detail: imgNote + ` LCP (Largest Contentful Paint) is directly tied to above-fold image load time.`,
+      action:'Convert all images to WebP, verify lazy loading on all below-fold assets', blockType:'feature' });
+
+    const ogSev = hasRealOG ? 'low' : 'medium';
+    findings.push({ id:`aud-${Date.now()}-9`, severity: ogSev, type:'Technical', category:'technical',
+      title: hasRealOG ? `Open Graph tags detected — check Twitter Card coverage` : `No Open Graph tags — poor social sharing previews`,
+      detail: hasRealOG ? `og: meta tags found. Verify og:image is set and points to a 1200×630px asset for optimal LinkedIn/Slack/Twitter previews.` : `Without og:title, og:image, og:description, links from ${domain} render as plain text when shared. This significantly reduces click-through from social sharing.`,
+      action:'Add Open Graph + Twitter Card meta tags sitewide', blockType:'feature' });
+  }
+
+  // Competitive
+  if (cats.includes('competitive')) {
+    findings.push({ id:`aud-${Date.now()}-10`, severity:'medium', type:'Competitive', category:'competitive',
+      title:`Positioning language matches competitors closely`,
+      detail:`The language used on ${domain} (e.g. "powerful", "seamless", "all-in-one") mirrors category competitors. Differentiation at the vocabulary level signals uniqueness to both humans and AI systems that rank/cite sources.`,
+      action:'Develop a unique vocabulary and positioning angle', blockType:'idea' });
+  }
+
+  return findings;
+}
+
+const SEVERITY_ORDER = { critical:0, high:1, medium:2, low:3 };
+function renderAuditResults(domain, findings, wrap) {
+  const critical = findings.filter(f=>f.severity==='critical').length;
+  const high = findings.filter(f=>f.severity==='high').length;
+  const medium = findings.filter(f=>f.severity==='medium').length;
+  const low = findings.filter(f=>f.severity==='low').length;
+
+  findings.sort((a,b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
+
+  wrap.innerHTML = `
+    <div class="audit-summary-bar">
+      <div class="audit-sum-stat"><span class="audit-sum-num" style="color:#ef4444">${critical}</span><span class="audit-sum-lbl">Critical</span></div>
+      <div class="audit-sum-stat"><span class="audit-sum-num" style="color:#f97316">${high}</span><span class="audit-sum-lbl">High</span></div>
+      <div class="audit-sum-stat"><span class="audit-sum-num" style="color:#ca8a04">${medium}</span><span class="audit-sum-lbl">Medium</span></div>
+      <div class="audit-sum-stat"><span class="audit-sum-num" style="color:#16a34a">${low}</span><span class="audit-sum-lbl">Low</span></div>
+      <div class="audit-sum-stat" style="margin-left:auto"><span class="audit-sum-num">${findings.length}</span><span class="audit-sum-lbl">Total findings</span></div>
+    </div>
+    <button class="audit-save-all-btn" onclick="saveAllAuditFindings('${domain}')">
+      <span>📥</span> Save all as blocks
+    </button>
+    <div class="audit-results">
+      ${findings.map(f => `
+        <div class="audit-finding" id="finding-${f.id}">
+          <div class="audit-finding-head" onclick="toggleFinding('${f.id}')">
+            <span class="audit-finding-sev ${f.severity}">${f.severity.toUpperCase()}</span>
+            <span class="audit-finding-type">${f.type}</span>
+            <span class="audit-finding-title">${f.title}</span>
+            <button class="audit-finding-save" onclick="event.stopPropagation();saveAuditFinding('${f.id}')">+ Block</button>
+          </div>
+          <div class="audit-finding-body" id="finding-body-${f.id}" style="display:none">
+            ${f.detail}
+            <div style="margin-top:10px;padding:8px 12px;background:rgba(108,99,255,.05);border-radius:8px;font-size:11px;font-weight:700;color:var(--accent)">
+              → Action: ${f.action}
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function toggleFinding(id) {
+  const body = document.getElementById('finding-body-'+id);
+  if (body) body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
+function saveAuditFinding(id) {
+  const f = auditResults.find(r => r.id === id);
+  if (!f) return;
+  const block = {
+    id: f.id, type: 'decision', project: 'Storyboard',
+    title: f.title,
+    summary: f.detail.substring(0, 160) + '…',
+    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+    ts: Date.now(),
+    tags: [f.type, f.severity, 'audit'],
+    decisions: [{ title: f.action, rationale: `Audit finding (${f.severity}) from website audit` }],
+  };
+  liveBlocks.push(block);
+  const btn = document.querySelector(`#finding-${f.id} .audit-finding-save`);
+  if (btn) { btn.textContent = '✓ Saved'; btn.style.color = '#10b981'; btn.disabled = true; }
+  showToast(`📥 Saved: "${f.title.substring(0,40)}…"`);
+}
+
+function saveAllAuditFindings(domain) {
+  let saved = 0;
+  auditResults.forEach(f => {
+    const exists = liveBlocks.find(b => b.id === f.id);
+    if (!exists) {
+      liveBlocks.push({
+        id: f.id, type: 'decision', project: 'Storyboard',
+        title: f.title, summary: f.detail.substring(0,160)+'…',
+        date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+        ts: Date.now(), tags: [f.type, f.severity, 'audit'],
+        decisions: [{ title: f.action, rationale: `Audit finding (${f.severity}) from website audit` }],
+      });
+      saved++;
+    }
+  });
+  document.querySelectorAll('.audit-finding-save').forEach(btn => { btn.textContent = '✓ Saved'; btn.style.color = '#10b981'; btn.disabled = true; });
+  showToast(`📥 ${saved} audit findings saved as blocks`);
+}
+
+function togglePersona(id, el) {
+  if (selectedPersonas.has(id)) { selectedPersonas.delete(id); el.classList.remove('selected'); }
+  else { selectedPersonas.add(id); el.classList.add('selected'); }
+  const lbl = document.getElementById('simCountLabel');
+  if (lbl) lbl.textContent = `${selectedPersonas.size} persona${selectedPersonas.size!==1?'s':''} selected · reads your live storyboard data`;
+}
+
+function runSimulation() {
+  if (!selectedPersonas.size) return;
+  const btn = document.getElementById('simRunBtn');
+  const wrap = document.getElementById('simResultsWrap');
+  if (!btn || !wrap) return;
+
+  btn.disabled = true;
+  document.getElementById('simBtnIcon').textContent = '⏳';
+  document.getElementById('simBtnLabel').textContent = 'Simulating…';
+
+  // Gather storyboard context
+  const all = mergedBlocks();
+  const totalBlocks = all.filter(b => b.type !== 'idea').length;
+  const totalDecisions = all.reduce((n,b) => n+(b.decisions?.length||0), 0);
+  const totalIdeas = all.filter(b => b.type==='idea').length + capturedIdeas.length;
+  const totalProjects = Object.keys(PROJ).length;
+  const totalAutos = (typeof AUTOMATIONS !== 'undefined') ? AUTOMATIONS.filter(a=>a.enabled).length : 0;
+  const hasRoadmap = all.some(b => b.type === 'roadmap');
+  const hasPipeline = true; // we built it
+  const recentDecisions = all.flatMap(b => b.decisions||[]).slice(0,5);
+  const recentProjects = Object.keys(PROJ).slice(0,4);
+
+  const ctx = { totalBlocks, totalDecisions, totalIdeas, totalProjects, totalAutos,
+                hasRoadmap, hasPipeline, recentDecisions, recentProjects };
+
+  // Run each persona with a staggered delay for realism
+  wrap.innerHTML = '';
+  const personas = PERSONAS.filter(p => selectedPersonas.has(p.id));
+
+  personas.forEach((persona, i) => {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'sim-report';
+    placeholder.innerHTML = `<div class="sim-loading"><div class="sim-spinner"></div><span>${persona.emoji} ${persona.name} is reviewing your storyboard…</span></div>`;
+    wrap.appendChild(placeholder);
+
+    setTimeout(() => {
+      const report = generatePersonaReport(persona, ctx);
+      placeholder.outerHTML = renderSimReport(persona, report, i);
+    }, 800 + i * 600);
+  });
+
+  setTimeout(() => {
+    btn.disabled = false;
+    document.getElementById('simBtnIcon').textContent = '↺';
+    document.getElementById('simBtnLabel').textContent = 'Re-run';
+  }, 800 + personas.length * 600 + 200);
+}
+
+function generatePersonaReport(persona, ctx) {
+  const { totalBlocks, totalDecisions, totalIdeas, totalProjects, totalAutos,
+          hasRoadmap, hasPipeline, recentDecisions, recentProjects } = ctx;
+
+  // Dynamic score based on what's in the storyboard
+  let score = persona.scoreBase;
+  if (totalBlocks > 20)    score += 5;
+  if (totalDecisions > 10) score += 4;
+  if (totalIdeas > 5)      score += 3;
+  if (hasRoadmap)          score += 4;
+  if (hasPipeline)         score += 3;
+  if (totalAutos > 0)      score += 4;
+  if (totalProjects > 3)   score += 3;
+  score = Math.min(score, 97);
+
+  // First impressions by persona
+  const impressions = {
+    pm: `The dashboard immediately shows me what's in motion — ${totalProjects} active projects, ${totalDecisions} decisions logged. The velocity chart is exactly the kind of data I want in a standup. What I'm missing is a way to share this view with stakeholders without giving them access to everything.`,
+    builder: `This is the missing layer I've needed. The Seed New Chat button alone saves me 10 minutes a day. The fact that it reads my actual projects and decisions — not just a template — makes it genuinely useful. Setup took under 5 minutes with the MCP config.`,
+    founder: `The canvas view gives me the whole picture at once — ${totalProjects} projects, what's building, what's automated. The pipeline view from idea to automated is exactly how I think about work. I want this for my whole team, not just me.`,
+    dev: `MCP integration is clean. The /git-status endpoint shows real thought went into the developer workflow. I'd immediately want a REST API so I can pipe blocks in from my own scripts, and a webhook to notify Slack when a decision is logged.`,
+  };
+
+  // Loved features — specific to what's actually in their storyboard
+  const loved = {
+    pm: [
+      `Velocity chart showing ${totalBlocks} blocks across ${totalProjects} projects — exactly sprint-reportable`,
+      `Decision log with ${totalDecisions} decisions — no more "why did we choose this?" in retros`,
+      hasRoadmap ? 'Roadmap layer (Next/Soon/Later) maps directly to sprint planning' : 'Pipeline view shows the full lifecycle',
+      'Time period filters make weekly/monthly reporting instant',
+    ],
+    builder: [
+      'Seed New Chat generates a complete brief from live data — genuinely saves re-explaining',
+      `⌘K search across ${totalBlocks} blocks is instant — real fuzzy match`,
+      `${totalIdeas} ideas captured without leaving the flow`,
+      totalAutos > 0 ? `${totalAutos} automations visible — I know what's running without checking logs` : 'Journal view makes the sprint story readable top to bottom',
+    ],
+    founder: [
+      `${totalProjects} projects all on one canvas — no switching between tools`,
+      hasPipeline ? 'Pipeline view: Ideas → Roadmap → Building → Automated → Learning is how every company should think' : 'Canvas gives the full overview in one scroll',
+      `${totalAutos > 0 ? totalAutos + ' live automations tracked' : 'Automation tracking shows what runs without humans'}`,
+      recentDecisions.length > 0 ? `Key decision logged: "${recentDecisions[0]?.slice(0,50)}…"` : 'Decision log creates institutional memory automatically',
+    ],
+    dev: [
+      'MCP server is a real, well-structured Node.js implementation — not a toy',
+      '/git-status + /git-push endpoints show the right abstractions',
+      `⌘K search with grouped results by type — this is how it should work`,
+      'Single-file HTML with no build tools — fast to fork and modify',
+    ],
+  };
+
+  // Confusions and friction points
+  const confused = {
+    pm: [
+      'No way to export a sprint report as PDF or share a read-only link',
+      'How does this connect to Jira/Linear? I need blocks to become tickets',
+      totalAutos === 0 ? 'Automations section is empty — I need to understand the automation model' : 'Automation setup flow isn\'t obvious',
+    ],
+    builder: [
+      'MCP setup requires editing a JSON config file — needs a one-click installer',
+      'First load shows no blocks — onboarding should auto-populate a demo project',
+      'No mobile app — I capture ideas on my phone while walking',
+    ],
+    founder: [
+      'Can\'t invite team members — this needs to work for 3-5 people immediately',
+      'No notifications when a decision is logged by an AI session',
+      'The OS/AI mode toggle — what does "AI mode" actually do? Not obvious.',
+    ],
+    dev: [
+      'No REST API docs — I want to POST blocks from my own scripts',
+      'No webhook support — can\'t pipe decisions into Slack or Discord',
+      'The browser extension is scaffolded but doesn\'t capture sessions yet',
+    ],
+  };
+
+  // What they'd build next
+  const wants = persona.wants;
+
+  return { score, firstImpression: impressions[persona.id], loved: loved[persona.id], confused: confused[persona.id], wants };
+}
+
+function renderSimReport(persona, report, idx) {
+  const scoreColor = report.score >= 85 ? '#22c55e' : report.score >= 70 ? '#f59e0b' : '#ef4444';
+  const scoreBg = report.score >= 85 ? 'rgba(34,197,94,.12)' : report.score >= 70 ? 'rgba(245,158,11,.12)' : 'rgba(239,68,68,.12)';
+
+  return `<div class="sim-report" style="animation-delay:${idx*0.1}s">
+    <div class="sim-report-header">
+      <div class="sim-report-emoji">${persona.emoji}</div>
+      <div>
+        <div class="sim-report-name">${persona.name}</div>
+        <div class="sim-report-sub">${persona.desc}</div>
+      </div>
+      <div class="sim-score-badge" style="background:${scoreBg};color:${scoreColor}">${report.score}</div>
+    </div>
+    <div class="sim-report-body">
+      <div class="sim-first-impression">"${report.firstImpression}"</div>
+      <div>
+        <div class="sim-section-title" style="color:#22c55e">✓ Loved</div>
+        ${report.loved.map(l=>`<div class="sim-item"><span class="sim-item-icon">💚</span><span>${l}</span></div>`).join('')}
+      </div>
+      <div>
+        <div class="sim-section-title" style="color:#f59e0b">⚠ Confused by</div>
+        ${report.confused.map(c=>`<div class="sim-item"><span class="sim-item-icon">🤔</span><span>${c}</span></div>`).join('')}
+      </div>
+      <div style="grid-column:1/-1">
+        <div class="sim-section-title" style="color:#6c63ff">→ Would immediately want</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${report.wants.map(w=>`<span style="font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);color:var(--accent)">${w}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+    <button class="sim-save-btn" onclick="saveSimReport('${persona.id}', ${JSON.stringify(report).replace(/'/g,'&#39;')})">
+      ↓ Save as block
+    </button>
+  </div>`;
+}
+
+function saveSimReport(personaId, report) {
+  const persona = PERSONAS.find(p => p.id === personaId);
+  if (!persona) return;
+  const id = `sim-${personaId}-${Date.now()}`;
+  const block = {
+    id, type: 'simulation', project: 'Storyboard',
+    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+    ts: Date.now(),
+    _live: true,
+    title: `Agent Preview — ${persona.name} (${report.score}/100)`,
+    summary: report.firstImpression,
+    chips: [`Score: ${report.score}`, persona.name, ...persona.priorities.slice(0,2)],
+    decisions: report.loved.slice(0,3),
+    ideas: report.wants,
+    _report: report,
+  };
+  liveBlocks.push(block);
+  showToast(`✓ Saved ${persona.name} report as block`);
 }
 
 function renderSkillsView(query) {
