@@ -3530,7 +3530,9 @@ body.light-mode .cat-block-chip { background: var(--bg); }
       <button class="seed-modal-copy" id="seedModalCopyBtn" onclick="execSeedCopy()">
         <span>Copy context</span><span>→</span>
       </button>
-      <button class="seed-modal-claude" onclick="execSeedCopyAndClaude()">Open Claude →</button>
+      <button class="seed-modal-claude" onclick="execSeedCopyAndClaude()" title="Copy seed + open Claude.ai">Claude →</button>
+      <button class="seed-modal-claude" style="border-color:rgba(16,163,127,.4);color:#10a37f" onclick="execSeedCopyAndOpen('https://chatgpt.com/')" title="Copy seed + open ChatGPT" onmouseover="this.style.borderColor='#10a37f';this.style.color='#10a37f'" onmouseout="this.style.borderColor='rgba(16,163,127,.4)';this.style.color='#10a37f'">ChatGPT →</button>
+      <button class="seed-modal-claude" style="border-color:rgba(66,133,244,.4);color:#4285f4" onclick="execSeedCopyAndOpen('https://gemini.google.com/')" title="Copy seed + open Gemini" onmouseover="this.style.borderColor='#4285f4'" onmouseout="this.style.borderColor='rgba(66,133,244,.4)'">Gemini →</button>
       <button class="seed-modal-raw-toggle" onclick="toggleSeedRaw()">raw</button>
       <button class="seed-modal-close" onclick="closeSeedModal()">×</button>
     </div>
@@ -6938,9 +6940,13 @@ function execSeedCopy() {
 }
 
 function execSeedCopyAndClaude() {
+  execSeedCopyAndOpen('https://claude.ai/new');
+}
+function execSeedCopyAndOpen(url) {
   navigator.clipboard.writeText(_seedRawText).then(() => {
     recordSeedUsed();
-    window.open('https://claude.ai/new', '_blank');
+    showToast('Context copied — paste it at the start of your chat');
+    window.open(url, '_blank');
     closeSeedModal();
   });
 }
@@ -8720,7 +8726,7 @@ function renderOverviewStrip() {
   ));
 
   // Next up items from memory
-  const nextItems = ['Plain-English hero copy live', 'Demo mode for meetup visitors', 'GitHub Pages public URL confirmed'];
+  const nextItems = ['User menu + MCP connectors panel', 'Latest stream — cross-project feed', 'Idea block redesign + period tabs fix'];
 
   el.className = 'overview-strip';
   el.innerHTML = `
