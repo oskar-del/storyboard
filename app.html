@@ -424,8 +424,60 @@ body.light-mode .topbar {
 
 /* ── Context Fault Lines (session block dividers) ──────────────── */
 .ctx-fault {
-  width: 100%; margin: 6px 0 10px; cursor: pointer; user-select: none;
+  width: 100%; margin: 14px 0 12px; cursor: pointer; user-select: none;
 }
+
+/* ── The alive timeline line ───────────────────────────────────────────── */
+.ctx-fault-timeline {
+  position: relative; height: 28px; margin-bottom: 6px;
+  display: flex; align-items: center;
+}
+.ctx-fault-timeline-track {
+  flex: 1; height: 2px; position: relative; border-radius: 2px;
+  background: rgba(108,99,255,.08);
+}
+.ctx-fault-timeline-fill {
+  position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px;
+  background: linear-gradient(to right, rgba(108,99,255,.15), rgba(108,99,255,.55), rgba(239,68,68,.6));
+  transition: width .4s ease;
+}
+.ctx-fault-timeline-pulse {
+  position: absolute; right: -1px; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 50%; background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.2), 0 0 8px rgba(239,68,68,.4);
+  animation: ctx-pulse 2s ease-in-out infinite;
+}
+@keyframes ctx-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(239,68,68,.2), 0 0 8px rgba(239,68,68,.4); }
+  50% { box-shadow: 0 0 0 6px rgba(239,68,68,.1), 0 0 16px rgba(239,68,68,.5); }
+}
+.ctx-fault-timeline-label {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 9px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase;
+  color: #ef4444; opacity: .8; white-space: nowrap;
+}
+.ctx-fault-timeline-start {
+  font-size: 9px; color: var(--text-3); margin-right: 8px; white-space: nowrap;
+}
+.ctx-fault-timeline-end {
+  font-size: 9px; color: #ef4444; margin-left: 8px; white-space: nowrap; opacity: .7;
+}
+
+/* Block context-depth dot — shows where in the window this block was captured */
+.block-ctx-depth {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 9px; font-weight: 700; color: var(--text-3);
+  margin-left: 4px; opacity: .6;
+}
+.block-ctx-depth-pip {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--text-3);
+}
+.block-ctx-depth.shallow .block-ctx-depth-pip { background: #ef4444; }
+.block-ctx-depth.mid .block-ctx-depth-pip    { background: #f59e0b; }
+.block-ctx-depth.deep .block-ctx-depth-pip   { background: #22c55e; }
+
+/* Old separator — keep for fallback */
 .ctx-fault-sep {
   display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
 }
@@ -3051,6 +3103,59 @@ const BLOCKS = [
       "Tool connection onboarding: 'connect your first tool' as day-1 hook"
     ] },
 
+  // ── Live insights captured Apr 18 (end of day 2) ───────────────────────────
+  { id:"sb-apr18-decision-discussions", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"Discussions are the missing context layer — the conversation that produces ideas",
+    summary:"Blocks capture outcomes (ideas, decisions) but not the process that generated them. The back-and-forth that produces an idea contains richer context than the idea itself — it has the reasoning, wrong turns, and nuance. If you trained a model on just the outcomes, it would produce worse output than one trained on the discussions that produced them. 'Discussion' is a new block type: auto-compiled from the conversation, saved as a beautiful markdown/journal file, linked to the blocks it produced. Separate from the card grid — more like a diary entry or short-form blog post. Could live in Files rather than the feed. Key question: can you reach the same output from just the idea/decision, or do you need the discussion context to get there?",
+    chips:["Discussion","Context layer","Journal","Diary","Block type"],
+    decisions:[
+      "Discussion = new block type (💬) — the conversation that produces ideas/decisions",
+      "Format: beautiful diary/blog, not a card — lives in Files, not the grid",
+      "Auto-compiled from conversation transcript, linked to blocks it produced",
+      "Without discussion context, models trained on outcome-only data will produce worse output",
+      "Discussion is the provenance layer: ideas have a chain of reasoning, not just a title"
+    ] },
+
+  { id:"sb-apr18-decision-shared-datapoints", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"Cross-project data points: same campaign type = shared performance intelligence",
+    summary:"If H&H runs a Facebook A/B test (lifestyle vs spec creative) and logs the result, that finding should surface automatically when New Build Homes starts a similar paid social campaign. The category tag 'Marketing > Paid Social' links them. What gets shared isn't just the outcome — it's the full chain: what was tested, the signal (CTR/CPL), the decision made, which skill/automation was updated. This is the difference between shared files (what other tools do) and shared intelligence (what Storyboard does). The more campaigns you run, the smarter every new one starts. Compounds across projects.",
+    chips:["Intelligence","Cross-project","Paid Social","A/B testing","Compounding"],
+    decisions:[
+      "Category tag = knowledge commons — same work type across projects shares data points",
+      "What surfaces isn't just 'X won' but the full rationale: setup, signal, decision, skill update",
+      "This is the core differentiator: shared intelligence, not just shared files",
+      "Every new campaign starts from compounded learning across all previous ones",
+      "Pitch framing: 'The tenth campaign benefits from the nine before it'"
+    ] },
+
+  { id:"sb-apr18-decision-categories", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"Work Categories are the missing layer between Projects and Skills",
+    summary:"Projects are siloed but work types are shared. 'Marketing Campaign' runs in New Build Homes AND H&H — the skills, decisions, and automations for that category are the same. Architecture: every block gets a category field (Content, SEO, Dev, Marketing, Legal, Client). Nav gets a third view mode: by Category. Opening 'Marketing' shows blocks from ALL projects. Skills library already has these category tags — they just need to flow down to blocks and automations. Seeding by category (not just project) is the next unlock.",
+    chips:["Architecture","Categories","Cross-project","Skills","Data model"],
+    decisions:[
+      "Work categories: Content, SEO, Dev, Marketing, Legal, Client Relations",
+      "Every block gets a category field alongside project",
+      "Nav view: All / By Project / By Category",
+      "Skills library categories already defined — flow them down to blocks",
+      "Seed by category = pulls context across all projects doing that work type"
+    ] },
+
+  { id:"sb-apr18-idea-preview-event", type:"idea", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"💡 Localhost preview = deployment event that should be auto-captured",
+    summary:"Every time Claude shows a localhost URL (e.g. http://localhost:3848/design-v2.html), that's a 'design snapshot' — someone was shown a version of the product, reacted to it, and decisions followed. Those moments are currently invisible. Auto-capture them: type=preview, screenshot as thumb, timestamp, conversation context. The /preview endpoint now exists in mcp-server.js. Claude should call it immediately after serving any localhost URL.",
+    chips:["Preview tracking","Design snapshots","Auto-capture","MCP"],
+    heat:"hot" },
+
+  { id:"sb-apr18-idea-cross-project-categories", type:"idea", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"💡 Cross-project work categories — marketing in one project connects to marketing in another",
+    summary:"Projects are siloed but work types aren't. If New Build Homes and H&H both run marketing campaigns, there's a knowledge connection: decisions made in one are likely relevant to the other. Storyboard should have a second taxonomy — Work Categories (Marketing, SEO, Dev, Legal, Client Relations) — that cuts across project boundaries. When you're doing SEO for Project A, Storyboard could surface: 'You also have SEO decisions in Project B — pull them in?' Skills and memory become truly shared, not project-locked.",
+    chips:["Cross-project","Categories","Knowledge graph","Shared memory","Taxonomy"] },
+
   { id:"sb-apr18-session8", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
     _live:true, _captured:"2026-04-18T20:00:00.000Z",
     seed:true,
@@ -4074,7 +4179,7 @@ function blockTimestamp(b) {
 // ═══════════════════════════════════
 // Type label map
 const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding' };
-const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎' };
+const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎', preview:'🖼️', discussion:'💬' };
 
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
@@ -4128,11 +4233,19 @@ function blockHTML(b, i, featured = false) {
             <span class="ctx-fault-gap-text">No seed used — this thread may have drifted</span>
           </div>` : '';
 
+      // Timeline fill %: use blockCount as proxy for how full context was
+      // More blocks before this fault = fuller context = higher fill %
+      const fillPct = Math.min(40 + (dCount2 + iCount2 + chips2.length) * 4, 95);
+      const sessionDur = b.duration || '';
+
       return `<div class="ctx-fault" onclick="openDetail('${b.id}')">
-        <div class="ctx-fault-sep">
-          <div class="ctx-fault-sep-line"></div>
-          <span class="ctx-fault-sep-badge">✦ context window</span>
-          <div class="ctx-fault-sep-line-r"></div>
+        <div class="ctx-fault-timeline">
+          <span class="ctx-fault-timeline-start">${date2||'start'}</span>
+          <div class="ctx-fault-timeline-track">
+            <div class="ctx-fault-timeline-fill" style="width:${fillPct}%"></div>
+            <div class="ctx-fault-timeline-pulse" style="left:${fillPct}%"></div>
+          </div>
+          <span class="ctx-fault-timeline-end">context full ✕</span>
         </div>
         <div class="ctx-fault-card">
           <span class="ctx-fault-icon">🧠</span>
@@ -4176,6 +4289,7 @@ function blockHTML(b, i, featured = false) {
           <span class="block-proj">${b.project||''}</span>
           <span class="block-date">${displayDate}</span>
           ${b._lastInCtx ? `<span class="block-last-in-ctx">📍 last in context</span>` : ''}
+          ${b._ctxDepth ? `<span class="block-ctx-depth ${b._ctxDepth}"><span class="block-ctx-depth-pip"></span>${b._ctxDepth === 'shallow' ? 'near limit' : b._ctxDepth === 'mid' ? 'mid-session' : 'early'}</span>` : ''}
         </div>
         <div class="block-title">${b.title||'Untitled'}</div>
         ${summary ? `<div class="block-summary">${summary}</div>` : ''}
@@ -4530,14 +4644,22 @@ function renderFeed() {
       const toWeek   = blocks.filter(b => (b.ts||0) >= weekAgo && (b.ts||0) < nowTs);
       const toOlder  = blocks.filter(b => (b.ts||0) < weekAgo);
 
-      // Feature 2: Mark "last captured in context" — the block just before each session fault line
-      (function markLastInCtx(arr) {
+      // Feature 2 + context depth: mark blocks relative to nearest fault line
+      (function markCtxDepth(arr) {
         for (let k = 1; k < arr.length; k++) {
           if (arr[k].type === 'session') {
-            // Find the nearest non-session block before this session
+            // Find non-session blocks before this session and assign depth
+            let nonSession = [];
             for (let j = k - 1; j >= 0; j--) {
-              if (arr[j].type !== 'session') { arr[j]._lastInCtx = true; break; }
+              if (arr[j].type === 'session') break;
+              nonSession.unshift(j);
             }
+            const n = nonSession.length;
+            nonSession.forEach((j, pos) => {
+              const pct = n > 1 ? pos / (n - 1) : 1;
+              arr[j]._ctxDepth = pct > 0.75 ? 'shallow' : pct > 0.35 ? 'mid' : 'deep';
+              if (pos === n - 1) arr[j]._lastInCtx = true;
+            });
           }
         }
       })([...toToday, ...toWeek, ...toOlder]);

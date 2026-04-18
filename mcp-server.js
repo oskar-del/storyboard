@@ -463,6 +463,48 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
+  // ── /preview — auto-capture when Claude shows a localhost URL ─────────────
+  // Call this immediately after showing a localhost URL to the user.
+  // Creates a "preview" block so design snapshots are never lost.
+  if (req.method === "POST" && req.url === "/preview") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const { url, file, project, context, reaction } = JSON.parse(body);
+        const now = new Date();
+        const ts = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+        const label = file || (url ? url.replace("http://localhost:3848/","") : "preview");
+        const newBlock = {
+          id: `preview-${Date.now()}`,
+          type: "preview",
+          project: project || "Storyboard",
+          title: `Preview shown: ${label}`,
+          summary: [
+            context ? `Context: ${context}` : null,
+            reaction ? `Reaction: ${reaction}` : null,
+            `URL: ${url || `http://localhost:3848/${label}`}`,
+          ].filter(Boolean).join("\n"),
+          date: now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
+          ts,
+          _captured: now.toISOString(),
+          _source: "claude-preview",
+          _url: url || `http://localhost:3848/${label}`,
+          chips: ["Preview", "Design snapshot", label],
+        };
+        const blocks = readJSON(BLOCKS_FILE, []);
+        blocks.unshift(newBlock);
+        writeJSON(BLOCKS_FILE, blocks);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ ok: true, id: newBlock.id, block: newBlock }));
+        process.stderr.write(`🖼️  Preview captured: "${label}" → ${project || "Storyboard"}\n`);
+      } catch (e) {
+        res.writeHead(400); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   if (req.method === "POST" && req.url === "/screenshot") {
     let body = "";
     req.on("data", chunk => { body += chunk; });
