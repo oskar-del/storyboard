@@ -585,46 +585,72 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
-  // ── /audit — crawl a URL and return real structural signals ─────────────────
+  // ── /audit — run the full Opero audit.py pipeline on a URL ──────────────────
   if (req.method === "POST" && req.url === "/audit") {
     let body = "";
     req.on("data", d => body += d);
     req.on("end", async () => {
       try {
-        const { url, categories } = JSON.parse(body || "{}");
+        const { url, name, area, competitor } = JSON.parse(body || "{}");
         if (!url) { res.writeHead(400); res.end(JSON.stringify({ error: "url required" })); return; }
 
-        // Fetch the page
-        let pageHtml = "";
-        let fetchError = null;
-        try {
-          const targetUrl = url.startsWith("http") ? url : "https://" + url;
-          const r = await fetch(targetUrl, { signal: AbortSignal.timeout(8000), headers: { "User-Agent": "Storyboard-Audit/1.0" } });
-          pageHtml = await r.text();
-        } catch (e) { fetchError = e.message; }
+        // Resolve domain from URL
+        let domain = url;
+        try { domain = new URL(url.startsWith("http") ? url : "https://"+url).hostname; } catch(e) {}
+        const companyName = name || domain.replace("www.","").split(".")[0];
+        const companyArea = area || "Global";
 
-        // Extract signals from HTML
-        const signals = {};
-        if (pageHtml) {
-          signals.title       = (pageHtml.match(/<title[^>]*>(.*?)<\/title>/is) || [])[1]?.trim() || null;
-          signals.metaDesc    = (pageHtml.match(/name=["']description["'][^>]*content=["']([^"']+)/i) || pageHtml.match(/content=["']([^"']+)["'][^>]*name=["']description["']/i) || [])[1] || null;
-          signals.h1s         = [...pageHtml.matchAll(/<h1[^>]*>(.*?)<\/h1>/gis)].map(m => m[1].replace(/<[^>]+>/g,"").trim()).filter(Boolean);
-          signals.h2s         = [...pageHtml.matchAll(/<h2[^>]*>(.*?)<\/h2>/gis)].map(m => m[1].replace(/<[^>]+>/g,"").trim()).filter(Boolean).slice(0,8);
-          signals.hasSchema   = /application\/ld\+json/i.test(pageHtml);
-          signals.hasFAQ      = /FAQPage|faqpage/i.test(pageHtml);
-          signals.hasOG       = /property=["']og:/i.test(pageHtml);
-          signals.hasCanonical= /rel=["']canonical/i.test(pageHtml);
-          signals.imgCount    = (pageHtml.match(/<img/gi) || []).length;
-          signals.lazyImgs    = (pageHtml.match(/loading=["']lazy/gi) || []).length;
-          signals.wordCount   = pageHtml.replace(/<[^>]+>/g," ").replace(/\s+/g," ").split(" ").length;
-          signals.hasHTTPS    = url.startsWith("https");
+        // Path to audit.py — relative to this script
+        const auditPy = join(__dirname, "../../../AI/AGENCY /Progression/BD-Audit-System/audit.py");
+        const tmpOut  = `/tmp/sb-audit-${Date.now()}.json`;
+
+        process.stderr.write(`🔎 Running audit.py on ${domain}…\n`);
+
+        let auditResult = null;
+        let auditError  = null;
+        let competitorResult = null;
+
+        try {
+          // Install deps if needed (BeautifulSoup, requests, lxml)
+          try { execSync("python3 -c 'import bs4,requests,lxml'", { timeout: 5000 }); }
+          catch { execSync("pip3 install beautifulsoup4 requests lxml --break-system-packages -q", { timeout: 30000 }); }
+
+          // Run main audit
+          execSync(
+            `python3 "${auditPy}" --domain "${domain}" --name "${companyName}" --area "${companyArea}" --output "${tmpOut}"`,
+            { timeout: 60000, stdio: "pipe" }
+          );
+          auditResult = JSON.parse(readFileSync(tmpOut, "utf8"));
+        } catch(e) {
+          auditError = e.message?.substring(0, 200);
+        }
+
+        // Optional competitor audit
+        if (competitor && !auditError) {
+          let compDomain = competitor;
+          try { compDomain = new URL(competitor.startsWith("http") ? competitor : "https://"+competitor).hostname; } catch(e) {}
+          const compOut = `/tmp/sb-audit-comp-${Date.now()}.json`;
+          try {
+            execSync(
+              `python3 "${auditPy}" --domain "${compDomain}" --name "${compDomain}" --area "${companyArea}" --output "${compOut}"`,
+              { timeout: 60000, stdio: "pipe" }
+            );
+            competitorResult = JSON.parse(readFileSync(compOut, "utf8"));
+          } catch(e) { /* competitor optional */ }
         }
 
         res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-        res.end(JSON.stringify({ ok: true, signals, fetchError, crawledAt: new Date().toISOString() }));
-        process.stderr.write(`🔎 Audited: ${url}\n`);
+        res.end(JSON.stringify({
+          ok: !auditError,
+          result: auditResult,
+          competitor: competitorResult,
+          error: auditError,
+          ranAt: new Date().toISOString()
+        }));
+        process.stderr.write(`✅ Audit complete: ${domain} → ${auditResult?.total_score || 'error'}/100\n`);
       } catch(e) {
-        res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
+        res.writeHead(500, { "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ error: e.message }));
       }
     });
     return;

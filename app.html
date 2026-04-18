@@ -2677,8 +2677,8 @@ const BLOCKS = [
 
   { id:"sb-apr18-session4", type:"session", project:"Storyboard", date:"Apr 18", ts:20260418,
     _live:true, _captured:"2026-04-18T14:00:00.000Z",
-    title:"Day 2 (late) — Agents view: Persona Simulation + Website Audit onboarding",
-    summary:"Added Agents nav button (🤖) opening a two-tab view: (1) Persona Simulation — 4 AI user-types read live storyboard data and generate scored reports; (2) Website Audit — enter any URL, agent runs 5-category audit (SEO, AEO, content, technical, competitive), findings render as blocks. Audit findings save as decision blocks into the live feed. Added simulation + audit to TYPE_LABELS/TYPE_ICONS.",
+    title:"Day 2 (late) — Agents view: Persona Simulation + Full Opero Audit pipeline wired in",
+    summary:"Added Agents nav (🤖) with two tabs: (1) Persona Simulation — 4 AI user types score your live storyboard; (2) Website Audit — enter URL + optional competitor domain, audit.py runs the full 5-category pipeline (AEO, SEO, listings, social, content), real scores displayed with competitive delta. Findings save as decision blocks. MCP server /audit endpoint calls audit.py directly.",
     chips:["Agents","Persona Sim","Website Audit","Onboarding","AEO"],
     decisions:[
       "Agents = two modes: simulate user types AND audit external websites",
@@ -5183,29 +5183,40 @@ function renderPersonasTab() {
 }
 
 function renderAuditTab() {
-  const cats = [
-    { id:'seo', label:'🔍 SEO Foundations', desc:'Titles, meta, structure' },
-    { id:'aeo', label:'🤖 AI-readiness', desc:'Schema, FAQ, E-E-A-T' },
-    { id:'content', label:'✍️ Content Quality', desc:'Clarity, depth, positioning' },
-    { id:'technical', label:'⚡ Technical', desc:'Speed, mobile, security' },
-    { id:'competitive', label:'🏆 Competitive', desc:'Positioning vs alternatives' },
-  ];
   return `
     <div class="audit-wrap">
-      <div style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:20px;max-width:520px">
-        Enter any website URL. The audit agent crawls the page, runs AI analysis across your selected categories, and creates blocks from every finding — seeding your storyboard with real, actionable data from day one.
+      <div style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:20px;max-width:560px">
+        Enter any URL — the audit agent runs the full <strong style="color:var(--text)">Opero AI Visibility pipeline</strong>: AEO, SEO, content authority, social presence, technical health. Scored 0-100 with real findings. Every issue becomes a block in your storyboard.
       </div>
-      <div class="audit-url-row">
-        <input class="audit-url-input" id="auditUrlInput" type="url" placeholder="https://yourcompany.com" value="" />
-        <button class="audit-run-btn" id="auditRunBtn" onclick="runAudit()">
-          <span id="auditBtnIcon">🔎</span>
-          <span id="auditBtnLabel">Run Audit</span>
-        </button>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Your website</div>
+          <input class="audit-url-input" id="auditUrlInput" type="url" placeholder="https://yourcompany.com" />
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Competitor to benchmark against <span style="font-weight:400;text-transform:none">(optional)</span></div>
+          <input class="audit-url-input" id="auditCompInput" type="url" placeholder="https://competitor.com" />
+        </div>
       </div>
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:8px">Audit categories</div>
-      <div class="audit-category-row">
-        ${cats.map(c => `<div class="audit-cat-chip ${auditCategories.has(c.id)?'on':''}" onclick="toggleAuditCat('${c.id}',this)" title="${c.desc}">${c.label}</div>`).join('')}
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Company name <span style="font-weight:400;text-transform:none">(optional)</span></div>
+          <input class="audit-url-input" id="auditNameInput" type="text" placeholder="Acme Corp" />
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Primary market / area <span style="font-weight:400;text-transform:none">(optional)</span></div>
+          <input class="audit-url-input" id="auditAreaInput" type="text" placeholder="London, Barcelona, Global…" />
+        </div>
       </div>
+
+      <button class="audit-run-btn" id="auditRunBtn" onclick="runAudit()">
+        <span id="auditBtnIcon">🔎</span>
+        <span id="auditBtnLabel">Run Full Audit</span>
+      </button>
+      <div style="font-size:11px;color:var(--text-3);margin-top:8px;margin-bottom:20px">Powered by audit.py — the same pipeline used on Savills, Knight Frank, and Foxtons</div>
+
       <div id="auditResultsWrap"></div>
     </div>`;
 }
@@ -5216,9 +5227,13 @@ function toggleAuditCat(id, el) {
 }
 
 async function runAudit() {
-  const urlEl = document.getElementById('auditUrlInput');
-  const url = urlEl?.value?.trim();
+  const urlEl  = document.getElementById('auditUrlInput');
+  const url    = urlEl?.value?.trim();
   if (!url) { urlEl?.focus(); return; }
+
+  const competitor = document.getElementById('auditCompInput')?.value?.trim() || null;
+  const nameVal    = document.getElementById('auditNameInput')?.value?.trim() || null;
+  const areaVal    = document.getElementById('auditAreaInput')?.value?.trim() || null;
 
   let domain = url;
   try { domain = new URL(url.startsWith('http') ? url : 'https://'+url).hostname.replace('www.',''); } catch(e) {}
@@ -5263,23 +5278,34 @@ async function runAudit() {
 
   const totalMs = steps.reduce((a,s) => a+s.ms, 100);
 
-  // Try to get real signals from local MCP server
-  let realSignals = null;
+  // Try to call the real audit.py pipeline via MCP server
+  let realAuditResult = null;
+  let competitorAuditResult = null;
   try {
     const auditRes = await Promise.race([
       fetch('http://localhost:3847/audit', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ url: url.startsWith('http') ? url : 'https://'+url, categories: [...auditCategories] })
+        body: JSON.stringify({
+          url: url.startsWith('http') ? url : 'https://'+url,
+          name: nameVal, area: areaVal, competitor
+        })
       }).then(r => r.json()),
-      new Promise((_,reject) => setTimeout(() => reject(new Error('timeout')), 6000))
+      new Promise((_,reject) => setTimeout(() => reject(new Error('timeout')), 65000))
     ]);
-    if (auditRes?.ok) realSignals = auditRes.signals;
-  } catch(e) { /* server not running — use generated findings */ }
+    if (auditRes?.ok && auditRes.result) {
+      realAuditResult = auditRes.result;
+      competitorAuditResult = auditRes.competitor || null;
+    }
+  } catch(e) { /* server not running or timed out — fall back to generated */ }
 
   setTimeout(() => {
-    const findings = generateAuditFindings(domain, url, realSignals);
-    auditResults = findings;
-    renderAuditResults(domain, findings, wrap);
+    if (realAuditResult) {
+      renderRealAuditResults(domain, realAuditResult, competitorAuditResult, wrap);
+    } else {
+      const findings = generateAuditFindings(domain, url, null);
+      auditResults = findings;
+      renderAuditResults(domain, findings, wrap);
+    }
     btn.disabled = false;
     document.getElementById('auditBtnIcon').textContent = '↺';
     document.getElementById('auditBtnLabel').textContent = 'Re-run';
@@ -5416,6 +5442,140 @@ function renderAuditResults(domain, findings, wrap) {
           </div>
         </div>`).join('')}
     </div>`;
+}
+
+function renderRealAuditResults(domain, result, competitor, wrap) {
+  const score = result.total_score;
+  const grade = result.grade || '';
+  const cats  = Object.values(result.categories || {});
+
+  // Build competitive delta row if we have a competitor
+  let compHtml = '';
+  if (competitor) {
+    const cDomain = competitor.domain || '';
+    const cScore  = competitor.total_score || 0;
+    const delta   = score - cScore;
+    const deltaSign = delta >= 0 ? '+' : '';
+    const deltaColor = delta >= 0 ? '#10b981' : '#ef4444';
+    compHtml = `
+      <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:rgba(0,0,0,.03);border-radius:12px;margin-bottom:14px;border:1px solid var(--border);flex-wrap:wrap">
+        <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.4px">vs competitor</div>
+        <div style="font-size:13px;font-weight:700">${cDomain}</div>
+        <div style="font-size:22px;font-weight:800">${cScore}<span style="font-size:12px;color:var(--text-3)">/100</span></div>
+        <div style="font-size:18px;font-weight:800;color:${deltaColor}">${deltaSign}${delta}</div>
+        <div style="font-size:12px;color:var(--text-3)">${delta >= 0 ? 'You lead' : 'You trail'} by ${Math.abs(delta)} points</div>
+        ${Object.values(result.categories).map((cat, i) => {
+          const cCat = Object.values(competitor.categories || {})[i];
+          if (!cCat) return '';
+          const d = cat.score - cCat.score;
+          const dc = d >= 0 ? '#10b981' : '#ef4444';
+          return `<div style="font-size:10px;color:${dc};font-weight:700">${cat.label?.split(' ')[0]}: ${d>=0?'+':''}${d}</div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  // Score colour
+  const scoreColor = score >= 75 ? '#10b981' : score >= 50 ? '#f59e0b' : '#ef4444';
+  const gradeLabel = score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F';
+
+  // Map categories to severity for blocks
+  const catSeverity = s => s >= 80 ? 'low' : s >= 60 ? 'medium' : s >= 40 ? 'high' : 'critical';
+
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="width:64px;height:64px;border-radius:50%;background:${scoreColor}18;border:3px solid ${scoreColor};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-size:20px;font-weight:900;color:${scoreColor}">${score}</span>
+      </div>
+      <div>
+        <div style="font-size:18px;font-weight:800;color:var(--text)">${result.agency || domain}</div>
+        <div style="font-size:12px;color:var(--text-3)">${grade}</div>
+        <div style="font-size:11px;font-weight:700;color:${scoreColor};margin-top:2px">Grade ${gradeLabel} · ${result.audit_date || ''}</div>
+      </div>
+      <button class="audit-save-all-btn" style="margin-left:auto;margin-bottom:0" onclick="saveRealAuditAsBlocks(${JSON.stringify(result).replace(/"/g,'&quot;')})">
+        📥 Save all findings as blocks
+      </button>
+    </div>
+
+    ${compHtml}
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:20px">
+      ${cats.map(cat => {
+        const pct = Math.round(cat.score/cat.max*100);
+        const cc  = pct >= 75 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+        return `<div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:4px">${cat.label || ''}</div>
+          <div style="font-size:22px;font-weight:800;color:${cc}">${cat.score}<span style="font-size:11px;color:var(--text-3)">/${cat.max}</span></div>
+          <div style="margin-top:6px;height:4px;background:var(--bg);border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${cc};border-radius:4px;transition:width .4s"></div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="audit-results">
+      ${cats.flatMap(cat => {
+        const sev = catSeverity(Math.round(cat.score/cat.max*100));
+        return [
+          ...(cat.issues||[]).map((issue, ii) => `
+            <div class="audit-finding">
+              <div class="audit-finding-head" onclick="toggleFinding('real-${cat.label?.replace(/\s/g,'')}-iss-${ii}')">
+                <span class="audit-finding-sev ${catSeverity(Math.round(cat.score/cat.max*100))}">${catSeverity(Math.round(cat.score/cat.max*100)).toUpperCase()}</span>
+                <span class="audit-finding-type">${cat.label?.split(' ')[0] || ''}</span>
+                <span class="audit-finding-title">${issue.replace(/^[❌⚠️]\s*/,'')}</span>
+                <button class="audit-finding-save" onclick="event.stopPropagation();saveRealFinding('${cat.label?.replace(/\s/g,'')}-iss-${ii}','${issue.replace(/['"]/g,' ').substring(0,80)}','${cat.label||''}')">+ Block</button>
+              </div>
+              <div class="audit-finding-body" id="real-${cat.label?.replace(/\s/g,'')}-iss-${ii}" style="display:none">
+                ${issue.replace(/^[❌⚠️✅]\s*/,'')}
+              </div>
+            </div>`),
+          ...(cat.findings||[]).map((f, fi) => `
+            <div class="audit-finding" style="opacity:.75">
+              <div class="audit-finding-head">
+                <span class="audit-finding-sev low">✓ PASS</span>
+                <span class="audit-finding-type">${cat.label?.split(' ')[0] || ''}</span>
+                <span class="audit-finding-title" style="color:var(--text-3)">${f.replace(/^[✅]\s*/,'')}</span>
+              </div>
+            </div>`),
+        ];
+      }).join('')}
+    </div>`;
+
+  // Store for save-all
+  window._lastRealAudit = result;
+}
+
+function saveRealFinding(id, title, category) {
+  const block = {
+    id: `audit-real-${id}-${Date.now()}`,
+    type: 'decision', project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+    title: title, summary: `Audit finding from ${category}`,
+    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+    ts: Date.now(), tags: [category, 'audit', 'finding'],
+  };
+  liveBlocks.push(block);
+  showToast(`📥 Saved audit finding as block`);
+}
+
+function saveRealAuditAsBlocks(result) {
+  if (typeof result === 'string') try { result = JSON.parse(result); } catch(e) { return; }
+  let saved = 0;
+  Object.values(result.categories || {}).forEach(cat => {
+    (cat.issues || []).forEach((issue, i) => {
+      const id = `audit-${cat.label?.replace(/\s/g,'')}-${i}-${Date.now()}`;
+      liveBlocks.push({
+        id, type: 'decision',
+        project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+        title: issue.replace(/^[❌⚠️✅]\s*/,'').substring(0, 100),
+        summary: `${cat.label} audit finding for ${result.agency || result.domain}`,
+        date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+        ts: Date.now() + i,
+        tags: [cat.label?.split(' ')[0] || 'audit', 'audit'],
+      });
+      saved++;
+    });
+  });
+  showToast(`📥 ${saved} audit findings saved as blocks`);
+  document.querySelectorAll('.audit-finding-save').forEach(btn => { btn.textContent = '✓'; btn.disabled = true; });
 }
 
 function toggleFinding(id) {
