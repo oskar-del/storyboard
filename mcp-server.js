@@ -409,8 +409,21 @@ const httpServer = createServer((req, res) => {
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
 
   if (req.method === "GET" && req.url === "/ping") {
-    res.writeHead(200, { "Content-Type": "application/json" });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ ok: true, version: "1.0.0" }));
+    return;
+  }
+
+  // /blocks — return all blocks from blocks-data.json (lets dashboard work from any origin)
+  if (req.method === "GET" && req.url.startsWith("/blocks")) {
+    try {
+      const data = existsSync(BLOCKS_FILE) ? JSON.parse(readFileSync(BLOCKS_FILE, "utf8")) : [];
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(data));
+    } catch {
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify([]));
+    }
     return;
   }
 
@@ -619,11 +632,11 @@ const httpServer = createServer((req, res) => {
         }
         const wlPath = path.join(STORYBOARD_DIR, "waitlist.json");
         let list = [];
-        try { list = JSON.parse(fs.readFileSync(wlPath, "utf8")); } catch(_) {}
+        try { list = JSON.parse(readFileSync(wlPath, "utf8")); } catch(_) {}
         const already = list.find(e => e.email === email);
         if (!already) {
           list.push({ email, source: source || "landing", ts: new Date().toISOString() });
-          fs.writeFileSync(wlPath, JSON.stringify(list, null, 2));
+          writeFileSync(wlPath, JSON.stringify(list, null, 2));
           process.stderr.write(`📬 Waitlist signup: ${email}\n`);
         }
         res.writeHead(200, headers);
@@ -641,7 +654,7 @@ const httpServer = createServer((req, res) => {
     try {
       const wlPath = path.join(STORYBOARD_DIR, "waitlist.json");
       let list = [];
-      try { list = JSON.parse(fs.readFileSync(wlPath, "utf8")); } catch(_) {}
+      try { list = JSON.parse(readFileSync(wlPath, "utf8")); } catch(_) {}
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ ok: true, count: list.length, signups: list }));
     } catch(e) {
@@ -868,19 +881,20 @@ const httpServer = createServer((req, res) => {
     req.on("data", chunk => { body += chunk; });
     req.on("end", async () => {
       try {
-        const { transcript, rawId, project } = JSON.parse(body);
+        const { transcript, rawId, project, apiKey: clientKey } = JSON.parse(body);
         if (!transcript) {
           res.writeHead(400); res.end(JSON.stringify({ error: "Missing transcript" }));
           return;
         }
 
-        const apiKey = process.env.ANTHROPIC_API_KEY;
+        // Accept key from environment OR from client (user's own key stored in browser)
+        const apiKey = process.env.ANTHROPIC_API_KEY || clientKey || "";
         if (!apiKey) {
-          // Return a helpful error — the API key needs to be set
+          // No key anywhere — signal client to use local extraction
           res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
           res.end(JSON.stringify({
             ok: false,
-            error: "ANTHROPIC_API_KEY not set. Add it to your environment to enable AI processing.",
+            error: "No API key available. Local pattern extraction will run instead.",
             fallback: true,
           }));
           return;

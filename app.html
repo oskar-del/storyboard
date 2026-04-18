@@ -2657,7 +2657,15 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 <!-- File reader overlay -->
 <div class="file-reader-overlay" id="fileReaderOverlay" onclick="if(event.target===this)closeFileReader()">
   <div class="file-reader" id="fileReaderPanel">
-    <button class="file-reader-close" onclick="closeFileReader()">✕</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="claudeDesignBtn" onclick="exportToClaudeDesign()" title="Export to Claude Design" style="display:none;background:linear-gradient(135deg,#6c63ff,#a855f7);border:none;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;gap:5px;align-items:center;transition:opacity .15s">
+          ✦ Claude Design
+        </button>
+        <div id="claudeDesignToast" style="display:none;font-size:11px;color:#a3e635;font-weight:600">✓ Prompt copied — paste in Claude Design</div>
+      </div>
+      <button class="file-reader-close" onclick="closeFileReader()">✕</button>
+    </div>
     <div class="file-reader-type" id="frType"></div>
     <h1 id="frTitle"></h1>
     <div class="file-reader-byline" id="frByline"></div>
@@ -2852,6 +2860,8 @@ body.light-mode .cat-block-chip { background: var(--bg); }
         <span>📥</span>
         <span id="inboxCount">0</span>
       </button>
+      <!-- Settings -->
+      <button id="settingsBtn" onclick="openSettings()" title="Settings" style="background:none;border:none;cursor:pointer;color:var(--text-3);padding:4px 6px;border-radius:6px;font-size:14px;transition:color .15s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-3)'">⚙</button>
       <!-- Search -->
       <button class="search-btn" onclick="openSearch()" title="Search blocks (⌘K)">
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -3089,6 +3099,10 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 <!-- FLOATING ADD IDEA BUTTON -->
 <div class="fab-wrap" id="fabWrap">
   <div class="fab-dial" id="fabDial">
+    <div class="fab-dial-btn" onclick="closeFab();openQuickThought()">
+      <div class="fab-dial-icon" style="background:rgba(108,99,255,.15)">⚡</div>
+      Quick thought
+    </div>
     <div class="fab-dial-btn" onclick="closeFab();openIdeaModal()">
       <div class="fab-dial-icon" style="background:#fff7ed">💡</div>
       Capture idea
@@ -3103,6 +3117,29 @@ body.light-mode .cat-block-chip { background: var(--bg); }
     </div>
   </div>
   <button class="fab-idea" id="fabBtn" onclick="toggleFab()" title="Capture (Ctrl+Space)">+</button>
+</div>
+
+<!-- QUICK THOUGHT MODAL — between-session capture, zero friction -->
+<div id="quickThoughtOverlay" onclick="if(event.target===this)closeQuickThought()" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;padding-bottom:100px">
+  <div id="quickThoughtPanel" style="background:var(--white);border:1px solid var(--border);border-radius:16px;width:520px;max-width:94vw;padding:18px 20px;box-shadow:0 20px 60px rgba(0,0,0,.5);transform:translateY(20px);transition:transform .2s cubic-bezier(.34,1.56,.64,1);opacity:0">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span style="font-size:15px">⚡</span>
+      <span style="font-weight:700;font-size:13px;color:var(--text)">Quick thought</span>
+      <span style="font-size:10px;color:var(--text-3);margin-left:2px">between sessions</span>
+      <button onclick="closeQuickThought()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text-3);font-size:16px;line-height:1">✕</button>
+    </div>
+    <textarea id="quickThoughtText" placeholder="What just hit you? Don't overthink it — just capture it." rows="3"
+      style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--text);resize:none;font-family:inherit;outline:none;line-height:1.5"
+      onkeydown="if((event.metaKey||event.ctrlKey)&&event.key==='Enter')saveQuickThought()"
+    ></textarea>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+      <span style="font-size:10px;color:var(--text-3)">Goes to your inbox for review · ⌘↩ to save</span>
+      <div style="display:flex;gap:8px">
+        <button onclick="closeQuickThought()" style="background:none;border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--text-2);cursor:pointer">Cancel</button>
+        <button onclick="saveQuickThought()" id="quickThoughtSaveBtn" style="background:#6c63ff;border:none;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:700;color:#fff;cursor:pointer">Save →</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- IDEA CAPTURE MODAL -->
@@ -3127,6 +3164,47 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 
 <!-- SEED MODAL -->
 <!-- ══ REVIEW INBOX ══ -->
+<!-- ── Settings overlay ─────────────────────────────────────────── -->
+<div id="settingsOverlay" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center" onclick="if(event.target===this)closeSettings()">
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:18px;width:480px;max-width:92vw;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px">⚙</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:15px;color:var(--text)">Settings</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:1px">Configure Storyboard for your environment</div>
+      </div>
+      <button onclick="closeSettings()" style="background:none;border:none;cursor:pointer;color:var(--text-3);font-size:18px;padding:2px 6px">✕</button>
+    </div>
+    <div style="padding:20px">
+      <!-- API Key section -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:6px">
+          Anthropic API Key
+          <span id="apiKeyStatus" style="font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;background:rgba(100,116,139,.15);color:var(--text-3)">not set</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-3);margin-bottom:10px;line-height:1.5">Used for AI-powered inbox extraction. Stays in your browser — never sent anywhere else. Get a key at <span style="color:#6c63ff">console.anthropic.com</span>.</div>
+        <div style="display:flex;gap:8px">
+          <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-…" autocomplete="off"
+            style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:monospace;outline:none"
+            oninput="updateApiKeyStatus()"
+          />
+          <button onclick="saveApiKey()" style="background:#6c63ff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;color:#fff;cursor:pointer">Save</button>
+          <button onclick="clearApiKey()" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:8px 10px;font-size:11px;color:#f87171;cursor:pointer">Clear</button>
+        </div>
+        <div id="apiKeySaved" style="display:none;font-size:11px;color:#4ade80;margin-top:6px">✓ Key saved — AI extraction enabled</div>
+      </div>
+      <!-- Divider -->
+      <div style="border-top:1px solid var(--border);margin:0 0 16px"></div>
+      <!-- Model note -->
+      <div style="font-size:11px;color:var(--text-3);line-height:1.6">
+        <span style="font-weight:600;color:var(--text-2)">Processing model:</span> Claude Haiku (fast + cheap)<br>
+        <span style="font-weight:600;color:var(--text-2)">Estimated cost:</span> ~$0.001 per session processed<br>
+        <span style="font-weight:600;color:var(--text-2)">Without a key:</span> Local pattern extraction runs automatically
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="inboxOverlay" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center">
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;width:640px;max-width:95vw;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
     <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
@@ -7702,6 +7780,16 @@ const FILES = [
     file: 'discussions/apr18-capture-everything.md',
   },
   {
+    id: 'disc-apr18-mobile-companion',
+    type: 'discussion',
+    title: 'Mobile — Companion, Not Dashboard',
+    subtitle: 'Live feed · Quick memo · Two things only · PWA first path',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Mobile is not a second dashboard. Two things only: live feed of your AI sessions (read view, blocks appear in real time) and quick memo capture. The desktop is where you build. The phone is where you watch it happen.',
+    links: ['Product', 'Mobile'],
+    file: 'discussions/apr18-mobile-companion.md',
+  },
+  {
     id: 'disc-apr18-velocity',
     type: 'discussion',
     title: 'Velocity — The Real Product Argument',
@@ -8078,6 +8166,14 @@ async function openFileReader(fileId) {
   typeEl.innerHTML  = `<span class="${typeClass}">${typeLabel}</span>`;
   titleEl.textContent = f.title;
   byline.innerHTML  = `<span>${f.date}</span><span style="color:${(PROJ[f.project]||{color:'#6c63ff'}).color}">${f.project}</span><span>${f.subtitle}</span>`;
+  // Show Claude Design export button for discussions and trails
+  const designBtn = document.getElementById('claudeDesignBtn');
+  if (f.type === 'discussion' || f.type === 'trail') {
+    designBtn.style.display = 'flex';
+    designBtn._fileId = f.id;
+  } else {
+    designBtn.style.display = 'none';
+  }
   body.innerHTML    = '<div style="color:var(--text-3);font-size:12px;padding:20px 0">Loading...</div>';
 
   overlay.classList.add('open');
@@ -8099,6 +8195,55 @@ async function openFileReader(fileId) {
 function closeFileReader() {
   document.getElementById('fileReaderOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  document.getElementById('claudeDesignBtn').style.display = 'none';
+  document.getElementById('claudeDesignToast').style.display = 'none';
+}
+
+async function exportToClaudeDesign() {
+  const btn = document.getElementById('claudeDesignBtn');
+  const toast = document.getElementById('claudeDesignToast');
+  const fileId = btn._fileId;
+  const f = FILES.find(x => x.id === fileId);
+  if (!f) return;
+
+  // Grab the rendered body text as source material
+  const bodyEl = document.getElementById('frBody');
+  const bodyText = bodyEl ? bodyEl.innerText.slice(0, 2000) : '';
+
+  // Build the Claude Design prompt
+  const prompt = `Create a clean, professional one-pager visual for the following project discussion. Use a dark background with purple/violet accents. Include:
+
+**Title:** ${f.title}
+**Project:** ${f.project}
+**Date:** ${f.date}
+
+**Content to visualise:**
+${bodyText}
+
+**Design direction:**
+- Dark background (#0d1117 or similar)
+- Purple/violet accent (#6c63ff)
+- Clean sans-serif typography
+- Key decisions as highlighted callout boxes
+- Any rejected ideas shown with strikethrough styling
+- The core intent or north-star statement as a large hero statement at the top
+- Structured sections for: Decisions, Ideas, Key Moments
+- Suitable for sharing as a project brief or stakeholder update
+
+Make it feel like a premium strategy document, not a slide deck.`;
+
+  try {
+    await navigator.clipboard.writeText(prompt);
+    btn.style.display = 'none';
+    toast.style.display = 'block';
+    setTimeout(() => {
+      toast.style.display = 'none';
+      btn.style.display = 'flex';
+    }, 4000);
+  } catch {
+    // Fallback — show prompt in a modal
+    window.prompt('Copy this Claude Design prompt:', prompt);
+  }
 }
 
 function renderSkillsView(query) {
@@ -9361,7 +9506,7 @@ function setSyncIndicator(state) {
   } else {
     dot.style.background = '#94a3b8';
     dot.style.boxShadow  = 'none';
-    label.textContent    = 'offline';
+    label.textContent    = 'server off';
     wrap.style.color     = 'var(--text-3)';
   }
 }
@@ -9369,26 +9514,38 @@ function setSyncIndicator(state) {
 function pollData() {
   const ts = Date.now();
 
-  // Poll blocks-data.json — MCP real-time writes
-  fetch('blocks-data.json?t=' + ts)
+  // Primary: poll MCP server directly (works regardless of how dashboard is opened)
+  // Falls back to blocks-data.json for local file:// serving
+  const mcpBlocks = fetch(`${SB_MCP}/blocks?t=${ts}`, { signal: AbortSignal.timeout(2000) })
     .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      if (!Array.isArray(data) || !data.length) { setSyncIndicator('idle'); return; }
-      // Only re-render if the live block set has actually changed
-      const newIds = data.map(b => b.id).join(',');
-      const oldIds = liveBlocks.map(b => b.id).join(',');
-      if (newIds !== oldIds) {
-        liveBlocks = data;
-        updateIdeasCount();
-        renderFeed();
-        buildNav();
-        buildRightPanel();
-        autoScreenshot('live');
-        setSyncIndicator('live'); // pulse green when new data arrives
-      } else {
-        setSyncIndicator('idle');
-      }
-    }).catch(() => { setSyncIndicator('offline'); });
+    .catch(() => null);
+
+  const fileBlocks = fetch('blocks-data.json?t=' + ts, { signal: AbortSignal.timeout(2000) })
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null);
+
+  Promise.all([mcpBlocks, fileBlocks]).then(([fromMcp, fromFile]) => {
+    const serverUp = fromMcp !== null;
+    const data = fromMcp || fromFile;
+
+    if (!Array.isArray(data) || !data.length) {
+      setSyncIndicator(serverUp ? 'idle' : 'offline');
+      return;
+    }
+    const newIds = data.map(b => b.id).join(',');
+    const oldIds = liveBlocks.map(b => b.id).join(',');
+    if (newIds !== oldIds) {
+      liveBlocks = data;
+      updateIdeasCount();
+      renderFeed();
+      buildNav();
+      buildRightPanel();
+      autoScreenshot('live');
+      setSyncIndicator('live');
+    } else {
+      setSyncIndicator(serverUp ? 'idle' : 'offline');
+    }
+  });
 
   // Poll skills-data.json — written by score_skills.py
   fetch('skills-data.json?t=' + ts)
@@ -9603,6 +9760,246 @@ async function pollInbox() {
   } catch { /* MCP not running */ }
 }
 
+// ── Quick thought — between-session capture ───────────────────────────────────
+function openQuickThought() {
+  const overlay = document.getElementById('quickThoughtOverlay');
+  const panel   = document.getElementById('quickThoughtPanel');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => {
+    panel.style.transform = 'translateY(0)';
+    panel.style.opacity = '1';
+  });
+  setTimeout(() => document.getElementById('quickThoughtText').focus(), 50);
+}
+
+function closeQuickThought() {
+  const overlay = document.getElementById('quickThoughtOverlay');
+  const panel   = document.getElementById('quickThoughtPanel');
+  panel.style.transform = 'translateY(20px)';
+  panel.style.opacity = '0';
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    document.getElementById('quickThoughtText').value = '';
+    document.getElementById('quickThoughtSaveBtn').textContent = 'Save →';
+    document.getElementById('quickThoughtSaveBtn').disabled = false;
+  }, 200);
+}
+
+async function saveQuickThought() {
+  const text = document.getElementById('quickThoughtText').value.trim();
+  if (!text) return;
+
+  const btn = document.getElementById('quickThoughtSaveBtn');
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+
+  const project = activeFilter !== 'All' ? activeFilter : 'Storyboard';
+
+  // Store as a raw capture with the thought as transcript — goes through inbox flow
+  const rawCapture = {
+    title: text.slice(0, 60) + (text.length > 60 ? '…' : ''),
+    source: 'quick-thought',
+    url: '',
+    turnCount: 1,
+    transcript: `Between-session thought captured on ${new Date().toLocaleString()}:\n\n${text}`,
+  };
+
+  try {
+    const r = await fetch(`${SB_MCP}/raw-capture`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rawCapture),
+    });
+    const data = await r.json();
+    if (data.ok) {
+      btn.textContent = '✓ Saved';
+      pollInbox(); // refresh badge
+      setTimeout(closeQuickThought, 800);
+    }
+  } catch {
+    // MCP not running — save directly as a block
+    const block = {
+      id: 'qt-' + Date.now(),
+      type: 'idea',
+      title: text.slice(0, 80),
+      summary: text,
+      project,
+      date: new Date().toISOString().slice(0, 10),
+      _source: 'quick-thought',
+    };
+    // Push to live blocks immediately (client-side, not persisted until server is up)
+    liveBlocks = [block, ...liveBlocks];
+    renderFeed();
+    btn.textContent = '✓ Saved locally';
+    setTimeout(closeQuickThought, 800);
+  }
+}
+
+// ── Settings & API key ────────────────────────────────────────────────────────
+function openSettings() {
+  const overlay = document.getElementById('settingsOverlay');
+  overlay.style.display = 'flex';
+  const stored = localStorage.getItem('sb_anthropic_key') || '';
+  const input = document.getElementById('apiKeyInput');
+  input.value = stored ? '•'.repeat(Math.min(stored.length, 20)) : '';
+  input.dataset.hasKey = stored ? '1' : '0';
+  updateApiKeyStatus();
+}
+function closeSettings() {
+  document.getElementById('settingsOverlay').style.display = 'none';
+}
+function updateApiKeyStatus() {
+  const stored = localStorage.getItem('sb_anthropic_key');
+  const el = document.getElementById('apiKeyStatus');
+  if (stored) {
+    el.textContent = '✓ set';
+    el.style.background = 'rgba(74,222,128,.15)';
+    el.style.color = '#4ade80';
+  } else {
+    el.textContent = 'not set';
+    el.style.background = 'rgba(100,116,139,.15)';
+    el.style.color = 'var(--text-3)';
+  }
+}
+function saveApiKey() {
+  const input = document.getElementById('apiKeyInput');
+  const val = input.value.trim();
+  // Don't save if it's just bullets (display mask, no change)
+  if (!val || /^•+$/.test(val)) return;
+  if (!val.startsWith('sk-ant-')) {
+    input.style.borderColor = '#f87171';
+    setTimeout(() => input.style.borderColor = 'var(--border)', 1500);
+    return;
+  }
+  localStorage.setItem('sb_anthropic_key', val);
+  input.value = '•'.repeat(Math.min(val.length, 20));
+  input.dataset.hasKey = '1';
+  document.getElementById('apiKeySaved').style.display = 'block';
+  setTimeout(() => document.getElementById('apiKeySaved').style.display = 'none', 3000);
+  updateApiKeyStatus();
+  document.getElementById('settingsBtn').style.color = '#4ade80';
+  setTimeout(() => document.getElementById('settingsBtn').style.color = '', 2000);
+}
+function clearApiKey() {
+  localStorage.removeItem('sb_anthropic_key');
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('apiKeyInput').dataset.hasKey = '0';
+  updateApiKeyStatus();
+}
+// On load — show green dot on settings btn if key is set
+(function() {
+  if (localStorage.getItem('sb_anthropic_key')) {
+    setTimeout(() => {
+      const btn = document.getElementById('settingsBtn');
+      if (btn) btn.title = '⚙ Settings — API key set';
+    }, 500);
+  }
+})();
+
+// ── Local pattern-based extraction — no API key required ────────────────────
+function localExtractFromTranscript(text, sourceTitle) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const candidates = [];
+  let uid = () => 'local-' + Math.random().toString(36).slice(2, 9);
+
+  const DECISION_RX = [
+    /\b(?:we(?:'ve)?\s+decided|decision(?:\s+is)?:?|going\s+with|locked\s+in|confirmed:?|the\s+answer\s+is|final(?:ly)?:?|✓|✔)/i,
+    /\b(?:we(?:'ll)?\s+use|stick(?:ing)?\s+with|that(?:'s|\s+is)\s+the\s+(?:one|call|plan)|agreed:?)/i,
+  ];
+  const IDEA_RX = [
+    /\b(?:what\s+if|could\s+we|idea:?|maybe\s+we|consider|how\s+about|what\s+about|potential(?:ly)?|imagine\s+if)/i,
+    /\b(?:thought:?|interesting\s+angle|here['']s\s+a\s+thought|one\s+option|another\s+option)\b/i,
+  ];
+  const REJECTION_RX = [
+    /\b(?:scratch\s+that|no\s+wait|actually\s+no|that\s+doesn['']t\s+(?:make|work)|let['']s\s+not|we\s+shouldn['']t|avoid|don['']t\s+(?:want|use|call|name))\b/i,
+    /\b(?:that\s+was\s+wrong|wrong\s+direction|drop\s+that|forget\s+(?:that|the)|remove|won['']t\s+work|too\s+(?:complex|vague|generic|confusing))\b/i,
+  ];
+
+  // Try to extract a meaningful title from first user-like line
+  const titleLine = lines.find(l => l.length > 15 && l.length < 120 && !/^(Human|Assistant|User|Claude):/i.test(l)) || sourceTitle || 'Captured session';
+  const suggestedTitle = titleLine.slice(0, 80);
+
+  // Deduplicate by content similarity (skip near-duplicates)
+  const seen = new Set();
+  const dedup = (text) => {
+    const key = text.toLowerCase().replace(/\s+/g, ' ').slice(0, 60);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  };
+
+  lines.forEach(line => {
+    // Skip very short or header-style lines
+    if (line.length < 20 || line.length > 400) return;
+    if (/^(Human|Assistant|User|Claude|System):/i.test(line)) return;
+
+    const isDecision  = DECISION_RX.some(r  => r.test(line));
+    const isIdea      = IDEA_RX.some(r       => r.test(line));
+    const isRejection = REJECTION_RX.some(r  => r.test(line));
+
+    if (isDecision && dedup(line)) {
+      candidates.push({
+        id: uid(), type: 'decision',
+        title: line.slice(0, 90),
+        summary: line.length > 90 ? line.slice(0, 150) : '',
+        project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+        date: new Date().toISOString().slice(0,10),
+      });
+    } else if (isRejection && dedup(line)) {
+      candidates.push({
+        id: uid(), type: 'rejection',
+        title: line.slice(0, 90),
+        summary: line.length > 90 ? line.slice(0, 150) : '',
+        project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+        date: new Date().toISOString().slice(0,10),
+      });
+    } else if (isIdea && dedup(line)) {
+      candidates.push({
+        id: uid(), type: 'idea',
+        title: line.slice(0, 90),
+        summary: line.length > 90 ? line.slice(0, 150) : '',
+        project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+        date: new Date().toISOString().slice(0,10),
+      });
+    }
+  });
+
+  // Cap at 20 candidates — most useful, least noise
+  const capped = candidates.slice(0, 20);
+
+  // Build a minimal discussion doc from the candidates
+  const ts = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  const docLines = [
+    `# ${suggestedTitle}`,
+    ``,
+    `**Captured:** ${ts}  `,
+    `**Source:** ${sourceTitle}  `,
+    `**Extraction:** local pattern matching`,
+    ``,
+    `---`,
+    ``,
+  ];
+  const byType = { decision: [], idea: [], rejection: [] };
+  capped.forEach(c => (byType[c.type] || []).push(c.title));
+  if (byType.decision.length) {
+    docLines.push(`## Decisions`, ``);
+    byType.decision.forEach(t => docLines.push(`- ${t}`));
+    docLines.push(``);
+  }
+  if (byType.idea.length) {
+    docLines.push(`## Ideas`, ``);
+    byType.idea.forEach(t => docLines.push(`- ${t}`));
+    docLines.push(``);
+  }
+  if (byType.rejection.length) {
+    docLines.push(`## Rejections`, ``);
+    byType.rejection.forEach(t => docLines.push(`- ~~${t}~~`));
+    docLines.push(``);
+  }
+
+  return { candidates: capped, title: suggestedTitle, discussionContent: docLines.join('\n') };
+}
+
 async function openInbox() {
   const overlay = document.getElementById('inboxOverlay');
   overlay.style.display = 'flex';
@@ -9632,7 +10029,8 @@ async function openInbox() {
     processingEl.style.display = 'block';
     footerEl.style.display = 'none';
 
-    // Process the transcript
+    // Process the transcript — include client-side key if set
+    const clientKey = localStorage.getItem('sb_anthropic_key') || '';
     const pr = await fetch(`${SB_MCP}/process-transcript`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -9640,6 +10038,7 @@ async function openInbox() {
         transcript: latest.transcript,
         rawId: latest.id,
         project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+        ...(clientKey ? { apiKey: clientKey } : {}),
       }),
     });
     const processed = await pr.json();
@@ -9650,13 +10049,25 @@ async function openInbox() {
 
     if (!processed.ok) {
       if (processed.fallback) {
-        // No API key — show raw capture for manual review
+        // No API key — run client-side pattern extraction instead
+        const local = localExtractFromTranscript(latest.transcript, latest.title);
+        if (local.candidates.length) {
+          _inboxCandidates = local.candidates.map((c, i) => ({ ...c, _idx: i, _kept: true }));
+          _inboxDiscussionContent = local.discussionContent;
+          _inboxDiscussionTitle = local.title;
+          renderInboxItems();
+          // Show a subtle note that this was local extraction
+          const note = document.createElement('div');
+          note.style.cssText = 'padding:6px 12px;font-size:10px;color:var(--text-3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px';
+          note.innerHTML = `<span style="opacity:.6">⚡ Local extraction</span><span style="opacity:.4">— AI key not set; patterns used instead</span>`;
+          itemsEl.insertBefore(note, itemsEl.firstChild);
+          return;
+        }
+        // Nothing extracted — show raw transcript for manual reading
         itemsEl.innerHTML = `<div style="padding:16px;color:var(--text-3);font-size:12px;line-height:1.6">
-          <div style="font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:8px">⚠ ANTHROPIC_API_KEY not set</div>
-          <div>AI processing requires an API key. Add it to your MCP server environment:</div>
-          <code style="display:block;margin:8px 0;padding:8px;background:rgba(0,0,0,.3);border-radius:6px;font-size:11px">ANTHROPIC_API_KEY=sk-ant-... node mcp-server.js</code>
-          <div style="margin-top:8px;font-weight:600;color:var(--text)">Raw capture from: ${latest.title}</div>
-          <div style="margin-top:6px;white-space:pre-wrap;font-size:11px;max-height:200px;overflow-y:auto">${latest.transcript.slice(0,800)}…</div>
+          <div style="font-weight:600;color:var(--text);margin-bottom:6px">${latest.title}</div>
+          <div style="font-size:11px;margin-bottom:8px;opacity:.6">No structured patterns detected. Raw capture below:</div>
+          <div style="white-space:pre-wrap;font-size:11px;max-height:280px;overflow-y:auto;line-height:1.5">${latest.transcript.slice(0, 1200)}</div>
         </div>`;
         footerEl.style.display = 'none';
         return;
