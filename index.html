@@ -860,43 +860,54 @@
 <!-- ============= FOR WHO ============= -->
 <section id="for-who" class="reveal">
   <div class="section-label">Who it's for</div>
-  <h2 class="section-h2">Built for serious<br>AI operators</h2>
-  <p class="section-sub">Not for casual users. For the people running multiple AI projects simultaneously and losing their minds trying to keep track of everything.</p>
+  <h2 class="section-h2">Two tracks.<br>Six entry points.</h2>
+  <p class="section-sub">Storyboard meets you where you are — whether you're running a business, building a side project, or just trying not to lose your conversations.</p>
 
-  <div class="who-grid">
-    <div class="who-card">
-      <span class="who-emoji">🧑‍💻</span>
-      <div class="who-title">The Power Builder</div>
-      <div class="who-subtitle">Runs 4+ AI projects in parallel. Uses Claude Code, Cowork, API.</div>
-      <ul class="who-pains">
-        <li>Re-explaining the same architecture every new chat</li>
-        <li>Can't remember which approach you ruled out last week</li>
-        <li>Context window fills up before the problem is solved</li>
-        <li>Sessions end — great decisions disappear forever</li>
-      </ul>
+  <!-- Track tabs -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px;margin:0 auto 32px">
+    <div style="background:var(--surface);border:1.5px solid rgba(124,107,255,.3);border-radius:18px;padding:24px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,#6c63ff,#a78bfa)"></div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">🏢 Business track</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">⚡</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Running business</div><div style="font-size:12px;color:var(--muted2)">Connect MCPs to real workflows. Structure memory across your operations. Stop losing context between sessions.</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">🚀</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Starting a business</div><div style="font-size:12px;color:var(--muted2)">AI as co-founder from day one. Every decision logged. Daily briefing. The full story, from the first session.</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">💰</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Selling / exiting</div><div style="font-size:12px;color:var(--muted2)">Due diligence is a paper trail problem. Every decision logged, export-ready. Complete provenance.</div></div>
+        </div>
+      </div>
     </div>
-    <div class="who-card">
-      <span class="who-emoji">🏗️</span>
-      <div class="who-title">The Solo Operator</div>
-      <div class="who-subtitle">Running a real business with AI as the core workforce.</div>
-      <ul class="who-pains">
-        <li>AI is building your product but you can't see the full picture</li>
-        <li>Hard to delegate to a new AI when it has no history</li>
-        <li>What did we decide about pricing 3 weeks ago?</li>
-        <li>No way to audit what AI has actually shipped</li>
-      </ul>
+    <div style="background:var(--surface);border:1.5px solid rgba(16,185,129,.25);border-radius:18px;padding:24px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,#10b981,#34d399)"></div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#10b981;margin-bottom:12px">👤 Individual track</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">💡</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Side project</div><div style="font-size:12px;color:var(--muted2)">Building something alongside a day job. Context windows end. Projects span months. Storyboard keeps the thread alive.</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">🧠</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Power user</div><div style="font-size:12px;color:var(--muted2)">Already deep in AI tools. One memory layer that connects Claude, ChatGPT, Gemini, Cursor — everything.</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">💬</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Just track my chats</div><div style="font-size:12px;color:var(--muted2)">Install the extension. Nothing is lost. Nothing to configure. Start here — grow into more when it clicks.</div></div>
+        </div>
+      </div>
     </div>
-    <div class="who-card">
-      <span class="who-emoji">🤝</span>
-      <div class="who-title">The Handoff Maker</div>
-      <div class="who-subtitle">Working with teams, contractors, or multiple AI instances.</div>
-      <ul class="who-pains">
-        <li>Onboarding someone new takes hours of explanation</li>
-        <li>New AI session = new AI that knows nothing</li>
-        <li>Your best context lives in conversation histories no one reads</li>
-        <li>No shared understanding of why decisions were made</li>
-      </ul>
-    </div>
+  </div>
+
+  <!-- The entry hook -->
+  <div style="max-width:680px;margin:0 auto;background:rgba(108,99,255,.04);border:1px solid rgba(108,99,255,.15);border-radius:14px;padding:20px 24px;text-align:center">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:6px">The easiest start</div>
+    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px">"I just don't want to lose my conversations."</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.6">That's the simplest reason to install Storyboard — and it's enough. Install the extension, it works, nothing to configure. You discover the rest when you open the dashboard and see 3 weeks of AI work, organized and searchable, waiting for you.</div>
   </div>
 </section>
 
@@ -1031,15 +1042,53 @@
     <!-- Vertical line -->
     <div style="position:absolute;left:27px;top:16px;bottom:16px;width:1.5px;background:var(--border);z-index:0"></div>
 
+    <!-- Day 3 -->
+    <div style="display:grid;grid-template-columns:56px 1fr;gap:0;margin-bottom:32px;position:relative;z-index:1">
+      <div style="display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:0">
+        <div style="width:28px;height:28px;border-radius:8px;background:rgba(124,107,255,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--accent);flex-shrink:0">3</div>
+      </div>
+      <div style="padding-bottom:0">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+          <div style="font-size:14px;font-weight:800;color:var(--text)">Day 3 — Apr 18</div>
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(86,207,170,0.15);color:var(--green);border:1px solid rgba(86,207,170,0.3)">🔴 Live now</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:3px solid var(--accent)">
+            <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ Context fault lines</div>
+            <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px">The finish line, made visible</div>
+            <div style="font-size:12px;color:var(--muted2)">Full-bleed dividers mark where context windows ended. Session depth, fill level, Re-seed — right on the line.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:3px solid var(--accent2)">
+            <div style="font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">◈ Categories view</div>
+            <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px">Cross-project intelligence</div>
+            <div style="font-size:12px;color:var(--muted2)">All blocks grouped by work type — SEO, Dev, Marketing, Content — across every project. The 10th campaign learns from the 9 before it.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:3px solid var(--green)">
+            <div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">💬 Three invisible layers</div>
+            <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px">Discussion · Trail · Thinking</div>
+            <div style="font-size:12px;color:var(--muted2)">The WHY, the HOW, and the AI's own reasoning — all captured, all seedable. The moat nobody else can build.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:3px solid var(--yellow)">
+            <div style="font-size:10px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">🚀 Journey architecture</div>
+            <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px">Two tracks, six paths</div>
+            <div style="font-size:12px;color:var(--muted2)">Business (Running / Starting / Selling) · Individual (Side project / Power user / Track chats). Onboarding that routes you to the right setup.</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:10px 14px;background:rgba(124,107,255,0.05);border:1px solid rgba(124,107,255,0.15);border-radius:10px">
+          <div style="font-size:11px;color:var(--muted2)"><strong style="color:var(--text)">Day 3 decision:</strong> The context fault line is the product's hero moment — the instant the invisible becomes visible. The three invisible layers (Discussion/Trail/Thinking) are the structural moat. No AI company captures all three across tools. That's the pitch.</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Day 2 -->
     <div style="display:grid;grid-template-columns:56px 1fr;gap:0;margin-bottom:32px;position:relative;z-index:1">
       <div style="display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:0">
-        <div style="width:28px;height:28px;border-radius:8px;background:rgba(124,107,255,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--accent);flex-shrink:0">2</div>
+        <div style="width:28px;height:28px;border-radius:8px;background:rgba(86,207,170,0.12);border:2px solid rgba(86,207,170,0.4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--green);flex-shrink:0">2</div>
       </div>
       <div style="padding-bottom:0">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
           <div style="font-size:14px;font-weight:800;color:var(--text)">Day 2 — Apr 18</div>
-          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(86,207,170,0.15);color:var(--green);border:1px solid rgba(86,207,170,0.3)">🔴 Live now</span>
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(124,107,255,0.12);color:var(--accent);border:1px solid rgba(124,107,255,0.25)">Shipped</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:3px solid var(--accent)">

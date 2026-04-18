@@ -698,6 +698,104 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
+  // ── /seed-by-category — cross-project context seed filtered by work type ─────
+  if (req.method === "POST" && req.url === "/seed-by-category") {
+    let body = "";
+    req.on("data", d => body += d);
+    req.on("end", () => {
+      try {
+        const { category, project, limit = 20, includeThinking = false } = JSON.parse(body || "{}");
+
+        // Category keyword map — mirrors app.html CAT_KEYWORDS
+        const CAT_KEYWORDS = {
+          "Content":    ["blog","article","post","copy","write","content","landing","page","newsletter","email","draft"],
+          "SEO":        ["seo","keyword","rank","search","meta","sitemap","hreflang","index","crawl","traffic","google"],
+          "Dev":        ["build","code","deploy","fix","refactor","debug","endpoint","api","server","component","function","script"],
+          "Marketing":  ["campaign","ad","social","paid","cpc","cpm","instagram","facebook","tiktok","linkedin","brand"],
+          "Legal":      ["gdpr","contract","terms","privacy","compliance","legal","regulation","law","tax","vat","license"],
+          "Client":     ["client","lead","meeting","call","proposal","pitch","deal","follow","crm","contact","sale"],
+          "Automation": ["automate","automation","workflow","schedule","trigger","mcp","script","pipeline","batch","cron"],
+        };
+
+        function inferCategory(block) {
+          const text = `${block.title||""} ${block.content||""} ${block.note||""}`.toLowerCase();
+          for (const [cat, kws] of Object.entries(CAT_KEYWORDS)) {
+            if (kws.some(kw => text.includes(kw))) return cat;
+          }
+          return "General";
+        }
+
+        // Load blocks
+        const blocks = readJSON(BLOCKS_FILE, []);
+
+        // Filter by category and optional project
+        const filtered = blocks.filter(b => {
+          if (project && b.project !== project) return false;
+          if (category && inferCategory(b) !== category) return false;
+          return true;
+        }).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, limit);
+
+        if (filtered.length === 0) {
+          res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({ ok: true, category, blockCount: 0, seed: `No blocks found for category: ${category || "all"}`, blocks: [] }));
+          return;
+        }
+
+        // Group by project
+        const byProject = {};
+        for (const b of filtered) {
+          const proj = b.project || "Unknown";
+          if (!byProject[proj]) byProject[proj] = [];
+          byProject[proj].push(b);
+        }
+
+        const projectNames = Object.keys(byProject);
+        const catLabel = category || "All categories";
+        const dateStr = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+        // Build seed text
+        const lines = [
+          `═══ STORYBOARD SEED · ${catLabel.toUpperCase()} ═══`,
+          `Generated: ${dateStr} · ${filtered.length} blocks across ${projectNames.length} project${projectNames.length !== 1 ? "s" : ""}`,
+          `Projects: ${projectNames.join(" · ")}`,
+          "",
+        ];
+
+        for (const [proj, pBlocks] of Object.entries(byProject)) {
+          lines.push(`─── ${proj} · ${pBlocks.length} block${pBlocks.length !== 1 ? "s" : ""} ───`);
+          for (const b of pBlocks) {
+            const typeIcon = { session: "🧠", decision: "✓", idea: "💡", feature: "🔧", trail: "🔗", discussion: "💬", thinking: "🫧" }[b.type] || "•";
+            const dateLabel = b.ts ? new Date(b.ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "";
+            const note = b.note ? ` — ${b.note.slice(0, 80)}` : "";
+            lines.push(`  ${typeIcon} [${b.type || "block"}] ${b.title || "(untitled)"}${note} (${dateLabel})`);
+            if (includeThinking && b.thinking) {
+              lines.push(`    🫧 Thinking: ${b.thinking.slice(0, 200)}…`);
+            }
+          }
+          lines.push("");
+        }
+
+        // Compounding insight footer
+        if (projectNames.length > 1) {
+          lines.push(`═══ CROSS-PROJECT INSIGHT ═══`);
+          lines.push(`These ${filtered.length} ${catLabel} blocks span ${projectNames.length} projects.`);
+          lines.push(`Patterns, decisions, and approaches that worked in one project are likely transferable.`);
+          lines.push(`The 10th ${catLabel} session benefits from the 9 before it — across all projects.`);
+        }
+
+        const seed = lines.join("\n");
+
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: true, category: catLabel, blockCount: filtered.length, projectCount: projectNames.length, seed, blocks: filtered }));
+        process.stderr.write(`🌱 seed-by-category: ${catLabel} → ${filtered.length} blocks across ${projectNames.length} projects\n`);
+      } catch(e) {
+        res.writeHead(500, { "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+
   // CORS preflight for /git-push, /waitlist, /audit (called from dashboard/landing)
   if (req.method === "OPTIONS") {
     res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST,GET", "Access-Control-Allow-Headers": "Content-Type" });
