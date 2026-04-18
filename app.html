@@ -1179,6 +1179,46 @@ body.light-mode .pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
 .nav-stat-l { font-size: 10px; color: var(--text-3); transition: opacity .15s; overflow: hidden; }
 .nav-collapsed .nav-stat-l { opacity: 0; }
 
+/* ── AI Usage bar (nav, above user profile) ── */
+.nav-usage {
+  padding: 8px 10px 4px;
+  border-top: 1px solid var(--border);
+  margin: 4px 0 0;
+  transition: opacity .2s;
+}
+.nav-collapsed .nav-usage { opacity: 0; pointer-events: none; }
+.nav-usage-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;
+}
+.nav-usage-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--text-3);
+}
+.nav-usage-link {
+  font-size: 9px; color: var(--accent); text-decoration: none; opacity: .65;
+  transition: opacity .15s;
+}
+.nav-usage-link:hover { opacity: 1; }
+.nav-usage-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+}
+.nav-usage-icon { font-size: 10px; line-height: 1; }
+.nav-usage-track {
+  flex: 1; height: 3px; background: rgba(255,255,255,.08); border-radius: 2px; overflow: hidden;
+}
+.nav-usage-fill {
+  height: 100%; border-radius: 2px; transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+.nav-usage-count {
+  font-size: 10px; font-weight: 700; color: var(--text-2); min-width: 20px; text-align: right;
+}
+.nav-usage-meta {
+  font-size: 9px; color: var(--text-3); line-height: 1.4; display: flex; flex-direction: column; gap: 1px;
+}
+.nav-usage-heavy {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
 /* ── User profile button (nav bottom) ── */
 .nav-user-btn {
   display: flex; align-items: center; gap: 9px;
@@ -3173,6 +3213,9 @@ body.light-mode .cat-block-chip { background: var(--bg); }
       <span>Inspect</span>
       <span class="inspect-score" id="inspectScorePill" style="display:none"></span>
     </button>
+
+    <!-- AI Usage bar -->
+    <div class="nav-usage" id="navUsage"></div>
 
     <div class="nav-footer">
       <!-- User menu dropdown (opens upward) -->
@@ -5852,12 +5895,13 @@ function renderFeed() {
   const el = document.getElementById('feed');
   const baseBlocks = mergedBlocks();
 
-  // Overview strip — always resolve first, before any early returns
-  // Show in grid OR canvas view, any time period, any project filter
+  // Overview strip — contextual banner, show in all main views
+  // Hide only in timeline/pipeline (no meaningful summary) and when period filter is active
   const ovEl = document.getElementById('overviewStrip');
   if (ovEl) {
-    const showOv = (activePeriod === 'all' && (activeView === 'grid' || activeView === 'canvas') &&
-                    !skillsViewActive && !decisionsViewActive && !contextWindowsViewActive);
+    const isTimelinePipeline = (activeView === 'timeline' || activeView === 'pipeline');
+    const hasPeriodFilter    = (activePeriod !== 'all');
+    const showOv = !isTimelinePipeline && !hasPeriodFilter;
     if (showOv) {
       ovEl.style.display = '';
       renderOverviewStrip();
@@ -8667,35 +8711,126 @@ function renderOverviewStrip() {
   if (!el) return;
 
   const allBlocksRaw = mergedBlocks();
-  // Scope to active project if one is selected
   const allBlocks = activeFilter === 'All' ? allBlocksRaw : allBlocksRaw.filter(b => b.project === activeFilter);
-  const scopeLabel = activeFilter !== 'All' ? activeFilter : null;
-
   const todayTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
   const todayBlocks = allBlocks.filter(b => (b.ts||0) >= todayTs);
-  // Fall back to last 3 sessions if nothing today
-  const todaySessions   = todayBlocks.filter(b => b.type === 'session').length ||
-                          allBlocks.filter(b => b.type === 'session').slice(-3).length;
-  const todayDecisions  = todayBlocks.reduce((n, b) => n + (b.decisions||[]).length, 0);
-  const todayIdeas      = todayBlocks.filter(b => b.type === 'idea').length;
 
-  // Recent activity (today's blocks, sorted newest first, max 4)
-  const recentActivity = (todayBlocks.length ? todayBlocks : allBlocks.slice(-4))
-    .filter(b => b.type !== 'idea' || b.title)
-    .sort((a,b) => (b.ts||0) - (a.ts||0))
-    .slice(0, 4);
+  // ── Detect active section ─────────────────────────────────────────────────
+  const isAgentsActive     = document.getElementById('agentBtn')?.classList.contains('active');
+  const isCategoriesActive = document.getElementById('categoriesBtn')?.classList.contains('active');
+  const section =
+    ideasViewActive        ? 'ideas' :
+    decisionsViewActive    ? 'decisions' :
+    skillsViewActive       ? 'skills' :
+    contextWindowsViewActive ? 'context' :
+    isAgentsActive         ? 'agents' :
+    isCategoriesActive     ? 'categories' :
+    activeFilter !== 'All' ? 'project' : 'all';
 
-  const activityRows = recentActivity.length
-    ? recentActivity.map(b => {
-        const icon = { session:'🧠', decision:'✓', idea:'💡', trail:'🔗', discussion:'💬', automation:'⚡', preview:'🖼️' }[b.type] || '◈';
-        const time = b.date || '';
-        return `<div class="ov-activity-row">
-          <span class="ov-act-icon">${icon}</span>
-          <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.title||'Untitled'}</span>
-          <span class="ov-act-time">${time}</span>
-        </div>`;
-      }).join('')
-    : `<div style="font-size:11px;color:var(--text-3);padding:8px 0">No activity today yet</div>`;
+  // ── Card 1: contextual ────────────────────────────────────────────────────
+  let card1 = '';
+
+  if (section === 'ideas') {
+    const allIdeas = allBlocksRaw.filter(b => b.type === 'idea');
+    const todayIdeas = allIdeas.filter(b => (b.ts||0) >= todayTs);
+    const byProj = {};
+    allIdeas.forEach(b => { byProj[b.project] = (byProj[b.project]||0)+1; });
+    const topProj = Object.entries(byProj).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    card1 = `<div class="ov-card">
+      <div class="ov-label">💡 Ideas</div>
+      <div class="ov-num" style="color:#f59e0b">${allIdeas.length}</div>
+      <div class="ov-sub">${todayIdeas.length} captured today</div>
+      ${topProj.map(([p,n])=>`<div class="ov-activity-row"><span class="ov-act-icon">◈</span><span style="flex:1">${p}</span><span class="ov-act-time" style="color:#f59e0b;font-weight:700">${n}</span></div>`).join('')}
+    </div>`;
+
+  } else if (section === 'decisions') {
+    const allDec = allBlocksRaw.reduce((n,b)=>n+(b.decisions?.length||0),0);
+    const todayDec = todayBlocks.reduce((n,b)=>n+(b.decisions?.length||0),0);
+    const byProj = {};
+    allBlocksRaw.forEach(b=>(b.decisions||[]).forEach(()=>{ byProj[b.project]=(byProj[b.project]||0)+1; }));
+    const topProj = Object.entries(byProj).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    card1 = `<div class="ov-card">
+      <div class="ov-label">✓ Decisions</div>
+      <div class="ov-num" style="color:#22c55e">${allDec}</div>
+      <div class="ov-sub">${todayDec} logged today</div>
+      ${topProj.map(([p,n])=>`<div class="ov-activity-row"><span class="ov-act-icon">◈</span><span style="flex:1">${p}</span><span class="ov-act-time" style="color:#22c55e;font-weight:700">${n}</span></div>`).join('')}
+    </div>`;
+
+  } else if (section === 'agents') {
+    card1 = `<div class="ov-card">
+      <div class="ov-label">🤖 Agents</div>
+      <div class="ov-num" style="color:#6c63ff">4</div>
+      <div class="ov-sub">personas available</div>
+      ${['Solo Builder','Startup Founder','Developer','Researcher'].map(a=>`<div class="ov-activity-row"><span class="ov-act-icon">▶</span><span style="flex:1">${a}</span></div>`).join('')}
+    </div>`;
+
+  } else if (section === 'categories') {
+    const catCounts = {};
+    allBlocksRaw.forEach(b => { const c = getBlockCategory(b); if(c&&c!=='General') catCounts[c]=(catCounts[c]||0)+1; });
+    const topCats = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).slice(0,4);
+    card1 = `<div class="ov-card">
+      <div class="ov-label">◈ Categories</div>
+      <div class="ov-num" style="color:#a78bfa">${topCats.length}</div>
+      <div class="ov-sub">active across all projects</div>
+      ${topCats.map(([c,n])=>`<div class="ov-activity-row"><span class="ov-act-icon">◈</span><span style="flex:1">${c}</span><span class="ov-act-time" style="color:#a78bfa;font-weight:700">${n}</span></div>`).join('')}
+    </div>`;
+
+  } else if (section === 'skills') {
+    const skillBlocks = allBlocksRaw.filter(b=>b.type==='skill'||b.chips?.some(c=>c?.toLowerCase().includes('skill')));
+    card1 = `<div class="ov-card">
+      <div class="ov-label">📚 Skills</div>
+      <div class="ov-num" style="color:#6c63ff">36</div>
+      <div class="ov-sub">in your library</div>
+      <div class="ov-activity-row"><span class="ov-act-icon">⚠️</span><span style="flex:1">Needs attention</span><span class="ov-act-time" style="color:#f59e0b;font-weight:700">5</span></div>
+      <div class="ov-activity-row"><span class="ov-act-icon">✓</span><span style="flex:1">Strong</span><span class="ov-act-time" style="color:#22c55e;font-weight:700">31</span></div>
+    </div>`;
+
+  } else if (section === 'context') {
+    const sessions = allBlocksRaw.filter(b=>b.type==='session').sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const lastSeed = sessions.find(b=>b.seed);
+    card1 = `<div class="ov-card">
+      <div class="ov-label">⚡ Context</div>
+      <div class="ov-num" style="color:#6c63ff">${sessions.length}</div>
+      <div class="ov-sub">context windows captured</div>
+      ${lastSeed?`<div class="ov-activity-row"><span class="ov-act-icon">🌱</span><span style="flex:1">${lastSeed.title||'Last seed'}</span><span class="ov-act-time">${lastSeed.date||''}</span></div>`:''}
+      <div class="ov-activity-row"><span class="ov-act-icon">🧠</span><span style="flex:1">Sessions seeded today</span><span class="ov-act-time" style="color:#6c63ff;font-weight:700">${todayBlocks.filter(b=>b.type==='session').length}</span></div>
+    </div>`;
+
+  } else if (section === 'project') {
+    const p = PROJ[activeFilter] || { color:'#6c63ff' };
+    const projBlocks = allBlocks.filter(b=>b.type!=='idea');
+    const projDec = allBlocks.reduce((n,b)=>n+(b.decisions?.length||0),0);
+    const projIdeas = allBlocks.filter(b=>b.type==='idea').length;
+    const todayCount = todayBlocks.filter(b=>b.type!=='idea').length;
+    const recentActivity = [...allBlocks].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,4);
+    card1 = `<div class="ov-card">
+      <div class="ov-label" style="color:${p.color}">${activeFilter}</div>
+      <div class="ov-num" style="color:${p.color}">${projBlocks.length}</div>
+      <div class="ov-sub">${projDec} decisions · ${projIdeas} ideas${todayCount?` · ${todayCount} today`:''}</div>
+      ${recentActivity.map(b=>{
+        const icon={session:'🧠',decision:'✓',idea:'💡',discussion:'💬',rejection:'✕'}[b.type]||'◈';
+        return `<div class="ov-activity-row"><span class="ov-act-icon">${icon}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.title||'Untitled'}</span><span class="ov-act-time">${b.date||''}</span></div>`;
+      }).join('')}
+    </div>`;
+
+  } else {
+    // All work — original today card
+    const todaySessions  = todayBlocks.filter(b=>b.type==='session').length || allBlocks.filter(b=>b.type==='session').slice(-3).length;
+    const todayDecisions = todayBlocks.reduce((n,b)=>n+(b.decisions||[]).length,0);
+    const todayIdeas     = todayBlocks.filter(b=>b.type==='idea').length;
+    const recentActivity = (todayBlocks.length?todayBlocks:allBlocks.slice(-4))
+      .filter(b=>b.type!=='idea'||b.title).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,4);
+    const activityRows = recentActivity.map(b=>{
+      const icon={session:'🧠',decision:'✓',idea:'💡',trail:'🔗',discussion:'💬',automation:'⚡'}[b.type]||'◈';
+      return `<div class="ov-activity-row"><span class="ov-act-icon">${icon}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.title||'Untitled'}</span><span class="ov-act-time">${b.date||''}</span></div>`;
+    }).join('');
+    card1 = `<div class="ov-card">
+      <div class="ov-label">Today</div>
+      <div class="ov-num">${todaySessions}</div>
+      <div class="ov-sub">${todayDecisions} decisions · ${todayIdeas} ideas</div>
+      ${activityRows}
+    </div>`;
+  }
 
   // Velocity — blocks per week for past 7 weeks, compute heights
   const weeks = [];
@@ -8746,13 +8881,8 @@ function renderOverviewStrip() {
 
   el.className = 'overview-strip';
   el.innerHTML = `
-    <!-- Today -->
-    <div class="ov-card">
-      <div class="ov-label">${scopeLabel ? `<span style="color:var(--accent)">${scopeLabel}</span> · Today` : 'Today'}</div>
-      <div class="ov-num">${todaySessions || allBlocks.filter(b=>b.type==='session').slice(-3).length}</div>
-      <div class="ov-sub">${todayDecisions} decision${todayDecisions!==1?'s':''} · ${todayIdeas} idea${todayIdeas!==1?'s':''}</div>
-      ${activityRows}
-    </div>
+    <!-- Card 1: Contextual -->
+    ${card1}
 
     <!-- Velocity -->
     <div class="ov-card">
@@ -10473,6 +10603,7 @@ function pollData() {
       liveBlocks = data;
       updateIdeasCount();
       renderFeed();
+      renderNavUsage();
       buildNav();
       buildRightPanel();
       autoScreenshot('live');
@@ -10587,6 +10718,68 @@ function selectOnboardPath(path) {
   document.getElementById(`obArrow${path}`).style.transform = 'rotate(90deg)';
 }
 
+// ── AI Usage bar ──────────────────────────────────────────────────────────────
+function renderNavUsage() {
+  const el = document.getElementById('navUsage');
+  if (!el) return;
+
+  const allBlocksRaw = mergedBlocks();
+  const sessions = allBlocksRaw.filter(b => b.type === 'session');
+
+  // Month boundaries as YYYYMMDD integers
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth(); // 0-indexed
+  const monthStartTs   = parseInt(`${y}${String(m+1).padStart(2,'0')}01`);
+  const lastMonthY     = m === 0 ? y - 1 : y;
+  const lastMonthM     = m === 0 ? 12 : m;
+  const lastMonthTs    = parseInt(`${lastMonthY}${String(lastMonthM).padStart(2,'0')}01`);
+
+  const thisMonthSess  = sessions.filter(b => (b.ts||0) >= monthStartTs);
+  const lastMonthSess  = sessions.filter(b => (b.ts||0) >= lastMonthTs && (b.ts||0) < monthStartTs);
+
+  const delta  = thisMonthSess.length - lastMonthSess.length;
+  const deltaLabel = delta > 0 ? `↑${delta} vs last month` : delta < 0 ? `↓${Math.abs(delta)} vs last month` : 'same as last month';
+  const deltaColor  = delta > 0 ? '#f59e0b' : delta < 0 ? '#22c55e' : '#94a3b8';
+
+  // Heaviest project by session count (possible automation drain indicator)
+  const byProj = {};
+  sessions.forEach(b => { if(b.project) byProj[b.project] = (byProj[b.project]||0)+1; });
+  const topEntries = Object.entries(byProj).sort((a,b)=>b[1]-a[1]);
+  const topProj    = topEntries[0];
+
+  // Detect likely automation pattern: same project, multiple sessions with regular cadence
+  let automationWarn = '';
+  if (topProj && topProj[1] >= 5) {
+    const projSessions = sessions.filter(b=>b.project===topProj[0]).sort((a,b)=>(a.ts||0)-(b.ts||0));
+    if (projSessions.length >= 3) {
+      automationWarn = `⚠ Heavy: ${topProj[0]}`;
+    }
+  }
+
+  // Fill bar: ~20 sessions/month = 100%
+  const fillPct   = Math.min(100, Math.round(thisMonthSess.length / 20 * 100));
+  const fillColor = fillPct > 75 ? '#ef4444' : fillPct > 45 ? '#f59e0b' : '#6c63ff';
+
+  const monthName = now.toLocaleString('default', { month: 'short' });
+
+  el.innerHTML = `
+    <div class="nav-usage-header">
+      <span class="nav-usage-label">AI Sessions · ${monthName}</span>
+      <a class="nav-usage-link" href="https://console.anthropic.com" target="_blank" title="Check billing">Console ↗</a>
+    </div>
+    <div class="nav-usage-row">
+      <span class="nav-usage-icon">🧠</span>
+      <div class="nav-usage-track"><div class="nav-usage-fill" style="width:${fillPct}%;background:${fillColor}"></div></div>
+      <span class="nav-usage-count">${thisMonthSess.length}</span>
+    </div>
+    <div class="nav-usage-meta">
+      <span style="color:${deltaColor}">${deltaLabel}</span>
+      ${automationWarn ? `<span class="nav-usage-heavy" style="color:#f59e0b" title="This project has many sessions — could be an automation">${automationWarn}</span>` : (topProj ? `<span class="nav-usage-heavy" style="color:var(--text-3)">Most: ${topProj[0]} (${topProj[1]})</span>` : '')}
+    </div>
+  `;
+}
+
 // ── User menu ─────────────────────────────────────────────────────────────────
 function toggleUserMenu() {
   const menu = document.getElementById('navUserMenu');
@@ -10667,6 +10860,8 @@ setTimeout(() => {
 }, 200);
 // Load inspect data immediately on open
 pollData();
+// Render usage bar on load (re-renders whenever renderFeed is called via liveBlocks update)
+renderNavUsage();
 // First-time onboarding check
 checkFirstRun();
 
