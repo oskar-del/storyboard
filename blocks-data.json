@@ -1,5 +1,21 @@
 [
   {
+    "id": "sb-apr19-session-polish-day5",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 5 — period tabs on project view, idea block redesign, right panel polish",
+    "summary": "Fixed period tabs disappearing when clicking a project in the sidebar — tabs now stay visible and actually filter the project's blocks by time. Redesigned idea blocks from old bright yellow pill aesthetic to proper dark-theme cards with amber left stripe and icon band — consistent with rest of design system. Fixed right panel idea pills to match new amber styling. All shipped to GitHub Pages.",
+    "date": "Apr 19",
+    "ts": 20260419,
+    "decisions": [
+      "Period tabs persist on canvas/project view — they filter that project's blocks",
+      "Idea blocks = dark card + amber stripe + icon band — no more light-mode pill colours in dark theme",
+      "Right panel idea pills match new amber system"
+    ],
+    "chips": ["period-tabs", "idea-redesign", "dark-theme", "UX polish"],
+    "_source": "claude.ai"
+  },
+  {
     "id": "sb-apr18-decision-public-url",
     "type": "decision",
     "project": "Storyboard",

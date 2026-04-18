@@ -6447,8 +6447,8 @@ function buildRightPanel() {
   // Ideas
   const ideas = all.filter(b => b.type === 'idea').slice(0,5);
   document.getElementById('rp-ideas').innerHTML = ideas.map((b,i) => `
-    <div class="rp-idea" style="background:${ideaBg(i)};border-color:${ideaBd(i)};color:${ideaTextColor()}" onclick="openDetail('${b.id}')">
-      ${b.title.replace('💡 ','')}
+    <div class="rp-idea" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2);color:var(--text)" onclick="openDetail('${b.id}')">
+      💡 ${b.title.replace('💡 ','')}
     </div>`).join('');
 
   // Velocity chart
