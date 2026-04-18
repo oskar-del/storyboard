@@ -1,12 +1,14 @@
 {
   "name": "Storyboard",
   "short_name": "Storyboard",
-  "description": "Visual AI work memory — blocks, decisions, ideas, automations across all projects.",
-  "start_url": "/",
+  "description": "Visual intent layer for AI work — blocks, decisions, ideas across all sessions and tools.",
+  "start_url": "/storyboard/app.html",
+  "scope": "/storyboard/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f0f2f8",
-  "theme_color": "#6c63ff",
+  "background_color": "#0e0e14",
+  "theme_color": "#7c6bff",
+  "categories": ["productivity", "utilities"],
   "icons": [
     {
       "src": "icons/icon-192.png",

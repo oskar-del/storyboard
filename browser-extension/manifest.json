@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Storyboard Capture",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Capture AI sessions from any tool — Claude, ChatGPT, Gemini, Cursor — directly into your Storyboard.",
   "icons": {
     "16":  "icons/icon-16.png",

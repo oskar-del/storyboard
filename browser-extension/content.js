@@ -1,12 +1,14 @@
 /**
- * Storyboard Capture — Content Script v0.3
- * Auto-captures conversations as Discussion blocks.
+ * Storyboard Capture — Content Script v0.4
+ * Auto-captures raw transcripts → /raw-capture → review inbox.
+ * Rejection/compaction events still go direct to /capture-web (immediate).
  * Detects rejections, compactions, and new messages.
  */
 
 // ── Config ────────────────────────────────────────────────────────────────────
 const SB_PORT = 3847;
-const SB_ENDPOINT = `http://127.0.0.1:${SB_PORT}/capture-web`;
+const SB_ENDPOINT = `http://127.0.0.1:${SB_PORT}/capture-web`;     // direct: rejections, compactions
+const SB_RAW_ENDPOINT = `http://127.0.0.1:${SB_PORT}/raw-capture`;  // → inbox: auto-captured transcripts
 const AUTO_CAPTURE_ENABLED = true;
 const REJECTION_PATTERNS = [
   /no[,.]?\s+(that|this|it)\s+doesn't/i,
@@ -304,26 +306,26 @@ async function autoCapture() {
 
   const sidebarTitle = adapter.getTitle();
   const title = sidebarTitle || autoTitle(turns, document.title);
-  const context = buildContext(turns);
-  const discussion = buildDiscussionContent(turns, title);
+  const transcript = buildContext(turns);
 
   try {
-    await fetch(SB_ENDPOINT, {
+    // Route through /raw-capture → inbox flow (total capture architecture)
+    // Dashboard will show 📥 badge; user reviews/approves in inbox overlay
+    const res = await fetch(SB_RAW_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         title,
-        body: context,
-        summary: turns.slice(-1)[0]?.text?.slice(0, 200) || context.slice(0, 200),
-        type: 'discussion',
+        transcript,
         source: adapter.name,
         url: location.href,
         turnCount: turns.length,
-        discussionContent: discussion,
         _autoCapture: true,
       }),
     });
-    showAutoCaptureToast('💬 Discussion captured');
+    if (res.ok) {
+      showAutoCaptureToast('📥 Sent to inbox');
+    }
   } catch {
     // MCP server might not be running — silent fail
   }

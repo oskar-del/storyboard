@@ -414,6 +414,117 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
+  // ── /session-bootstrap — complete session seed for Claude auto-start ─────────
+  // Returns everything Claude needs to know to start a session without manual seeding.
+  // Called by: Chrome dashboard reader, auto-seed skill, session-workflow
+  if ((req.method === "GET" || req.method === "POST") && req.url.startsWith("/session-bootstrap")) {
+    try {
+      const blocks  = existsSync(BLOCKS_FILE) ? JSON.parse(readFileSync(BLOCKS_FILE, "utf8")) : [];
+      const dateStr = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+      // Sort by recency
+      const sorted = [...blocks].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+      // Active project = most frequent in last 10 blocks
+      const recent10 = sorted.slice(0, 10);
+      const projCounts = {};
+      recent10.forEach(b => { projCounts[b.project] = (projCounts[b.project] || 0) + 1; });
+      const activeProject = Object.entries(projCounts).sort((a,b) => b[1]-a[1])[0]?.[0] || "All";
+
+      // Block counts by type
+      const typeCounts = {};
+      blocks.forEach(b => { typeCounts[b.type] = (typeCounts[b.type] || 0) + 1; });
+
+      // Recent blocks (last 8)
+      const recentBlocks = sorted.slice(0, 8).map(b => ({
+        id: b.id, type: b.type, title: b.title, project: b.project,
+        date: b.date, summary: (b.summary || b.content || "").slice(0, 120),
+      }));
+
+      // Decisions — extracted from blocks with decisions array, last 10
+      const decisions = sorted
+        .flatMap(b => (b.decisions || []).map(d => ({ text: d, project: b.project, date: b.date })))
+        .slice(0, 10);
+
+      // Rejections — explicit rejection blocks
+      const rejections = sorted
+        .filter(b => b.type === "rejection")
+        .slice(0, 8)
+        .map(b => ({ title: b.title, replacedBy: b.replacedBy, project: b.project }));
+
+      // Intent blocks — forward-looking
+      const intents = sorted
+        .filter(b => b.type === "intent")
+        .slice(0, 5)
+        .map(b => ({ title: b.title, project: b.project }));
+
+      // Open ideas
+      const ideas = blocks
+        .filter(b => b.type === "idea" && b.status !== "done")
+        .sort((a,b) => (b.ts||0)-(a.ts||0))
+        .slice(0, 8)
+        .map(b => ({ title: b.title, project: b.project }));
+
+      // Context fill estimate — time since last session block
+      const lastSession = sorted.find(b => b.type === "session");
+      const lastSessionDate = lastSession?.date || "unknown";
+      const rawCapturesCount = (() => {
+        try { return JSON.parse(readFileSync(join(STORYBOARD_DIR, "raw-captures.json"), "utf8")).length; } catch { return 0; }
+      })();
+
+      // Seed prompt — what Claude reads at session start
+      const seedPrompt = [
+        `═══ STORYBOARD AUTO-SEED · ${dateStr} ═══`,
+        `Active project: ${activeProject}`,
+        `Total blocks: ${blocks.length} | Inbox: ${rawCapturesCount} pending`,
+        "",
+        "── RECENT WORK ──",
+        ...recentBlocks.map(b => {
+          const icon = { session:"◈", decision:"✓", idea:"💡", intent:"🎯", rejection:"✕", compaction:"🗜️" }[b.type] || "•";
+          return `  ${icon} [${b.project}] ${b.title}`;
+        }),
+        "",
+        "── DECISIONS CARRYING FORWARD ──",
+        ...(decisions.length ? decisions.map(d => `  ✓ ${d.project}: ${d.text}`) : ["  None recorded yet"]),
+        "",
+        "── DO NOT RE-SUGGEST (rejections) ──",
+        ...(rejections.length ? rejections.map(r => `  ✕ ${r.title}${r.replacedBy ? ` → use: ${r.replacedBy}` : ""}`) : ["  No rejections recorded"]),
+        "",
+        "── INTENT (what we're building toward) ──",
+        ...(intents.length ? intents.map(i => `  🎯 ${i.project}: ${i.title}`) : ["  Set intent in dashboard"]),
+        "",
+        "── OPEN IDEAS (not yet acted on) ──",
+        ...(ideas.length ? ideas.map(i => `  💡 ${i.project}: ${i.title}`) : ["  No pending ideas"]),
+        "",
+        `═══ Ready. Context windows end. Intent doesn't. ═══`,
+      ].join("\n");
+
+      const response = {
+        ok: true,
+        generated: new Date().toISOString(),
+        activeProject,
+        blockCounts: { total: blocks.length, ...typeCounts },
+        rawCapturesPending: rawCapturesCount,
+        lastSessionDate,
+        recentBlocks,
+        decisions,
+        rejections,
+        intents,
+        ideas,
+        seedPrompt,
+        dashboardUrl: "http://localhost:3848/app.html",
+      };
+
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(response, null, 2));
+      process.stderr.write(`🚀 /session-bootstrap: ${activeProject} · ${blocks.length} blocks · ${rawCapturesCount} pending\n`);
+    } catch(e) {
+      res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
+    return;
+  }
+
   // /blocks — return all blocks from blocks-data.json (lets dashboard work from any origin)
   if (req.method === "GET" && req.url.startsWith("/blocks")) {
     try {

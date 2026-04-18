@@ -2057,6 +2057,17 @@ body.light-mode .decision { background: #f0fdf4; border-color: #bbf7d0; }
 
 /* ── TIMELINE VIEW ───────────────────────────────────────────── */
 .tl-wrap { padding: 16px 20px 40px; }
+.tl-month-row.zoom-day  { grid-template-columns: 110px 1fr; }
+.tl-day-label {
+  font-size: 11px; font-weight: 700; color: var(--text-2);
+  padding-top: 6px; white-space: nowrap; letter-spacing: -.2px;
+}
+.tl-type-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.tl-type-pill {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px;
+  padding: 2px 7px; border-radius: 20px; border: 1px solid;
+}
+.tl-dot-reject { text-decoration: line-through; text-decoration-color: rgba(248,113,113,.5); }
 .tl-zoom-bar {
   display: flex; gap: 6px; margin-bottom: 24px; align-items: center;
 }
@@ -2890,6 +2901,11 @@ body.light-mode .cat-block-chip { background: var(--bg); }
     </div>
 
     <div class="topbar-right">
+      <!-- 🚀 New Session button — pulls session-bootstrap, opens seed overlay -->
+      <button id="newSessionBtn" onclick="openSessionBootstrap()" title="Auto-seed a new AI session from Storyboard state" style="display:flex;align-items:center;gap:5px;background:rgba(124,107,255,0.15);border:1px solid rgba(124,107,255,0.35);border-radius:8px;padding:5px 11px;font-size:11px;font-weight:700;color:#c4b9ff;cursor:pointer;transition:all .15s" onmouseenter="this.style.background='rgba(124,107,255,0.25)'" onmouseleave="this.style.background='rgba(124,107,255,0.15)'">
+        <span>🚀</span>
+        <span id="topbarSeedBtn">New session</span>
+      </button>
       <!-- Review inbox badge -->
       <button id="inboxBtn" onclick="openInbox()" title="Unprocessed captures — review and keep what matters" style="display:none;position:relative;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:#f59e0b;cursor:pointer;gap:5px;align-items:center;transition:all .15s">
         <span>📥</span>
@@ -3199,6 +3215,53 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 
 <!-- SEED MODAL -->
 <!-- ══ REVIEW INBOX ══ -->
+
+<!-- ── Session Bootstrap overlay ────────────────────────────────── -->
+<div id="sessionBootstrapOverlay" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center" onclick="if(event.target===this)closeSessionBootstrap()">
+  <div style="background:#0e0e14;border:1px solid rgba(124,107,255,.35);border-radius:20px;width:640px;max-width:95vw;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.7)">
+    <!-- Header -->
+    <div style="padding:18px 22px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">🚀</span>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#f0f0f5;letter-spacing:-.3px">Session bootstrap</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px">Paste this seed at the start of your next AI session</div>
+        </div>
+      </div>
+      <button onclick="closeSessionBootstrap()" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:18px;padding:4px 6px;border-radius:6px" onmouseenter="this.style.color='rgba(255,255,255,.7)'" onmouseleave="this.style.color='rgba(255,255,255,.3)'">&times;</button>
+    </div>
+    <!-- Status / loading -->
+    <div id="sbLoader" style="padding:24px 22px;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.4);font-size:12px">
+      <div style="width:14px;height:14px;border:2px solid rgba(124,107,255,.4);border-top-color:#7c6bff;border-radius:50%;animation:spin .8s linear infinite"></div>
+      Loading from Storyboard…
+    </div>
+    <!-- Stats bar -->
+    <div id="sbStats" style="display:none;padding:10px 22px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:16px;flex-shrink:0;flex-wrap:wrap">
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">Active project: <strong id="sb-active-proj" style="color:#c4b9ff">—</strong></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">Total blocks: <strong id="sb-total-blocks" style="color:#c4b9ff">—</strong></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">Inbox: <strong id="sb-inbox-count" style="color:#fbbf24">—</strong> pending</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">Last session: <strong id="sb-last-session" style="color:#c4b9ff">—</strong></div>
+    </div>
+    <!-- Seed text -->
+    <div id="sbSeedWrap" style="display:none;flex:1;overflow-y:auto;padding:16px 22px">
+      <pre id="sbSeedText" style="white-space:pre-wrap;word-break:break-word;font-family:-apple-system,BlinkMacSystemFont,'SF Mono','Fira Code',monospace;font-size:11px;line-height:1.7;color:rgba(255,255,255,.75);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px 16px;margin:0;max-height:340px;overflow-y:auto"></pre>
+    </div>
+    <!-- Error state -->
+    <div id="sbError" style="display:none;padding:24px 22px;color:#f87171;font-size:12px">
+      <div style="font-weight:700;margin-bottom:6px">⚠ Server not running</div>
+      <div style="color:rgba(255,255,255,.4);line-height:1.6">Start the MCP server first: double-click <code style="font-family:monospace;color:#c4b9ff">start-server.command</code> in your storyboard folder, then try again.</div>
+    </div>
+    <!-- Footer actions -->
+    <div id="sbActions" style="display:none;padding:14px 22px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:8px;align-items:center;flex-shrink:0">
+      <button id="sbCopyBtn" onclick="copySessionSeed()" style="flex:1;background:rgba(124,107,255,1);border:none;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:opacity .15s" onmouseenter="this.style.opacity='.88'" onmouseleave="this.style.opacity='1'">
+        Copy seed to clipboard
+      </button>
+      <button onclick="refreshSessionBootstrap()" title="Refresh" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;color:rgba(255,255,255,.5);cursor:pointer;font-size:13px;transition:all .15s" onmouseenter="this.style.color='rgba(255,255,255,.8)'" onmouseleave="this.style.color='rgba(255,255,255,.5)'">↻</button>
+      <button onclick="closeSessionBootstrap()" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;color:rgba(255,255,255,.35);cursor:pointer;font-size:12px">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Settings overlay ─────────────────────────────────────────── -->
 <div id="settingsOverlay" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center" onclick="if(event.target===this)closeSettings()">
   <div style="background:var(--white);border:1px solid var(--border);border-radius:18px;width:480px;max-width:92vw;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
@@ -3396,6 +3459,14 @@ body.light-mode .cat-block-chip { background: var(--bg); }
     </div>
 
     <div class="rp-divider"></div>
+
+    <!-- Seed quality trend -->
+    <div class="rp-section" id="rp-seed-trend-section" style="display:none">
+      <div class="rp-title">Seed quality</div>
+      <div id="rp-seed-trend"></div>
+    </div>
+
+    <div class="rp-divider" id="rp-seed-divider" style="display:none"></div>
 
     <!-- Ideas captured -->
     <div class="rp-section">
@@ -5162,7 +5233,7 @@ function blockHTML(b, i, featured = false) {
 // ═══════════════════════════════════
 // TIMELINE VIEW
 // ═══════════════════════════════════
-let tlZoom = 'month'; // 'year' | 'month' | 'week'
+let tlZoom = 'month'; // 'year' | 'month' | 'week' | 'day'
 
 function renderTimelineView() {
   const feed = document.getElementById('feed');
@@ -5225,27 +5296,51 @@ function renderTimelineView() {
     byWeek[mk][wk].push({ b, d });
   });
 
+  // Group by day
+  const byDay = {};
+  dated.forEach(({ b, d }) => {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (!byDay[key]) byDay[key] = [];
+    byDay[key].push({ b, d });
+  });
+
   const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const TYPE_ICON = { session: '◈', decision: '✓', idea: '💡', feature: '★' };
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const TYPE_ICON = {
+    session:    { icon: '◈', color: '#7c6bff' },
+    decision:   { icon: '✓', color: '#56cfaa' },
+    idea:       { icon: '💡', color: '#ffd166' },
+    feature:    { icon: '★', color: '#6b8cff' },
+    intent:     { icon: '🎯', color: '#e879f9' },
+    compaction: { icon: '🗜️', color: '#94a3b8' },
+    rejection:  { icon: '✕', color: '#f87171' },
+    roadmap:    { icon: '→', color: '#fb923c' },
+    preview:    { icon: '◐', color: '#34d399' },
+  };
 
   function dotHTML(b) {
     const p = PROJ[b.project] || { color: '#6c63ff' };
-    const icon = TYPE_ICON[b.type] || '◈';
-    const title = b.title.replace('💡 ','').replace('✓ ','');
-    return `<div class="tl-dot" style="background:${p.color}18;border-color:${p.color}30"
+    const t = TYPE_ICON[b.type] || TYPE_ICON.session;
+    const isRejection = b.type === 'rejection';
+    const title = (b.title || '').replace('💡 ','').replace('✓ ','').replace('✕ ','');
+    const accentColor = isRejection ? t.color : p.color;
+    return `<div class="tl-dot${isRejection ? ' tl-dot-reject' : ''}" style="background:${accentColor}15;border-color:${accentColor}35"
       onclick="openDetail('${b.id}')" title="${title}">
-      <div class="tl-dot-color" style="background:${p.color}"></div>
+      <div class="tl-dot-color" style="background:${t.color}"></div>
       <div class="tl-dot-text">${title}</div>
-      <div class="tl-dot-type">${icon}</div>
+      <div class="tl-dot-type" style="color:${t.color};opacity:.7">${typeof t.icon === 'string' && t.icon.length < 3 ? t.icon : ''}</div>
     </div>`;
   }
+
+  // Stats
+  const rejections = filtered.filter(b => b.type === 'rejection').length;
+  const intents    = filtered.filter(b => b.type === 'intent').length;
 
   let rows = '';
 
   if (tlZoom === 'year') {
     Object.keys(byYear).sort().reverse().forEach(yr => {
       const entries = byYear[yr];
-      // Heatmap: 12 cells = 12 months, colour by count
       const monthCounts = {};
       entries.forEach(({ d }) => { const m = d.getMonth(); monthCounts[m] = (monthCounts[m]||0) + 1; });
       const max = Math.max(1, ...Object.values(monthCounts));
@@ -5253,12 +5348,12 @@ function renderTimelineView() {
         const cnt = monthCounts[i] || 0;
         const alpha = cnt ? Math.max(0.12, cnt/max * 0.85) : 0;
         const bg = cnt ? `rgba(124,107,255,${alpha.toFixed(2)})` : 'var(--border)';
-        return `<div class="tl-heat-cell" style="background:${bg}" title="${MONTH_NAMES[i]}: ${cnt} blocks"></div>`;
+        return `<div class="tl-heat-cell" onclick="setTlZoomMonth('${yr}-${String(i+1).padStart(2,'0')}')" style="background:${bg};cursor:pointer" title="${MONTH_NAMES[i]}: ${cnt} blocks — click to drill in"></div>`;
       }).join('');
       rows += `<div class="tl-year">
         <div class="tl-year-label">${yr} <span style="font-weight:400;opacity:.5">${entries.length} blocks</span></div>
         <div class="tl-heatmap-row">${heatCells}</div>
-        <div class="tl-blocks">${entries.slice(0,12).map(({b}) => dotHTML(b)).join('')}${entries.length>12?`<span class="tl-empty">+${entries.length-12} more</span>`:''}</div>
+        <div class="tl-blocks">${entries.slice(0,16).map(({b}) => dotHTML(b)).join('')}${entries.length>16?`<span class="tl-empty">+${entries.length-16} more</span>`:''}</div>
       </div>`;
     });
   } else if (tlZoom === 'month') {
@@ -5266,12 +5361,22 @@ function renderTimelineView() {
       const [yr, mo] = mk.split('-');
       const label = `${MONTH_NAMES[parseInt(mo)-1]} ${yr}`;
       const entries = byMonth[mk];
+      // Type breakdown pill row
+      const typeCounts = {};
+      entries.forEach(({b}) => { typeCounts[b.type] = (typeCounts[b.type]||0)+1; });
+      const typePills = Object.entries(typeCounts).map(([t,c]) => {
+        const ti = TYPE_ICON[t] || TYPE_ICON.session;
+        return `<span class="tl-type-pill" style="background:${ti.color}18;color:${ti.color};border-color:${ti.color}30">${c}×${t}</span>`;
+      }).join('');
       rows += `<div class="tl-month-row zoom-month">
         <div class="tl-month-label">${label}</div>
-        <div class="tl-blocks">${entries.map(({b}) => dotHTML(b)).join('')}</div>
+        <div>
+          <div class="tl-type-pills">${typePills}</div>
+          <div class="tl-blocks">${entries.map(({b}) => dotHTML(b)).join('')}</div>
+        </div>
       </div>`;
     });
-  } else { // week
+  } else if (tlZoom === 'week') {
     Object.keys(byMonth).sort().reverse().forEach(mk => {
       const [yr, mo] = mk.split('-');
       const label = `${MONTH_NAMES[parseInt(mo)-1]} ${yr}`;
@@ -5280,7 +5385,7 @@ function renderTimelineView() {
         const entries = weekGroups[wk];
         const weekNum = wk.split('W')[1];
         return `<div class="tl-week-group">
-          <div class="tl-week-label">Week ${weekNum}</div>
+          <div class="tl-week-label">Wk ${weekNum} <span style="opacity:.4;font-weight:400">${entries.length}</span></div>
           <div class="tl-blocks">${entries.map(({b}) => dotHTML(b)).join('')}</div>
         </div>`;
       }).join('');
@@ -5289,12 +5394,27 @@ function renderTimelineView() {
         <div>${weekRows || '<div class="tl-empty">No blocks</div>'}</div>
       </div>`;
     });
+  } else { // day
+    const dayKeys = Object.keys(byDay).sort().reverse();
+    dayKeys.forEach(dk => {
+      const entries = byDay[dk];
+      const d = entries[0].d;
+      const dayName = DAY_NAMES[d.getDay()];
+      const dayLabel = `${dayName} ${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
+      rows += `<div class="tl-month-row zoom-day">
+        <div class="tl-day-label">${dayLabel}</div>
+        <div class="tl-blocks">${entries.map(({b}) => dotHTML(b)).join('')}</div>
+      </div>`;
+    });
+    if (!dayKeys.length) rows = '<div class="tl-empty" style="padding:20px">No blocks with date info.</div>';
   }
 
   feed.innerHTML = `<div class="tl-wrap">
     <div class="tl-stats-bar">
-      <div class="tl-stat"><strong>${total}</strong>total blocks</div>
+      <div class="tl-stat"><strong>${total}</strong>total</div>
       <div class="tl-stat"><strong>${decisions}</strong>decisions</div>
+      <div class="tl-stat"><strong>${ideas}</strong>ideas</div>
+      <div class="tl-stat"><strong>${rejections}</strong>rejections</div>
       <div class="tl-stat"><strong>${projects}</strong>projects</div>
     </div>
     <div class="tl-zoom-bar">
@@ -5302,9 +5422,21 @@ function renderTimelineView() {
       <button class="tl-zoom-btn ${tlZoom==='year'?'on':''}"  onclick="setTlZoom('year')">Year</button>
       <button class="tl-zoom-btn ${tlZoom==='month'?'on':''}" onclick="setTlZoom('month')">Month</button>
       <button class="tl-zoom-btn ${tlZoom==='week'?'on':''}"  onclick="setTlZoom('week')">Week</button>
+      <button class="tl-zoom-btn ${tlZoom==='day'?'on':''}"   onclick="setTlZoom('day')">Day</button>
     </div>
     <div class="tl-months">${rows}</div>
   </div>`;
+}
+
+function setTlZoomMonth(monthKey) {
+  // Drill from year heatmap into a specific month
+  tlZoom = 'month';
+  renderTimelineView();
+  // Scroll to month
+  setTimeout(() => {
+    const rows = document.querySelectorAll('.tl-month-row');
+    rows.forEach(r => { if (r.querySelector('.tl-month-label')?.textContent?.includes(MONTH_NAMES[parseInt(monthKey.split('-')[1])-1])) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  }, 100);
 }
 
 function setTlZoom(z) {
@@ -6098,6 +6230,55 @@ function closeProjDrawer() {
 // ═══════════════════════════════════
 // RIGHT PANEL CONTENT
 // ═══════════════════════════════════
+function buildSeedTrend(all) {
+  const trendEl = document.getElementById('rp-seed-trend');
+  const section = document.getElementById('rp-seed-trend-section');
+  const divider = document.getElementById('rp-seed-divider');
+  if (!trendEl) return;
+
+  // Find all seed quality blocks (tagged with _seedQuality)
+  const ratings = all
+    .filter(b => b._seedQuality && b.ts)
+    .sort((a, b) => (a.ts || 0) - (b.ts || 0))
+    .slice(-12); // last 12 ratings
+
+  if (ratings.length < 2) { section.style.display = 'none'; divider.style.display = 'none'; return; }
+  section.style.display = '';
+  divider.style.display = '';
+
+  const score = { green: 3, yellow: 2, red: 1 };
+  const data = ratings.map(b => score[b._seedQuality] || 2);
+  const avg = (data.reduce((s,v) => s+v, 0) / data.length).toFixed(1);
+  const trend = data[data.length-1] - data[0] > 0 ? '↑' : data[data.length-1] - data[0] < 0 ? '↓' : '→';
+  const trendColor = trend === '↑' ? '#56cfaa' : trend === '↓' ? '#f87171' : '#94a3b8';
+
+  // SVG sparkline
+  const W = 140, H = 32, pad = 4;
+  const xs = data.map((_, i) => pad + (i / (data.length - 1)) * (W - pad*2));
+  const ys = data.map(v => H - pad - ((v - 1) / 2) * (H - pad*2));
+  const path = xs.map((x, i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+  const lastColor = data[data.length-1] === 3 ? '#56cfaa' : data[data.length-1] === 1 ? '#f87171' : '#ffd166';
+  const dots = data.map((v, i) => {
+    if (i !== 0 && i !== data.length - 1) return '';
+    const c = v === 3 ? '#56cfaa' : v === 1 ? '#f87171' : '#ffd166';
+    return `<circle cx="${xs[i].toFixed(1)}" cy="${ys[i].toFixed(1)}" r="3" fill="${c}"/>`;
+  }).join('');
+
+  trendEl.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible">
+        <path d="${path}" fill="none" stroke="${lastColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+        ${dots}
+      </svg>
+      <div style="text-align:right">
+        <div style="font-size:14px;font-weight:800;color:${trendColor}">${trend}</div>
+        <div style="font-size:9px;color:var(--text-3)">${ratings.length} seeds</div>
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--text-3)">Avg score: <strong style="color:var(--text-2)">${avg}/3.0</strong></div>
+  `;
+}
+
 function buildRightPanel() {
   const all = mergedBlocks();
   const nowTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
@@ -6122,6 +6303,9 @@ function buildRightPanel() {
   document.getElementById('rp-blocks-today').textContent = todayBlocks.length;
   document.getElementById('rp-ideas-count').textContent  = all.filter(b => b.type === 'idea').length + capturedIdeas.length;
   document.getElementById('rp-live-count').textContent   = liveCount;
+
+  // Seed quality trend
+  buildSeedTrend(all);
 
   // North Star for active project
   const nsSection = document.getElementById('rp-northstar-section');
@@ -6578,6 +6762,130 @@ function saveSeedIntent() {
 function seedSession() {
   // Route through the full seed modal for consistent experience
   seedNewChat();
+}
+
+// ── Session Bootstrap — auto-seed from /session-bootstrap endpoint ────────────
+let _sbSeedText = '';
+
+async function openSessionBootstrap() {
+  const overlay = document.getElementById('sessionBootstrapOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('sbLoader').style.display = 'flex';
+  document.getElementById('sbStats').style.display = 'none';
+  document.getElementById('sbSeedWrap').style.display = 'none';
+  document.getElementById('sbError').style.display = 'none';
+  document.getElementById('sbActions').style.display = 'none';
+  await fetchSessionBootstrap();
+}
+
+async function fetchSessionBootstrap() {
+  try {
+    const res = await fetch(`${SB_MCP}/session-bootstrap`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    _sbSeedText = data.seedPrompt || '';
+
+    // Populate stats bar
+    document.getElementById('sb-active-proj').textContent  = data.activeProject || '—';
+    document.getElementById('sb-total-blocks').textContent = data.blockCounts?.total || 0;
+    document.getElementById('sb-inbox-count').textContent  = data.rawCapturesPending || 0;
+    document.getElementById('sb-last-session').textContent = data.lastSessionDate || '—';
+    document.getElementById('sbStats').style.display = 'flex';
+
+    // Populate seed text
+    document.getElementById('sbSeedText').textContent = _sbSeedText;
+    document.getElementById('sbSeedWrap').style.display = 'block';
+    document.getElementById('sbActions').style.display = 'flex';
+
+    document.getElementById('sbLoader').style.display = 'none';
+    document.getElementById('sbError').style.display = 'none';
+
+  } catch (e) {
+    // Fallback — generate seed from local liveBlocks
+    _sbSeedText = generateLocalSeed();
+    if (_sbSeedText) {
+      document.getElementById('sbSeedText').textContent = _sbSeedText;
+      document.getElementById('sbSeedWrap').style.display = 'block';
+      document.getElementById('sbActions').style.display = 'flex';
+      document.getElementById('sbStats').style.display = 'flex';
+      document.getElementById('sb-active-proj').textContent  = activeFilter !== 'All' ? activeFilter : (liveBlocks[0]?.project || '—');
+      document.getElementById('sb-total-blocks').textContent = liveBlocks.length;
+      document.getElementById('sb-inbox-count').textContent  = '?';
+      document.getElementById('sb-last-session').textContent = '—';
+      document.getElementById('sbLoader').style.display = 'none';
+    } else {
+      document.getElementById('sbLoader').style.display = 'none';
+      document.getElementById('sbError').style.display = 'block';
+    }
+  }
+}
+
+function generateLocalSeed() {
+  const blocks = mergedBlocks();
+  if (!blocks.length) return '';
+  const sorted = [...blocks].sort((a,b) => (b.ts||0)-(a.ts||0));
+  const recent = sorted.slice(0, 8);
+  const decisions = sorted.flatMap(b => (b.decisions||[]).slice(0,2)).slice(0,6);
+  const rejections = sorted.filter(b => b.type === 'rejection').slice(0,5);
+  const intents = sorted.filter(b => b.type === 'intent').slice(0,3);
+
+  const lines = [
+    `═══ STORYBOARD AUTO-SEED · ${new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})} ═══`,
+    `(Generated from local dashboard — start server for full data)`,
+    '',
+    '── RECENT WORK ──',
+    ...recent.map(b => {
+      const icon = {session:'◈',decision:'✓',idea:'💡',intent:'🎯',rejection:'✕',compaction:'🗜️'}[b.type]||'•';
+      return `  ${icon} [${b.project}] ${b.title}`;
+    }),
+    '',
+    '── DECISIONS CARRYING FORWARD ──',
+    ...(decisions.length ? decisions.map(d => `  ✓ ${d}`) : ['  None recorded yet']),
+    '',
+    '── DO NOT RE-SUGGEST (rejections) ──',
+    ...(rejections.length ? rejections.map(r => `  ✕ ${r.title}`) : ['  No rejections recorded']),
+    '',
+    '── INTENT ──',
+    ...(intents.length ? intents.map(i => `  🎯 ${i.project}: ${i.title}`) : ['  Set intent in dashboard']),
+    '',
+    `═══ Ready. Context windows end. Intent doesn't. ═══`,
+  ];
+  return lines.join('\n');
+}
+
+async function copySessionSeed() {
+  if (!_sbSeedText) return;
+  try {
+    await navigator.clipboard.writeText(_sbSeedText);
+    const btn = document.getElementById('sbCopyBtn');
+    btn.textContent = '✓ Copied!';
+    btn.style.background = '#10b981';
+    setTimeout(() => {
+      btn.textContent = 'Copy seed to clipboard';
+      btn.style.background = 'rgba(124,107,255,1)';
+    }, 2000);
+  } catch {
+    // Fallback: select the text
+    const pre = document.getElementById('sbSeedText');
+    const range = document.createRange();
+    range.selectNodeContents(pre);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  }
+}
+
+function refreshSessionBootstrap() {
+  document.getElementById('sbLoader').style.display = 'flex';
+  document.getElementById('sbStats').style.display = 'none';
+  document.getElementById('sbSeedWrap').style.display = 'none';
+  document.getElementById('sbError').style.display = 'none';
+  document.getElementById('sbActions').style.display = 'none';
+  fetchSessionBootstrap();
+}
+
+function closeSessionBootstrap() {
+  document.getElementById('sessionBootstrapOverlay').style.display = 'none';
 }
 
 // ── Global Search ────────────────────────────────────────────────────────────
@@ -9733,6 +10041,8 @@ function setSyncIndicator(state) {
   }
 }
 
+const SB_MCP = 'http://127.0.0.1:3847'; // declared here so pollData() can reference it at call time
+
 function pollData() {
   const ts = Date.now();
 
@@ -9959,7 +10269,39 @@ checkFirstRun();
 // ═══════════════════════════════════════════════════════════
 // REVIEW INBOX — capture everything, decide what to keep
 // ═══════════════════════════════════════════════════════════
-const SB_MCP = 'http://127.0.0.1:3847';
+// ── Chrome reader API — Claude calls these via javascript_tool ─────────────────
+// When Claude has Chrome access to localhost:3848, it can call:
+//   window.storyboard.getBootstrap()    → full session seed JSON
+//   window.storyboard.getSeedPrompt()   → formatted seed text for clipboard
+//   window.storyboard.getState()        → lightweight state summary
+window.storyboard = {
+  async getBootstrap() {
+    try {
+      const res = await fetch(`${SB_MCP}/session-bootstrap`);
+      return await res.json();
+    } catch { return { error: 'Server offline', localBlocks: mergedBlocks().length }; }
+  },
+  async getSeedPrompt() {
+    try {
+      const res = await fetch(`${SB_MCP}/session-bootstrap`);
+      const data = await res.json();
+      return data.seedPrompt || generateLocalSeed();
+    } catch { return generateLocalSeed(); }
+  },
+  getState() {
+    const blocks = mergedBlocks();
+    const sorted = [...blocks].sort((a,b) => (b.ts||0)-(a.ts||0));
+    return {
+      totalBlocks: blocks.length,
+      activeFilter,
+      recentTitles: sorted.slice(0,5).map(b => b.title),
+      rejections: sorted.filter(b => b.type==='rejection').length,
+      ideas: sorted.filter(b => b.type==='idea').length,
+      serverConnected: document.getElementById('syncDot')?.style.background.includes('10b981') || false,
+    };
+  },
+};
+
 let _inboxCandidates = [];
 let _inboxRawId = null;
 let _inboxDiscussionContent = null;
@@ -10418,6 +10760,126 @@ function closeInbox() {
 // Poll on load and every 30s
 setTimeout(() => { pollInbox(); setInterval(pollInbox, 30000); }, 3000);
 
+</script>
+
+<!-- ── MOBILE QUICK MEMO BAR ─────────────────────────────────────── -->
+<div id="mobileMemoBar" style="display:none">
+  <div class="mob-memo-inner">
+    <textarea id="mobMemoInput" class="mob-memo-input" placeholder="Drop a thought… it'll go to your inbox" rows="1"></textarea>
+    <button class="mob-memo-send" onclick="sendMobileMemo()" aria-label="Send">⚡</button>
+  </div>
+  <div class="mob-feed-label">📡 Live feed — tap any block to expand</div>
+</div>
+
+<style>
+/* ── MOBILE PWA STYLES ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hide desktop elements on mobile */
+  .right-panel { display: none !important; }
+  .feed-toolbar .view-tabs,
+  .feed-toolbar .view-tab:not(#mobileTimelineBtn) { display: none; }
+  .canvas-btn, .pipeline-btn { display: none; }
+  #topbarSeedBtn { display: none; }
+
+  /* Simplify topbar */
+  .topbar { padding: 0 12px; }
+  .topbar-right { gap: 6px; }
+
+  /* Feed takes full width */
+  .main { padding-bottom: 120px; }
+  .feed { columns: 1 !important; padding: 8px 12px 12px; }
+
+  /* Block cards: simpler on mobile */
+  .block { break-inside: avoid; }
+  .block-actions { display: none; }
+
+  /* Mobile bottom memo bar */
+  #mobileMemoBar {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(14,14,20,0.97);
+    border-top: 1px solid rgba(124,107,255,0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 200;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    gap: 6px;
+  }
+  .mob-memo-inner {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mob-memo-input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(124,107,255,0.3);
+    border-radius: 12px;
+    padding: 9px 13px;
+    color: #f0f0f5;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    outline: none;
+    resize: none;
+    line-height: 1.4;
+    max-height: 100px;
+  }
+  .mob-memo-input:focus { border-color: rgba(124,107,255,0.7); }
+  .mob-memo-input::placeholder { color: rgba(255,255,255,0.3); }
+  .mob-memo-send {
+    background: rgba(124,107,255,0.85);
+    border: none; border-radius: 12px;
+    width: 42px; height: 42px; flex-shrink: 0;
+    color: #fff; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .15s;
+  }
+  .mob-memo-send:active { opacity: .7; }
+  .mob-feed-label {
+    font-size: 10px; color: rgba(255,255,255,0.25);
+    text-align: center; letter-spacing: .3px;
+  }
+
+  /* Hide FAB on mobile (bottom bar replaces it) */
+  #fab, #fabDial { display: none !important; }
+}
+</style>
+
+<script>
+// Auto-resize mobile memo textarea
+const mobInput = document.getElementById('mobMemoInput');
+if (mobInput) {
+  mobInput.addEventListener('input', () => {
+    mobInput.style.height = 'auto';
+    mobInput.style.height = Math.min(mobInput.scrollHeight, 100) + 'px';
+  });
+}
+
+async function sendMobileMemo() {
+  const input = document.getElementById('mobMemoInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const btn = document.querySelector('.mob-memo-send');
+  btn.textContent = '…'; btn.disabled = true;
+  try {
+    const res = await fetch(`${SB_MCP}/raw-capture`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Quick memo', transcript: text, source: 'Mobile' }),
+    });
+    if (res.ok) {
+      input.value = ''; input.style.height = '';
+      btn.textContent = '✓';
+      setTimeout(() => { btn.textContent = '⚡'; btn.disabled = false; }, 1500);
+    } else { throw new Error(); }
+  } catch {
+    // Offline fallback — push directly
+    liveBlocks.unshift({ id: `mob-${Date.now()}`, type: 'idea', title: text, summary: text, project: 'Storyboard', ts: Date.now(), date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}), _mobileCapture: true });
+    renderFeed();
+    input.value = ''; input.style.height = '';
+    btn.textContent = '✓';
+    setTimeout(() => { btn.textContent = '⚡'; btn.disabled = false; }, 1500);
+  }
+}
 </script>
 </body>
 </html>
