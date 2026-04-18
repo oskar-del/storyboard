@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Tool Demo — Storyboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1120;
+    --card: #161929;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0f0f5;
+    --text-2: #a0a0b8;
+    --text-3: #5a5a78;
+    --purple: #8b5cf6;
+    --green: #10b981;
+    --blue: #3b82f6;
+    --gold: #f59e0b;
+    --red: #ef4444;
+    --chatgpt: #10a37f;
+    --claude: #d4785a;
+    --storyboard: #8b5cf6;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding: 48px 20px 80px;
+  }
+
+  .page-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  h1 span { background: linear-gradient(135deg, var(--purple), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-2);
+    text-align: center;
+    margin-bottom: 56px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  /* ── Tool badges ── */
+  .tools-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .tool-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1.5px solid;
+  }
+
+  .tool-badge.chatgpt { background: rgba(16,163,127,0.08); border-color: rgba(16,163,127,0.3); color: var(--chatgpt); }
+  .tool-badge.storyboard { background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.3); color: var(--storyboard); }
+  .tool-badge.claude { background: rgba(212,120,90,0.08); border-color: rgba(212,120,90,0.3); color: var(--claude); }
+
+  .arrow-connector {
+    font-size: 18px;
+    color: var(--text-3);
+  }
+
+  /* ── Step flow ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 40px;
+    bottom: 40px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--chatgpt), var(--storyboard), var(--claude));
+    opacity: 0.3;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding: 24px 0;
+    position: relative;
+  }
+
+  .step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step.chatgpt .step-num { background: rgba(16,163,127,0.15); color: var(--chatgpt); border: 1.5px solid rgba(16,163,127,0.3); }
+  .step.storyboard .step-num { background: rgba(139,92,246,0.15); color: var(--storyboard); border: 1.5px solid rgba(139,92,246,0.3); }
+  .step.claude .step-num { background: rgba(212,120,90,0.15); color: var(--claude); border: 1.5px solid rgba(212,120,90,0.3); }
+  .step.result .step-num { background: rgba(16,185,129,0.15); color: var(--green); border: 1.5px solid rgba(16,185,129,0.3); }
+
+  .step-body { padding-top: 4px; }
+
+  .step-tool {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .step.chatgpt .step-tool { color: var(--chatgpt); }
+  .step.storyboard .step-tool { color: var(--storyboard); }
+  .step.claude .step-tool { color: var(--claude); }
+  .step.result .step-tool { color: var(--green); }
+
+  .step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+
+  /* ── Conversation mockup ── */
+  .chat-mock {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .chat-msg {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .chat-msg:last-child { margin-bottom: 0; }
+
+  .chat-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    font-weight: 800;
+  }
+
+  .chat-avatar.user { background: rgba(255,255,255,0.1); color: var(--text-2); }
+  .chat-avatar.gpt { background: rgba(16,163,127,0.2); color: var(--chatgpt); }
+  .chat-avatar.sb { background: rgba(139,92,246,0.2); color: var(--storyboard); }
+  .chat-avatar.claude { background: rgba(212,120,90,0.2); color: var(--claude); }
+
+  .chat-bubble { flex: 1; color: var(--text-2); }
+  .chat-bubble strong { color: var(--text); }
+  .chat-bubble .highlight { color: var(--green); font-weight: 600; }
+  .chat-bubble .rejected { color: var(--red); text-decoration: line-through; opacity: 0.7; }
+
+  /* ── Storyboard capture card ── */
+  .capture-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .capture-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(139,92,246,0.05);
+  }
+
+  .capture-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .capture-title { font-size: 11px; font-weight: 700; color: var(--storyboard); }
+  .capture-type { font-size: 9px; color: var(--text-3); margin-left: auto; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+  .capture-body { padding: 14px; }
+
+  .capture-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .capture-row:last-child { margin-bottom: 0; }
+
+  .capture-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .capture-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-bottom: 2px; }
+  .capture-val { font-size: 11px; color: var(--text-2); line-height: 1.5; }
+  .capture-val strong { color: var(--text); }
+
+  /* ── Seed block ── */
+  .seed-block {
+    background: var(--card);
+    border: 1.5px solid rgba(139,92,246,0.3);
+    border-radius: 14px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .seed-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--green));
+  }
+
+  .seed-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--storyboard);
+    margin-bottom: 10px;
+  }
+
+  .seed-content {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.7;
+    font-style: italic;
+    border-left: 2px solid rgba(139,92,246,0.3);
+    padding-left: 12px;
+  }
+
+  .seed-content strong { color: var(--text); font-style: normal; }
+  .seed-content .tag { display: inline-block; background: rgba(16,185,129,0.1); color: var(--green); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; font-style: normal; margin: 0 2px; }
+  .seed-content .reject-tag { display: inline-block; background: rgba(239,68,68,0.1); color: var(--red); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; font-style: normal; margin: 0 2px; }
+
+  /* ── Result block ── */
+  .result-block {
+    background: rgba(16,185,129,0.05);
+    border: 1.5px solid rgba(16,185,129,0.2);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .result-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .result-desc {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+
+  .result-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .chip {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .chip.green { background: rgba(16,185,129,0.1); color: var(--green); }
+  .chip.purple { background: rgba(139,92,246,0.1); color: var(--purple); }
+
+  /* ── Bottom CTA ── */
+  .cta-section {
+    margin-top: 56px;
+    text-align: center;
+    padding: 40px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--chatgpt), var(--storyboard), var(--claude));
+  }
+
+  .cta-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+  .cta-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; max-width: 480px; margin: 0 auto 24px; }
+
+  .cta-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .cta-btn {
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+
+  .cta-btn:hover { opacity: 0.8; }
+  .cta-btn.primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .cta-btn.secondary { background: transparent; color: var(--text-2); border-color: var(--border); }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="eyebrow">Storyboard in action</div>
+  <h1>Start in ChatGPT.<br>Continue in <span>Claude. Zero re-explaining.</span></h1>
+  <p class="subtitle">This is the core demo. One real scenario, traced from the first message in ChatGPT to a fully-seeded Claude session — with nothing lost in between.</p>
+
+  <div class="tools-row">
+    <div class="tool-badge chatgpt">🟢 ChatGPT</div>
+    <div class="arrow-connector">→</div>
+    <div class="tool-badge storyboard">⬡ Storyboard</div>
+    <div class="arrow-connector">→</div>
+    <div class="tool-badge claude">◆ Claude</div>
+  </div>
+
+  <div class="steps">
+
+    <!-- STEP 1: ChatGPT session -->
+    <div class="step chatgpt">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-tool">ChatGPT — Session starts</div>
+        <div class="step-title">You work out a pricing strategy with ChatGPT</div>
+        <div class="step-desc">45 minutes. You land on a three-tier model, rule out a usage-based approach, and the reasoning is buried across 60 messages.</div>
+        <div class="chat-mock">
+          <div class="chat-msg">
+            <div class="chat-avatar user">O</div>
+            <div class="chat-bubble">I'm trying to figure out pricing for a B2B SaaS tool. Should we go usage-based or seat-based?</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar gpt">G</div>
+            <div class="chat-bubble">For B2B, seat-based is usually easier to forecast and sell to procurement. Usage-based works if your value scales clearly with usage — think API calls, not a dashboard…</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar user">O</div>
+            <div class="chat-bubble">OK usage-based is out then. What about three tiers — Starter, Pro, Business?</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar gpt">G</div>
+            <div class="chat-bubble"><strong>Recommendation: 3-tier seat-based.</strong> Starter €29/mo (solo), Pro €79/mo (3 seats, audit pipeline), Business €199/mo (10 seats + white-label). <span class="highlight">Key gate: white-label on Business drives upsell.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Storyboard captures -->
+    <div class="step storyboard">
+      <div class="step-num">⬡</div>
+      <div class="step-body">
+        <div class="step-tool">Storyboard — Capturing all four layers</div>
+        <div class="step-title">Everything is captured as structured blocks</div>
+        <div class="step-desc">Not a summary. All four invisible layers — the decision, the reasoning, the trail, and what was ruled out.</div>
+
+        <div class="capture-card">
+          <div class="capture-header">
+            <div class="capture-dot" style="background:#22c55e"></div>
+            <div class="capture-title">Pricing model decision</div>
+            <div class="capture-type">Decision · ChatGPT</div>
+          </div>
+          <div class="capture-body">
+            <div class="capture-row">
+              <div class="capture-icon">💬</div>
+              <div>
+                <div class="capture-label">Discussion — WHY</div>
+                <div class="capture-val">Seat-based chosen because B2B procurement favours predictable invoices. Usage-based creates friction with finance teams and doesn't reflect dashboard value.</div>
+              </div>
+            </div>
+            <div class="capture-row">
+              <div class="capture-icon">🔗</div>
+              <div>
+                <div class="capture-label">Trail — HOW</div>
+                <div class="capture-val">Evaluated usage-based → rejected. Evaluated freemium → too slow to monetise. Landed on 3-tier seat model: <strong>€29 / €79 / €199</strong>.</div>
+              </div>
+            </div>
+            <div class="capture-row">
+              <div class="capture-icon">🫧</div>
+              <div>
+                <div class="capture-label">Thinking — AI reasoning</div>
+                <div class="capture-val">White-label as Business gate creates natural upsell pressure. Procurement prefers seat invoices over variable costs.</div>
+              </div>
+            </div>
+            <div class="capture-row">
+              <div class="capture-icon">✕</div>
+              <div>
+                <div class="capture-label">Rejection — Roads not taken</div>
+                <div class="capture-val"><strong>Usage-based: ruled out</strong> — value doesn't scale with usage for a dashboard product. Do NOT re-suggest.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Seed generated -->
+    <div class="step storyboard">
+      <div class="step-num">→</div>
+      <div class="step-body">
+        <div class="step-tool">Storyboard — Seed generated</div>
+        <div class="step-title">One click. Full context packaged for Claude.</div>
+        <div class="step-desc">The seed isn't a copy-paste of the conversation. It's a structured brief built from all four layers — exactly what Claude needs to continue without re-explaining anything.</div>
+
+        <div class="seed-block">
+          <div class="seed-label">⚡ Storyboard seed — injected into Claude</div>
+          <div class="seed-content">
+            <strong>Active project:</strong> B2B SaaS pricing strategy<br><br>
+            <strong>Decision made (ChatGPT session, Apr 18):</strong> 3-tier seat-based pricing — <span class="tag">€29 Starter</span> <span class="tag">€79 Pro</span> <span class="tag">€199 Business</span>. White-label as Business gate.<br><br>
+            <strong>Why seat-based:</strong> B2B procurement favours predictable invoices. Dashboard value doesn't scale with usage.<br><br>
+            <strong>Do NOT suggest:</strong> <span class="reject-tag">Usage-based</span> — explicitly ruled out. Reasoning documented.<br><br>
+            <strong>Next:</strong> Build the pricing page. Explore annual discount strategy (not yet decided).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Claude continues -->
+    <div class="step claude">
+      <div class="step-num">◆</div>
+      <div class="step-body">
+        <div class="step-tool">Claude — New session, full context</div>
+        <div class="step-title">Claude picks up exactly where ChatGPT left off</div>
+        <div class="step-desc">No re-explaining. No re-deciding. Claude knows the pricing model, knows why usage-based was rejected, and starts building the pricing page immediately.</div>
+        <div class="chat-mock">
+          <div class="chat-msg">
+            <div class="chat-avatar user">O</div>
+            <div class="chat-bubble">OK let's build the pricing page now.</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar claude">C</div>
+            <div class="chat-bubble">
+              On it. Based on the Storyboard seed — <strong>3 tiers: Starter €29, Pro €79, Business €199</strong>. White-label is the Business differentiator so I'll make that prominent. Leaving out usage-based framing entirely.<br><br>
+              Starting with the comparison table — want annual discount on all tiers or just Pro+?
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: Result -->
+    <div class="step result">
+      <div class="step-num">✓</div>
+      <div class="step-body">
+        <div class="step-tool">Result</div>
+        <div class="step-title">The work compounds. Nothing was re-explained.</div>
+        <div class="result-block">
+          <div class="result-title">What Storyboard preserved across the tool switch</div>
+          <div class="result-desc">The decision. The reasoning behind it. The path that was tried. The idea that was rejected — and <em>why</em>. Claude didn't need to be told any of this. It was seeded in.</div>
+          <div class="result-chips">
+            <div class="chip green">✓ 0 minutes re-explaining</div>
+            <div class="chip green">✓ Dead end not re-discovered</div>
+            <div class="chip green">✓ Reasoning preserved</div>
+            <div class="chip purple">⬡ Storyboard made this possible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-title">This works today.</div>
+    <div class="cta-desc">The MCP server, the Storyboard dashboard, the seed — all live. The browser extension captures ChatGPT sessions. Claude reads your storyboard natively.</div>
+    <div class="cta-links">
+      <a href="app.html" class="cta-btn primary">Open Storyboard →</a>
+      <a href="index.html" class="cta-btn secondary">Back to sprint log</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
