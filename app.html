@@ -1170,13 +1170,70 @@ body.light-mode .pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
 
 .nav-footer {
   margin-top: auto;
-  padding: 10px 10px 14px;
+  padding: 8px 8px 10px;
   border-top: 1px solid var(--border);
+  position: relative;
 }
 .nav-stat { display: flex; align-items: center; gap: 8px; padding: 3px 0; white-space: nowrap; }
 .nav-stat-v { font-size: 13px; font-weight: 800; min-width: 32px; text-align: right; flex-shrink: 0; }
 .nav-stat-l { font-size: 10px; color: var(--text-3); transition: opacity .15s; overflow: hidden; }
 .nav-collapsed .nav-stat-l { opacity: 0; }
+
+/* ── User profile button (nav bottom) ── */
+.nav-user-btn {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%; padding: 8px 10px; border-radius: 10px;
+  background: transparent; border: none; cursor: pointer;
+  transition: background .15s; text-align: left;
+}
+.nav-user-btn:hover { background: rgba(255,255,255,.05); }
+.nav-user-avatar {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #6c63ff, #a78bfa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff;
+}
+.nav-user-info { flex: 1; min-width: 0; transition: opacity .15s, max-width .22s; }
+.nav-user-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-user-plan { font-size: 10px; color: var(--text-3); }
+.nav-user-chevron { font-size: 10px; color: var(--text-3); flex-shrink: 0; transition: opacity .15s; }
+.nav-collapsed .nav-user-info, .nav-collapsed .nav-user-chevron { opacity: 0; width: 0; overflow: hidden; }
+
+/* ── User menu dropdown ── */
+.nav-user-menu {
+  position: absolute; bottom: calc(100% + 4px); left: 8px; right: 8px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; padding: 6px; z-index: 200;
+  box-shadow: 0 -8px 32px rgba(0,0,0,.4), 0 -2px 8px rgba(0,0,0,.2);
+  display: none;
+}
+.nav-user-menu.open { display: block; }
+.num-section-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--text-3); padding: 6px 10px 4px;
+}
+.num-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px; border-radius: 8px; cursor: pointer;
+  font-size: 12px; color: var(--text-2); font-weight: 500;
+  transition: background .12s; white-space: nowrap;
+}
+.num-item:hover { background: rgba(255,255,255,.06); color: var(--text); }
+.num-item-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.num-item-badge {
+  margin-left: auto; font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 10px;
+}
+.num-divider { height: 1px; background: var(--border); margin: 4px 6px; }
+.num-conn-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-left: auto;
+}
+.num-stats-row {
+  display: flex; gap: 0; padding: 8px 10px 4px; justify-content: space-between;
+}
+.num-stat { text-align: center; }
+.num-stat-v { font-size: 13px; font-weight: 800; display: block; }
+.num-stat-l { font-size: 9px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
 
 /* ── MAIN ── */
 .main {
@@ -3118,18 +3175,72 @@ body.light-mode .cat-block-chip { background: var(--bg); }
     </button>
 
     <div class="nav-footer">
-      <div class="nav-stat">
-        <span class="nav-stat-v" style="color:#10b981">1124</span>
-        <span class="nav-stat-l">commits</span>
+      <!-- User menu dropdown (opens upward) -->
+      <div class="nav-user-menu" id="navUserMenu">
+        <div class="num-section-label">Workspace</div>
+        <div class="num-stats-row">
+          <div class="num-stat"><span class="num-stat-v" style="color:#6c63ff" id="numStatBlocks">—</span><span class="num-stat-l">blocks</span></div>
+          <div class="num-stat"><span class="num-stat-v" style="color:#22c55e" id="numStatDecisions">—</span><span class="num-stat-l">decisions</span></div>
+          <div class="num-stat"><span class="num-stat-v" style="color:#f59e0b" id="numStatIdeas">—</span><span class="num-stat-l">ideas</span></div>
+        </div>
+        <div class="num-divider"></div>
+
+        <div class="num-section-label">MCP Connectors</div>
+        <div class="num-item" onclick="showToast('Claude Desktop — connected via MCP server')">
+          <span class="num-item-icon">⚡</span>
+          Claude Desktop
+          <div class="num-conn-dot" style="background:#22c55e" title="Connected"></div>
+        </div>
+        <div class="num-item" onclick="showToast('Browser extension captures Claude.ai, ChatGPT, Gemini automatically')">
+          <span class="num-item-icon">🧩</span>
+          Browser extension
+          <div class="num-conn-dot" style="background:#22c55e" title="Connected"></div>
+        </div>
+        <div class="num-item" style="opacity:.5" onclick="showToast('Cursor connector — coming soon')">
+          <span class="num-item-icon">✦</span>
+          Cursor
+          <div class="num-conn-dot" style="background:#475569" title="Not connected"></div>
+        </div>
+        <div class="num-item" style="opacity:.5" onclick="showToast('Windsurf connector — coming soon')">
+          <span class="num-item-icon">🌊</span>
+          Windsurf
+          <div class="num-conn-dot" style="background:#475569" title="Not connected"></div>
+        </div>
+        <div class="num-item" style="opacity:.5" onclick="showToast('ChatGPT connector — coming soon')">
+          <span class="num-item-icon">🤖</span>
+          ChatGPT
+          <div class="num-conn-dot" style="background:#475569" title="Not connected"></div>
+        </div>
+        <div class="num-divider"></div>
+
+        <div class="num-section-label">Account</div>
+        <div class="num-item" onclick="showToast('Settings — coming in Day 6')">
+          <span class="num-item-icon">⚙️</span>
+          Settings
+        </div>
+        <div class="num-item" onclick="toggleTheme()">
+          <span class="num-item-icon">🌓</span>
+          Toggle theme
+        </div>
+        <div class="num-item" onclick="showToast('Export workspace — coming soon')">
+          <span class="num-item-icon">↗</span>
+          Export workspace
+        </div>
+        <div class="num-item" onclick="document.getElementById('onboardOverlay').style.display='block'">
+          <span class="num-item-icon">👋</span>
+          What is Storyboard?
+        </div>
       </div>
-      <div class="nav-stat">
-        <span class="nav-stat-v" style="color:#6366f1">18</span>
-        <span class="nav-stat-l">files built</span>
-      </div>
-      <div class="nav-stat">
-        <span class="nav-stat-v" style="color:#6c63ff">10</span>
-        <span class="nav-stat-l">ideas</span>
-      </div>
+
+      <!-- User profile button -->
+      <button class="nav-user-btn" onclick="toggleUserMenu()">
+        <div class="nav-user-avatar">O</div>
+        <div class="nav-user-info">
+          <div class="nav-user-name">Oskar Hansson</div>
+          <div class="nav-user-plan">Sprint · Day 5/10</div>
+        </div>
+        <span class="nav-user-chevron">▲</span>
+      </button>
     </div>
   </nav>
 
@@ -10452,6 +10563,40 @@ function selectOnboardPath(path) {
   _selectedPath = path;
   document.getElementById(`obCmd${path}`).style.display = 'block';
   document.getElementById(`obArrow${path}`).style.transform = 'rotate(90deg)';
+}
+
+// ── User menu ─────────────────────────────────────────────────────────────────
+function toggleUserMenu() {
+  const menu = document.getElementById('navUserMenu');
+  if (!menu) return;
+  const isOpen = menu.classList.toggle('open');
+  if (isOpen) {
+    // Populate live stats
+    const all = mergedBlocks();
+    const el_b = document.getElementById('numStatBlocks');
+    const el_d = document.getElementById('numStatDecisions');
+    const el_i = document.getElementById('numStatIdeas');
+    if (el_b) el_b.textContent = all.filter(b=>b.type!=='idea').length;
+    if (el_d) el_d.textContent = all.reduce((n,b)=>n+(b.decisions?.length||0),0);
+    if (el_i) el_i.textContent = all.filter(b=>b.type==='idea').length + capturedIdeas.length;
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', function _close(e) {
+        if (!e.target.closest('.nav-footer')) {
+          menu.classList.remove('open');
+          document.removeEventListener('click', _close);
+        }
+      });
+    }, 0);
+  }
+}
+
+function toggleTheme() {
+  const body = document.body;
+  lightMode = !body.classList.contains('light-mode');
+  body.classList.toggle('light-mode', lightMode);
+  document.querySelectorAll('.mode-toggle-opt').forEach((o,i) => o.classList.toggle('active', i===(lightMode?0:1)));
+  document.getElementById('navUserMenu')?.classList.remove('open');
 }
 
 function dismissOnboard() {
