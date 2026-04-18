@@ -3104,6 +3104,21 @@ const BLOCKS = [
     ] },
 
   // ── Live insights captured Apr 18 (end of day 2) ───────────────────────────
+  { id:"sb-apr18-decision-three-layers", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true,
+    title:"Three invisible layers: Discussion / Trail / Thinking — all missing from current context seeding",
+    summary:"Current context seeding saves outputs only (decisions, code, files). Three richer layers are invisible and lost: (1) Discussion = human↔AI conversation, the why behind decisions, back-and-forth that produced the idea; (2) Trail = execution sequence, what was tried in order, what failed, what worked, the artifact produced — not just 'we used Remotion' but the full path from html2canvas failure to Remotion success; (3) Thinking = AI's internal reasoning, the deliberation that's currently completely hidden — trade-offs weighed, options rejected, uncertainty. Feed Discussion + Trail + Thinking into the next session and the AI doesn't just know what was built — it understands it. These three layers are also bidirectionally linked: Discussion references Trail, Trail references Discussion, Thinking underlies both.",
+    chips:["Architecture","Discussion","Trail","Thinking","Context layers","Provenance"],
+    decisions:[
+      "Discussion = human↔AI back-and-forth → the WHY. Separate block type 💬",
+      "Trail = execution sequence → the HOW. What was tried, failed, succeeded, in order. Separate block type 🔗",
+      "Thinking = AI internal reasoning → currently invisible. The deliberation, trade-offs, rejected options",
+      "Discussion references Trail (this conversation led to these steps)",
+      "Trail references Discussion (these steps came from this reasoning)",
+      "Seeding with all three = AI understands, not just knows",
+      "Today: we save outputs. With D+T+T: we save full provenance chains"
+    ] },
+
   { id:"sb-apr18-decision-discussions", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
     _live:true,
     title:"Discussions are the missing context layer — the conversation that produces ideas",
@@ -3111,10 +3126,12 @@ const BLOCKS = [
     chips:["Discussion","Context layer","Journal","Diary","Block type"],
     decisions:[
       "Discussion = new block type (💬) — the conversation that produces ideas/decisions",
-      "Format: beautiful diary/blog, not a card — lives in Files, not the grid",
-      "Auto-compiled from conversation transcript, linked to blocks it produced",
-      "Without discussion context, models trained on outcome-only data will produce worse output",
-      "Discussion is the provenance layer: ideas have a chain of reasoning, not just a title"
+      "Format: beautiful diary/blog narrative — lives in Files, not the card grid",
+      "Structure: conversation summary → decision taken → embedded artifact (code/file/config) → why it matters",
+      "Artifacts are embedded inline in the narrative, not just linked — code snippets, configs, outputs",
+      "Without discussion context, models produce worse output — Discussion IS the provenance layer",
+      "Feed a Discussion to a new session = AI understands rationale, not just the conclusion",
+      "This is literate-programming-style: reasoning and artifact woven together, not separate"
     ] },
 
   { id:"sb-apr18-decision-shared-datapoints", type:"decision", project:"Storyboard", date:"Apr 18", ts:20260418,
@@ -4179,7 +4196,7 @@ function blockTimestamp(b) {
 // ═══════════════════════════════════
 // Type label map
 const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding' };
-const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎', preview:'🖼️', discussion:'💬' };
+const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎', preview:'🖼️', discussion:'💬', trail:'🔗', thinking:'🫧' };
 
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
