@@ -4717,8 +4717,8 @@ function setView(v) {
   document.getElementById('listBtn').classList.toggle('on',      v === 'list');
   document.getElementById('timelineBtn').classList.toggle('on',  v === 'timeline');
   document.getElementById('pipelineBtn').classList.toggle('on',  v === 'pipeline');
-  // Canvas + Timeline + Pipeline hide the period tabs
-  document.getElementById('periodTabs').style.visibility = (v === 'canvas' || v === 'timeline' || v === 'pipeline') ? 'hidden' : '';
+  // Timeline + Pipeline hide the period tabs; Canvas keeps them (project view uses them)
+  document.getElementById('periodTabs').style.visibility = (v === 'timeline' || v === 'pipeline') ? 'hidden' : '';
   renderFeed();
 }
 
@@ -4738,8 +4738,62 @@ function toggleInspect() {
   }
 }
 
+function computeLocalInspect() {
+  // Compute inspect score from live data — used when MCP server is offline
+  const all = mergedBlocks();
+  const decisions = all.reduce((n,b) => n+(b.decisions?.length||0), 0);
+  const sessions  = all.filter(b=>b.type==='session').length;
+  const ideas     = all.filter(b=>b.type==='idea').length;
+  const rejections= all.filter(b=>b.type==='rejection').length;
+  const discussions=all.filter(b=>b.type==='discussion').length;
+  const projects  = new Set(all.map(b=>b.project)).size;
+  const hasIntent = all.some(b=>b.type==='intent');
+  const hasRoadmap= all.some(b=>b.type==='roadmap');
+  const recentTs  = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+  const activeToday=all.filter(b=>(b.ts||0)>=recentTs).length;
+
+  let score = 30; // base
+  if (sessions >= 3)    score += 10;
+  if (sessions >= 8)    score += 8;
+  if (decisions >= 10)  score += 10;
+  if (decisions >= 25)  score += 8;
+  if (ideas >= 5)       score += 6;
+  if (rejections >= 2)  score += 8;  // capturing rejections = gold
+  if (discussions >= 2) score += 6;
+  if (hasIntent)        score += 6;
+  if (hasRoadmap)       score += 4;
+  if (projects >= 3)    score += 6;
+  if (activeToday >= 3) score += 8;
+  score = Math.min(score, 99);
+
+  const suggestions = [];
+
+  // Strengths
+  if (decisions >= 10) suggestions.push({ type:'strength', title:`${decisions} decisions logged`, text:'Decision capture is strong — this is the core memory layer working as intended.' });
+  if (rejections >= 2) suggestions.push({ type:'strength', title:`${rejections} rejections documented`, text:'Roads not taken are captured. This prevents re-discovering the same dead ends in future sessions.' });
+  if (sessions >= 5)   suggestions.push({ type:'strength', title:`${sessions} sessions in storyboard`, text:'Consistent session capture means context compounds with every new session.' });
+  if (discussions >= 2) suggestions.push({ type:'strength', title:`${discussions} discussions captured`, text:'The WHY layer is present — reasoning is documented, not just outcomes.' });
+
+  // Opportunities
+  if (!hasIntent)      suggestions.push({ type:'opportunity', title:'Set a project intent', text:'Intent anchors every session. Without it, the storyboard captures what happened but not what you\'re driving toward.', action:'Click any project → tap the intent bar' });
+  if (ideas < 5)       suggestions.push({ type:'opportunity', title:'Capture more ideas', text:`Only ${ideas} ideas logged. Ideas are the raw material for roadmap items — capture them fast when they surface.`, action:'⌘K → Idea, or tap + in the dashboard' });
+  if (!hasRoadmap)     suggestions.push({ type:'opportunity', title:'No roadmap items yet', text:'Convert a decision into a roadmap item (Next/Soon/Later) to unlock the Pipeline view fully.', action:'Open a decision block → "Add to roadmap"' });
+
+  // Gaps
+  if (rejections === 0) suggestions.push({ type:'gap', title:'No rejections captured', text:'Rejected paths are invisible — you\'re one re-suggestion away from re-discovering a dead end. Document what you ruled out and why.', action:'Create a Rejection block via + capture' });
+  if (sessions < 3)    suggestions.push({ type:'gap', title:'Early stage — only a few sessions', text:'The storyboard needs more sessions to compound. Every session you run through the system makes the next one faster.', action:'Keep using Storyboard for every AI session' });
+  if (projects < 2)    suggestions.push({ type:'gap', title:'Only one active project', text:'Storyboard is most powerful across multiple projects — cross-project intelligence surfaces when patterns repeat.', action:'Add your second active project' });
+
+  return { score, suggestions };
+}
+
 function renderInspect(data) {
-  if (!data || !data.inspect) return;
+  if (!data || !data.inspect) {
+    // No server data — compute locally
+    const local = computeLocalInspect();
+    renderInspect({ inspect: local });
+    return;
+  }
   const { score, suggestions } = data.inspect;
 
   // Score ring
@@ -5816,12 +5870,16 @@ function renderCanvasView() {
   // then the filtered blocks below — don't show all-projects overview
   if (activeFilter !== 'All') {
     el.innerHTML = renderProjectHeader(activeFilter);
-    // Append filtered blocks in a grid below the header
-    const projBlocks = all.filter(b => b.project === activeFilter).sort((a,b) => (b.ts||0)-(a.ts||0));
+    // Append filtered blocks — respect period filter
+    const minTs = periodTs();
+    let projBlocks = all.filter(b => b.project === activeFilter);
+    if (minTs) projBlocks = projBlocks.filter(b => (b.ts||0) >= minTs);
+    projBlocks = projBlocks.sort((a,b) => (b.ts||0)-(a.ts||0));
     if (projBlocks.length) {
       el.innerHTML += projBlocks.map((b,i) => blockHTML(b,i)).join('');
     } else {
-      el.innerHTML += `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">No blocks yet for this project.</div>`;
+      const noMsg = minTs ? 'No blocks in this time period for this project.' : 'No blocks yet for this project.';
+      el.innerHTML += `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">${noMsg}</div>`;
     }
     return;
   }
