@@ -296,53 +296,63 @@
   <!-- ═══ S2: THE PROBLEM ═══ -->
   <div class="slide" id="s2">
     <div class="eyebrow">The Problem</div>
-    <h2 style="margin-bottom:12px">Every AI session<br>starts with <span style="color:#ff6b9d">amnesia.</span></h2>
-    <p class="lead" style="margin-bottom:32px;font-size:17px">The AI forgets everything. You re-explain, re-decide, re-discover — on repeat. This isn't a context window problem. It's a memory problem.</p>
-    <div class="pain-grid">
+    <h2 style="margin-bottom:12px">Every session end<br>is a <span style="color:#ff6b9d">four-layer wipe.</span></h2>
+    <p class="lead" style="margin-bottom:32px;font-size:17px">It's not just that the AI forgets. When a session ends, four things vanish simultaneously — and none of them are being captured anywhere.</p>
+    <div class="pain-grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="pain-card">
-        <div class="pain-quote">"Here's what we're building, here's the stack, here's where we left off…"</div>
-        <div class="pain-label">🔁 Re-explained every session</div>
+        <div class="pain-quote">"I remember what we decided. I have no idea why we decided it."</div>
+        <div class="pain-label">💬 The WHY — gone</div>
       </div>
       <div class="pain-card">
-        <div class="pain-quote">"Did we already try this? I can't remember if we ruled it out last week."</div>
-        <div class="pain-label">🌫️ Decisions that evaporate</div>
+        <div class="pain-quote">"What did we try first? What failed? I can't reconstruct the steps."</div>
+        <div class="pain-label">🔗 The HOW — gone</div>
       </div>
       <div class="pain-card">
-        <div class="pain-quote">"You remember the decision. Not why you made it. Not what you ruled out. Not what the AI was actually thinking. That's gone forever."</div>
-        <div class="pain-label">🫧 The reasoning behind everything — permanently invisible</div>
+        <div class="pain-quote">"Why did the AI go that direction? What was it weighing? That reasoning is invisible."</div>
+        <div class="pain-label">🫧 The AI's thinking — gone</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-quote">"We tried this exact thing three weeks ago and ruled it out. We just wasted a session re-discovering the same dead end."</div>
+        <div class="pain-label">✕ The roads not taken — gone</div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S3: THREE INVISIBLE LAYERS ═══ -->
+  <!-- ═══ S3: FOUR INVISIBLE LAYERS ═══ -->
   <div class="slide" id="s3">
     <div class="eyebrow">What we capture</div>
-    <h2 style="margin-bottom:10px;text-align:center">Three layers.<br>All <span class="em">previously invisible.</span></h2>
+    <h2 style="margin-bottom:10px;text-align:center">Four layers.<br>All <span class="em">previously invisible.</span></h2>
     <p style="font-size:15px;color:var(--muted2);margin-bottom:32px;max-width:580px;text-align:center;line-height:1.6">
-      Every AI session has three layers. All three have been invisible — until now.
+      Every AI session produces four layers of context. All four have been invisible — until now.
     </p>
-    <div class="three-col" style="max-width:960px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1080px">
       <div class="card" style="border-top:3px solid var(--accent)">
         <span class="card-icon">💬</span>
         <h3>Discussion — The WHY</h3>
-        <p>The human↔AI conversation that produced each decision. The reasoning, the alternatives considered, the moment the insight landed. Currently: locked inside closed chat windows, lost forever.</p>
+        <p>The conversation that produced each decision. The reasoning, alternatives considered, the moment the insight landed. Locked in closed windows — until now.</p>
         <span class="tag now">Captured</span>
       </div>
       <div class="card" style="border-top:3px solid var(--accent2)">
         <span class="card-icon">🔗</span>
         <h3>Trail — The HOW</h3>
-        <p>The execution sequence. What was tried first. What failed. What worked. The full path from idea to artifact. Currently: invisible — you see the output, never the journey.</p>
+        <p>The execution sequence. What was tried first. What failed. What worked. The full path from decision to artifact. You see the output — never the journey.</p>
         <span class="tag now">Captured</span>
       </div>
       <div class="card" style="border-top:3px solid var(--orange)">
         <span class="card-icon">🫧</span>
         <h3>Thinking — The AI's Reasoning</h3>
-        <p>Anthropic's extended thinking tokens — the AI's own internal reasoning before it responds. Nobody captures this. Storyboard seeds it back: the AI reasons from its own prior thought process.</p>
+        <p>Extended thinking tokens — the AI's own deliberation before it responds. Nobody captures this. Storyboard seeds it back: the AI reasons from its own prior thought process.</p>
         <span class="tag vision">The moat</span>
+      </div>
+      <div class="card" style="border-top:3px solid #f87171">
+        <span class="card-icon">✕</span>
+        <h3>Rejection — Roads Not Taken</h3>
+        <p>What was explicitly ruled out and why. Surfaces in every seed as "Do NOT re-suggest." The path not taken, finally documented. Stops you re-discovering the same dead ends.</p>
+        <span class="tag now">Captured</span>
       </div>
     </div>
     <p style="font-size:13px;color:var(--muted);margin-top:22px;text-align:center">
-      Seeding with Discussion + Trail + Thinking: the AI doesn't just <em>know</em> the context — it <em>understands</em> it.
+      Seeding with all four layers: the AI doesn't just <em>know</em> the context — it <em>understands</em> it.
     </p>
   </div>
 

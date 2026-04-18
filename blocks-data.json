@@ -1,5 +1,56 @@
 [
   {
+    "id": "sb-apr18-discussion-built-with-storyboard",
+    "type": "discussion",
+    "project": "Storyboard",
+    "title": "Built with Storyboard — the velocity proof story",
+    "summary": "The most powerful part of the origin story: Storyboard was built using Storyboard. Every session compaction produced higher-quality context than any normal AI user gets. The intent blocks, rejection captures, and discussion docs seeded each new session — so the work got more effective as the product got better. The velocity increased because the memory layer increased. This is the 'eating our own dog food' proof that nobody else can claim: we didn't just build a memory tool, we experienced the compound effect of it while building it. This needs to be a core part of the origin narrative and eventual case study. Comparable to Figma designed in Figma, Linear tracked in Linear. Nobody doing context-layer tooling for AI can say this yet because nobody built the capture layer first.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "decisions": [
+      "The 'built with Storyboard' story is a marketing asset, not just a feature demo",
+      "Velocity increase is the measurable proof — sessions got faster as blocks accumulated",
+      "This becomes the origin story once we're ready to go public"
+    ],
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-discussion-gtm-launch-strategy",
+    "type": "discussion",
+    "project": "Storyboard",
+    "title": "Go-to-market — the full launch sequence",
+    "summary": "PHASE 1 — MEETUPS FIRST (now, no public content yet): Attend Claude/AI meetups, get 5-10 real people testing it face-to-face. No blog posts, no LinkedIn blast yet. Reason: no point sending traffic to something nobody has validated. The product needs one person to see it live and say 'I need this.' PHASE 2 — EARLY TESTERS (when Phase 1 gives signal): Small circle of testers from meetup contacts. Gather real feedback before public. PHASE 3 — PUBLIC CONTENT BLAST (when product is ready for public): (1) SEO articles — write all the pain-point articles, publish them on the storyboard landing page. Own the keyword clusters: 'AI context loss', 'AI session reset problem', 'how to preserve AI conversation context', 'cross-AI tool memory'. Target AI magazines, journals, relevant publications. (2) LinkedIn — pain-framed posts, the four invisible layers story, the painkiller framing. Designed to hit the right early adopter. (3) Substack — longer-form, narrative pieces. (4) Paid ads — boost the best-performing organic content, not cold campaigns. Amplify what already resonates. (5) Outbound agent — automated agent that monitors AI meetup pages, Discord groups, relevant communities, sends targeted outreach to people actively discussing the exact pain we solve. NOT DOING ANY OF THIS until post-meetup validation. The right sequence: face-to-face → testers → signal → blast.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "decisions": [
+      "No public marketing until post-meetup validation — wrong sequence wastes reach",
+      "SEO articles go on the storyboard landing page itself, not a separate blog",
+      "Paid ads = amplify organic signal, not cold campaigns",
+      "Outbound agent monitors meetups/Discord for people describing the exact pain"
+    ],
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-idea-outbound-agent",
+    "type": "idea",
+    "project": "Storyboard",
+    "title": "Outbound agent — monitors meetups, Discord, AI communities for pain signal",
+    "summary": "An automated agent that continuously checks: AI meetup pages (Meetup.com, Eventbrite), Discord servers (Anthropic, OpenAI, AI builders), Reddit (r/ClaudeAI, r/ChatGPT, r/LocalLLaMA), relevant Slack groups. When it finds someone describing context loss, AI reset frustration, cross-tool friction — it surfaces them and drafts targeted outreach. Not spam, precision targeting. People already describing the pain we solve.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-decision-no-content-yet",
+    "type": "decision",
+    "project": "Storyboard",
+    "title": "No public content until post-meetup validation",
+    "summary": "Decision: hold all SEO articles, LinkedIn posts, Substack, paid ads until after first meetup validation cycle. Rationale: sending traffic before real user signal is wasteful and potentially damaging. The sequence is meetups → testers → signal → blast. Content strategy is fully planned and ready to execute, just not yet.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
     "id": "sb-apr18-discussion-painkillers-vs-presents",
     "type": "discussion",
     "project": "Storyboard",

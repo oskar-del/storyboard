@@ -4864,6 +4864,8 @@ function setFilter(f) {
 }
 
 function navClick(f) {
+  // On mobile: close sidebar immediately — don't wait for renders
+  if (isMobile()) closeAll();
   // Exit ideas / decisions / context views when clicking a project
   if (ideasViewActive) {
     ideasViewActive = false;
@@ -4882,10 +4884,16 @@ function navClick(f) {
     contextWindowsViewActive = false;
     document.getElementById('contextBtn')?.classList.remove('active');
   }
-  // When filtering to a specific project, board view would show just one column — auto-switch to grid
-  if (f !== 'All' && activeView === 'board') setView('grid');
+  // Clicking a specific project → land on Canvas view (project profile: header + blocks)
+  // Canvas now correctly filters to the selected project.
+  // Exception: if already on timeline/pipeline/list with a project selected, stay there (user chose that view).
+  if (f !== 'All') {
+    const stayViews = ['timeline', 'pipeline', 'list'];
+    if (!stayViews.includes(activeView)) setView('canvas');
+  }
+  // Going back to "All work" from canvas → switch to grid (the all-projects overview)
+  if (f === 'All' && activeView === 'canvas') setView('grid');
   setFilter(f);
-  if (isMobile()) closeAll();
 }
 
 // ═══════════════════════════════════
@@ -5607,6 +5615,21 @@ function renderJournalView(projName) {
 function renderFeed() {
   const el = document.getElementById('feed');
   const baseBlocks = mergedBlocks();
+
+  // Overview strip — always resolve first, before any early returns
+  // Show in grid OR canvas view, any time period, any project filter
+  const ovEl = document.getElementById('overviewStrip');
+  if (ovEl) {
+    const showOv = (activePeriod === 'all' && (activeView === 'grid' || activeView === 'canvas') &&
+                    !skillsViewActive && !decisionsViewActive && !contextWindowsViewActive);
+    if (showOv) {
+      ovEl.style.display = '';
+      renderOverviewStrip();
+    } else {
+      ovEl.style.display = 'none';
+    }
+  }
+
   // Canvas view — workspace overview, managed by renderCanvasView()
   if (activeView === 'canvas')   { renderCanvasView();   return; }
   if (activeView === 'timeline') { renderTimelineView(); return; }
@@ -5619,18 +5642,6 @@ function renderFeed() {
   if (contextWindowsViewActive) { renderContextWindowsView(); return; }
   // Category view — managed by openCategoryView(), don't override
   if (document.getElementById('categoriesBtn')?.classList.contains('active') && activeCatFilter !== undefined && document.querySelector('.cat-view')) { return; }
-  // Overview strip — show in All / all-time view only
-  const ovEl = document.getElementById('overviewStrip');
-  if (ovEl) {
-    const showOv = (activeFilter === 'All' && activePeriod === 'all' && activeView === 'grid');
-    if (showOv) {
-      ovEl.style.display = '';
-      renderOverviewStrip();
-    } else {
-      ovEl.style.display = 'none';
-    }
-  }
-
   // Ideas view: show all ideas (static + captured), ignore project filter
   if (ideasViewActive) {
     const minTs = periodTs();
@@ -5800,6 +5811,20 @@ function renderFeed() {
 function renderCanvasView() {
   const el = document.getElementById('feed');
   const all = mergedBlocks();
+
+  // If a specific project is selected, show just that project's canvas card full-width
+  // then the filtered blocks below — don't show all-projects overview
+  if (activeFilter !== 'All') {
+    el.innerHTML = renderProjectHeader(activeFilter);
+    // Append filtered blocks in a grid below the header
+    const projBlocks = all.filter(b => b.project === activeFilter).sort((a,b) => (b.ts||0)-(a.ts||0));
+    if (projBlocks.length) {
+      el.innerHTML += projBlocks.map((b,i) => blockHTML(b,i)).join('');
+    } else {
+      el.innerHTML += `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">No blocks yet for this project.</div>`;
+    }
+    return;
+  }
 
   const cards = Object.entries(PROJ).map(([name, p]) => {
     const m = PROJECT_META[name] || {};
@@ -8338,15 +8363,21 @@ function renderOverviewStrip() {
   const el = document.getElementById('overviewStrip');
   if (!el) return;
 
-  const allBlocks = mergedBlocks();
+  const allBlocksRaw = mergedBlocks();
+  // Scope to active project if one is selected
+  const allBlocks = activeFilter === 'All' ? allBlocksRaw : allBlocksRaw.filter(b => b.project === activeFilter);
+  const scopeLabel = activeFilter !== 'All' ? activeFilter : null;
+
   const todayTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
   const todayBlocks = allBlocks.filter(b => (b.ts||0) >= todayTs);
-  const todaySessions   = todayBlocks.filter(b => b.type === 'session').length;
+  // Fall back to last 3 sessions if nothing today
+  const todaySessions   = todayBlocks.filter(b => b.type === 'session').length ||
+                          allBlocks.filter(b => b.type === 'session').slice(-3).length;
   const todayDecisions  = todayBlocks.reduce((n, b) => n + (b.decisions||[]).length, 0);
   const todayIdeas      = todayBlocks.filter(b => b.type === 'idea').length;
 
   // Recent activity (today's blocks, sorted newest first, max 4)
-  const recentActivity = todayBlocks
+  const recentActivity = (todayBlocks.length ? todayBlocks : allBlocks.slice(-4))
     .filter(b => b.type !== 'idea' || b.title)
     .sort((a,b) => (b.ts||0) - (a.ts||0))
     .slice(0, 4);
@@ -8414,7 +8445,7 @@ function renderOverviewStrip() {
   el.innerHTML = `
     <!-- Today -->
     <div class="ov-card">
-      <div class="ov-label">Today</div>
+      <div class="ov-label">${scopeLabel ? `<span style="color:var(--accent)">${scopeLabel}</span> · Today` : 'Today'}</div>
       <div class="ov-num">${todaySessions || allBlocks.filter(b=>b.type==='session').slice(-3).length}</div>
       <div class="ov-sub">${todayDecisions} decision${todayDecisions!==1?'s':''} · ${todayIdeas} idea${todayIdeas!==1?'s':''}</div>
       ${activityRows}
@@ -8754,6 +8785,13 @@ Make it feel like a premium strategy document, not a slide deck.`;
   }
 }
 
+function toggleWeakFilter() {
+  const isWeak = skillsSearch === '__weak__';
+  const inp = document.getElementById('skillsSearch');
+  if (inp) inp.value = '';
+  renderSkillsView(isWeak ? '' : '__weak__');
+}
+
 function renderSkillsView(query) {
   if (query !== undefined) skillsSearch = query;
   const el = document.getElementById('feed');
@@ -8761,8 +8799,9 @@ function renderSkillsView(query) {
 
   // Filter by search + active project
   const filtered = SKILLS.filter(s => {
-    const matchesSearch = !q ||
-      s.name.includes(q) || s.desc.toLowerCase().includes(q) ||
+    // '__weak__' is a sentinel — bypass text search, weak filter applied later
+    const matchesSearch = !q || q === '__weak__' ||
+      s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) ||
       s.cat.toLowerCase().includes(q) ||
       s.projects.some(p => p.toLowerCase().includes(q));
     const matchesProject = activeFilter === 'All' || s.projects.includes(activeFilter);
@@ -8786,7 +8825,7 @@ function renderSkillsView(query) {
       <span style="font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Library health</span>
       <span style="font-size:13px;font-weight:800;color:${avgColor}">${avgScore}/100 avg</span>
       <span style="font-size:11px;color:#10b981;font-weight:700">${aCount} A-grade</span>
-      ${weakCount>0?`<button onclick="renderSkillsView(''); document.getElementById('skillsSearch').value=''; window._weakFilter=!window._weakFilter; renderSkillsView(window._weakFilter?'__weak__':'')" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25);cursor:pointer">${weakCount} need work ↓</button>`:''}
+      ${weakCount>0?`<button onclick="toggleWeakFilter()" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25);cursor:pointer">${weakCount} need work ↓</button>`:''}
       <span style="margin-left:auto;font-size:10px;color:var(--text-3)">${allScored.length} scored</span>
     </div>` : '';
 
