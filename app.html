@@ -1380,6 +1380,14 @@ body.light-mode .proj-header-deploy.live { background: #f0fdf4; color: #059669; 
 
 /* ── WORK BLOCK ── */
 /* ── Block scroll-in animation ─────────────── */
+@keyframes slideUp {
+  from { opacity:0; transform: translateX(-50%) translateY(16px); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes slideDown {
+  from { opacity:0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+}
 @keyframes blockEnter {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -2773,6 +2781,33 @@ body.light-mode .cat-block-chip { background: var(--bg); }
           </div>
           <div style="margin-top:10px;font-size:12px;color:#666">Restart Claude Desktop. Sessions start appearing here automatically.</div>
           <button onclick="dismissOnboard()" style="margin-top:12px;background:#7c6bff;border:none;border-radius:8px;padding:8px 18px;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Got it — open dashboard →</button>
+        </div>
+      </div>
+
+      <!-- Browser extension -->
+      <div id="obPath3" onclick="selectOnboardPath(3)" style="background:#13131c;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px 22px;cursor:pointer;transition:all .15s"
+        onmouseover="this.style.borderColor='rgba(245,158,11,0.4)';this.style.background='rgba(245,158,11,0.05)'"
+        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='#13131c'">
+        <div style="display:flex;gap:14px;align-items:center">
+          <span style="font-size:26px">🧩</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:15px;color:#f0f0f8;margin-bottom:3px">Install browser extension</div>
+            <div style="font-size:13px;color:#666;line-height:1.5">Capture Claude.ai, ChatGPT, Gemini, Perplexity automatically — no terminal needed.</div>
+          </div>
+          <div id="obArrow3" style="color:#666;font-size:18px;flex-shrink:0;transition:transform .15s">→</div>
+        </div>
+        <div id="obCmd3" style="display:none;margin-top:14px;background:#0a0a12;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px">
+          <div style="font-size:11px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">3 steps, 2 minutes</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:12px;color:#888;line-height:1.6">
+            <div><span style="color:#f0f0f8;font-weight:600">1.</span> Open Chrome → <code style="color:#c5c5e8">chrome://extensions</code></div>
+            <div><span style="color:#f0f0f8;font-weight:600">2.</span> Enable <span style="color:#f59e0b">Developer mode</span> (top right toggle)</div>
+            <div><span style="color:#f0f0f8;font-weight:600">3.</span> Click <span style="color:#f59e0b">Load unpacked</span> → select the <code style="color:#c5c5e8">browser-extension/</code> folder</div>
+          </div>
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:8px;font-size:11px;color:#888;line-height:1.5">
+            Also start the MCP server: <code style="color:#c5c5e8">node mcp-server.js</code><br>
+            Then visit Claude.ai — your session will appear here within 30 seconds.
+          </div>
+          <button onclick="dismissOnboard()" style="margin-top:12px;background:#f59e0b;border:none;border-radius:8px;padding:8px 18px;color:#000;font-size:13px;font-weight:700;cursor:pointer">Ready — open dashboard →</button>
         </div>
       </div>
 
@@ -6393,6 +6428,8 @@ function execSeedCopy() {
     const btn = document.getElementById('seedModalCopyBtn');
     btn.innerHTML = '<span>✓ Copied — paste into any AI</span>';
     btn.classList.add('copied');
+    // Record that a seed was just used — quality rating will prompt after session
+    recordSeedUsed();
     setTimeout(() => {
       btn.innerHTML = '<span>Copy context</span><span>→</span>';
       btn.classList.remove('copied');
@@ -6402,10 +6439,112 @@ function execSeedCopy() {
 
 function execSeedCopyAndClaude() {
   navigator.clipboard.writeText(_seedRawText).then(() => {
+    recordSeedUsed();
     window.open('https://claude.ai/new', '_blank');
     closeSeedModal();
   });
 }
+
+// ── Seed quality rating ───────────────────────────────────────────────────────
+function recordSeedUsed() {
+  const event = {
+    ts: Date.now(),
+    project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+    blockCount: (_seedRawText.match(/\n/g)||[]).length,
+  };
+  localStorage.setItem('sb_last_seed', JSON.stringify(event));
+  // Show rating prompt after a delay (user has had time to start their session)
+  setTimeout(showSeedRatingPrompt, 90000); // 90s — long enough to know if it worked
+}
+
+function showSeedRatingPrompt() {
+  // Don't show if already rated this seed
+  const last = JSON.parse(localStorage.getItem('sb_last_seed') || 'null');
+  if (!last || last.rated) return;
+  // Don't show if modal is open
+  if (document.querySelector('.seed-modal-bg.open')) return;
+
+  const banner = document.getElementById('seedRatingBanner');
+  if (banner) { banner.style.display = 'flex'; return; }
+
+  // Build banner
+  const el = document.createElement('div');
+  el.id = 'seedRatingBanner';
+  el.style.cssText = `
+    position:fixed;bottom:88px;left:50%;transform:translateX(-50%);
+    background:var(--white);border:1px solid var(--border);border-radius:12px;
+    padding:12px 16px;display:flex;align-items:center;gap:12px;
+    box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:500;font-size:12px;
+    animation:slideUp .3s cubic-bezier(.34,1.56,.64,1)
+  `;
+  el.innerHTML = `
+    <span style="font-size:15px">🌱</span>
+    <span style="color:var(--text-2)">How did that seed land?</span>
+    <button onclick="rateSeed('great')"  style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:#4ade80;cursor:pointer" title="Cold start avoided — AI picked up right where we left off">🟢 Nailed it</button>
+    <button onclick="rateSeed('partial')" style="background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:#fbbf24;cursor:pointer" title="Partial context — some re-explaining needed">🟡 Partial</button>
+    <button onclick="rateSeed('miss')"   style="background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:#f87171;cursor:pointer" title="Still had to re-explain from scratch">🔴 Miss</button>
+    <button onclick="dismissSeedRating()" style="background:none;border:none;cursor:pointer;color:var(--text-3);font-size:14px;margin-left:4px">✕</button>
+  `;
+  document.body.appendChild(el);
+}
+
+const SEED_RATING_LABELS = {
+  great:   { emoji:'🟢', label:'Nailed it',  detail:'Cold start avoided — AI picked up right where we left off' },
+  partial: { emoji:'🟡', label:'Partial',    detail:'Some re-explaining needed but context helped' },
+  miss:    { emoji:'🔴', label:'Miss',        detail:'Still had to re-explain context from scratch' },
+};
+
+async function rateSeed(rating) {
+  dismissSeedRating();
+  const last = JSON.parse(localStorage.getItem('sb_last_seed') || 'null');
+  if (!last) return;
+  last.rated = true;
+  last.rating = rating;
+  localStorage.setItem('sb_last_seed', JSON.stringify(last));
+
+  const cfg = SEED_RATING_LABELS[rating];
+  const block = {
+    id: 'sq-' + Date.now(),
+    type: 'decision',
+    title: `Seed quality: ${cfg.emoji} ${cfg.label}`,
+    summary: cfg.detail,
+    project: last.project,
+    date: new Date().toISOString().slice(0, 10),
+    _seedQuality: rating,
+    _source: 'seed-rating',
+  };
+
+  // Try to save via MCP, fall back to local
+  try {
+    await fetch(`${SB_MCP}/capture-web`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...block, body: cfg.detail }),
+    });
+  } catch {
+    liveBlocks = [block, ...liveBlocks];
+    renderFeed();
+  }
+
+  showToast(`${cfg.emoji} Seed rated — keeps the velocity data honest`);
+}
+
+function dismissSeedRating() {
+  const el = document.getElementById('seedRatingBanner');
+  if (el) el.remove();
+  // Mark as dismissed so it doesn't show again for this seed
+  const last = JSON.parse(localStorage.getItem('sb_last_seed') || 'null');
+  if (last) { last.rated = true; localStorage.setItem('sb_last_seed', JSON.stringify(last)); }
+}
+
+// Check on load — if a seed was used in a previous session and never rated, prompt now
+(function checkPendingRating() {
+  const last = JSON.parse(localStorage.getItem('sb_last_seed') || 'null');
+  if (!last || last.rated) return;
+  const age = Date.now() - last.ts;
+  // Only prompt if seed was used in last 24h and not rated yet
+  if (age < 86400000) setTimeout(showSeedRatingPrompt, 5000);
+})();
 
 function toggleSeedRaw() {
   document.getElementById('seedModalRaw').classList.toggle('visible');
@@ -7780,6 +7919,16 @@ const FILES = [
     file: 'discussions/apr18-capture-everything.md',
   },
   {
+    id: 'disc-apr18-feature-inventory',
+    type: 'reference',
+    title: 'Feature Inventory — All 41 Features',
+    subtitle: '24 core · 17 supporting · campaign angles for each · marketing priority order',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Complete map of every feature built across Days 1–4. Capture layer, processing layer, memory blocks, context seeding, dashboard UI, infra, and pitch assets. Campaign angles for ads, PR, and messaging.',
+    links: ['Product', 'Marketing'],
+    file: 'discussions/apr18-feature-inventory.md',
+  },
+  {
     id: 'disc-apr18-mobile-companion',
     type: 'discussion',
     title: 'Mobile — Companion, Not Dashboard',
@@ -8106,6 +8255,7 @@ function openFilesView() {
       <button class="files-tab ${filesFilter==='trail'?'active':''}" onclick="filesFilter='trail';openFilesView()">🔗 Trails</button>
       <button class="files-tab ${filesFilter==='thinking'?'active':''}" onclick="filesFilter='thinking';openFilesView()">🫧 Thinking</button>
       <button class="files-tab ${filesFilter==='rejection'?'active':''}" onclick="filesFilter='rejection';openFilesView()">✕ Rejections</button>
+      <button class="files-tab ${filesFilter==='reference'?'active':''}" onclick="filesFilter='reference';openFilesView()">📋 Reference</button>
     </div>
     <div class="files-grid">
       ${filtered.map(f => `
@@ -8161,7 +8311,7 @@ async function openFileReader(fileId) {
   const byline  = document.getElementById('frByline');
   const body    = document.getElementById('frBody');
 
-  const typeLabel = f.type === 'discussion' ? '💬 Discussion' : f.type === 'trail' ? '🔗 Trail' : '🫧 Thinking';
+  const typeLabel = f.type === 'discussion' ? '💬 Discussion' : f.type === 'trail' ? '🔗 Trail' : f.type === 'thinking' ? '🫧 Thinking' : f.type === 'rejection' ? '✕ Rejection' : f.type === 'reference' ? '📋 Reference' : f.type;
   const typeClass = `file-card-type ${f.type}`;
   typeEl.innerHTML  = `<span class="${typeClass}">${typeLabel}</span>`;
   titleEl.textContent = f.title;
@@ -9431,6 +9581,78 @@ function toggleIdeasView() {
   renderFeed();
 }
 
+// ── Since you were away ───────────────────────────────────────────────────────
+(function checkSinceAway() {
+  const lastOpen = parseInt(localStorage.getItem('sb_last_open') || '0');
+  const now = Date.now();
+  localStorage.setItem('sb_last_open', now);
+
+  if (!lastOpen) return; // first ever open
+  const gapMs = now - lastOpen;
+  if (gapMs < 30 * 60 * 1000) return; // less than 30 min — same session, skip
+
+  const gapHours = Math.round(gapMs / 3600000);
+  const gapLabel = gapHours < 24
+    ? `${gapHours}h ago`
+    : gapHours < 48 ? 'yesterday' : `${Math.round(gapHours/24)} days ago`;
+
+  // Count blocks added since last open
+  const allBlocks = [...(window.liveBlocks || []), ...(window.BASE_BLOCKS || [])];
+  const newBlocks = allBlocks.filter(b => {
+    if (!b.date) return false;
+    const bd = new Date(b.date).getTime();
+    return bd > lastOpen;
+  });
+
+  // Check for unrated seed
+  const lastSeed = JSON.parse(localStorage.getItem('sb_last_seed') || 'null');
+  const hasUnratedSeed = lastSeed && !lastSeed.rated && (now - lastSeed.ts) < 86400000;
+
+  // Only show if something meaningful happened
+  if (newBlocks.length === 0 && !hasUnratedSeed) return;
+
+  setTimeout(() => {
+    // Build banner
+    const existing = document.getElementById('sinceAwayBanner');
+    if (existing) return;
+
+    const parts = [];
+    if (newBlocks.length > 0) parts.push(`${newBlocks.length} new block${newBlocks.length !== 1 ? 's' : ''}`);
+    if (hasUnratedSeed) parts.push('1 unrated seed');
+
+    const el = document.createElement('div');
+    el.id = 'sinceAwayBanner';
+    el.style.cssText = `
+      position:fixed;top:58px;left:50%;transform:translateX(-50%);
+      background:var(--white);border:1px solid var(--border);border-radius:10px;
+      padding:8px 16px;display:flex;align-items:center;gap:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:400;font-size:12px;
+      animation:slideDown .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap
+    `;
+    el.innerHTML = `
+      <span style="color:var(--text-3)">Since ${gapLabel}:</span>
+      <span style="color:var(--text);font-weight:600">${parts.join(' · ')}</span>
+      ${hasUnratedSeed ? `<button onclick="showSeedRatingPrompt();dismissSinceAway()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#4ade80;cursor:pointer">Rate seed →</button>` : ''}
+      ${newBlocks.length > 0 ? `<button onclick="highlightNewBlocks(${lastOpen});dismissSinceAway()" style="background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#a78bfa;cursor:pointer">Show new →</button>` : ''}
+      <button onclick="dismissSinceAway()" style="background:none;border:none;cursor:pointer;color:var(--text-3);font-size:14px">✕</button>
+    `;
+    document.body.appendChild(el);
+  }, 1500);
+})();
+
+function dismissSinceAway() {
+  const el = document.getElementById('sinceAwayBanner');
+  if (el) el.remove();
+}
+
+function highlightNewBlocks(since) {
+  dismissSinceAway();
+  // Set period filter to show recent blocks and scroll to top of feed
+  const feed = document.getElementById('feed');
+  if (feed) feed.scrollTop = 0;
+  showToast('⬆ Scrolled to most recent blocks');
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -9641,7 +9863,7 @@ function selectOnboardPath(path) {
     return;
   }
   // Collapse any open path
-  [1, 2].forEach(p => {
+  [1, 2, 3].forEach(p => {
     const cmd = document.getElementById(`obCmd${p}`);
     const arrow = document.getElementById(`obArrow${p}`);
     if (cmd) cmd.style.display = 'none';
@@ -10158,13 +10380,29 @@ async function saveApproved() {
     });
     const data = await r.json();
     if (data.ok) {
-      btn.textContent = `✓ Saved ${data.saved} blocks`;
-      setTimeout(() => {
+      btn.textContent = `✓ Saved ${data.saved} block${data.saved !== 1 ? 's' : ''}`;
+      setTimeout(async () => {
         closeInbox();
+        // Pull fresh blocks from MCP server and re-render — approved blocks appear immediately
+        try {
+          const br = await fetch(`${SB_MCP}/blocks?t=${Date.now()}`);
+          const fresh = await br.json();
+          if (Array.isArray(fresh) && fresh.length) {
+            liveBlocks = fresh;
+            updateIdeasCount();
+          }
+        } catch {}
+        renderFeed();
+        buildNav();
+        buildRightPanel();
+        setSyncIndicator('live');
         pollInbox();
-        // Refresh the feed
-        if (typeof renderCurrentView === 'function') renderCurrentView();
-      }, 1200);
+        showToast(`✓ ${data.saved} block${data.saved !== 1 ? 's' : ''} added to your storyboard`);
+        // Surface the new Discussion doc in files view if generated
+        if (data.discussionFile) {
+          setTimeout(() => showToast('💬 Discussion doc saved to Files'), 1500);
+        }
+      }, 900);
     }
   } catch {
     btn.textContent = 'Error — try again';
