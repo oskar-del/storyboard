@@ -1683,6 +1683,31 @@ body.light-mode .seed-modal-raw { background: #f7f8fa; }
 }
 .intent-set-btn:hover { background: rgba(108,99,255,.25); }
 
+/* ── REJECTION BLOCK — path not taken ── */
+.block-rejection {
+  border: 1.5px solid rgba(220,38,38,.18) !important;
+  background: rgba(220,38,38,.03) !important;
+  opacity: .85;
+}
+.block-rejection:hover { opacity: 1; }
+.block-rejection .block-stripe { background: rgba(220,38,38,.5) !important; }
+.block-rejection-label {
+  font-size: 9px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase;
+  color: #f87171; margin-bottom: 4px; display: flex; align-items: center; gap: 5px;
+}
+.block-rejection-what {
+  font-size: 12px; font-weight: 700; color: var(--text-2);
+  text-decoration: line-through; text-decoration-color: rgba(220,38,38,.4);
+  margin-bottom: 5px; line-height: 1.4;
+}
+.block-rejection-why {
+  font-size: 11px; color: var(--text-3); line-height: 1.5;
+}
+.block-rejection-replaced {
+  font-size: 10px; color: #4ade80; font-weight: 600; margin-top: 6px;
+  display: flex; align-items: center; gap: 4px;
+}
+
 /* ── INTENT BLOCK — special "north star" card ── */
 .block-intent {
   border: 1.5px solid rgba(244,63,94,.25) !important;
@@ -3584,6 +3609,14 @@ const BLOCKS = [
     chips:["North Star","Memory","Canvas","Intent"],
   },
 
+  { id:"sb-apr18-rejection-morning-brief", type:"rejection", project:"Storyboard", date:"Apr 18", ts:20260418,
+    _live:true, _captured:"2026-04-18T10:00:00.000Z",
+    title:"Morning brief",
+    summary:"Proposed as the new label for the Seed button. User response: 'that doesn't make any sense.' Rejected immediately — framing is time-of-day specific, doesn't communicate the action (carrying context forward), and feels like a product feature unrelated to what the button does.",
+    chips:["Carry forward →"],
+    replacedBy: "Carry forward →",
+  },
+
   { id:"sb-apr18-compaction-1", type:"compaction", project:"Storyboard", date:"Apr 18", ts:20260418,
     _live:true, _captured:"2026-04-18T21:30:00.000Z",
     title:"Context compacted mid-session — Day 3 sprint",
@@ -4780,8 +4813,8 @@ function blockTimestamp(b) {
 // BLOCK HTML (shared between views)
 // ═══════════════════════════════════
 // Type label map
-const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding', intent:'Intent', compaction:'Compaction' };
-const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎', preview:'🖼️', discussion:'💬', trail:'🔗', thinking:'🫧', intent:'🎯', compaction:'🗜️' };
+const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding', intent:'Intent', compaction:'Compaction', rejection:'Rejection' };
+const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎', preview:'🖼️', discussion:'💬', trail:'🔗', thinking:'🫧', intent:'🎯', compaction:'🗜️', rejection:'✕' };
 
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
@@ -4862,6 +4895,20 @@ function blockHTML(b, i, featured = false) {
             </div>
             <div class="ctx-fault-date">${date2}</div>
           </div>
+        </div>
+      </div>`;
+    }
+
+    // ── Rejection block — path not taken ──
+    if (b.type === 'rejection') {
+      const replacedBy = b.replacedBy || b.chips?.[0] || '';
+      return `<div class="block block-rejection" style="${style}" onclick="openDetail('${b.id}')">
+        <div class="block-stripe"></div>
+        <div class="block-body">
+          <div class="block-rejection-label">✕ Rejected · <span style="color:var(--text-3);font-weight:500">${b.project||''} · ${displayDate}</span></div>
+          <div class="block-rejection-what">${b.title||'Untitled'}</div>
+          ${summary ? `<div class="block-rejection-why">${summary.slice(0,160)}${summary.length>160?'…':''}</div>` : ''}
+          ${replacedBy ? `<div class="block-rejection-replaced">→ Replaced by: ${replacedBy}</div>` : ''}
         </div>
       </div>`;
     }
@@ -6188,9 +6235,9 @@ function showSeedModal(rawText, projName, sections) {
     <div class="seed-modal-section">
       <div class="seed-modal-section-label">${s.label}</div>
       ${s.rows.map(r => `
-        <div class="seed-modal-row">
-          <span class="seed-modal-row-icon">${r.icon}</span>
-          <span class="seed-modal-row-text">${r.text}</span>
+        <div class="seed-modal-row" style="${r._rejectionStyle ? 'opacity:.75' : ''}">
+          <span class="seed-modal-row-icon" style="${r._rejectionStyle ? 'color:#f87171' : ''}">${r.icon}</span>
+          <span class="seed-modal-row-text" style="${r._rejectionStyle ? 'text-decoration:line-through;text-decoration-color:rgba(248,113,113,.4);color:var(--text-2)' : ''}">${r.text}</span>
           ${r.tag ? `<span class="seed-modal-row-tag">${r.tag}</span>` : ''}
         </div>`).join('')}
     </div>`).join('');
@@ -6294,8 +6341,8 @@ function renderSearchResults(q) {
     results = all.sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12);
   }
 
-  const typeColors = { session:'#6c63ff', idea:'#f59e0b', decision:'#22c55e', roadmap:'#15803d', feature:'#4ecdc4', automation:'#10b981', intent:'#f43f5e', compaction:'#64748b' };
-  const typeIcons2 = { session:'🧠', idea:'💡', decision:'✓', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', intent:'🎯', compaction:'🗜️' };
+  const typeColors = { session:'#6c63ff', idea:'#f59e0b', decision:'#22c55e', roadmap:'#15803d', feature:'#4ecdc4', automation:'#10b981', intent:'#f43f5e', compaction:'#64748b', rejection:'#dc2626' };
+  const typeIcons2 = { session:'🧠', idea:'💡', decision:'✓', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', intent:'🎯', compaction:'🗜️', rejection:'✕' };
 
   // Group by type for organized display
   if (query) {
@@ -7593,6 +7640,36 @@ const FILES = [
     links: ['Context Windows', 'Three Layers'],
     file: 'discussions/apr18-context-compaction.md',
   },
+  {
+    id: 'disc-apr18-velocity',
+    type: 'discussion',
+    title: 'Velocity — The Real Product Argument',
+    subtitle: '100–1000x multiplier · Why velocity decays without memory · Meta-story pitch hook',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Five years ago, 2 days of work = debate about a logo and a Squarespace template. Today, 2 days = functional dashboard, pitch deck, MCP server, browser extension, 13 discussion documents. The multiplier is real. But it only compounds if the memory holds...',
+    links: ['GTM', 'Strategy'],
+    file: 'discussions/apr18-velocity.md',
+  },
+  {
+    id: 'disc-apr18-gtm-two-phase',
+    type: 'discussion',
+    title: 'GTM — Two-Phase User Strategy',
+    subtitle: 'Phase 1: first 500 power users · Phase 2: extension consumer test · Two products emerging',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Don\'t go broad immediately — go deep first. Phase 1: Claude Cowork users, AI power users, first 500 who become the community foundation. Phase 2: browser extension as standalone consumer product, lighter onboarding, "never start from scratch again." The journey selector is Phase 1 framing — don\'t force casual users through it...',
+    links: ['GTM', 'Strategy'],
+    file: 'discussions/apr18-gtm-two-phase.md',
+  },
+  {
+    id: 'disc-apr18-gap-analysis',
+    type: 'discussion',
+    title: 'Gap Analysis — What Storyboard Is Not Capturing',
+    subtitle: 'Four invisible layers · Rejections · Conversation auto-capture · Seed quality · Build order',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Storyboard captures the skeleton but not the connective tissue. The three invisible layers were named correctly — but none of them are auto-captured yet. A fourth layer was missing: Rejection. Every decision has a shadow of dismissed alternatives. The path not taken shapes what the path taken means...',
+    links: ['Three Layers', 'Context Windows', 'Strategy'],
+    file: 'discussions/apr18-gap-analysis.md',
+  },
 ];
 
 let filesFilter = 'all';
@@ -7872,18 +7949,19 @@ function openFilesView() {
   el.innerHTML = `<div class="files-wrap">
     <div class="files-header">
       <span class="files-title">📁 Files</span>
-      <span class="files-subtitle">${FILES.length} documents · Discussions · Trails · Thinking</span>
+      <span class="files-subtitle">${FILES.length} documents · Discussions · Trails · Thinking · Rejections</span>
     </div>
     <div class="files-tabs">
       <button class="files-tab ${filesFilter==='all'?'active':''}" onclick="filesFilter='all';openFilesView()">All</button>
       <button class="files-tab ${filesFilter==='discussion'?'active':''}" onclick="filesFilter='discussion';openFilesView()">💬 Discussions</button>
       <button class="files-tab ${filesFilter==='trail'?'active':''}" onclick="filesFilter='trail';openFilesView()">🔗 Trails</button>
       <button class="files-tab ${filesFilter==='thinking'?'active':''}" onclick="filesFilter='thinking';openFilesView()">🫧 Thinking</button>
+      <button class="files-tab ${filesFilter==='rejection'?'active':''}" onclick="filesFilter='rejection';openFilesView()">✕ Rejections</button>
     </div>
     <div class="files-grid">
       ${filtered.map(f => `
         <div class="file-card" onclick="openFileReader('${f.id}')">
-          <span class="file-card-type ${f.type}">${f.type === 'discussion' ? '💬 Discussion' : f.type === 'trail' ? '🔗 Trail' : '🫧 Thinking'}</span>
+          <span class="file-card-type ${f.type}">${f.type === 'discussion' ? '💬 Discussion' : f.type === 'trail' ? '🔗 Trail' : f.type === 'rejection' ? '✕ Rejection' : '🫧 Thinking'}</span>
           <div class="file-card-title">${f.title}</div>
           <div class="file-card-preview">${f.preview}</div>
           <div class="file-card-meta">
@@ -8697,6 +8775,10 @@ function seedNewChat() {
     (b.decisions||[]).forEach(d => { if(allDecs.length<8) allDecs.push({text:d, project:b.project, ts:b.ts}); });
   });
 
+  // ── Rejections (don't re-suggest dismissed paths) ──
+  const rejections = all.filter(b => b.type === 'rejection' && (!focusName || b.project === focusName))
+    .sort((a,b) => (b.ts||0) - (a.ts||0)).slice(0, 5);
+
   // ── Open ideas (from captured + blocks) ──
   const allIdeas = [
     ...capturedIdeas.slice(0,4).map(i=>({title:i.title, project:i.project||''})),
@@ -8745,6 +8827,13 @@ ${focusDecs.length
 
 ---
 
+## ✕ Do NOT Re-Suggest (Rejected)
+${rejections.length
+  ? rejections.map(r=>`- ✕ **${r.title}** — ${r.summary ? r.summary.slice(0,100) : 'explicitly rejected'}${r.replacedBy ? ` → replaced by: ${r.replacedBy}` : ''}`).join('\n')
+  : '— no rejections recorded yet'}
+
+---
+
 ## 💡 Open Threads
 ${allIdeas.length
   ? allIdeas.map(i=>`- 💡 ${i.title}${i.project ? ` [${i.project}]` : ''}`).join('\n')
@@ -8788,6 +8877,18 @@ ${weakSkills.length ? `\n## ⚠️ Skills Needing Attention\n${weakSkills.map(s=
         icon: '✓',
         text: d.text,
         tag: d.proj !== focusName ? d.proj : null,
+      }))
+    });
+  }
+
+  if (rejections.length) {
+    modalSections.push({
+      label: '✕ Do not re-suggest',
+      rows: rejections.map(r => ({
+        icon: '✕',
+        text: `<strong>${r.title}</strong>${r.replacedBy ? ` → ${r.replacedBy}` : ''}`,
+        tag: r.summary ? r.summary.slice(0, 60) + '…' : 'rejected',
+        _rejectionStyle: true,
       }))
     });
   }

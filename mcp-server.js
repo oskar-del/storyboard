@@ -421,11 +421,17 @@ const httpServer = createServer((req, res) => {
     req.on("end", () => {
       try {
         const block = JSON.parse(body);
-        // Validate minimum fields
-        if (!block.title || !block.project || !block.type) {
-          res.writeHead(400); res.end(JSON.stringify({ error: "Missing title, project or type" }));
+        // Validate minimum fields — project is optional for auto-captures
+        if (!block.title || !block.type) {
+          res.writeHead(400); res.end(JSON.stringify({ error: "Missing title or type" }));
           return;
         }
+        // Infer project from active blocks if not provided
+        const inferredProject = block.project || (() => {
+          const activeBlocks = readJSON(BLOCKS_FILE, []);
+          const recent = activeBlocks.find(b => b.project && b._live);
+          return recent?.project || "Storyboard";
+        })();
         // Build a clean block record
         const now = new Date();
         const ts = block.ts || parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
@@ -433,18 +439,35 @@ const httpServer = createServer((req, res) => {
         const newBlock = {
           id,
           type:    block.type,
-          project: block.project,
+          project: inferredProject,
           title:   block.title.substring(0, 120),
-          summary: block.summary || block.context
-            ? `${block.summary || ""}${block.context ? "\n\n[Context from " + (block.source || "browser") + "]\n" + block.context.substring(0, 600) : ""}`.trim()
+          summary: (block.summary || block.context || block.body)
+            ? `${block.summary || ""}${block.context ? "\n\n[Context from " + (block.source || "browser") + "]\n" + block.context.substring(0, 600) : ""}${block.body && !block.summary ? block.body.substring(0, 600) : ""}`.trim()
             : undefined,
           date:     block.date || now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
           ts,
           _captured: block._captured || now.toISOString(),
           _source:  block.source || "browser-extension",
           _url:     block.url || undefined,
+          _autoCapture: block._autoCapture || undefined,
           heat:     block.type === "idea" ? "hot" : undefined,
+          replacedBy: block.replacedBy || undefined,
+          turnCount: block.turnCount || undefined,
         };
+
+        // For auto-captured discussions, save the full conversation as a file
+        if (block.type === "discussion" && block.discussionContent) {
+          const safeTitle = block.title.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 40);
+          const dateStr = now.toISOString().slice(0,10).replace(/-/g,"");
+          const fname = `auto-${dateStr}-${safeTitle}.md`;
+          const fpath = path.join(__dirname, "discussions", fname);
+          try {
+            require("fs").writeFileSync(fpath, block.discussionContent, "utf-8");
+            newBlock._discussionFile = `discussions/${fname}`;
+          } catch (e) {
+            // non-fatal
+          }
+        }
         // Remove undefined keys
         Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
 
@@ -764,7 +787,7 @@ const httpServer = createServer((req, res) => {
         for (const [proj, pBlocks] of Object.entries(byProject)) {
           lines.push(`─── ${proj} · ${pBlocks.length} block${pBlocks.length !== 1 ? "s" : ""} ───`);
           for (const b of pBlocks) {
-            const typeIcon = { session: "🧠", decision: "✓", idea: "💡", feature: "🔧", trail: "🔗", discussion: "💬", thinking: "🫧" }[b.type] || "•";
+            const typeIcon = { session: "🧠", decision: "✓", idea: "💡", feature: "🔧", trail: "🔗", discussion: "💬", thinking: "🫧", intent: "🎯", rejection: "✕", compaction: "🗜️" }[b.type] || "•";
             const dateLabel = b.ts ? new Date(b.ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "";
             const note = b.note ? ` — ${b.note.slice(0, 80)}` : "";
             lines.push(`  ${typeIcon} [${b.type || "block"}] ${b.title || "(untitled)"}${note} (${dateLabel})`);
