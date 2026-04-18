@@ -2948,7 +2948,7 @@ body.light-mode .cat-block-chip { background: var(--bg); }
           <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
           <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
         </div>
-        <span style="font-size:10px;font-weight:700;color:#6c63ff">Day 2/10</span>
+        <span id="topbarDayPill" style="font-size:10px;font-weight:700;color:#6c63ff">Day 3/10</span>
       </div>
       <button class="seed-btn" onclick="seedNewChat()">⚡ Carry forward</button>
       <button class="panel-btn" id="panelBtn" onclick="toggleRight()" title="Activity panel">
@@ -8338,9 +8338,11 @@ function renderOverviewStrip() {
   const velColor = velPct >= 0 ? '#10b981' : '#ef4444';
 
   // Sprint card — Day N of 10
-  const sprintStartDate = new Date('2026-04-17');
+  const sprintStartDate = new Date('2026-04-16');
   const now = new Date();
   const dayNum = Math.min(Math.max(1, Math.round((now - sprintStartDate) / 86400000) + 1), SPRINT_TOTAL_DAYS);
+  const topbarPill = document.getElementById('topbarDayPill');
+  if (topbarPill) topbarPill.textContent = `Day ${dayNum}/10`;
   const dayDots = Array.from({length: SPRINT_TOTAL_DAYS}, (_, i) => {
     const cls = i < dayNum - 1 ? 'done' : i === dayNum - 1 ? 'today' : '';
     return `<div class="sprint-day ${cls}"></div>`;
