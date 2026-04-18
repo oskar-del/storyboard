@@ -1683,6 +1683,28 @@ body.light-mode .seed-modal-raw { background: #f7f8fa; }
 }
 .intent-set-btn:hover { background: rgba(108,99,255,.25); }
 
+/* ── INBOX CANDIDATE ITEMS ── */
+.inbox-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; border-radius: 10px; margin-bottom: 6px;
+  border: 1.5px solid var(--border); background: var(--surface);
+  transition: all .15s; cursor: pointer;
+}
+.inbox-item:hover { border-color: rgba(108,99,255,.3); }
+.inbox-item.selected { border-color: rgba(108,99,255,.5); background: rgba(108,99,255,.06); }
+.inbox-item.dismissed { opacity: .35; }
+.inbox-item-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.inbox-item-body { flex: 1; min-width: 0; }
+.inbox-item-type { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--text-3); margin-bottom: 3px; }
+.inbox-item-text { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.inbox-item-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; line-height: 1.4; }
+.inbox-item-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.inbox-action { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; cursor: pointer; border: 1px solid; transition: all .12s; }
+.inbox-action-keep { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.25); color: #4ade80; }
+.inbox-action-keep:hover { background: rgba(34,197,94,.2); }
+.inbox-action-dismiss { background: rgba(255,255,255,.04); border-color: var(--border); color: var(--text-3); }
+.inbox-action-dismiss:hover { background: rgba(255,255,255,.08); color: var(--text-2); }
+
 /* ── REJECTION BLOCK — path not taken ── */
 .block-rejection {
   border: 1.5px solid rgba(220,38,38,.18) !important;
@@ -2825,6 +2847,11 @@ body.light-mode .cat-block-chip { background: var(--bg); }
     </div>
 
     <div class="topbar-right">
+      <!-- Review inbox badge -->
+      <button id="inboxBtn" onclick="openInbox()" title="Unprocessed captures — review and keep what matters" style="display:none;position:relative;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:#f59e0b;cursor:pointer;gap:5px;align-items:center;transition:all .15s">
+        <span>📥</span>
+        <span id="inboxCount">0</span>
+      </button>
       <!-- Search -->
       <button class="search-btn" onclick="openSearch()" title="Search blocks (⌘K)">
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -3099,6 +3126,30 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 <div class="toast" id="toast"></div>
 
 <!-- SEED MODAL -->
+<!-- ══ REVIEW INBOX ══ -->
+<div id="inboxOverlay" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;width:640px;max-width:95vw;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px">📥</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:800;color:var(--text)">Review inbox</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:1px">AI extracted these from your conversation. Keep what matters.</div>
+      </div>
+      <button onclick="closeInbox()" style="background:none;border:none;color:var(--text-3);font-size:16px;cursor:pointer;padding:4px 8px">✕</button>
+    </div>
+    <div id="inboxProcessing" style="display:none;padding:32px;text-align:center;color:var(--text-3)">
+      <div style="font-size:22px;margin-bottom:8px">🧠</div>
+      <div style="font-size:13px;font-weight:600">Processing transcript…</div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:4px">Extracting decisions, ideas, and rejections</div>
+    </div>
+    <div id="inboxItems" style="flex:1;overflow-y:auto;padding:12px 16px"></div>
+    <div id="inboxFooter" style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center">
+      <button onclick="keepAll()" style="flex:1;background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);border-radius:9px;padding:9px;color:#a5b4fc;font-size:12px;font-weight:700;cursor:pointer">✓ Keep all</button>
+      <button onclick="saveApproved()" id="inboxSaveBtn" style="flex:2;background:#6c63ff;border:none;border-radius:9px;padding:9px;color:#fff;font-size:12px;font-weight:800;cursor:pointer">Save selected →</button>
+    </div>
+  </div>
+</div>
+
 <div class="seed-modal-bg" id="seedModalBg" onclick="if(event.target===this)closeSeedModal()">
   <div class="seed-modal" id="seedModal">
     <!-- Intent header — always first -->
@@ -7641,6 +7692,16 @@ const FILES = [
     file: 'discussions/apr18-context-compaction.md',
   },
   {
+    id: 'disc-apr18-capture-everything',
+    type: 'discussion',
+    title: 'Capture Everything — The Right Architecture',
+    subtitle: 'Total capture → AI processing → Review inbox → Story assembly',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Don\'t ask users to categorize at capture time. Capture everything raw, process it afterward, let the user decide what to keep. The friction of categorization kills capture rate. The most important things — rejections, passing ideas, nuanced decisions — are exactly what you never stop to document...',
+    links: ['Architecture', 'Three Layers'],
+    file: 'discussions/apr18-capture-everything.md',
+  },
+  {
     id: 'disc-apr18-velocity',
     type: 'discussion',
     title: 'Velocity — The Real Product Argument',
@@ -9515,6 +9576,198 @@ checkFirstRun();
     }).observe(feed, { childList: true, subtree: false });
   }
 })();
+
+// ═══════════════════════════════════════════════════════════
+// REVIEW INBOX — capture everything, decide what to keep
+// ═══════════════════════════════════════════════════════════
+const SB_MCP = 'http://127.0.0.1:3847';
+let _inboxCandidates = [];
+let _inboxRawId = null;
+let _inboxDiscussionContent = null;
+let _inboxDiscussionTitle = null;
+
+// Poll for unprocessed raw captures every 30s
+async function pollInbox() {
+  try {
+    const r = await fetch(`${SB_MCP}/raw-captures`);
+    if (!r.ok) return;
+    const data = await r.json();
+    const btn = document.getElementById('inboxBtn');
+    const cnt = document.getElementById('inboxCount');
+    if (data.count > 0) {
+      btn.style.display = 'flex';
+      cnt.textContent = data.count;
+    } else {
+      btn.style.display = 'none';
+    }
+  } catch { /* MCP not running */ }
+}
+
+async function openInbox() {
+  const overlay = document.getElementById('inboxOverlay');
+  overlay.style.display = 'flex';
+  const itemsEl = document.getElementById('inboxItems');
+  const processingEl = document.getElementById('inboxProcessing');
+  const footerEl = document.getElementById('inboxFooter');
+
+  // Get unprocessed captures
+  try {
+    const r = await fetch(`${SB_MCP}/raw-captures`);
+    const data = await r.json();
+    if (!data.captures?.length) {
+      itemsEl.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-3);font-size:13px">
+        <div style="font-size:24px;margin-bottom:8px">📭</div>
+        <div style="font-weight:600;margin-bottom:4px">No unprocessed captures</div>
+        <div style="font-size:11px">Raw conversations appear here after the extension captures them.</div>
+      </div>`;
+      footerEl.style.display = 'none';
+      return;
+    }
+
+    const latest = data.captures[0];
+    _inboxRawId = latest.id;
+
+    // Show processing state
+    itemsEl.style.display = 'none';
+    processingEl.style.display = 'block';
+    footerEl.style.display = 'none';
+
+    // Process the transcript
+    const pr = await fetch(`${SB_MCP}/process-transcript`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        transcript: latest.transcript,
+        rawId: latest.id,
+        project: activeFilter !== 'All' ? activeFilter : 'Storyboard',
+      }),
+    });
+    const processed = await pr.json();
+
+    processingEl.style.display = 'none';
+    itemsEl.style.display = 'block';
+    footerEl.style.display = 'flex';
+
+    if (!processed.ok) {
+      if (processed.fallback) {
+        // No API key — show raw capture for manual review
+        itemsEl.innerHTML = `<div style="padding:16px;color:var(--text-3);font-size:12px;line-height:1.6">
+          <div style="font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:8px">⚠ ANTHROPIC_API_KEY not set</div>
+          <div>AI processing requires an API key. Add it to your MCP server environment:</div>
+          <code style="display:block;margin:8px 0;padding:8px;background:rgba(0,0,0,.3);border-radius:6px;font-size:11px">ANTHROPIC_API_KEY=sk-ant-... node mcp-server.js</code>
+          <div style="margin-top:8px;font-weight:600;color:var(--text)">Raw capture from: ${latest.title}</div>
+          <div style="margin-top:6px;white-space:pre-wrap;font-size:11px;max-height:200px;overflow-y:auto">${latest.transcript.slice(0,800)}…</div>
+        </div>`;
+        footerEl.style.display = 'none';
+        return;
+      }
+      itemsEl.innerHTML = `<div style="padding:32px;text-align:center;color:#f87171;font-size:12px">Error: ${processed.error}</div>`;
+      footerEl.style.display = 'none';
+      return;
+    }
+
+    _inboxCandidates = processed.candidates.map((c, i) => ({ ...c, _idx: i, _kept: true }));
+    _inboxDiscussionContent = processed.discussionContent;
+    _inboxDiscussionTitle = processed.extracted?.suggestedTitle || latest.title;
+    renderInboxItems();
+
+  } catch (e) {
+    itemsEl.style.display = 'block';
+    processingEl.style.display = 'none';
+    itemsEl.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:12px">
+      <div style="font-size:20px;margin-bottom:8px">🔌</div>
+      MCP server not running.<br>Start it to enable review inbox.
+    </div>`;
+    footerEl.style.display = 'none';
+  }
+}
+
+function renderInboxItems() {
+  const el = document.getElementById('inboxItems');
+  const TYPE_CONFIG = {
+    intent:    { icon: '🎯', color: '#f43f5e', label: 'Intent' },
+    decision:  { icon: '✓',  color: '#22c55e', label: 'Decision' },
+    idea:      { icon: '💡', color: '#f59e0b', label: 'Idea' },
+    rejection: { icon: '✕',  color: '#dc2626', label: 'Rejection' },
+  };
+
+  el.innerHTML = _inboxCandidates.map((c, i) => {
+    const cfg = TYPE_CONFIG[c.type] || { icon: '•', color: '#6c63ff', label: c.type };
+    const isKept = c._kept;
+    return `<div class="inbox-item ${isKept ? 'selected' : 'dismissed'}" id="inbox-item-${i}">
+      <span class="inbox-item-icon">${cfg.icon}</span>
+      <div class="inbox-item-body">
+        <div class="inbox-item-type" style="color:${cfg.color}">${cfg.label}</div>
+        <div class="inbox-item-text">${c.title}</div>
+        ${c.summary ? `<div class="inbox-item-sub">${c.summary.slice(0, 100)}</div>` : ''}
+        ${c.replacedBy ? `<div class="inbox-item-sub" style="color:#4ade80">→ ${c.replacedBy}</div>` : ''}
+      </div>
+      <div class="inbox-item-actions">
+        <button class="inbox-action inbox-action-keep" onclick="toggleCandidate(${i}, true)">Keep</button>
+        <button class="inbox-action inbox-action-dismiss" onclick="toggleCandidate(${i}, false)">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Update save button
+  const kept = _inboxCandidates.filter(c => c._kept).length;
+  document.getElementById('inboxSaveBtn').textContent = `Save ${kept} block${kept !== 1 ? 's' : ''} →`;
+}
+
+function toggleCandidate(idx, keep) {
+  _inboxCandidates[idx]._kept = keep;
+  renderInboxItems();
+}
+
+function keepAll() {
+  _inboxCandidates.forEach(c => c._kept = true);
+  renderInboxItems();
+}
+
+async function saveApproved() {
+  const approved = _inboxCandidates.filter(c => c._kept).map(c => {
+    const { _idx, _kept, ...block } = c;
+    return block;
+  });
+  if (!approved.length) return;
+
+  const btn = document.getElementById('inboxSaveBtn');
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+
+  try {
+    const r = await fetch(`${SB_MCP}/confirm-candidates`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        approved,
+        discussionContent: _inboxDiscussionContent,
+        discussionTitle: _inboxDiscussionTitle,
+      }),
+    });
+    const data = await r.json();
+    if (data.ok) {
+      btn.textContent = `✓ Saved ${data.saved} blocks`;
+      setTimeout(() => {
+        closeInbox();
+        pollInbox();
+        // Refresh the feed
+        if (typeof renderCurrentView === 'function') renderCurrentView();
+      }, 1200);
+    }
+  } catch {
+    btn.textContent = 'Error — try again';
+    btn.disabled = false;
+  }
+}
+
+function closeInbox() {
+  document.getElementById('inboxOverlay').style.display = 'none';
+  _inboxCandidates = [];
+}
+
+// Poll on load and every 30s
+setTimeout(() => { pollInbox(); setInterval(pollInbox, 30000); }, 3000);
 
 </script>
 </body>

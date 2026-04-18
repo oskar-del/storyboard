@@ -819,6 +819,228 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
+  // ── /raw-capture — store raw conversation for later processing ──────────────
+  if (req.method === "POST" && req.url === "/raw-capture") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const payload = JSON.parse(body);
+        const now = new Date();
+        const rawFile = join(STORYBOARD_DIR, "raw-captures.json");
+        const raws = readJSON(rawFile, []);
+        const entry = {
+          id: `raw-${Date.now()}`,
+          captured: now.toISOString(),
+          title: (payload.title || "").slice(0, 120),
+          source: payload.source || "browser-extension",
+          url: payload.url || "",
+          turnCount: payload.turnCount || 0,
+          transcript: payload.transcript || payload.messages || payload.body || "",
+          processed: false,
+        };
+        raws.unshift(entry);
+        // Keep last 50 raw captures
+        writeJSON(rawFile, raws.slice(0, 50));
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: true, id: entry.id }));
+        process.stderr.write(`📥 Raw capture: "${entry.title}" · ${entry.turnCount} turns\n`);
+      } catch (e) {
+        res.writeHead(400); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
+  // ── /raw-captures — list unprocessed raw captures ────────────────────────────
+  if (req.method === "GET" && req.url === "/raw-captures") {
+    const rawFile = join(STORYBOARD_DIR, "raw-captures.json");
+    const raws = readJSON(rawFile, []);
+    const unprocessed = raws.filter(r => !r.processed);
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ ok: true, count: unprocessed.length, captures: unprocessed }));
+    return;
+  }
+
+  // ── /process-transcript — extract structured blocks from raw text via Claude API ─
+  if (req.method === "POST" && req.url === "/process-transcript") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", async () => {
+      try {
+        const { transcript, rawId, project } = JSON.parse(body);
+        if (!transcript) {
+          res.writeHead(400); res.end(JSON.stringify({ error: "Missing transcript" }));
+          return;
+        }
+
+        const apiKey = process.env.ANTHROPIC_API_KEY;
+        if (!apiKey) {
+          // Return a helpful error — the API key needs to be set
+          res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({
+            ok: false,
+            error: "ANTHROPIC_API_KEY not set. Add it to your environment to enable AI processing.",
+            fallback: true,
+          }));
+          return;
+        }
+
+        const systemPrompt = `You are a Storyboard content extractor. Read the AI conversation transcript and extract structured information.
+
+Return ONLY valid JSON in this exact format:
+{
+  "decisions": ["string", ...],
+  "ideas": ["string", ...],
+  "rejections": [{"title": "string", "reason": "string", "replacedBy": "string or null"}, ...],
+  "intent": "string or null",
+  "keyMoments": ["string", ...],
+  "suggestedTitle": "string",
+  "discussionSummary": "2-3 sentence narrative summary of what happened in this conversation"
+}
+
+Rules:
+- decisions: things explicitly decided, agreed on, or locked in (max 8)
+- ideas: suggestions, possibilities, things to explore later (max 6)
+- rejections: things explicitly dismissed, rejected, or said no to (max 5)
+- intent: the overarching goal or direction expressed in the conversation (one sentence)
+- keyMoments: turning points, important insights, breakthroughs (max 4)
+- suggestedTitle: a short title for this conversation (max 60 chars)
+- discussionSummary: what happened, what was built, what was decided (2-3 sentences)`;
+
+        const truncatedTranscript = transcript.slice(0, 12000); // ~3k tokens
+
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+          },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 1024,
+            system: systemPrompt,
+            messages: [{ role: "user", content: `Extract from this conversation:\n\n${truncatedTranscript}` }],
+          }),
+        });
+
+        if (!response.ok) {
+          const err = await response.text();
+          res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({ ok: false, error: `API error: ${response.status}`, detail: err }));
+          return;
+        }
+
+        const data = await response.json();
+        const raw = data.content?.[0]?.text || "{}";
+        let extracted;
+        try {
+          // Strip markdown code fences if present
+          const clean = raw.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
+          extracted = JSON.parse(clean);
+        } catch {
+          extracted = { decisions: [], ideas: [], rejections: [], intent: null, keyMoments: [], suggestedTitle: "Session", discussionSummary: "" };
+        }
+
+        // Mark raw capture as processed
+        if (rawId) {
+          const rawFile = join(STORYBOARD_DIR, "raw-captures.json");
+          const raws = readJSON(rawFile, []);
+          const idx = raws.findIndex(r => r.id === rawId);
+          if (idx >= 0) { raws[idx].processed = true; writeJSON(rawFile, raws); }
+        }
+
+        // Build candidate blocks for review
+        const now = new Date();
+        const dateStr = now.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+        const ts = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+        const inferredProject = project || "Storyboard";
+        const candidates = [];
+
+        if (extracted.intent) {
+          candidates.push({ type: "intent", title: extracted.intent, project: inferredProject, date: dateStr, ts, _candidate: true });
+        }
+        (extracted.decisions || []).forEach(d => {
+          candidates.push({ type: "decision", title: d, project: inferredProject, date: dateStr, ts, _candidate: true });
+        });
+        (extracted.ideas || []).forEach(i => {
+          candidates.push({ type: "idea", title: i, project: inferredProject, date: dateStr, ts, heat: "hot", _candidate: true });
+        });
+        (extracted.rejections || []).forEach(r => {
+          candidates.push({ type: "rejection", title: r.title, summary: r.reason || "", replacedBy: r.replacedBy, project: inferredProject, date: dateStr, ts, _candidate: true });
+        });
+
+        // Build auto discussion doc
+        const discussionLines = [`# Discussion: ${extracted.suggestedTitle || "Session"}`, `\n${extracted.discussionSummary || ""}`, "\n---"];
+        if (extracted.decisions?.length) discussionLines.push(`\n## Decisions\n${extracted.decisions.map(d=>`- ✓ ${d}`).join("\n")}`);
+        if (extracted.ideas?.length) discussionLines.push(`\n## Ideas\n${extracted.ideas.map(i=>`- 💡 ${i}`).join("\n")}`);
+        if (extracted.rejections?.length) discussionLines.push(`\n## Rejections\n${extracted.rejections.map(r=>`- ✕ ${r.title}${r.reason ? ` — ${r.reason}` : ""}`).join("\n")}`);
+        if (extracted.keyMoments?.length) discussionLines.push(`\n## Key moments\n${extracted.keyMoments.map(m=>`- ${m}`).join("\n")}`);
+        const discussionContent = discussionLines.join("\n");
+
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({
+          ok: true,
+          extracted,
+          candidates,
+          discussionContent,
+          candidateCount: candidates.length,
+        }));
+        process.stderr.write(`🧠 Processed transcript: ${candidates.length} candidates extracted\n`);
+      } catch (e) {
+        res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
+  // ── /confirm-candidates — save approved blocks from review inbox ──────────────
+  if (req.method === "POST" && req.url === "/confirm-candidates") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const { approved, discussionContent, discussionTitle } = JSON.parse(body);
+        if (!approved?.length) {
+          res.writeHead(400); res.end(JSON.stringify({ error: "No approved blocks" }));
+          return;
+        }
+        const now = new Date();
+        const blocks = readJSON(BLOCKS_FILE, []);
+        const newBlocks = approved.map(b => ({
+          ...b,
+          id: `confirmed-${b.type}-${Date.now()}-${Math.random().toString(36).slice(2,6)}`,
+          _candidate: undefined,
+          _confirmed: now.toISOString(),
+          _live: true,
+        }));
+        blocks.unshift(...newBlocks);
+        writeJSON(BLOCKS_FILE, blocks);
+
+        // Save discussion doc if provided
+        let discussionFile = null;
+        if (discussionContent) {
+          const safeTitle = (discussionTitle || "session").replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 40);
+          const dateStr = now.toISOString().slice(0,10).replace(/-/g,"");
+          const fname = `processed-${dateStr}-${safeTitle}.md`;
+          const fpath = join(STORYBOARD_DIR, "discussions", fname);
+          try {
+            writeFileSync(fpath, discussionContent, "utf-8");
+            discussionFile = `discussions/${fname}`;
+          } catch { /* non-fatal */ }
+        }
+
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: true, saved: newBlocks.length, discussionFile }));
+        process.stderr.write(`✓ Confirmed ${newBlocks.length} blocks from review inbox\n`);
+      } catch (e) {
+        res.writeHead(400); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   // CORS preflight for /git-push, /waitlist, /audit (called from dashboard/landing)
   if (req.method === "OPTIONS") {
     res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST,GET", "Access-Control-Allow-Headers": "Content-Type" });
