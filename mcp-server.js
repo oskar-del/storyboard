@@ -23,7 +23,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync, readdirSync } from "fs";
 import { execSync } from "child_process";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -1163,6 +1163,91 @@ Rules:
         res.writeHead(400); res.end(JSON.stringify({ error: e.message }));
       }
     });
+    return;
+  }
+
+  // ── /export — full workspace backup as a single dense JSON file ──────────────
+  // Everything in one file: all blocks, discussions, raw captures, metadata.
+  // Download from dashboard "💾 Backup" button. Push to GitHub. Later → S3.
+  if (req.method === "GET" && req.url.startsWith("/export")) {
+    try {
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+
+      // All blocks
+      const blocks = existsSync(BLOCKS_FILE) ? JSON.parse(readFileSync(BLOCKS_FILE, "utf8")) : [];
+
+      // Raw captures (unprocessed inbox)
+      const rawCaptures = (() => {
+        try { return JSON.parse(readFileSync(join(STORYBOARD_DIR, "raw-captures.json"), "utf8")); } catch { return []; }
+      })();
+
+      // All discussion docs (read markdown files from discussions/)
+      const discussionsDir = join(STORYBOARD_DIR, "discussions");
+      const discussions = [];
+      try {
+        const files = readdirSync(discussionsDir).filter(f => f.endsWith(".md"));
+        for (const fname of files) {
+          try {
+            const content = readFileSync(join(discussionsDir, fname), "utf8");
+            discussions.push({ file: fname, content });
+          } catch { /* skip */ }
+        }
+      } catch { /* discussions dir missing */ }
+
+      // Waitlist
+      const waitlist = (() => {
+        try { return JSON.parse(readFileSync(join(STORYBOARD_DIR, "waitlist.json"), "utf8")); } catch { return []; }
+      })();
+
+      // Project summary — block counts per project + type breakdown
+      const projectSummary = {};
+      blocks.forEach(b => {
+        if (!projectSummary[b.project]) projectSummary[b.project] = { total: 0, byType: {} };
+        projectSummary[b.project].total++;
+        projectSummary[b.project].byType[b.type] = (projectSummary[b.project].byType[b.type] || 0) + 1;
+      });
+
+      // Decisions and rejections extracted flat — easiest to scan in a backup
+      const allDecisions = blocks.flatMap(b => (b.decisions || []).map(d => ({ text: d, project: b.project, date: b.date })));
+      const allRejections = blocks.filter(b => b.type === "rejection").map(b => ({ title: b.title, replacedBy: b.replacedBy, reason: b._reason, project: b.project }));
+      const allIntents = blocks.filter(b => b.type === "intent").map(b => ({ title: b.title, project: b.project, date: b.date }));
+
+      const exportData = {
+        _meta: {
+          exportedAt: now.toISOString(),
+          exportDate: dateStr,
+          version: "1.0",
+          description: "Storyboard full workspace backup — a visual intent layer across AI platforms",
+          blockCount: blocks.length,
+          discussionCount: discussions.length,
+          rawCaptureCount: rawCaptures.length,
+          waitlistCount: waitlist.length,
+        },
+        projectSummary,
+        intents: allIntents,
+        decisions: allDecisions,
+        rejections: allRejections,
+        blocks,
+        discussions,
+        rawCaptures,
+        waitlist,
+      };
+
+      const json = JSON.stringify(exportData, null, 2);
+      const filename = `storyboard-backup-${dateStr}.json`;
+
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Access-Control-Allow-Origin": "*",
+      });
+      res.end(json);
+      process.stderr.write(`💾 Export: ${blocks.length} blocks · ${discussions.length} discussions · ${rawCaptures.length} raw captures\n`);
+    } catch (e) {
+      res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
     return;
   }
 

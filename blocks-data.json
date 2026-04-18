@@ -1,10 +1,137 @@
 [
   {
+    "id": "sb-apr18-discussion-painkillers-vs-presents",
+    "type": "discussion",
+    "project": "Storyboard",
+    "title": "Painkillers vs Presents — the two-layer messaging framework",
+    "summary": "Painkillers get people in the door — problems they already feel. Presents make them stay and tell people — things they didn't know they were missing until they see it. PAINKILLERS: (1) The four-layer amnesia pain — 'reset pain' is too small. When a session ends you lose all four invisible layers at once: Discussion (the WHY — what was debated), Trail (the HOW — what was tried and executed), Thinking (the AI's own reasoning), Rejection (what was ruled out and why). No other tool captures any of these. The full chain lost: Thinking → Discussion → Decision → Trail → Artifact. (2) Cognitive load pain — the structure of your AI work only lives in your head, nowhere else. (3) Cross-tool pain — every AI is an island, you can't carry context between tools. (4) Safety pain — laptop gone, everything gone, nobody warned you. PRESENTS: (1) Cross-project intelligence — the 10th campaign learns from the 9 before it. (2) Skills and prompts compounding — your way of working gets sharper over time. (3) The active intent layer — your data working for you, not just stored. You can't sell a present as a painkiller. Show it, don't pitch it.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "decisions": [
+      "Painkillers = get them in the door. Presents = make them stay and tell people.",
+      "Never pitch a Present as a Painkiller — show it, don't describe it",
+      "The categories/cross-project view is a Present, not a Painkiller"
+    ],
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-discussion-four-pains",
+    "type": "discussion",
+    "project": "Storyboard",
+    "title": "The four core pain points — in order",
+    "summary": "Pain 1 (headline): The reset pain. Every session starts blank. You re-explain, re-decide, re-discover — on repeat. Pain 2 (headline): The cognitive load pain. The structure of your AI work only exists in your head. Which project holds what, what was decided, what the pipeline is — it's all a mental map you carry alone. Storyboard puts it on the screen. Pain 3 (closer): The cross-tool pain. You start in ChatGPT, you can't pick it up in Claude. Every AI tool is an island. Pain 4 (closer): The safety pain. Laptop stolen, everything gone. Nobody warned you. — Pains 1+2 are the headline that makes people stop. Pains 3+4 are the 'and by the way' that makes the decision obvious. Not every pain needs to be the hero, but all of them belong in the story.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-discussion-two-pains",
+    "type": "discussion",
+    "project": "Storyboard",
+    "title": "Two distinct pain points — reset pain vs cognitive load pain",
+    "summary": "These are two separate pains that need separate plain-English headlines. Pain 1: The reset pain — every session starts blank, you lose momentum, re-explain decisions, re-discover what you already knew. Pain 2: The cognitive load pain — serious AI users carry an invisible mental map all day. Which project holds what, what was decided where, what the pipeline looks like, where things are going. It only lives in your head. Fragile and exhausting. Storyboard externalises it — makes the thing in your head visible on a screen. These are two different product promises and two different buyer emotions.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "decisions": [
+      "Don't collapse both pains into one tagline — they're different emotions and different buyers",
+      "Pain 2 (cognitive load) may be the more universal pain — every serious AI user feels it, even if they can't name it"
+    ],
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-decision-backup-in-settings",
+    "type": "decision",
+    "project": "Storyboard",
+    "title": "Backup lives in Settings/Account — not in the topbar",
+    "summary": "Backup is infrastructure, not a daily action. The right model: account setup → backup destination configured once → runs silently forever. User never thinks about it again until they need it (stolen laptop, new machine, moving). The topbar 💾 button is a temporary scaffold only. Long-term: Settings → Account → Backup. Configure once, forget. Same mental model as Dropbox.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-decision-raw-data-file",
+    "type": "decision",
+    "project": "Storyboard",
+    "title": "Raw data file is the backup unit — one dense file, push to GitHub, later to S3",
+    "summary": "The backup strategy is not 'sync every file' — it's one dense compacted file that contains everything: all blocks, all discussions, all decisions, full /AI folder inventory. That file is what gets pushed to GitHub now. Later it's what goes to S3 or equivalent cloud storage. Simple, portable, readable by any AI tool. The raw file IS the product in a sense — if you can restore from it, nothing is ever truly lost.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-idea-full-workspace-backup",
+    "type": "idea",
+    "project": "Storyboard",
+    "title": "Full AI workspace backup — not just blocks-data, everything in /AI",
+    "summary": "Need a comprehensive backup of the entire AI workspace: every website project, every tool, every task window being tracked in Storyboard. This means: (1) a full folder inventory/manifest of /AI, (2) a human-readable summary of what each project is and where it stands, (3) all of it backed up to GitHub or cloud. If the laptop is gone tomorrow, the owner should be able to reconstruct everything from the backup — not just the Storyboard blocks but the full picture of every project in flight. This is both a safety feature and a product feature: the AI workspace snapshot.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_priority": "high",
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-idea-cloud-storage",
+    "type": "idea",
+    "project": "Storyboard",
+    "title": "Cloud storage / backup — laptop stolen, everything is gone",
+    "summary": "Right now all Storyboard data lives locally. Laptop stolen, hard drive fails, new computer — entire AI work history vanishes. Every decision, discussion, block: gone. Cloud sync fixes this. Opt-in (some users work with sensitive data and won't want it). The compacted context file / dense raw backup is the thing to save — not raw transcripts, but the distilled intent. People will pay for the safety feeling alone. Also unlocks cross-device access (phone, second machine). Natural paid tier: local free, cloud sync paid.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-idea-plain-english-tagline",
+    "type": "idea",
+    "project": "Storyboard",
+    "title": "Plain-English tagline — the technical framing loses normal users",
+    "summary": "'A visual intent layer across AI platforms' is perfect for investors and power users. Zero meaning for a normal person. The actual pain in plain English: 'Every time you open a new AI chat, it has no idea who you are or what you're building. Storyboard fixes that.' Find the version that hits the emotion first, then earns the right to explain the architecture.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-discussion-cross-tool-context",
+    "type": "discussion",
+    "project": "Storyboard",
+    "title": "Cross-tool context continuity — the real moat",
+    "summary": "Context loss isn't just a within-session problem. It's a cross-tool problem. You start in ChatGPT, you can't pick it up in Claude. You prototype in Cursor, you lose the decisions when you switch. Every AI tool is an island. Storyboard is the bridge. The value isn't the bridge itself — it's the accumulated intent. After a month, your Storyboard has distilled decisions from 50 sessions across 4 tools. That's a layer no individual AI company can replicate. It's built from how YOU actually work.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "decisions": [
+      "Cross-tool context loss is a painkiller problem — will get worse as people work across more AI tools",
+      "Storyboard is the only layer that sits above all tools and holds intent across all of them",
+      "Session bootstrap already proves the mechanism — extend capture to every AI tool, not just Claude"
+    ],
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-idea-cross-tool-core",
+    "type": "idea",
+    "project": "Storyboard",
+    "title": "Cross-tool context transfer as core product — start in one AI, continue in another",
+    "summary": "Not just a feature — potentially a second core product. Start a session in ChatGPT, Storyboard captures it. Open Claude, it seeds from Storyboard automatically. No re-explaining. No lost decisions. The AI tool becomes interchangeable; the intent layer is what persists. This is the painkiller that grows bigger as the AI tool ecosystem fragments further.",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr18-rejection-for-ai-work",
+    "type": "rejection",
+    "project": "Storyboard",
+    "title": "Visual intent layer for AI work",
+    "summary": "Rejected as core framing — 'for AI work' is generic, anyone could say it. Replaced with 'across AI platforms'.",
+    "replacedBy": "A visual intent layer across AI platforms",
+    "date": "Apr 18",
+    "ts": 20260418,
+    "_reason": "'For AI work' has no differentiation. 'Across AI platforms' signals the cross-tool vision — that Storyboard sits above Claude, ChatGPT, Cursor, Gemini, all of them. That's the actual moat.",
+    "_source": "claude.ai"
+  },
+  {
     "id": "sb-apr18-intent-storyboard",
     "type": "intent",
     "project": "Storyboard",
-    "title": "Build the visual intent layer for AI work \u2014 context windows end, intent doesn't",
-    "summary": "Storyboard is not a note-taking app. It's the persistent memory that keeps the 100x AI velocity multiplier compounding across sessions, tools, and time.",
+    "title": "Storyboard \u2014 a visual intent layer across AI platforms",
+    "summary": "Storyboard sits above all AI tools. It captures sessions, decisions, and ideas from any tool — Claude, ChatGPT, Cursor, Gemini — and seeds them back into any new session. The AI tool becomes interchangeable. The intent layer is what persists. Context windows end. Intent doesn't.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai"

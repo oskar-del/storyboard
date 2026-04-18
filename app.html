@@ -3294,10 +3294,20 @@ body.light-mode .cat-block-chip { background: var(--bg); }
       <!-- Divider -->
       <div style="border-top:1px solid var(--border);margin:0 0 16px"></div>
       <!-- Model note -->
-      <div style="font-size:11px;color:var(--text-3);line-height:1.6">
+      <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin-bottom:20px">
         <span style="font-weight:600;color:var(--text-2)">Processing model:</span> Claude Haiku (fast + cheap)<br>
         <span style="font-weight:600;color:var(--text-2)">Estimated cost:</span> ~$0.001 per session processed<br>
         <span style="font-weight:600;color:var(--text-2)">Without a key:</span> Local pattern extraction runs automatically
+      </div>
+      <!-- Divider -->
+      <div style="border-top:1px solid var(--border);margin:0 0 16px"></div>
+      <!-- Backup section -->
+      <div style="margin-bottom:4px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">Backup & export</div>
+        <div style="font-size:11px;color:var(--text-3);margin-bottom:12px;line-height:1.5">Download your full workspace as a single JSON file — all blocks, decisions, discussions, and raw captures. Store it wherever you want. Cloud sync coming later.</div>
+        <button onclick="downloadBackup();closeSettings()" style="background:rgba(86,207,170,0.1);border:1px solid rgba(86,207,170,0.3);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;color:#56cfaa;cursor:pointer;width:100%">
+          💾 Download backup now
+        </button>
       </div>
     </div>
   </div>
@@ -6766,6 +6776,44 @@ function seedSession() {
 
 // ── Session Bootstrap — auto-seed from /session-bootstrap endpoint ────────────
 let _sbSeedText = '';
+
+async function downloadBackup() {
+  const btn = document.getElementById('backupBtnLabel');
+  const orig = btn?.textContent || 'Backup';
+  if (btn) btn.textContent = 'Saving…';
+  try {
+    const res = await fetch(`${SB_MCP}/export`);
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    const blob = await res.blob();
+    const date = new Date().toISOString().slice(0, 10);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `storyboard-backup-${date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if (btn) { btn.textContent = '✓ Saved'; setTimeout(() => btn.textContent = orig, 2500); }
+  } catch (e) {
+    // Server offline — export from live blocks in memory
+    const date = new Date().toISOString().slice(0, 10);
+    const exportData = {
+      _meta: { exportedAt: new Date().toISOString(), exportDate: date, version: '1.0', source: 'dashboard-fallback', blockCount: liveBlocks.length },
+      blocks: liveBlocks,
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `storyboard-backup-${date}-local.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if (btn) { btn.textContent = '✓ Local'; setTimeout(() => btn.textContent = orig, 2500); }
+  }
+}
 
 async function openSessionBootstrap() {
   const overlay = document.getElementById('sessionBootstrapOverlay');
