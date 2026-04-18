@@ -1995,6 +1995,82 @@ body.light-mode .canvas-card-deploy.live { background: #f0fdf4; color: #059669; 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
+/* ── FILES VIEW ──────────────────────────────────────────────────────── */
+.files-wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+.files-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.files-title { font-size: 18px; font-weight: 800; color: var(--text); }
+.files-subtitle { font-size: 12px; color: var(--text-3); }
+.files-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.files-tab { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer; color: var(--text-3); border: none; background: none; transition: all .15s; }
+.files-tab.active { background: rgba(108,99,255,.1); color: #a5b4fc; }
+.files-tab:hover:not(.active) { color: var(--text-2); background: rgba(255,255,255,.04); }
+.files-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.file-card {
+  background: var(--card, rgba(255,255,255,.03)); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; cursor: pointer; transition: all .15s;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.file-card:hover { border-color: rgba(108,99,255,.3); background: rgba(108,99,255,.04); transform: translateY(-1px); }
+.file-card-type {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px;
+}
+.file-card-type.discussion { background: rgba(108,99,255,.1); color: #a5b4fc; }
+.file-card-type.trail       { background: rgba(16,185,129,.1); color: #6ee7b7; }
+.file-card-type.thinking    { background: rgba(139,92,246,.1); color: #c4b5fd; }
+.file-card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.file-card-preview { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+.file-card-meta { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.file-card-date { font-size: 10px; color: var(--text-3); }
+.file-card-project { font-size: 10px; font-weight: 700; }
+.file-card-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+.file-card-link { font-size: 10px; color: var(--text-3); background: rgba(255,255,255,.05); border-radius: 4px; padding: 2px 6px; }
+
+/* ── FILE READER OVERLAY ─────────────────────────────────────────────── */
+.file-reader-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.7); backdrop-filter: blur(6px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 20px; opacity: 0; pointer-events: none;
+  transition: opacity .2s; overflow-y: auto;
+}
+.file-reader-overlay.open { opacity: 1; pointer-events: all; }
+.file-reader {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 720px;
+  padding: 36px 40px; position: relative;
+  transform: translateY(16px); transition: transform .2s;
+}
+.file-reader-overlay.open .file-reader { transform: translateY(0); }
+.file-reader-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  color: var(--text-3); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s;
+}
+.file-reader-close:hover { background: rgba(239,68,68,.1); color: #f87171; border-color: rgba(239,68,68,.3); }
+.file-reader-type { margin-bottom: 6px; }
+.file-reader h1 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; line-height: 1.25; }
+.file-reader .file-reader-byline { font-size: 11px; color: var(--text-3); margin-bottom: 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+.file-reader-body h2 { font-size: 14px; font-weight: 800; color: var(--text); margin: 24px 0 8px; letter-spacing: -.2px; }
+.file-reader-body h3 { font-size: 13px; font-weight: 700; color: var(--text-2); margin: 18px 0 6px; }
+.file-reader-body p { font-size: 13px; color: var(--text-2); line-height: 1.7; margin-bottom: 12px; }
+.file-reader-body ul { margin: 0 0 12px 18px; }
+.file-reader-body li { font-size: 13px; color: var(--text-2); line-height: 1.65; margin-bottom: 4px; }
+.file-reader-body strong { color: var(--text); font-weight: 700; }
+.file-reader-body em { color: var(--text-2); font-style: italic; }
+.file-reader-body pre { background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin: 12px 0; overflow-x: auto; }
+.file-reader-body code { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; color: #a5b4fc; }
+.file-reader-body pre code { color: var(--text-2); }
+.file-reader-body blockquote { border-left: 3px solid rgba(108,99,255,.3); padding: 0 0 0 14px; margin: 12px 0; }
+.file-reader-body blockquote p { color: var(--text-3); font-style: italic; }
+.file-reader-body hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+.file-reader-body a { color: #a5b4fc; text-decoration: none; }
+.file-reader-body a:hover { text-decoration: underline; }
+
 /* ── AGENT PREVIEW ── */
 .agent-preview-wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
 .agent-preview-header { margin-bottom: 28px; }
@@ -2139,6 +2215,17 @@ body.light-mode .canvas-card-deploy.live { background: #f0fdf4; color: #059669; 
 <body>
 
 <!-- DETAIL OVERLAY -->
+<!-- File reader overlay -->
+<div class="file-reader-overlay" id="fileReaderOverlay" onclick="if(event.target===this)closeFileReader()">
+  <div class="file-reader" id="fileReaderPanel">
+    <button class="file-reader-close" onclick="closeFileReader()">✕</button>
+    <div class="file-reader-type" id="frType"></div>
+    <h1 id="frTitle"></h1>
+    <div class="file-reader-byline" id="frByline"></div>
+    <div class="file-reader-body" id="frBody"></div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay" onclick="maybeCloseDetail(event)">
   <div class="detail" id="detail-panel">
     <div class="detail-stripe" id="d-stripe"></div>
@@ -2447,10 +2534,10 @@ body.light-mode .canvas-card-deploy.live { background: #f0fdf4; color: #059669; 
       <span class="nav-tool-label">Skills</span>
       <span class="nav-tool-badge" id="skillsCountBadge">35</span>
     </button>
-    <button class="nav-tool-item" id="filesBtn">
+    <button class="nav-tool-item" id="filesBtn" onclick="openFilesView()">
       <span class="nav-tool-icon">📁</span>
       <span class="nav-tool-label">Files</span>
-      <span class="nav-tool-badge" id="filesCount">—</span>
+      <span class="nav-tool-badge" id="filesCount">4</span>
     </button>
     <!-- Inspect button -->
     <button class="inspect-btn" id="inspectBtn" onclick="toggleInspect()">
@@ -6625,6 +6712,155 @@ function saveSimReport(personaId, report) {
   };
   liveBlocks.push(block);
   showToast(`✓ Saved ${persona.name} report as block`);
+}
+
+// ═══════════════════════════════════
+// FILES VIEW
+// ═══════════════════════════════════
+const FILES = [
+  {
+    id: 'disc-apr18-three-layers',
+    type: 'discussion',
+    title: 'The Three Invisible Layers',
+    subtitle: 'Discussion · Trail · Thinking — and why they matter for context seeding',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Every tool saves outputs. Three richer layers are invisible and lost: the Discussion that produced the idea, the Trail that executed it, and the Thinking that reasoned through it...',
+    links: ['Context Windows', 'Categories'],
+    file: 'discussions/apr18-three-layers.md',
+  },
+  {
+    id: 'disc-apr18-context-windows',
+    type: 'discussion',
+    title: 'Context Windows — Making the Invisible Visible',
+    subtitle: 'How fault lines, fill meters, and depth markers were born',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'The context window problem was talked about in abstract but wasn\'t visible anywhere in the dashboard. The breaks were invisible. The question: can we feel when a context window runs out?',
+    links: ['Three Layers', 'Design'],
+    file: 'discussions/apr18-context-windows.md',
+  },
+  {
+    id: 'disc-apr18-categories',
+    type: 'discussion',
+    title: 'Cross-Project Intelligence — The Category Layer',
+    subtitle: 'How A/B tests in one project should inform campaigns in another',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'Two projects, both running Facebook campaigns. The learnings from one should compound into the next. The work category is the missing layer between Projects and Skills...',
+    links: ['Three Layers'],
+    file: 'discussions/apr18-categories.md',
+  },
+  {
+    id: 'trail-apr18-darkmode',
+    type: 'trail',
+    title: 'Trail: Dark Mode Fix — Full Execution Log',
+    subtitle: 'Root CSS architectural fix · IDEA_BG getters · All light bleeds resolved',
+    date: 'Apr 18', project: 'Storyboard',
+    preview: 'The root CSS had light colors as defaults and dark mode patched on top. Anything without explicit dark coverage showed through as light. The topbar was hardcoded white...',
+    links: ['Design'],
+    file: 'discussions/apr18-design-darkmode.md',
+  },
+];
+
+let filesFilter = 'all';
+
+function openFilesView() {
+  const el = document.getElementById('feed');
+  // Reset nav active states
+  document.querySelectorAll('.nav-item, .nav-proj-row, .nav-tool-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('filesBtn')?.classList.add('active');
+
+  const filtered = filesFilter === 'all' ? FILES : FILES.filter(f => f.type === filesFilter);
+
+  el.innerHTML = `<div class="files-wrap">
+    <div class="files-header">
+      <span class="files-title">📁 Files</span>
+      <span class="files-subtitle">${FILES.length} documents · Discussions · Trails · Thinking</span>
+    </div>
+    <div class="files-tabs">
+      <button class="files-tab ${filesFilter==='all'?'active':''}" onclick="filesFilter='all';openFilesView()">All</button>
+      <button class="files-tab ${filesFilter==='discussion'?'active':''}" onclick="filesFilter='discussion';openFilesView()">💬 Discussions</button>
+      <button class="files-tab ${filesFilter==='trail'?'active':''}" onclick="filesFilter='trail';openFilesView()">🔗 Trails</button>
+      <button class="files-tab ${filesFilter==='thinking'?'active':''}" onclick="filesFilter='thinking';openFilesView()">🫧 Thinking</button>
+    </div>
+    <div class="files-grid">
+      ${filtered.map(f => `
+        <div class="file-card" onclick="openFileReader('${f.id}')">
+          <span class="file-card-type ${f.type}">${f.type === 'discussion' ? '💬 Discussion' : f.type === 'trail' ? '🔗 Trail' : '🫧 Thinking'}</span>
+          <div class="file-card-title">${f.title}</div>
+          <div class="file-card-preview">${f.preview}</div>
+          <div class="file-card-meta">
+            <span class="file-card-date">${f.date}</span>
+            <span class="file-card-project" style="color:${(PROJ[f.project]||{color:'#6c63ff'}).color}">${f.project}</span>
+          </div>
+          ${f.links?.length ? `<div class="file-card-links">${f.links.map(l=>`<span class="file-card-link">→ ${l}</span>`).join('')}</div>` : ''}
+        </div>`).join('')}
+      ${filtered.length === 0 ? `<div style="color:var(--text-3);font-size:13px;padding:40px 0">No ${filesFilter} files yet.</div>` : ''}
+    </div>
+  </div>`;
+}
+
+// Simple markdown → HTML renderer for the file reader
+function mdToHtml(md) {
+  return md
+    .replace(/^# (.+)$/gm,       '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm,      '<h2>$2</h2>'.replace('$2','$1'))
+    .replace(/^### (.+)$/gm,     '<h3>$1</h3>')
+    .replace(/^---$/gm,          '<hr>')
+    .replace(/^\*\*(.+)\*\*\s*→\s*(.+)$/gm, '<p><strong>$1</strong> → $2</p>')
+    .replace(/\*\*(.+?)\*\*/g,   '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,       '<em>$1</em>')
+    .replace(/`([^`]+)`/g,       '<code>$1</code>')
+    .replace(/^```(\w*)\n([\s\S]*?)^```/gm, '<pre><code>$2</code></pre>')
+    .replace(/^- (.+)$/gm,       '<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+    .replace(/(<li>[\s\S]+?<\/li>)(?!\s*<li>)/g, '<ul>$1</ul>')
+    .replace(/^> (.+)$/gm,       '<blockquote><p>$1</p></blockquote>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    .replace(/→ See: `([^`]+)`/g, '→ See: <a href="#" onclick="return false" style="color:#a5b4fc">$1</a>')
+    .split('\n\n')
+    .map(block => {
+      if (block.match(/^<(h[1-6]|ul|ol|pre|blockquote|hr)/)) return block;
+      if (block.trim() === '') return '';
+      return `<p>${block.replace(/\n/g, ' ')}</p>`;
+    })
+    .join('\n');
+}
+
+async function openFileReader(fileId) {
+  const f = FILES.find(x => x.id === fileId);
+  if (!f) return;
+
+  const overlay = document.getElementById('fileReaderOverlay');
+  const typeEl  = document.getElementById('frType');
+  const titleEl = document.getElementById('frTitle');
+  const byline  = document.getElementById('frByline');
+  const body    = document.getElementById('frBody');
+
+  const typeLabel = f.type === 'discussion' ? '💬 Discussion' : f.type === 'trail' ? '🔗 Trail' : '🫧 Thinking';
+  const typeClass = `file-card-type ${f.type}`;
+  typeEl.innerHTML  = `<span class="${typeClass}">${typeLabel}</span>`;
+  titleEl.textContent = f.title;
+  byline.innerHTML  = `<span>${f.date}</span><span style="color:${(PROJ[f.project]||{color:'#6c63ff'}).color}">${f.project}</span><span>${f.subtitle}</span>`;
+  body.innerHTML    = '<div style="color:var(--text-3);font-size:12px;padding:20px 0">Loading...</div>';
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Fetch the markdown file and render it
+  try {
+    const resp = await fetch(f.file);
+    if (!resp.ok) throw new Error('File not found');
+    const md = await resp.text();
+    // Strip the H1 and frontmatter since we show those separately
+    const stripped = md.replace(/^# .+\n/, '').replace(/^\*\*.+\*\*.*\n/gm, (m,o) => o < 400 ? '' : m);
+    body.innerHTML = mdToHtml(stripped);
+  } catch (e) {
+    body.innerHTML = `<p style="color:var(--text-3)">Could not load file. <code>${f.file}</code></p>`;
+  }
+}
+
+function closeFileReader() {
+  document.getElementById('fileReaderOverlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function renderSkillsView(query) {
