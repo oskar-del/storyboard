@@ -5257,11 +5257,16 @@ function blockHTML(b, i, featured = false) {
     }
 
     if (b.type === 'idea') {
-      return `<div class="block" style="${style};background:${ideaBg(idx)};border-color:${ideaBd(idx)}" onclick="openDetail('${b.id}')">
+      return `<div class="block${featuredClass}" style="--block-color:#f59e0b;--block-bg:rgba(245,158,11,.06)" onclick="openDetail('${b.id}')">
+        <div class="block-stripe" style="background:#f59e0b"></div>
+        <div class="block-icon-band" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.15)">
+          <span class="block-icon-band-icon">💡</span>
+          <span class="block-icon-band-label" style="color:#f59e0b">Idea</span>
+        </div>
         <div class="block-body">
           <div class="block-meta">
             <span class="block-dot" style="background:${p.color}"></span>
-            <span class="block-type-badge" style="background:${ideaBg(idx)};color:${ideaBadgeColor()};border-color:${ideaBd(idx)}">💡 Idea</span>
+            <span class="block-proj">${b.project||''}</span>
             <span class="block-date">${displayDate}</span>
           </div>
           <div class="block-title">${b.title||'Untitled idea'}</div>
