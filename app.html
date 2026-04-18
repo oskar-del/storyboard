@@ -3203,6 +3203,9 @@ body.light-mode .cat-block-chip { background: var(--bg); }
     <!-- Overview strip — shown in All / all-time view -->
     <div id="overviewStrip" style="display:none"></div>
 
+    <!-- Stats + Latest stream — rendered outside CSS columns feed -->
+    <div id="feedHeader" style="padding:0 16px 4px"></div>
+
     <div class="feed" id="feed"></div>
   </main>
 
@@ -5750,6 +5753,12 @@ function renderFeed() {
     }
   }
 
+  // Clear feedHeader for non-grid views
+  const fhEl = document.getElementById('feedHeader');
+  if (fhEl && (activeView !== 'grid' || activeFilter !== 'All' || activePeriod !== 'all')) {
+    fhEl.innerHTML = '';
+  }
+
   // Canvas view — workspace overview, managed by renderCanvasView()
   if (activeView === 'canvas')   { renderCanvasView();   return; }
   if (activeView === 'timeline') { renderTimelineView(); return; }
@@ -5880,7 +5889,7 @@ function renderFeed() {
         </div>`;
       }
 
-      // Compact stats row
+      // Compact stats + recent stream — render into feedHeader (outside CSS columns)
       const totalDecisions = allBlocks.reduce((n,b) => n+(b.decisions?.length||0), 0);
       const totalIdeas = allBlocks.filter(b=>b.type==='idea').length + capturedIdeas.length;
       const activeProjects = new Set(allBlocks.filter(b=>b.type!=='idea').map(b=>b.project)).size;
@@ -5889,13 +5898,13 @@ function renderFeed() {
         <div class="cstat"><span class="cstat-val" style="color:#22c55e">${totalDecisions}</span><span class="cstat-label">decisions</span></div>
         <div class="cstat"><span class="cstat-val" style="color:#f59e0b">${totalIdeas}</span><span class="cstat-label">ideas</span></div>
         <div class="cstat"><span class="cstat-val" style="color:#8b5cf6">${activeProjects}</span><span class="cstat-label">projects</span></div>
-        ${toToday.length ? `<div class="cstat" style="margin-left:auto;border-right:none"><span class="cstat-val" style="color:var(--text)">${toToday.length}</span><span class="cstat-label">today</span></div>` : ''}
+        ${toToday.length ? `<div class="cstat" style="margin-left:auto;border-right:none;padding-left:0"><span class="cstat-val" style="color:var(--text)">${toToday.length}</span><span class="cstat-label">today</span></div>` : ''}
       </div>`;
-
-      // Recent stream — 8 newest blocks across all projects
       const recentStreamHtml = buildRecentStream(allBlocks);
+      const feedHeader = document.getElementById('feedHeader');
+      if (feedHeader) feedHeader.innerHTML = compactStatsHtml + recentStreamHtml;
 
-      let html = compactStatsHtml + recentStreamHtml;
+      let html = '';
       if (toToday.length) html += `<div class="time-lane">Today</div>` + toToday.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
       if (toWeek.length)  html += `<div class="time-lane">This week</div>` + toWeek.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
       if (toOlder.length) html += `<div class="time-lane">Older</div>` + toOlder.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
