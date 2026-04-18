@@ -6049,18 +6049,34 @@ function renderCanvasView() {
   // If a specific project is selected, show just that project's canvas card full-width
   // then the filtered blocks below — don't show all-projects overview
   if (activeFilter !== 'All') {
-    el.innerHTML = renderProjectHeader(activeFilter);
-    // Append filtered blocks — respect period filter
+    // Render header + layer breakdown outside CSS columns in feedHeader
+    const fh = document.getElementById('feedHeader');
+    const p = PROJ[activeFilter] || { color:'#6c63ff' };
+    const projAll = all.filter(b => b.project === activeFilter);
+    const layerCounts = [
+      { label:'Sessions',   icon:'🧠', color:'#6c63ff', n: projAll.filter(b=>b.type==='session').length },
+      { label:'Decisions',  icon:'✓',  color:'#22c55e', n: projAll.reduce((s,b)=>s+(b.decisions?.length||0),0) },
+      { label:'Ideas',      icon:'💡', color:'#f59e0b', n: projAll.filter(b=>b.type==='idea').length },
+      { label:'Discussions',icon:'💬', color:'#60a5fa', n: projAll.filter(b=>b.type==='discussion').length },
+      { label:'Rejections', icon:'✕',  color:'#f87171', n: projAll.filter(b=>b.type==='rejection').length },
+    ];
+    const layerBar = `<div style="display:flex;gap:8px;padding:12px 0 4px;flex-wrap:wrap">
+      ${layerCounts.map(l=>`
+        <div style="flex:1;min-width:80px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 12px;border-top:2px solid ${l.color}">
+          <div style="font-size:18px;font-weight:800;color:${l.color};line-height:1">${l.n}</div>
+          <div style="font-size:10px;color:var(--text-3);font-weight:600;margin-top:3px">${l.icon} ${l.label}</div>
+        </div>`).join('')}
+    </div>`;
+    if (fh) fh.innerHTML = renderProjectHeader(activeFilter) + layerBar;
+
+    // Blocks in the columns feed
     const minTs = periodTs();
-    let projBlocks = all.filter(b => b.project === activeFilter);
+    let projBlocks = projAll.filter(b => b.type !== 'intent');
     if (minTs) projBlocks = projBlocks.filter(b => (b.ts||0) >= minTs);
     projBlocks = projBlocks.sort((a,b) => (b.ts||0)-(a.ts||0));
-    if (projBlocks.length) {
-      el.innerHTML += projBlocks.map((b,i) => blockHTML(b,i)).join('');
-    } else {
-      const noMsg = minTs ? 'No blocks in this time period for this project.' : 'No blocks yet for this project.';
-      el.innerHTML += `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">${noMsg}</div>`;
-    }
+    el.innerHTML = projBlocks.length
+      ? projBlocks.map((b,i) => blockHTML(b,i)).join('')
+      : `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">${minTs ? 'No blocks in this time period.' : 'No blocks yet.'}</div>`;
     return;
   }
 
@@ -9624,7 +9640,7 @@ function openDetail(id) {
     body += `<div class="detail-section">
       <div class="detail-section-title">Ideas captured</div>
       <div class="ideas-grid">${b.ideas.map((idea,i)=>`
-        <div class="idea-card" style="background:${ideaBg(i)};border:1px solid ${ideaBd(i)};color:${ideaTextColor()}">💡 ${idea}</div>`).join('')}
+        <div class="idea-card" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--text)">💡 ${idea}</div>`).join('')}
       </div>
     </div>`;
   }
