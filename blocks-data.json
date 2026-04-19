@@ -1,5 +1,41 @@
 [
   {
+    "id": "sb-apr19-session-day6-wrap",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 6 wrap — Task windows, instruction manual, autonomous polish",
+    "summary": "Task windows strip shipped in two locations: pd-task-strip inside project drawer (Canvas view) and ph-task-strip inline in project header (Grid view, where user actually is). 32 Storyboard blocks tagged with task field across 6 workstreams: dashboard, strategy, landing-page, mcp-server, chrome-extension, context-visual. Instruction manual (MANUAL.html) written and pushed to GitHub — covers every feature with why/how, 12 block types, 6 views, data model, 13 key design decisions, Day 7+ roadmap. Settings About tab now links to MANUAL.html. ph-task-strip fix confirmed working in grid view. All pushed to oskar-del/storyboard.",
+    "date": "Apr 19",
+    "ts": 20260419090000,
+    "decisions": [
+      "Task strip needs two implementations — one for project drawer (Canvas), one for inline header (Grid). User lives in Grid view.",
+      "task field on blocks is first-class — string like 'dashboard', connects blocks to parallel workstreams",
+      "activeTask global = null (all tasks) or string (filter feed by task), cleared when setFilter('All') is called",
+      "Instruction manual is a standalone dark HTML — not in-app docs, meant for sharing with collaborators",
+      "MANUAL.html should be updated whenever new features ship — user's explicit ongoing request"
+    ],
+    "chips": ["task-windows", "task-strip", "manual", "day6-wrap", "github"],
+    "_source": "claude.ai",
+    "task": "dashboard"
+  },
+  {
+    "id": "sb-apr20-intent-day7",
+    "type": "intent",
+    "project": "Storyboard",
+    "title": "Day 7 intentions — live blocks, auto session startup, categories integration",
+    "summary": "Three big features earmarked for Day 7: (1) Live block flow — blocks appear in real time as Claude works, not just at session end. Tetris feel. Each decision logs the moment it's made. (2) Auto session startup — Claude asks 'do you want to load your latest Storyboard context?' at session start, making Storyboard the default context layer. (3) Categories ↔ Tasks — tasks are project-specific instances of cross-project categories. The larger pipe connecting how work flows through Storyboard.",
+    "date": "Apr 20",
+    "ts": 20260420,
+    "ideas": [
+      "Live blocks: /log-block endpoint on MCP server, Claude calls it mid-session as each decision happens",
+      "Auto-startup: Storyboard skill reads blocks-data.json and formats today's context in one call",
+      "Categories as meta-tasks: a 'strategy' category spans all projects, a 'Storyboard/strategy' task is the instance"
+    ],
+    "chips": ["live-blocks", "auto-startup", "categories", "day7", "roadmap"],
+    "_source": "claude.ai",
+    "task": "strategy"
+  },
+  {
     "id": "sb-apr19-session-day6-today-settings",
     "type": "session",
     "project": "Storyboard",
