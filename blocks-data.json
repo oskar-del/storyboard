@@ -1,5 +1,24 @@
 [
   {
+    "id": "sb-apr19-session-day6-today-settings",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 6 — Today digest, morning kickoff card, Settings panel rebuild",
+    "summary": "Today digest shipped: CSS for all td-* classes, staggered drop-in animation (Tetris feel) for cards, morning kickoff card with inline textarea, project selector, and instant block creation on Enter. Settings panel rebuilt from scratch: 4 tabs (Appearance, Data, AI, About). Appearance tab has dark/light toggle and compact mode switch. Data tab shows live storage stats (block count, local count, KB used, project count) plus Export JSON, Import JSON with merge, and Clear local blocks. AI tab has API key with status. About tab shows sprint day, GitHub link, landing page link. Import function merges JSON without duplicates. Compact mode CSS reduces card padding globally. Sprint bar toggle wired to settings. Block drop-in animation added as CSS keyframe, fires on Today first render and on each new kickoff block.",
+    "date": "Apr 19",
+    "ts": 20260419,
+    "decisions": [
+      "Settings panel needs 4 tabs — API key alone is not a settings panel",
+      "Data tab shows live stats (merged block count, localStorage size) — makes it feel like a real app",
+      "Import merges by ID deduplication — safe to import multiple times",
+      "Compact mode is a CSS class toggle (sb-compact) on body, persisted in localStorage",
+      "Today digest drop-in animation uses staggered delays (40ms per card) for Tetris feel",
+      "Morning kickoff card replaces bare empty state — first thought of the day becomes first block"
+    ],
+    "chips": ["settings", "today-digest", "animation", "data-management", "morning-kickoff"],
+    "_source": "claude.ai"
+  },
+  {
     "id": "sb-apr19-session-day6-design-system",
     "type": "session",
     "project": "Storyboard",
