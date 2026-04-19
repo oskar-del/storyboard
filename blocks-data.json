@@ -3,276 +3,319 @@
     "id": "sb-apr19-session-day6-today-settings",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 6 — Today digest, morning kickoff card, Settings panel rebuild",
+    "title": "Day 6 \u2014 Today digest, morning kickoff card, Settings panel rebuild",
     "summary": "Today digest shipped: CSS for all td-* classes, staggered drop-in animation (Tetris feel) for cards, morning kickoff card with inline textarea, project selector, and instant block creation on Enter. Settings panel rebuilt from scratch: 4 tabs (Appearance, Data, AI, About). Appearance tab has dark/light toggle and compact mode switch. Data tab shows live storage stats (block count, local count, KB used, project count) plus Export JSON, Import JSON with merge, and Clear local blocks. AI tab has API key with status. About tab shows sprint day, GitHub link, landing page link. Import function merges JSON without duplicates. Compact mode CSS reduces card padding globally. Sprint bar toggle wired to settings. Block drop-in animation added as CSS keyframe, fires on Today first render and on each new kickoff block.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Settings panel needs 4 tabs — API key alone is not a settings panel",
-      "Data tab shows live stats (merged block count, localStorage size) — makes it feel like a real app",
-      "Import merges by ID deduplication — safe to import multiple times",
+      "Settings panel needs 4 tabs \u2014 API key alone is not a settings panel",
+      "Data tab shows live stats (merged block count, localStorage size) \u2014 makes it feel like a real app",
+      "Import merges by ID deduplication \u2014 safe to import multiple times",
       "Compact mode is a CSS class toggle (sb-compact) on body, persisted in localStorage",
       "Today digest drop-in animation uses staggered delays (40ms per card) for Tetris feel",
-      "Morning kickoff card replaces bare empty state — first thought of the day becomes first block"
+      "Morning kickoff card replaces bare empty state \u2014 first thought of the day becomes first block"
     ],
-    "chips": ["settings", "today-digest", "animation", "data-management", "morning-kickoff"],
-    "_source": "claude.ai"
+    "chips": [
+      "settings",
+      "today-digest",
+      "animation",
+      "data-management",
+      "morning-kickoff"
+    ],
+    "_source": "claude.ai",
+    "task": "dashboard"
   },
   {
     "id": "sb-apr19-session-day6-design-system",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 6 — Design system audit, search ⌘K upgrade, block detail redesign",
-    "summary": "Full design system pass: added semantic TYPE_COLORS so block stripe/icon-band colors reflect type not project (purple=session, amber=idea, green=decision, blue=discussion, red=rejection). Fixed sprint day calculation (Apr 15 = Day 1, today = Day 5). Added discussion block type with proper blue card. Fixed --card CSS variable missing in dark mode (search overlay had no background). Upgraded search with type filter chips, arrow-key navigation, term highlighting, decision match preview, result count footer. Rewrote block detail overlay — proper section order (summary first, then decisions, ideas, related blocks), chips shown in meta row, context window fill bar for sessions, related blocks panel, Carry forward available on ALL blocks. Fixed search hover color inconsistency.",
+    "title": "Day 6 \u2014 Design system audit, search \u2318K upgrade, block detail redesign",
+    "summary": "Full design system pass: added semantic TYPE_COLORS so block stripe/icon-band colors reflect type not project (purple=session, amber=idea, green=decision, blue=discussion, red=rejection). Fixed sprint day calculation (Apr 15 = Day 1, today = Day 5). Added discussion block type with proper blue card. Fixed --card CSS variable missing in dark mode (search overlay had no background). Upgraded search with type filter chips, arrow-key navigation, term highlighting, decision match preview, result count footer. Rewrote block detail overlay \u2014 proper section order (summary first, then decisions, ideas, related blocks), chips shown in meta row, context window fill bar for sessions, related blocks panel, Carry forward available on ALL blocks. Fixed search hover color inconsistency.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Block type > project in visual hierarchy — stripe uses semantic TYPE_COLORS not project color",
+      "Block type > project in visual hierarchy \u2014 stripe uses semantic TYPE_COLORS not project color",
       "Sprint start = Apr 15 2026 (Day 1), today Apr 19 = Day 5",
-      "Discussion blocks get dedicated blue card renderer — were falling through to generic",
-      "Block detail: summary first, then decisions → ideas → related blocks",
+      "Discussion blocks get dedicated blue card renderer \u2014 were falling through to generic",
+      "Block detail: summary first, then decisions \u2192 ideas \u2192 related blocks",
       "Carry forward available on ALL blocks, not just seed=true ones",
-      "Search result hover: var(--bg) was near-black in dark mode → rgba(255,255,255,.04)"
+      "Search result hover: var(--bg) was near-black in dark mode \u2192 rgba(255,255,255,.04)"
     ],
-    "chips": ["design-system", "type-colors", "search", "detail-overlay", "sprint-day"],
-    "_source": "claude.ai"
+    "chips": [
+      "design-system",
+      "type-colors",
+      "search",
+      "detail-overlay",
+      "sprint-day"
+    ],
+    "_source": "claude.ai",
+    "task": "dashboard"
   },
   {
     "id": "sb-apr19-session-polish-day5",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 5 — Contextual overview strip, AI usage bar, search command palette",
+    "title": "Day 5 \u2014 Contextual overview strip, AI usage bar, search command palette",
     "summary": "Contextual overview strip now adapts to every section: ideas/decisions/skills/context/agents/categories/project each get dedicated stats card. Strip was locked to grid+canvas+all-time; now shows everywhere except timeline/pipeline. AI usage bar added to nav sidebar: session count this month, fill bar, delta vs last month, heavy project detection for automation drain. Strip instant-update fixed for Agents/Categories/Skills views (bypassed renderFeed). Search upgraded: type filter chips, arrow nav, term highlighting, decision match preview.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Overview strip is contextual — 7 section variants, not a static banner",
-      "Strip shows in all views (not just grid+all-time) — was a design error limiting its usefulness",
+      "Overview strip is contextual \u2014 7 section variants, not a static banner",
+      "Strip shows in all views (not just grid+all-time) \u2014 was a design error limiting its usefulness",
       "AI usage bar in nav: sessions/month meter + delta + heavy project warning + Console link",
       "Agents/Categories/Skills activate strip immediately without going through renderFeed"
     ],
-    "chips": ["overview-strip", "usage-bar", "search", "contextual-UI"],
-    "_source": "claude.ai"
+    "chips": [
+      "overview-strip",
+      "usage-bar",
+      "search",
+      "contextual-UI"
+    ],
+    "_source": "claude.ai",
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-decision-public-url",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Public URL confirmed live — oskar-del.github.io/storyboard",
-    "summary": "GitHub Pages is serving the sprint at https://oskar-del.github.io/storyboard/. Visitors get blocks-data.json loaded as static data — full sprint history visible without running the MCP server. App shows 'Demo' instead of 'server off' on GitHub Pages. Push button hidden in demo mode. This is the URL to hand out at Claude meetups.",
+    "title": "Public URL confirmed live \u2014 oskar-del.github.io/storyboard",
+    "summary": "GitHub Pages is serving the sprint at https://oskar-del.github.io/storyboard/. Visitors get blocks-data.json loaded as static data \u2014 full sprint history visible without running the MCP server. App shows 'Demo' instead of 'server off' on GitHub Pages. Push button hidden in demo mode. This is the URL to hand out at Claude meetups.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "GitHub Pages = the demo/meetup URL — always current after every push",
+      "GitHub Pages = the demo/meetup URL \u2014 always current after every push",
       "Demo mode: shows 'Demo' not 'server off', hides push button",
-      "blocks-data.json is the static data layer — loads on GitHub Pages without MCP"
+      "blocks-data.json is the static data layer \u2014 loads on GitHub Pages without MCP"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "landing-page"
   },
   {
     "id": "sb-apr18-session-dashboard-ux-fixes",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 4 — dashboard UX overhaul + compounding context visual",
-    "summary": "Overview strip now persists across project views and shows project-scoped stats (STORYBOARD · TODAY). Canvas view respects activeFilter — clicking a project lands on the project profile, all view toggles stay filtered to that project. Mobile sidebar fixed — closes immediately on tap, not after renders. Skills 'needs work' button fixed — __weak__ sentinel was leaking into search, now bypasses text match. Sprint next-up items updated. Compounding context visual built (compounding-context.html). Agent Preview marked complete. Go-to-market, outbound agent, and 'built with Storyboard' blocks captured.",
+    "title": "Day 4 \u2014 dashboard UX overhaul + compounding context visual",
+    "summary": "Overview strip now persists across project views and shows project-scoped stats (STORYBOARD \u00b7 TODAY). Canvas view respects activeFilter \u2014 clicking a project lands on the project profile, all view toggles stay filtered to that project. Mobile sidebar fixed \u2014 closes immediately on tap, not after renders. Skills 'needs work' button fixed \u2014 __weak__ sentinel was leaking into search, now bypasses text match. Sprint next-up items updated. Compounding context visual built (compounding-context.html). Agent Preview marked complete. Go-to-market, outbound agent, and 'built with Storyboard' blocks captured.",
     "date": "Apr 18",
     "ts": 20260418,
-    "chips": ["Dashboard", "UX", "Mobile", "Visual"],
+    "chips": [
+      "Dashboard",
+      "UX",
+      "Mobile",
+      "Visual"
+    ],
     "decisions": [
       "Overview strip stays visible on project views, scoped to project stats",
-      "Project click → Canvas view as default landing (not grid dump)",
-      "Mobile sidebar closes first, renders after — never blocks interaction",
+      "Project click \u2192 Canvas view as default landing (not grid dump)",
+      "Mobile sidebar closes first, renders after \u2014 never blocks interaction",
       "Compounding context visual is a marketing asset, not just a feature demo"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-discussion-built-with-storyboard",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Built with Storyboard — the velocity proof story",
-    "summary": "The most powerful part of the origin story: Storyboard was built using Storyboard. Every session compaction produced higher-quality context than any normal AI user gets. The intent blocks, rejection captures, and discussion docs seeded each new session — so the work got more effective as the product got better. The velocity increased because the memory layer increased. This is the 'eating our own dog food' proof that nobody else can claim: we didn't just build a memory tool, we experienced the compound effect of it while building it. This needs to be a core part of the origin narrative and eventual case study. Comparable to Figma designed in Figma, Linear tracked in Linear. Nobody doing context-layer tooling for AI can say this yet because nobody built the capture layer first.",
+    "title": "Built with Storyboard \u2014 the velocity proof story",
+    "summary": "The most powerful part of the origin story: Storyboard was built using Storyboard. Every session compaction produced higher-quality context than any normal AI user gets. The intent blocks, rejection captures, and discussion docs seeded each new session \u2014 so the work got more effective as the product got better. The velocity increased because the memory layer increased. This is the 'eating our own dog food' proof that nobody else can claim: we didn't just build a memory tool, we experienced the compound effect of it while building it. This needs to be a core part of the origin narrative and eventual case study. Comparable to Figma designed in Figma, Linear tracked in Linear. Nobody doing context-layer tooling for AI can say this yet because nobody built the capture layer first.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
       "The 'built with Storyboard' story is a marketing asset, not just a feature demo",
-      "Velocity increase is the measurable proof — sessions got faster as blocks accumulated",
+      "Velocity increase is the measurable proof \u2014 sessions got faster as blocks accumulated",
       "This becomes the origin story once we're ready to go public"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-discussion-gtm-launch-strategy",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Go-to-market — the full launch sequence",
-    "summary": "PHASE 1 — MEETUPS FIRST (now, no public content yet): Attend Claude/AI meetups, get 5-10 real people testing it face-to-face. No blog posts, no LinkedIn blast yet. Reason: no point sending traffic to something nobody has validated. The product needs one person to see it live and say 'I need this.' PHASE 2 — EARLY TESTERS (when Phase 1 gives signal): Small circle of testers from meetup contacts. Gather real feedback before public. PHASE 3 — PUBLIC CONTENT BLAST (when product is ready for public): (1) SEO articles — write all the pain-point articles, publish them on the storyboard landing page. Own the keyword clusters: 'AI context loss', 'AI session reset problem', 'how to preserve AI conversation context', 'cross-AI tool memory'. Target AI magazines, journals, relevant publications. (2) LinkedIn — pain-framed posts, the four invisible layers story, the painkiller framing. Designed to hit the right early adopter. (3) Substack — longer-form, narrative pieces. (4) Paid ads — boost the best-performing organic content, not cold campaigns. Amplify what already resonates. (5) Outbound agent — automated agent that monitors AI meetup pages, Discord groups, relevant communities, sends targeted outreach to people actively discussing the exact pain we solve. NOT DOING ANY OF THIS until post-meetup validation. The right sequence: face-to-face → testers → signal → blast.",
+    "title": "Go-to-market \u2014 the full launch sequence",
+    "summary": "PHASE 1 \u2014 MEETUPS FIRST (now, no public content yet): Attend Claude/AI meetups, get 5-10 real people testing it face-to-face. No blog posts, no LinkedIn blast yet. Reason: no point sending traffic to something nobody has validated. The product needs one person to see it live and say 'I need this.' PHASE 2 \u2014 EARLY TESTERS (when Phase 1 gives signal): Small circle of testers from meetup contacts. Gather real feedback before public. PHASE 3 \u2014 PUBLIC CONTENT BLAST (when product is ready for public): (1) SEO articles \u2014 write all the pain-point articles, publish them on the storyboard landing page. Own the keyword clusters: 'AI context loss', 'AI session reset problem', 'how to preserve AI conversation context', 'cross-AI tool memory'. Target AI magazines, journals, relevant publications. (2) LinkedIn \u2014 pain-framed posts, the four invisible layers story, the painkiller framing. Designed to hit the right early adopter. (3) Substack \u2014 longer-form, narrative pieces. (4) Paid ads \u2014 boost the best-performing organic content, not cold campaigns. Amplify what already resonates. (5) Outbound agent \u2014 automated agent that monitors AI meetup pages, Discord groups, relevant communities, sends targeted outreach to people actively discussing the exact pain we solve. NOT DOING ANY OF THIS until post-meetup validation. The right sequence: face-to-face \u2192 testers \u2192 signal \u2192 blast.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "No public marketing until post-meetup validation — wrong sequence wastes reach",
+      "No public marketing until post-meetup validation \u2014 wrong sequence wastes reach",
       "SEO articles go on the storyboard landing page itself, not a separate blog",
       "Paid ads = amplify organic signal, not cold campaigns",
       "Outbound agent monitors meetups/Discord for people describing the exact pain"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "landing-page"
   },
   {
     "id": "sb-apr18-idea-outbound-agent",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Outbound agent — monitors meetups, Discord, AI communities for pain signal",
-    "summary": "An automated agent that continuously checks: AI meetup pages (Meetup.com, Eventbrite), Discord servers (Anthropic, OpenAI, AI builders), Reddit (r/ClaudeAI, r/ChatGPT, r/LocalLLaMA), relevant Slack groups. When it finds someone describing context loss, AI reset frustration, cross-tool friction — it surfaces them and drafts targeted outreach. Not spam, precision targeting. People already describing the pain we solve.",
+    "title": "Outbound agent \u2014 monitors meetups, Discord, AI communities for pain signal",
+    "summary": "An automated agent that continuously checks: AI meetup pages (Meetup.com, Eventbrite), Discord servers (Anthropic, OpenAI, AI builders), Reddit (r/ClaudeAI, r/ChatGPT, r/LocalLLaMA), relevant Slack groups. When it finds someone describing context loss, AI reset frustration, cross-tool friction \u2014 it surfaces them and drafts targeted outreach. Not spam, precision targeting. People already describing the pain we solve.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-decision-no-content-yet",
     "type": "decision",
     "project": "Storyboard",
     "title": "No public content until post-meetup validation",
-    "summary": "Decision: hold all SEO articles, LinkedIn posts, Substack, paid ads until after first meetup validation cycle. Rationale: sending traffic before real user signal is wasteful and potentially damaging. The sequence is meetups → testers → signal → blast. Content strategy is fully planned and ready to execute, just not yet.",
+    "summary": "Decision: hold all SEO articles, LinkedIn posts, Substack, paid ads until after first meetup validation cycle. Rationale: sending traffic before real user signal is wasteful and potentially damaging. The sequence is meetups \u2192 testers \u2192 signal \u2192 blast. Content strategy is fully planned and ready to execute, just not yet.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-discussion-painkillers-vs-presents",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Painkillers vs Presents — the two-layer messaging framework",
-    "summary": "Painkillers get people in the door — problems they already feel. Presents make them stay and tell people — things they didn't know they were missing until they see it. PAINKILLERS: (1) The four-layer amnesia pain — 'reset pain' is too small. When a session ends you lose all four invisible layers at once: Discussion (the WHY — what was debated), Trail (the HOW — what was tried and executed), Thinking (the AI's own reasoning), Rejection (what was ruled out and why). No other tool captures any of these. The full chain lost: Thinking → Discussion → Decision → Trail → Artifact. (2) Cognitive load pain — the structure of your AI work only lives in your head, nowhere else. (3) Cross-tool pain — every AI is an island, you can't carry context between tools. (4) Safety pain — laptop gone, everything gone, nobody warned you. PRESENTS: (1) Cross-project intelligence — the 10th campaign learns from the 9 before it. (2) Skills and prompts compounding — your way of working gets sharper over time. (3) The active intent layer — your data working for you, not just stored. You can't sell a present as a painkiller. Show it, don't pitch it.",
+    "title": "Painkillers vs Presents \u2014 the two-layer messaging framework",
+    "summary": "Painkillers get people in the door \u2014 problems they already feel. Presents make them stay and tell people \u2014 things they didn't know they were missing until they see it. PAINKILLERS: (1) The four-layer amnesia pain \u2014 'reset pain' is too small. When a session ends you lose all four invisible layers at once: Discussion (the WHY \u2014 what was debated), Trail (the HOW \u2014 what was tried and executed), Thinking (the AI's own reasoning), Rejection (what was ruled out and why). No other tool captures any of these. The full chain lost: Thinking \u2192 Discussion \u2192 Decision \u2192 Trail \u2192 Artifact. (2) Cognitive load pain \u2014 the structure of your AI work only lives in your head, nowhere else. (3) Cross-tool pain \u2014 every AI is an island, you can't carry context between tools. (4) Safety pain \u2014 laptop gone, everything gone, nobody warned you. PRESENTS: (1) Cross-project intelligence \u2014 the 10th campaign learns from the 9 before it. (2) Skills and prompts compounding \u2014 your way of working gets sharper over time. (3) The active intent layer \u2014 your data working for you, not just stored. You can't sell a present as a painkiller. Show it, don't pitch it.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
       "Painkillers = get them in the door. Presents = make them stay and tell people.",
-      "Never pitch a Present as a Painkiller — show it, don't describe it",
+      "Never pitch a Present as a Painkiller \u2014 show it, don't describe it",
       "The categories/cross-project view is a Present, not a Painkiller"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-discussion-four-pains",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "The four core pain points — in order",
-    "summary": "Pain 1 (headline): The reset pain. Every session starts blank. You re-explain, re-decide, re-discover — on repeat. Pain 2 (headline): The cognitive load pain. The structure of your AI work only exists in your head. Which project holds what, what was decided, what the pipeline is — it's all a mental map you carry alone. Storyboard puts it on the screen. Pain 3 (closer): The cross-tool pain. You start in ChatGPT, you can't pick it up in Claude. Every AI tool is an island. Pain 4 (closer): The safety pain. Laptop stolen, everything gone. Nobody warned you. — Pains 1+2 are the headline that makes people stop. Pains 3+4 are the 'and by the way' that makes the decision obvious. Not every pain needs to be the hero, but all of them belong in the story.",
+    "title": "The four core pain points \u2014 in order",
+    "summary": "Pain 1 (headline): The reset pain. Every session starts blank. You re-explain, re-decide, re-discover \u2014 on repeat. Pain 2 (headline): The cognitive load pain. The structure of your AI work only exists in your head. Which project holds what, what was decided, what the pipeline is \u2014 it's all a mental map you carry alone. Storyboard puts it on the screen. Pain 3 (closer): The cross-tool pain. You start in ChatGPT, you can't pick it up in Claude. Every AI tool is an island. Pain 4 (closer): The safety pain. Laptop stolen, everything gone. Nobody warned you. \u2014 Pains 1+2 are the headline that makes people stop. Pains 3+4 are the 'and by the way' that makes the decision obvious. Not every pain needs to be the hero, but all of them belong in the story.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-discussion-two-pains",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Two distinct pain points — reset pain vs cognitive load pain",
-    "summary": "These are two separate pains that need separate plain-English headlines. Pain 1: The reset pain — every session starts blank, you lose momentum, re-explain decisions, re-discover what you already knew. Pain 2: The cognitive load pain — serious AI users carry an invisible mental map all day. Which project holds what, what was decided where, what the pipeline looks like, where things are going. It only lives in your head. Fragile and exhausting. Storyboard externalises it — makes the thing in your head visible on a screen. These are two different product promises and two different buyer emotions.",
+    "title": "Two distinct pain points \u2014 reset pain vs cognitive load pain",
+    "summary": "These are two separate pains that need separate plain-English headlines. Pain 1: The reset pain \u2014 every session starts blank, you lose momentum, re-explain decisions, re-discover what you already knew. Pain 2: The cognitive load pain \u2014 serious AI users carry an invisible mental map all day. Which project holds what, what was decided where, what the pipeline looks like, where things are going. It only lives in your head. Fragile and exhausting. Storyboard externalises it \u2014 makes the thing in your head visible on a screen. These are two different product promises and two different buyer emotions.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "Don't collapse both pains into one tagline — they're different emotions and different buyers",
-      "Pain 2 (cognitive load) may be the more universal pain — every serious AI user feels it, even if they can't name it"
+      "Don't collapse both pains into one tagline \u2014 they're different emotions and different buyers",
+      "Pain 2 (cognitive load) may be the more universal pain \u2014 every serious AI user feels it, even if they can't name it"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-decision-backup-in-settings",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Backup lives in Settings/Account — not in the topbar",
-    "summary": "Backup is infrastructure, not a daily action. The right model: account setup → backup destination configured once → runs silently forever. User never thinks about it again until they need it (stolen laptop, new machine, moving). The topbar 💾 button is a temporary scaffold only. Long-term: Settings → Account → Backup. Configure once, forget. Same mental model as Dropbox.",
+    "title": "Backup lives in Settings/Account \u2014 not in the topbar",
+    "summary": "Backup is infrastructure, not a daily action. The right model: account setup \u2192 backup destination configured once \u2192 runs silently forever. User never thinks about it again until they need it (stolen laptop, new machine, moving). The topbar \ud83d\udcbe button is a temporary scaffold only. Long-term: Settings \u2192 Account \u2192 Backup. Configure once, forget. Same mental model as Dropbox.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-decision-raw-data-file",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Raw data file is the backup unit — one dense file, push to GitHub, later to S3",
-    "summary": "The backup strategy is not 'sync every file' — it's one dense compacted file that contains everything: all blocks, all discussions, all decisions, full /AI folder inventory. That file is what gets pushed to GitHub now. Later it's what goes to S3 or equivalent cloud storage. Simple, portable, readable by any AI tool. The raw file IS the product in a sense — if you can restore from it, nothing is ever truly lost.",
+    "title": "Raw data file is the backup unit \u2014 one dense file, push to GitHub, later to S3",
+    "summary": "The backup strategy is not 'sync every file' \u2014 it's one dense compacted file that contains everything: all blocks, all discussions, all decisions, full /AI folder inventory. That file is what gets pushed to GitHub now. Later it's what goes to S3 or equivalent cloud storage. Simple, portable, readable by any AI tool. The raw file IS the product in a sense \u2014 if you can restore from it, nothing is ever truly lost.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-idea-full-workspace-backup",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Full AI workspace backup — not just blocks-data, everything in /AI",
-    "summary": "Need a comprehensive backup of the entire AI workspace: every website project, every tool, every task window being tracked in Storyboard. This means: (1) a full folder inventory/manifest of /AI, (2) a human-readable summary of what each project is and where it stands, (3) all of it backed up to GitHub or cloud. If the laptop is gone tomorrow, the owner should be able to reconstruct everything from the backup — not just the Storyboard blocks but the full picture of every project in flight. This is both a safety feature and a product feature: the AI workspace snapshot.",
+    "title": "Full AI workspace backup \u2014 not just blocks-data, everything in /AI",
+    "summary": "Need a comprehensive backup of the entire AI workspace: every website project, every tool, every task window being tracked in Storyboard. This means: (1) a full folder inventory/manifest of /AI, (2) a human-readable summary of what each project is and where it stands, (3) all of it backed up to GitHub or cloud. If the laptop is gone tomorrow, the owner should be able to reconstruct everything from the backup \u2014 not just the Storyboard blocks but the full picture of every project in flight. This is both a safety feature and a product feature: the AI workspace snapshot.",
     "date": "Apr 18",
     "ts": 20260418,
     "_priority": "high",
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-idea-cloud-storage",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Cloud storage / backup — laptop stolen, everything is gone",
-    "summary": "Right now all Storyboard data lives locally. Laptop stolen, hard drive fails, new computer — entire AI work history vanishes. Every decision, discussion, block: gone. Cloud sync fixes this. Opt-in (some users work with sensitive data and won't want it). The compacted context file / dense raw backup is the thing to save — not raw transcripts, but the distilled intent. People will pay for the safety feeling alone. Also unlocks cross-device access (phone, second machine). Natural paid tier: local free, cloud sync paid.",
+    "title": "Cloud storage / backup \u2014 laptop stolen, everything is gone",
+    "summary": "Right now all Storyboard data lives locally. Laptop stolen, hard drive fails, new computer \u2014 entire AI work history vanishes. Every decision, discussion, block: gone. Cloud sync fixes this. Opt-in (some users work with sensitive data and won't want it). The compacted context file / dense raw backup is the thing to save \u2014 not raw transcripts, but the distilled intent. People will pay for the safety feeling alone. Also unlocks cross-device access (phone, second machine). Natural paid tier: local free, cloud sync paid.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-idea-plain-english-tagline",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Plain-English tagline — the technical framing loses normal users",
+    "title": "Plain-English tagline \u2014 the technical framing loses normal users",
     "summary": "'A visual intent layer across AI platforms' is perfect for investors and power users. Zero meaning for a normal person. The actual pain in plain English: 'Every time you open a new AI chat, it has no idea who you are or what you're building. Storyboard fixes that.' Find the version that hits the emotion first, then earns the right to explain the architecture.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-discussion-cross-tool-context",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Cross-tool context continuity — the real moat",
-    "summary": "Context loss isn't just a within-session problem. It's a cross-tool problem. You start in ChatGPT, you can't pick it up in Claude. You prototype in Cursor, you lose the decisions when you switch. Every AI tool is an island. Storyboard is the bridge. The value isn't the bridge itself — it's the accumulated intent. After a month, your Storyboard has distilled decisions from 50 sessions across 4 tools. That's a layer no individual AI company can replicate. It's built from how YOU actually work.",
+    "title": "Cross-tool context continuity \u2014 the real moat",
+    "summary": "Context loss isn't just a within-session problem. It's a cross-tool problem. You start in ChatGPT, you can't pick it up in Claude. You prototype in Cursor, you lose the decisions when you switch. Every AI tool is an island. Storyboard is the bridge. The value isn't the bridge itself \u2014 it's the accumulated intent. After a month, your Storyboard has distilled decisions from 50 sessions across 4 tools. That's a layer no individual AI company can replicate. It's built from how YOU actually work.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "Cross-tool context loss is a painkiller problem — will get worse as people work across more AI tools",
+      "Cross-tool context loss is a painkiller problem \u2014 will get worse as people work across more AI tools",
       "Storyboard is the only layer that sits above all tools and holds intent across all of them",
-      "Session bootstrap already proves the mechanism — extend capture to every AI tool, not just Claude"
+      "Session bootstrap already proves the mechanism \u2014 extend capture to every AI tool, not just Claude"
     ],
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "mcp-server"
   },
   {
     "id": "sb-apr18-idea-cross-tool-core",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Cross-tool context transfer as core product — start in one AI, continue in another",
-    "summary": "Not just a feature — potentially a second core product. Start a session in ChatGPT, Storyboard captures it. Open Claude, it seeds from Storyboard automatically. No re-explaining. No lost decisions. The AI tool becomes interchangeable; the intent layer is what persists. This is the painkiller that grows bigger as the AI tool ecosystem fragments further.",
+    "title": "Cross-tool context transfer as core product \u2014 start in one AI, continue in another",
+    "summary": "Not just a feature \u2014 potentially a second core product. Start a session in ChatGPT, Storyboard captures it. Open Claude, it seeds from Storyboard automatically. No re-explaining. No lost decisions. The AI tool becomes interchangeable; the intent layer is what persists. This is the painkiller that grows bigger as the AI tool ecosystem fragments further.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-rejection-for-ai-work",
     "type": "rejection",
     "project": "Storyboard",
     "title": "Visual intent layer for AI work",
-    "summary": "Rejected as core framing — 'for AI work' is generic, anyone could say it. Replaced with 'across AI platforms'.",
+    "summary": "Rejected as core framing \u2014 'for AI work' is generic, anyone could say it. Replaced with 'across AI platforms'.",
     "replacedBy": "A visual intent layer across AI platforms",
     "date": "Apr 18",
     "ts": 20260418,
-    "_reason": "'For AI work' has no differentiation. 'Across AI platforms' signals the cross-tool vision — that Storyboard sits above Claude, ChatGPT, Cursor, Gemini, all of them. That's the actual moat.",
-    "_source": "claude.ai"
+    "_reason": "'For AI work' has no differentiation. 'Across AI platforms' signals the cross-tool vision \u2014 that Storyboard sits above Claude, ChatGPT, Cursor, Gemini, all of them. That's the actual moat.",
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-intent-storyboard",
     "type": "intent",
     "project": "Storyboard",
     "title": "Storyboard \u2014 a visual intent layer across AI platforms",
-    "summary": "Storyboard sits above all AI tools. It captures sessions, decisions, and ideas from any tool — Claude, ChatGPT, Cursor, Gemini — and seeds them back into any new session. The AI tool becomes interchangeable. The intent layer is what persists. Context windows end. Intent doesn't.",
+    "summary": "Storyboard sits above all AI tools. It captures sessions, decisions, and ideas from any tool \u2014 Claude, ChatGPT, Cursor, Gemini \u2014 and seeds them back into any new session. The AI tool becomes interchangeable. The intent layer is what persists. Context windows end. Intent doesn't.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-compaction-day4",
@@ -283,7 +326,8 @@
     "date": "Apr 18",
     "ts": 20260418,
     "_what_was_lost": "Early rejected names, first draft velocity framing, extension adapter specifics",
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "context-visual"
   },
   {
     "id": "sb-apr18-rejection-morning-brief",
@@ -295,7 +339,8 @@
     "date": "Apr 18",
     "ts": 20260418,
     "_reason": "Doesn't communicate the action. 'Morning' is time-specific. Carry forward is what you actually do.",
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-rejection-memory-layer",
@@ -307,7 +352,8 @@
     "date": "Apr 18",
     "ts": 20260418,
     "_reason": "Memory is backward-looking. Intent is forward-looking. The product is about what you're building next, not what you built.",
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-rejection-seed-label",
@@ -319,7 +365,8 @@
     "date": "Apr 18",
     "ts": 20260418,
     "_reason": "'Seed' is a developer term. Nobody outside engineering knows what seeding a chat means.",
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-decision-capture-everything",
@@ -329,7 +376,8 @@
     "summary": "Don't ask users to categorize at capture time. Capture friction kills capture rate. AI extracts structure afterward. 'Decide what to keep' is a lighter cognitive task than 'decide what to capture'.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-decision-byok",
@@ -339,7 +387,8 @@
     "summary": "Phase 1 power users paste their own Anthropic key. Phase 2 is a hosted subscription. Local pattern extraction is the floor \u2014 always works with zero config.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-idea-claude-design",
@@ -349,7 +398,8 @@
     "summary": "Anthropic launched Claude Design (Apr 17). Natural complement: Claude Design makes outputs visual, Storyboard makes the process visible. 'Send to Claude Design' button on Discussion docs.",
     "date": "Apr 18",
     "ts": 20260418,
-    "_source": "claude.ai"
+    "_source": "claude.ai",
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-session-day4",
@@ -362,7 +412,8 @@
     "title": "Day 4 session \u2014 total capture pipeline",
     "summary": "Built review inbox, /raw-capture, /process-transcript, /confirm-candidates, local pattern extraction, Settings overlay, seed quality rating, since-you-were-away banner, Claude Design export.",
     "contextBlocks": 41,
-    "contextFill": 78
+    "contextFill": 78,
+    "task": "dashboard"
   },
   {
     "id": "decision-integration-architecture",
@@ -377,7 +428,8 @@
       "future-proof"
     ],
     "ts": 20260417,
-    "confidence": "high"
+    "confidence": "high",
+    "task": "chrome-extension"
   },
   {
     "id": "sb-day1-sprint-session",
@@ -411,7 +463,8 @@
       "Screen recording showing full loop: capture \u2192 dashboard \u2192 Seed \u2192 paste",
       "Demo data that tells a real story across multiple months and projects"
     ],
-    "seed": "Storyboard \u2014 Day 1 Complete\n\nShipped today: landing page (context window hero), skills with category intents, Context Hub (per-project seed + staleness), onboarding (3 paths), browser extension v0.1, MCP /capture-web + /ping endpoints, pitch deck, README.\n\nMCP clients: Claude Desktop, Cursor, Windsurf, Copilot\nExtension coverage: Claude, ChatGPT, Gemini, Perplexity, Replit\n\nNext: block detail overlay, timeline view, Chrome Web Store"
+    "seed": "Storyboard \u2014 Day 1 Complete\n\nShipped today: landing page (context window hero), skills with category intents, Context Hub (per-project seed + staleness), onboarding (3 paths), browser extension v0.1, MCP /capture-web + /ping endpoints, pitch deck, README.\n\nMCP clients: Claude Desktop, Cursor, Windsurf, Copilot\nExtension coverage: Claude, ChatGPT, Gemini, Perplexity, Replit\n\nNext: block detail overlay, timeline view, Chrome Web Store",
+    "task": "chrome-extension"
   },
   {
     "id": "sb-v5-session",
@@ -438,7 +491,8 @@
     "ideas": [
       "Mobile PWA install flow \u2014 'Add to Home Screen' prompt on first visit",
       "Export whole storyboard as markdown \u2014 for handoff or backup"
-    ]
+    ],
+    "task": "dashboard"
   },
   {
     "id": "sb-v3-session",

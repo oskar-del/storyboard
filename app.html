@@ -2834,6 +2834,43 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 }
 .audit-save-all-btn:hover { opacity: .85; }
 
+/* ── Task windows strip (project drawer) ─────────────────────── */
+.pd-task-strip { padding: 0 22px 4px; }
+.pd-task-strip-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-3); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+.pd-task-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px;
+}
+.pd-task-card {
+  background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px;
+  padding: 10px 11px; cursor: pointer; transition: all .15s; position: relative;
+}
+.pd-task-card:hover {
+  border-color: var(--block-color, var(--accent)); background: rgba(108,99,255,.05);
+  transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.2);
+}
+.pd-task-card-top {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+}
+.pd-task-icon { font-size: 16px; }
+.pd-task-auto-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #10b981;
+  box-shadow: 0 0 5px rgba(16,185,129,.6); animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: .4; }
+}
+.pd-task-name {
+  font-size: 11px; font-weight: 700; color: var(--text);
+  text-transform: capitalize; margin-bottom: 3px; line-height: 1.3;
+}
+.pd-task-meta { font-size: 10px; color: var(--text-3); margin-bottom: 2px; }
+.pd-task-date { font-size: 10px; color: var(--text-3); opacity: .7; }
+body.light-mode .pd-task-card { background: #f7f8fa; }
+body.light-mode .pd-task-card:hover { background: rgba(108,99,255,.05); }
+
 /* ── Compact mode ────────────────────────────────────────────── */
 body.sb-compact .block { padding: 8px 10px; }
 body.sb-compact .block-title { font-size: 12px; }
@@ -5223,6 +5260,7 @@ let skillsData = {};  // keyed by skill name → { score, grade, dimensions, wor
 let activeFilter = 'All';
 let activePeriod = 'all';
 let activeView = 'grid';
+let activeTask = null; // task window filter — null = all tasks
 let navCollapsed = false;
 let rightOpen = false;
 let isMobile = () => window.innerWidth <= 768;
@@ -5462,6 +5500,7 @@ function closeAll() {
 // ═══════════════════════════════════
 function setFilter(f) {
   activeFilter = f;
+  if (f === 'All') activeTask = null; // clear task filter when going back to All
   // Update both .nav-item and .nav-proj-row active states
   document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => {
     el.classList.toggle('active', el.id === `nav-${f.replace(/ /g,'-')}`);
@@ -5472,6 +5511,20 @@ function setFilter(f) {
     : `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
        <span class="sep">/</span>
        <span style="color:var(--text)">${f}</span>`;
+  renderFeed();
+}
+
+function setTaskFilter(task) {
+  activeTask = task || null;
+  closeProjDrawer();
+  const bc = document.getElementById('breadcrumb');
+  if (bc && activeFilter !== 'All' && task) {
+    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+      <span class="sep">/</span>
+      <span onclick="setFilter('${activeFilter}');activeTask=null;renderFeed();" style="color:var(--text-3);cursor:pointer">${activeFilter}</span>
+      <span class="sep">/</span>
+      <span style="color:var(--text)">${task.replace(/-/g,' ')}</span>`;
+  }
   renderFeed();
 }
 
@@ -6321,7 +6374,9 @@ function renderFeed() {
   }
   const minTs = periodTs();
   const allBlocks = [...baseBlocks, ...capturedIdeas].filter(b => (b.ts||0) >= minTs || minTs === 0);
-  const raw = activeFilter === 'All' ? allBlocks : allBlocks.filter(b => b.project === activeFilter);
+  let raw = activeFilter === 'All' ? allBlocks : allBlocks.filter(b => b.project === activeFilter);
+  // Apply task filter if set
+  if (activeTask) raw = raw.filter(b => b.task === activeTask);
 
   // ── Today Digest — special layout when period = today ────────────────────
   if (activePeriod === 'today') {
@@ -6980,6 +7035,52 @@ function openProjectDetail(name) {
   });
   const autos    = AUTOMATIONS.filter(a => a.project === name && a.enabled);
 
+  // ── Task windows strip ──────────────────────────────────────
+  // Group blocks by task field — only blocks with a task label
+  const taskMap = {};
+  projBlocks.forEach(b => {
+    if (!b.task) return;
+    if (!taskMap[b.task]) taskMap[b.task] = { blocks:[], lastTs:0, autoCount:0 };
+    taskMap[b.task].blocks.push(b);
+    if ((b.ts||0) > taskMap[b.task].lastTs) taskMap[b.task].lastTs = b.ts||0;
+  });
+  // Count automations per task
+  autos.forEach(a => {
+    if (a.task && taskMap[a.task]) taskMap[a.task].autoCount++;
+  });
+  const taskEntries = Object.entries(taskMap).sort((a,b) => b[1].lastTs - a[1].lastTs);
+
+  const TASK_ICONS = {
+    'dashboard':'🖥', 'landing-page':'🌐', 'mcp-server':'⚡', 'chrome-extension':'🔌',
+    'mobile-pwa':'📱', 'context-visual':'📊', 'strategy':'🧠', 'crm-sales':'💼',
+    'website':'🌐', 'seo-content':'🔍', 'social-media':'📣', 'email-campaigns':'📧',
+    'airtable':'📋', 'data-pipeline':'🔄', 'automation':'⚙', 'design':'🎨',
+  };
+
+  const taskStripHTML = taskEntries.length ? `
+    <div class="pd-task-strip">
+      <div class="pd-task-strip-label">Task windows <span style="color:var(--text-3);font-weight:500">${taskEntries.length} active</span></div>
+      <div class="pd-task-cards">
+        ${taskEntries.map(([taskName, info]) => {
+          const icon = TASK_ICONS[taskName] || '◈';
+          const lastBlock = info.blocks.sort((a,b)=>(b.ts||0)-(a.ts||0))[0];
+          const lastDate = lastBlock ? blockTimestamp(lastBlock) : '';
+          const hasAuto = info.autoCount > 0;
+          const sessionCount = info.blocks.filter(b=>b.type==='session').length;
+          return `<div class="pd-task-card" onclick="setFilter('${name}');setTaskFilter('${taskName}')">
+            <div class="pd-task-card-top">
+              <span class="pd-task-icon">${icon}</span>
+              ${hasAuto ? `<span class="pd-task-auto-dot" title="Automation running"></span>` : ''}
+            </div>
+            <div class="pd-task-name">${taskName.replace(/-/g,' ')}</div>
+            <div class="pd-task-meta">${info.blocks.length} block${info.blocks.length!==1?'s':''}${sessionCount?' · '+sessionCount+' session'+(sessionCount!==1?'s':''):''}</div>
+            ${lastDate ? `<div class="pd-task-date">${lastDate}</div>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="pd-divider"></div>` : '';
+
   const allDecisions = [];
   blocks.forEach(b => (b.decisions||[]).forEach(d => allDecisions.push({ text:d, block:b })));
 
@@ -7072,6 +7173,8 @@ function openProjectDetail(name) {
     </div>
 
     <div class="pd-divider"></div>
+
+    ${taskStripHTML}
 
     <div class="pd-section-title">Recent work</div>
     ${latestChips}
@@ -10914,6 +11017,13 @@ function renderProjectHeader(projName) {
       <div class="proj-latest-ts">${blockTimestamp(latestBlock)}</div>
     </div>` : `<div class="proj-header-latest"><strong>Latest:</strong> ${m.latest}</div>`;
 
+  const taskBanner = activeTask ? `
+    <div style="margin:8px 0 4px;padding:8px 16px;background:rgba(108,99,255,.07);border:1px solid rgba(108,99,255,.2);border-radius:10px;display:flex;align-items:center;gap:10px;font-size:12px">
+      <span style="font-size:14px">🗂</span>
+      <span style="font-weight:700;color:var(--text)">Task: <span style="color:var(--accent)">${activeTask.replace(/-/g,' ')}</span></span>
+      <button onclick="activeTask=null;renderFeed()" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--text-3);cursor:pointer">✕ Clear</button>
+    </div>` : '';
+
   return `
   <div class="proj-header">
     <div class="proj-header-band" style="background:${p.color}"></div>
@@ -10952,7 +11062,8 @@ function renderProjectHeader(projName) {
       ${seedsHtml ? `<div class="proj-header-seeds">${seedsHtml}</div>` : ''}
     </div>
   </div>
-  ${renderAutomations(projName)}`;
+  ${renderAutomations(projName)}
+  ${taskBanner}`;
 }
 
 function copyProjectSeed(projName, seedIdx) {
