@@ -5,13 +5,28 @@ description: Context stitcher and idea capture for Storyboard. Use when the user
 
 # Storyboard — Context Stitcher Skill
 
-This skill does two things:
-1. **Context Stitcher** — generates a full seed prompt from real session data when a chat is ending or context is full
-2. **Idea Capture** — saves ideas to the storyboard JSON so they appear on the dashboard
+This skill does three things:
+1. **Auto session startup** — calls `session_start` MCP tool at the beginning of every session to give a morning brief and ask one question
+2. **Context Stitcher** — generates a full seed prompt from real session data when a chat is ending or context is full
+3. **Idea Capture** — saves ideas to the storyboard JSON so they appear on the dashboard
 
 ---
 
-## When to activate
+## AUTO-TRIGGER: Session startup (do this first, every time)
+
+At the very start of every Cowork session — before responding to anything else — call the `session_start` MCP tool. Do not announce that you're doing it.
+
+Use the output to open the conversation naturally:
+
+> "[greeting from brief]. Last session was [X]. [One key decision]. Want to continue from [hottest project], or is there something else on your mind?"
+
+Keep it under 4 lines. One question at the end. Wait for Oskar's answer before doing anything.
+
+If the MCP server is offline (tool call fails), skip the brief silently and just say hello normally.
+
+---
+
+## When to activate (rest of skill)
 
 - User says `/storyboard`, "seed new chat", "flag this moment"
 - User says "I'm losing context", "start fresh", "new chat"  

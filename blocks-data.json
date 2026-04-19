@@ -1,5 +1,24 @@
 [
   {
+    "id": "sb-apr20-session-day7-auto-startup",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 7 — Auto session startup, session brief card, Tetris mode live",
+    "summary": "Auto session startup shipped: session_start MCP tool + /session-start HTTP endpoint. Claude calls it at the top of every Cowork session before saying anything else. Returns last session, key decisions, hottest project, pending ideas, in-progress items. Formatted as a 3-line brief + one question: 'Continue from X, or start something new?' Today tab now shows a dismissable morning brief card that fetches from /session-start when MCP is connected. Resets when switching back to Today view. SKILL.md updated with AUTO-TRIGGER section — session_start fires before any user response.",
+    "date": "Apr 20",
+    "ts": 20260420,
+    "decisions": [
+      "session_start fires before Claude says anything else — it IS the opening message, not a follow-up",
+      "Brief is 3 lines max + one question — not a data dump",
+      "Today tab shows the brief as a card (dismissable ✕) — visual confirmation the startup ran",
+      "Brief resets on return to Today so it's always fresh",
+      "If MCP offline, skip silently — no error, just say hello normally"
+    ],
+    "chips": ["auto-startup", "session-start", "morning-brief", "day7", "mcp-tool"],
+    "_source": "claude.ai",
+    "task": "dashboard"
+  },
+  {
     "id": "sb-apr19-session-day6-wrap",
     "type": "session",
     "project": "Storyboard",

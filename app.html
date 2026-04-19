@@ -3002,6 +3002,22 @@ body.sb-compact .td-card-title { font-size: 12px; }
 body.light-mode .td-card { background: #ffffff; }
 body.light-mode .td-decision-item:hover { background: rgba(0,0,0,.03); }
 body.light-mode .td-pill { background: rgba(0,0,0,.04); }
+/* ── Session brief card (Today digest header) ────────────── */
+.td-brief {
+  background: linear-gradient(135deg, rgba(108,99,255,.05), rgba(108,99,255,.02));
+  border: 1px solid rgba(108,99,255,.18); border-radius: 14px;
+  padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+  animation: blockDropIn .4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.td-brief-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.td-brief-body { flex: 1; min-width: 0; }
+.td-brief-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--accent); margin-bottom: 5px; }
+.td-brief-line { font-size: 12.5px; color: var(--text); line-height: 1.5; margin-bottom: 3px; }
+.td-brief-line strong { color: var(--text); }
+.td-brief-question { font-size: 12.5px; color: var(--text-2); font-style: italic; margin-top: 7px; }
+.td-brief-dismiss { background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 13px; padding: 2px 6px; border-radius: 6px; flex-shrink: 0; transition: color .15s; }
+.td-brief-dismiss:hover { color: var(--text-2); }
+body.light-mode .td-brief { background: rgba(108,99,255,.04); }
 /* ── Settings panel ──────────────────────────────────────── */
 .settings-panel {
   background: var(--white); border: 1px solid var(--border); border-radius: 18px;
@@ -5299,6 +5315,7 @@ function setPeriod(p, btn) {
   activePeriod = p;
   document.querySelectorAll('.period-tab').forEach(el => el.classList.remove('on'));
   btn.classList.add('on');
+  if (p === 'today') resetSessionBrief();
   renderFeed();
 }
 function resetPeriodToAll() {
@@ -6853,11 +6870,14 @@ function renderTodayDigest(todayBlocks, allBaseBlocks) {
         </div>` : ''}
       </div>
 
+      <div id="tdSessionBrief" style="display:none"></div>
       ${sectionHtml('Sessions run today', '#6c63ff', '🧠', sessionsHtml)}
       ${sectionHtml(`Decisions made (${decisions.length})`, '#22c55e', '✓', decisionsHtml)}
       ${sectionHtml(`Ideas captured (${ideas.length})`, '#f59e0b', '💡', ideasHtml)}
       ${other.length ? sectionHtml('Other activity', '#94a3b8', '◈', otherHtml) : ''}
     </div>`;
+  // Load session brief from MCP
+  loadSessionBrief();
   // Staggered drop-in animation for all cards
   setTimeout(() => {
     const cards = el.querySelectorAll('.td-card, .td-decision-item, .td-section');
@@ -6870,6 +6890,58 @@ function renderTodayDigest(todayBlocks, allBaseBlocks) {
     });
   }, 20);
 }
+
+// ── Session brief ─────────────────────────────────────────────────────────────
+// Fetches /session-start from MCP server and renders a morning brief card
+// at the top of the Today digest. Called after Today view renders.
+let _briefShown = false;
+function loadSessionBrief() {
+  if (_briefShown) return;
+  const el = document.getElementById('tdSessionBrief');
+  if (!el) return;
+  fetch(`${SB_MCP}/session-start`, { signal: AbortSignal.timeout(2500) })
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(data => {
+      if (!data) return;
+      _briefShown = true;
+      const hour = new Date().getHours();
+      const greeting = hour < 12 ? 'Morning' : hour < 17 ? 'Afternoon' : 'Evening';
+
+      const lines = [];
+      if (data.lastSession) {
+        const proj = data.lastSession.project ? ` <span style="color:${PROJ[data.lastSession.project]?.color||'#6c63ff'}">${data.lastSession.project}</span>` : '';
+        lines.push(`Last session:${proj} — ${(data.lastSession.title||'').replace(/^Day \d+ — /,'').slice(0,70)}`);
+      }
+      if (data.lastDecisions?.length) {
+        lines.push(`Key decision: ${data.lastDecisions[0].slice(0,90)}`);
+      }
+      if (data.inProgress?.length) {
+        lines.push(`In progress: ${data.inProgress.map(b=>b.title.slice(0,40)).join(' · ')}`);
+      }
+      if (data.pendingIdeas?.length) {
+        lines.push(`${data.pendingIdeas.length} idea${data.pendingIdeas.length>1?'s':''} waiting: ${data.pendingIdeas.map(b=>b.title).join(', ')}`);
+      }
+
+      const question = data.hottestProject
+        ? `Continue on <strong>${data.hottestProject}</strong>, or start something new?`
+        : 'What are we working on today?';
+
+      el.style.display = 'block';
+      el.innerHTML = `<div class="td-brief">
+        <span class="td-brief-icon">🌅</span>
+        <div class="td-brief-body">
+          <div class="td-brief-label">${greeting} · Sprint Day ${data.sprintDay}/10 · ${data.totalBlocks} blocks total</div>
+          ${lines.map(l=>`<div class="td-brief-line">${l}</div>`).join('')}
+          <div class="td-brief-question">${question}</div>
+        </div>
+        <button class="td-brief-dismiss" onclick="this.closest('.td-brief').parentElement.style.display='none'" title="Dismiss">✕</button>
+      </div>`;
+    });
+}
+
+// Reset brief on period change so it shows again when returning to Today
+function resetSessionBrief() { _briefShown = false; }
 
 // Today kickoff helpers
 function selectKickoffProj(btn, name) {

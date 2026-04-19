@@ -632,49 +632,55 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 <!-- TOMORROW / WHAT'S NEXT -->
 <div class="section" id="next">
   <div class="section-label">Day 7+</div>
-  <h2>What's live — Day 6 evening additions</h2>
-  <div class="section-lead">These features shipped during the Day 6 autonomous session and are live now.</div>
+  <h2>What's live — Day 6 evening + Day 7</h2>
+  <div class="section-lead">Features shipped during the Day 6–7 autonomous and live sessions.</div>
 
   <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon">🌅</div>
+      <div class="fc-title">Auto session startup</div>
+      <div class="fc-why">Why: Every session started cold. Oskar had to manually trigger /storyboard to get context. That's friction. The first thing you see when you start work should be a brief on where you are.</div>
+      <div class="fc-how"><strong>How it works:</strong> MCP tool <code>session_start</code> + HTTP endpoint <code>/session-start</code>. Claude calls it automatically at the start of every Cowork session before saying anything else. Returns: last session, key decisions, hottest project, pending ideas, in-progress items. Formatted as a 3-line brief + one question: "Continue from X, or start something new?" Today tab shows the brief as a dismissable card when MCP is connected.</div>
+    </div>
     <div class="feature-card">
       <div class="fc-icon">⚡</div>
       <div class="fc-title">Live block logging (Tetris mode)</div>
       <div class="fc-why">Why: Blocks were only logged at end-of-session. The day's story was assembled backwards, after the fact. Tetris mode makes it real time.</div>
-      <div class="fc-how"><strong>How it works:</strong> MCP tool <code>log_block</code> + HTTP endpoint <code>/log-block</code>. Claude calls it the moment a decision is made. Blocks appear in the Today feed within 10 seconds via the existing 10s poll loop. SKILL.md updated with the logging protocol — Claude logs silently, one line confirm.</div>
+      <div class="fc-how"><strong>How it works:</strong> MCP tool <code>log_block</code> + HTTP endpoint <code>/log-block</code>. Claude calls it the moment a decision is made. Blocks appear in the Today feed within 10 seconds via the existing 10s poll loop. SKILL.md has the logging protocol — Claude logs silently, one line confirm.</div>
     </div>
     <div class="feature-card">
       <div class="fc-icon">📖</div>
       <div class="fc-title">This manual</div>
-      <div class="fc-why">Why: Features were accumulating faster than anyone could remember them. A friend meeting was coming up. The rule is: when a feature ships, the manual updates.</div>
-      <div class="fc-how">Available at <code>MANUAL.html</code> alongside the app. Linked from Settings → About. Linked from nav footer user menu → Feature manual. Updated whenever features ship.</div>
+      <div class="fc-why">Why: Features were accumulating faster than anyone could remember them. The rule is: when a feature ships, the manual updates.</div>
+      <div class="fc-how">Available at <code>MANUAL.html</code> alongside the app. Linked from Settings → About and nav footer → Feature manual. Updated whenever features ship.</div>
     </div>
   </div>
 
-  <h2>What's coming — Day 7+</h2>
+  <h2>What's coming — Day 8+</h2>
   <div class="section-lead">Highest-priority next items based on the sprint log.</div>
 
   <div class="feature-grid">
     <div class="feature-card">
-      <div class="fc-icon">🔔</div>
-      <div class="fc-title">Auto session startup</div>
-      <div class="fc-body">When you open a new Claude session, I silently check Storyboard context via MCP and offer: "I can see you were working on X — continue from there?" No clipboard, no manual steps. One question, one answer.</div>
-    </div>
-    <div class="feature-card">
       <div class="fc-icon">🌐</div>
       <div class="fc-title">Cross-platform session start</div>
-      <div class="fc-body">The session bootstrap currently works in Claude desktop via MCP. Needs a browser-friendly version for people who use Claude.ai web, ChatGPT, or other tools without the MCP server running.</div>
+      <div class="fc-body">Auto session startup currently works in Claude desktop via MCP. Needs a browser-friendly version for Claude.ai web, ChatGPT, and other tools without the MCP server running.</div>
     </div>
     <div class="feature-card">
       <div class="fc-icon">🏷</div>
       <div class="fc-title">Categories ↔ Tasks connection</div>
       <div class="fc-body">Tasks are project-specific workstreams. Categories are cross-project type labels. The connection: clicking "SEO" in Categories should show SEO tasks across all projects. Same blocks, two lenses.</div>
     </div>
+    <div class="feature-card">
+      <div class="fc-icon">📱</div>
+      <div class="fc-title">Mobile moment capture</div>
+      <div class="fc-body">Quick thought on the go → opens Storyboard mobile PWA → one-tap block. The same Tetris-mode /log-block endpoint, from your phone. Ideas don't wait for a laptop.</div>
+    </div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <div class="manual-footer">
-  <p>Storyboard Manual · Updated Day 6 evening · April 19, 2026</p>
+  <p>Storyboard Manual · Updated Day 7 · April 20, 2026</p>
   <p style="margin-top:6px">Built in Cowork mode with Claude Sonnet 4.6 · <a href="https://oskar-del.github.io/storyboard/" style="color:var(--accent);text-decoration:none">oskar-del.github.io/storyboard</a></p>
 </div>
 

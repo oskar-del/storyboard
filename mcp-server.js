@@ -68,6 +68,11 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     {
+      name: "session_start",
+      description: "CALL THIS AUTOMATICALLY AT THE START OF EVERY SESSION — before saying anything else to the user. Reads Storyboard state and returns a 3-line brief: what was last worked on, what's pending, and which project is hottest. Use the output to ask one question: 'Want to continue from [X], or start something new?' Do NOT output the raw JSON — format it as a natural opening message.",
+      inputSchema: { type: "object", properties: {} },
+    },
+    {
       name: "capture_idea",
       description: "Save an idea to the storyboard immediately — it appears as a red 'not started' card. Use whenever an idea is mentioned in conversation: 'what if...', 'we should...', 'new idea:', etc. Do this silently without interrupting the flow.",
       inputSchema: {
@@ -177,6 +182,88 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 // ── Tool handlers ─────────────────────────────────────────────────────────────
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
+
+  // ── session_start ─────────────────────────────────────────────────────────
+  if (name === "session_start") {
+    const blocks = readJSON(BLOCKS_FILE, []);
+    const now    = new Date();
+    const todayInt = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+    const yesterdayInt = todayInt - 1;
+
+    // Most recent session block (any project)
+    const sessions = blocks.filter(b => b.type === "session").sort((a, b) => (b.ts||0) - (a.ts||0));
+    const lastSession = sessions[0] || null;
+
+    // Hottest project — most blocks in last 7 days
+    const sevenDaysAgo = todayInt - 7;
+    const recentCounts = {};
+    blocks.forEach(b => {
+      if ((b.ts||0) >= sevenDaysAgo && b.project) {
+        recentCounts[b.project] = (recentCounts[b.project] || 0) + 1;
+      }
+    });
+    const hottestProject = Object.entries(recentCounts).sort((a,b) => b[1]-a[1])[0]?.[0] || null;
+
+    // Today's blocks so far
+    const todayBlocks = blocks.filter(b => (b.ts||0) >= todayInt);
+
+    // Pending ideas (not started)
+    const pendingIdeas = blocks.filter(b => b.type === "idea" && b.status === "not_started").slice(0, 3);
+
+    // Unfinished tasks — last session blocks marked in_progress
+    const inProgress = blocks.filter(b => b.status === "in_progress").slice(0, 3);
+
+    // Last decisions from the most recent session
+    const lastDecisions = (lastSession?.decisions || []).slice(0, 3);
+
+    // Sprint day
+    const sprintStart = new Date("2026-04-15");
+    const sprintDay   = Math.min(10, Math.max(1, Math.floor((now - sprintStart) / 86400000) + 1));
+
+    // Format the brief
+    const hour = now.getHours();
+    const greeting = hour < 12 ? "Morning" : hour < 17 ? "Afternoon" : "Evening";
+
+    const brief = {
+      greeting,
+      sprintDay,
+      todayCount:     todayBlocks.length,
+      lastSession:    lastSession ? { title: lastSession.title, project: lastSession.project, date: lastSession.date } : null,
+      lastDecisions,
+      hottestProject,
+      pendingIdeas:   pendingIdeas.map(b => ({ title: b.title.replace("💡 ",""), project: b.project })),
+      inProgress:     inProgress.map(b => ({ title: b.title, project: b.project })),
+      totalBlocks:    blocks.length,
+    };
+
+    // Build a natural-language brief Claude can use to open the conversation
+    const lines = [];
+    lines.push(`${greeting}, Oskar. Sprint Day ${sprintDay}/10.`);
+
+    if (lastSession) {
+      lines.push(`Last session: "${lastSession.title}" (${lastSession.project}${lastSession.date ? ", " + lastSession.date : ""}).`);
+    }
+    if (lastDecisions.length) {
+      lines.push(`Key decisions from that session: ${lastDecisions.slice(0,2).join(" · ")}.`);
+    }
+    if (inProgress.length) {
+      lines.push(`In progress: ${inProgress.map(b => `"${b.title}" (${b.project})`).join(", ")}.`);
+    }
+    if (pendingIdeas.length) {
+      lines.push(`${pendingIdeas.length} idea${pendingIdeas.length > 1 ? "s" : ""} waiting: ${pendingIdeas.map(b => b.title).join(", ")}.`);
+    }
+    if (hottestProject) {
+      lines.push(`Hottest project this week: ${hottestProject} (${recentCounts[hottestProject]} blocks).`);
+    }
+    if (todayBlocks.length) {
+      lines.push(`${todayBlocks.length} block${todayBlocks.length > 1 ? "s" : ""} captured today already.`);
+    }
+    lines.push(``);
+    lines.push(`Continue from ${hottestProject || (lastSession?.project) || "your last session"}, or start something new?`);
+
+    process.stderr.write(`🌅 Session start: Day ${sprintDay}, ${blocks.length} blocks, hottest: ${hottestProject}\n`);
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
 
   // ── capture_idea ──────────────────────────────────────────────────────────
   if (name === "capture_idea") {
@@ -578,6 +665,46 @@ const httpServer = createServer((req, res) => {
     } catch(e) {
       res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
+    return;
+  }
+
+  // /session-start — GET endpoint for auto session brief (used by dashboard + Chrome extension)
+  if (req.method === "GET" && req.url === "/session-start") {
+    try {
+      const blocks = readJSON(BLOCKS_FILE, []);
+      const now = new Date();
+      const todayInt = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+      const sevenDaysAgo = todayInt - 7;
+
+      const sessions = blocks.filter(b => b.type === "session").sort((a, b) => (b.ts||0) - (a.ts||0));
+      const lastSession = sessions[0] || null;
+
+      const recentCounts = {};
+      blocks.forEach(b => {
+        if ((b.ts||0) >= sevenDaysAgo && b.project) recentCounts[b.project] = (recentCounts[b.project]||0)+1;
+      });
+      const hottestProject = Object.entries(recentCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || null;
+      const todayBlocks = blocks.filter(b => (b.ts||0) >= todayInt);
+      const pendingIdeas = blocks.filter(b => b.type==="idea" && b.status==="not_started").slice(0,3);
+      const inProgress = blocks.filter(b => b.status==="in_progress").slice(0,3);
+      const sprintStart = new Date("2026-04-15");
+      const sprintDay = Math.min(10, Math.max(1, Math.floor((now-sprintStart)/86400000)+1));
+
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        sprintDay,
+        lastSession,
+        hottestProject,
+        todayCount: todayBlocks.length,
+        pendingIdeas: pendingIdeas.map(b => ({ title: b.title.replace("💡 ",""), project: b.project })),
+        inProgress:   inProgress.map(b => ({ title: b.title, project: b.project })),
+        lastDecisions: (lastSession?.decisions||[]).slice(0,3),
+        totalBlocks: blocks.length,
+      }));
+    } catch(e) {
+      res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: e.message }));
     }
     return;
   }
