@@ -2834,6 +2834,32 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 }
 .audit-save-all-btn:hover { opacity: .85; }
 
+/* ── Task windows strip (inline project header) ──────────────── */
+.ph-task-strip {
+  padding: 14px 20px 16px; border-top: 1px solid var(--border);
+}
+.ph-task-strip-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-3); margin-bottom: 10px; display: flex; align-items: center;
+}
+.ph-task-cards {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.ph-task-card {
+  background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px;
+  padding: 10px 12px; cursor: pointer; transition: all .15s; min-width: 100px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.ph-task-card:hover { border-color: rgba(108,99,255,.35); background: rgba(108,99,255,.05); transform: translateY(-1px); }
+.ph-task-card.active { box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+.ph-task-card.add-task { opacity: .5; min-width: 80px; }
+.ph-task-card.add-task:hover { opacity: 1; }
+.ph-task-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ph-task-name { font-size: 11px; font-weight: 700; color: var(--text); text-transform: capitalize; line-height: 1.3; }
+.ph-task-meta { font-size: 10px; color: var(--text-3); }
+body.light-mode .ph-task-card { background: #f7f8fa; }
+body.light-mode .ph-task-card:hover { background: rgba(108,99,255,.05); }
+
 /* ── Task windows strip (project drawer) ─────────────────────── */
 .pd-task-strip { padding: 0 22px 4px; }
 .pd-task-strip-label {
@@ -5512,6 +5538,13 @@ function setFilter(f) {
        <span class="sep">/</span>
        <span style="color:var(--text)">${f}</span>`;
   renderFeed();
+}
+
+function showAddTaskPrompt(projName) {
+  const name = prompt(`New task window name for "${projName}":\n(e.g. "crm-sales", "website", "seo-content")`);
+  if (!name || !name.trim()) return;
+  const taskName = name.trim().toLowerCase().replace(/\s+/g,'-');
+  showToast(`Task "${taskName}" ready — tag blocks with task:"${taskName}" to populate it`);
 }
 
 function setTaskFilter(task) {
@@ -11063,7 +11096,46 @@ function renderProjectHeader(projName) {
     </div>
   </div>
   ${renderAutomations(projName)}
-  ${taskBanner}`;
+  ${taskBanner}
+  ${(() => {
+    // Task windows strip — inline in the project feed header
+    const all = mergedBlocks();
+    const projBlocks = all.filter(b => b.project === projName);
+    const taskMap2 = {};
+    projBlocks.forEach(b => {
+      if (!b.task) return;
+      if (!taskMap2[b.task]) taskMap2[b.task] = { blocks:[], lastTs:0 };
+      taskMap2[b.task].blocks.push(b);
+      if ((b.ts||0) > taskMap2[b.task].lastTs) taskMap2[b.task].lastTs = b.ts||0;
+    });
+    const entries = Object.entries(taskMap2).sort((a,b) => b[1].lastTs - a[1].lastTs);
+    if (!entries.length) return '';
+    const TICONS = { 'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','mobile-pwa':'📱','context-visual':'📊','strategy':'🧠','crm-sales':'💼','website':'🌐','seo-content':'🔍','social-media':'📣','email-campaigns':'📧','airtable':'📋','data-pipeline':'🔄','automation':'⚙','design':'🎨' };
+    const autos2 = AUTOMATIONS.filter(a => a.project === projName && a.enabled);
+    return `<div class="ph-task-strip">
+      <div class="ph-task-strip-label">Task windows <span style="color:var(--text-3);font-weight:500;margin-left:4px">${entries.length} active</span></div>
+      <div class="ph-task-cards">
+        ${entries.map(([taskName, info]) => {
+          const icon = TICONS[taskName] || '◈';
+          const isActive = activeTask === taskName;
+          const hasAuto = autos2.some(a => a.task === taskName);
+          const sessionCount = info.blocks.filter(b=>b.type==='session').length;
+          return `<div class="ph-task-card${isActive?' active':''}" onclick="setTaskFilter('${taskName}')" style="${isActive?'border-color:'+p.color+';background:'+p.color+'10':''}">
+            <div class="ph-task-card-top">
+              <span style="font-size:15px">${icon}</span>
+              ${hasAuto ? `<span class="pd-task-auto-dot"></span>` : ''}
+            </div>
+            <div class="ph-task-name">${taskName.replace(/-/g,' ')}</div>
+            <div class="ph-task-meta">${info.blocks.length} block${info.blocks.length!==1?'s':''}${sessionCount?' · '+sessionCount+' sess':''}${isActive?' · <span style="color:'+p.color+'">active</span>':''}</div>
+          </div>`;
+        }).join('')}
+        <div class="ph-task-card add-task" onclick="showAddTaskPrompt('${projName}')" title="Add task window">
+          <div class="ph-task-card-top"><span style="font-size:15px;color:var(--text-3)">+</span></div>
+          <div class="ph-task-name" style="color:var(--text-3)">new task</div>
+        </div>
+      </div>
+    </div>`;
+  })()}`;
 }
 
 function copyProjectSeed(projName, seedIdx) {
