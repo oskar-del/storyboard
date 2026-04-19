@@ -32,12 +32,14 @@
   --top-h:    48px;
   --right-w:  268px;
   --accent:   #6c63ff;
+  --card:     #161b27;
 }
 
 /* ── LIGHT MODE — opt-in override ───────────────────────────────── */
 body.light-mode {
   --bg:       #f0f2f8;
   --white:    #ffffff;
+  --card:     #ffffff;
   --border:   #e2e6f0;
   --text:     #0f1120;
   --text-2:   #505575;
@@ -3120,19 +3122,33 @@ body.light-mode .cat-block-chip { background: var(--bg); }
   </header>
 
   <!-- SEARCH OVERLAY -->
-  <div id="searchOverlay" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.45);backdrop-filter:blur(4px)" onclick="closeSearch()">
-    <div onclick="event.stopPropagation()" style="position:absolute;top:80px;left:50%;transform:translateX(-50%);width:min(600px,92vw);background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.2);overflow:hidden">
+  <div id="searchOverlay" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.55);backdrop-filter:blur(6px)" onclick="closeSearch()">
+    <div onclick="event.stopPropagation()" style="position:absolute;top:72px;left:50%;transform:translateX(-50%);width:min(620px,94vw);background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:16px;box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);overflow:hidden">
+      <!-- Input row -->
       <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)">
-        <svg width="14" height="14" viewBox="0 0 13 13" fill="none" style="color:var(--text-3);flex-shrink:0">
+        <svg width="15" height="15" viewBox="0 0 13 13" fill="none" style="color:var(--text-3);flex-shrink:0">
           <circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/>
           <line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
-        <input id="searchInput" placeholder="Search blocks, decisions, ideas…" autocomplete="off" spellcheck="false"
+        <input id="searchInput" placeholder="Search blocks, decisions, ideas, projects…" autocomplete="off" spellcheck="false"
           style="flex:1;background:transparent;border:none;outline:none;font-size:15px;color:var(--text);font-family:inherit"
-          oninput="renderSearchResults(this.value)">
-        <kbd style="font-size:10px;color:var(--text-3);background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:2px 6px;flex-shrink:0">esc</kbd>
+          oninput="renderSearchResults(this.value)"
+          onkeydown="handleSearchKey(event)">
+        <div style="display:flex;align-items:center;gap:4px">
+          <kbd style="font-size:9px;color:var(--text-3);background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:4px;padding:2px 5px">↑↓</kbd>
+          <kbd style="font-size:9px;color:var(--text-3);background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:4px;padding:2px 5px">↵</kbd>
+          <kbd style="font-size:9px;color:var(--text-3);background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:4px;padding:2px 5px">esc</kbd>
+        </div>
       </div>
-      <div id="searchResults" style="max-height:400px;overflow-y:auto;padding:8px 0"></div>
+      <!-- Type filter chips -->
+      <div id="searchFilters" style="display:flex;gap:5px;padding:8px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap"></div>
+      <!-- Results -->
+      <div id="searchResults" style="max-height:380px;overflow-y:auto;padding:6px 0"></div>
+      <!-- Footer hint -->
+      <div id="searchFooter" style="padding:7px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:10px;color:var(--text-3)" id="searchCount">—</span>
+        <span style="font-size:10px;color:var(--text-3)">⌘K to open · esc to close</span>
+      </div>
     </div>
   </div>
 
@@ -7310,90 +7326,153 @@ function closeSessionBootstrap() {
 }
 
 // ── Global Search ────────────────────────────────────────────────────────────
+let _searchActiveIdx = -1;
+let _searchTypeFilter = 'all';
+
 function openSearch() {
+  _searchActiveIdx = -1;
+  _searchTypeFilter = 'all';
   document.getElementById('searchOverlay').style.display = 'block';
-  setTimeout(() => { const inp = document.getElementById('searchInput'); if (inp) { inp.value=''; inp.focus(); renderSearchResults(''); } }, 50);
+  setTimeout(() => {
+    const inp = document.getElementById('searchInput');
+    if (inp) { inp.value = ''; inp.focus(); }
+    renderSearchFilters();
+    renderSearchResults('');
+  }, 30);
 }
 function closeSearch() {
   document.getElementById('searchOverlay').style.display = 'none';
 }
+
+function renderSearchFilters() {
+  const el = document.getElementById('searchFilters');
+  if (!el) return;
+  const types = ['all','session','idea','decision','discussion','rejection','skill'];
+  const icons = { all:'⊞', session:'🧠', idea:'💡', decision:'✓', discussion:'💬', rejection:'✕', skill:'📚' };
+  el.innerHTML = types.map(t => {
+    const isActive = _searchTypeFilter === t;
+    return `<button onclick="setSearchType('${t}')"
+      style="padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid ${isActive?'var(--accent)':'var(--border)'};background:${isActive?'rgba(108,99,255,.15)':'transparent'};color:${isActive?'var(--accent)':'var(--text-3)'};transition:all .12s"
+      >${icons[t]||'◈'} ${t.charAt(0).toUpperCase()+t.slice(1)}</button>`;
+  }).join('');
+}
+function setSearchType(t) {
+  _searchTypeFilter = t;
+  _searchActiveIdx = -1;
+  renderSearchFilters();
+  const inp = document.getElementById('searchInput');
+  renderSearchResults(inp?.value || '');
+}
+
+function handleSearchKey(e) {
+  const items = document.querySelectorAll('.search-result-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _searchActiveIdx = Math.min(_searchActiveIdx + 1, items.length - 1);
+    _highlightSearchItem(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _searchActiveIdx = Math.max(_searchActiveIdx - 1, 0);
+    _highlightSearchItem(items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_searchActiveIdx >= 0 && items[_searchActiveIdx]) {
+      items[_searchActiveIdx].click();
+    } else if (items.length === 1) {
+      items[0].click();
+    }
+  }
+}
+function _highlightSearchItem(items) {
+  items.forEach((el, i) => {
+    const active = i === _searchActiveIdx;
+    el.style.background = active ? 'rgba(108,99,255,.12)' : '';
+    if (active) el.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+function _highlight(text, q) {
+  if (!q || !text) return text || '';
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx === -1) return text;
+  return text.slice(0, idx) + `<mark style="background:rgba(108,99,255,.3);color:var(--accent);border-radius:2px;padding:0 1px">${text.slice(idx, idx+q.length)}</mark>` + text.slice(idx + q.length);
+}
+
 function renderSearchResults(q) {
   const el = document.getElementById('searchResults');
   if (!el) return;
   const query = (q||'').toLowerCase().trim();
+  _searchActiveIdx = -1;
 
   const all = mergedBlocks();
   let results = all.filter(b => {
+    // Type filter
+    if (_searchTypeFilter !== 'all' && b.type !== _searchTypeFilter) return false;
     if (!query) return true;
-    const text = [b.title, b.summary, b.project, ...(b.decisions||[]), ...(b.chips||[])].join(' ').toLowerCase();
+    const text = [b.title, b.summary, b.body, b.project, ...(b.decisions||[]), ...(b.chips||[])].filter(Boolean).join(' ').toLowerCase();
     return text.includes(query);
-  }).slice(0, 25);
+  }).slice(0, 30);
+
+  const countEl = document.getElementById('searchCount');
 
   if (!results.length && query) {
-    el.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">No results for "${q}"</div>`;
+    el.innerHTML = `<div style="padding:36px;text-align:center;color:var(--text-3);font-size:13px">No results for "<strong style="color:var(--text)">${q}</strong>"</div>`;
+    if (countEl) countEl.textContent = '0 results';
     return;
   }
+
+  // If no query: show recent activity grouped by type
   if (!query) {
-    // Show recent
-    results = all.sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12);
+    const recentAll = all.filter(b => _searchTypeFilter === 'all' || b.type === _searchTypeFilter)
+      .sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0, 16);
+    results = recentAll;
   }
 
-  const typeColors = { session:'#6c63ff', idea:'#f59e0b', decision:'#22c55e', roadmap:'#15803d', feature:'#4ecdc4', automation:'#10b981', intent:'#f43f5e', compaction:'#64748b', rejection:'#dc2626' };
-  const typeIcons2 = { session:'🧠', idea:'💡', decision:'✓', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', intent:'🎯', compaction:'🗜️', rejection:'✕' };
+  if (countEl) countEl.textContent = query ? `${results.length} result${results.length!==1?'s':''}` : 'Recent activity';
 
-  // Group by type for organized display
-  if (query) {
-    // Flat results when searching
-    el.innerHTML = results.map(b => {
-      const p = PROJ[b.project] || { color:'#6c63ff' };
-      const tc = typeColors[b.type] || p.color;
-      const typeBg = tc + '18';
-      const snippet = (b.summary||b.body||'').replace('undefined','').slice(0,90).trim();
-      return `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
-        <span style="font-size:14px;flex-shrink:0">${typeIcons2[b.type]||'◈'}</span>
-        <div style="flex:1;min-width:0">
-          <div class="sri-title">${(b.title||'Untitled').replace('💡 ','')}</div>
-          ${snippet ? `<div class="sri-meta">${snippet}${snippet.length>=90?'…':''}</div>` : ''}
-          <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
-            <span class="sri-type" style="background:${typeBg};color:${tc}">${b.type||'block'}</span>
-            <span class="sri-meta" style="margin-top:0">${b.project} · ${relTime(b.ts)||b.date||''}</span>
-          </div>
+  const typeColors = { session:'#6c63ff', idea:'#f59e0b', decision:'#22c55e', roadmap:'#15803d', feature:'#4ecdc4', automation:'#10b981', intent:'#f43f5e', compaction:'#64748b', rejection:'#dc2626', discussion:'#60a5fa', skill:'#a78bfa' };
+  const typeIcons2 = { session:'🧠', idea:'💡', decision:'✓', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', intent:'🎯', compaction:'🗜️', rejection:'✕', discussion:'💬' };
+
+  function itemHtml(b) {
+    const p = PROJ[b.project] || { color:'#6c63ff' };
+    const tc = typeColors[b.type] || p.color;
+    const typeBg = tc + '18';
+    const titleRaw = (b.title||'Untitled').replace('💡 ','');
+    const titleHl  = query ? _highlight(titleRaw, query) : titleRaw;
+    const snippet  = (b.summary||b.body||'').replace('undefined','').slice(0, 80).trim();
+    const snippetHl = snippet && query ? _highlight(snippet, query) : snippet;
+    const decMatches = query ? (b.decisions||[]).filter(d => d?.toLowerCase().includes(query.toLowerCase())) : [];
+    return `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
+      <span style="font-size:13px;flex-shrink:0;margin-top:1px">${typeIcons2[b.type]||'◈'}</span>
+      <div style="flex:1;min-width:0">
+        <div class="sri-title">${titleHl}</div>
+        ${snippetHl ? `<div class="sri-meta">${snippetHl}${snippet.length>=80?'…':''}</div>` : ''}
+        ${decMatches.length ? `<div class="sri-meta" style="color:#22c55e;margin-top:2px">✓ ${decMatches[0].slice(0,70)}${decMatches[0].length>70?'…':''}</div>` : ''}
+        <div style="display:flex;align-items:center;gap:5px;margin-top:3px">
+          <span class="sri-type" style="background:${typeBg};color:${tc}">${b.type||'block'}</span>
+          <span class="sri-meta" style="margin-top:0">${b.project||''}</span>
+          <span class="sri-meta" style="margin-top:0;margin-left:auto">${relTime(b.ts)||b.date||''}</span>
         </div>
-      </div>`;
-    }).join('');
+      </div>
+    </div>`;
+  }
+
+  if (query) {
+    el.innerHTML = results.map(itemHtml).join('');
   } else {
-    // Grouped by type when no query (recent activity)
+    // Group by type
     const grouped = {};
     results.forEach(b => { const t = b.type||'block'; if (!grouped[t]) grouped[t]=[]; grouped[t].push(b); });
-    const order = ['session','decision','roadmap','idea','feature','automation'];
+    const order = ['session','decision','idea','discussion','skill','rejection'];
     let html = '';
-    order.forEach(type => {
+    [...order, ...Object.keys(grouped).filter(t=>!order.includes(t))].forEach(type => {
       const items = grouped[type];
       if (!items?.length) return;
       const tc = typeColors[type] || '#6c63ff';
-      html += `<div style="padding:6px 12px 2px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">${typeIcons2[type]||'◈'} Recent ${type}s</div>`;
-      html += items.slice(0,4).map(b => {
-        const p = PROJ[b.project] || { color:'#6c63ff' };
-        return `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
-          <div class="sri-dot" style="background:${tc}"></div>
-          <div style="flex:1;min-width:0">
-            <div class="sri-title">${(b.title||'Untitled').replace('💡 ','')}</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
-              <span class="sri-meta" style="margin-top:0">${b.project} · ${relTime(b.ts)||b.date||''}</span>
-            </div>
-          </div>
-        </div>`;
-      }).join('');
+      html += `<div style="padding:5px 14px 1px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">${typeIcons2[type]||'◈'} Recent ${type}s</div>`;
+      html += items.slice(0, 4).map(itemHtml).join('');
     });
-    // Add remaining types
-    Object.keys(grouped).filter(t => !order.includes(t)).forEach(type => {
-      const items = grouped[type];
-      html += items.slice(0,3).map(b => `<div class="search-result-item" onclick="closeSearch();openDetail('${b.id}')">
-        <div class="sri-dot" style="background:var(--text-3)"></div>
-        <div style="flex:1;min-width:0"><div class="sri-title">${(b.title||'Untitled').replace('💡 ','')}</div></div>
-      </div>`).join('');
-    });
-    el.innerHTML = html || `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">No recent activity</div>`;
+    el.innerHTML = html || `<div style="padding:36px;text-align:center;color:var(--text-3);font-size:13px">No recent activity</div>`;
   }
 }
 
@@ -8883,8 +8962,8 @@ function renderOverviewStrip() {
     (dayNum * 3)
   ));
 
-  // Next up items from memory
-  const nextItems = ['User menu + MCP connectors panel', 'Latest stream — cross-project feed', 'Idea block redesign + period tabs fix'];
+  // Next up items — Day 5/6 work
+  const nextItems = ['Search ⌘K — full fuzzy search with type filters', 'Usage bar — AI sessions tracker in nav', 'Design system audit + UI polish pass'];
 
   el.className = 'overview-strip';
   el.innerHTML = `
