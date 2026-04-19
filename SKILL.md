@@ -130,9 +130,30 @@ The generated seed prompt should follow this structure:
 
 ---
 
+---
+
+## Live Block Logging (Tetris mode)
+
+During any work session, call `log_block` via MCP whenever:
+- A key decision is made → `type: "decision"`
+- An important idea surfaces → `type: "idea"`  
+- A milestone is reached → `type: "milestone"`
+- A path is explicitly rejected → `type: "rejection"`
+
+These blocks appear in the Today feed within 10 seconds. They build the day's story in real time, not just at end-of-session.
+
+**Protocol:**
+1. Don't ask or announce — log silently
+2. Call once per significant moment (not for every minor action)
+3. Include `task` field if working within a specific task window
+4. A one-line confirm in your response is enough: `⚡ Logged: [title]`
+
+---
+
 ## Rules
 
 - Never summarize vaguely. Be specific: file names, commit counts, exact decisions.
 - Keep the seed under 800 words — it needs to fit cleanly at the top of a new chat.
 - Always end with "Immediate next steps" — the user needs to be able to pick up without re-explaining anything.
 - If this is an idea capture, don't disrupt the work. One line confirmation only.
+- Log live blocks throughout the session, not just at the end.

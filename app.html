@@ -3559,7 +3559,7 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
         <div class="num-divider"></div>
 
         <div class="num-section-label">Account</div>
-        <div class="num-item" onclick="showToast('Settings — coming in Day 6')">
+        <div class="num-item" onclick="document.getElementById('navUserMenu').classList.remove('open');openSettings()">
           <span class="num-item-icon">⚙️</span>
           Settings
         </div>
@@ -3567,9 +3567,9 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
           <span class="num-item-icon">🌓</span>
           Toggle theme
         </div>
-        <div class="num-item" onclick="showToast('Export workspace — coming soon')">
-          <span class="num-item-icon">↗</span>
-          Export workspace
+        <div class="num-item" onclick="document.getElementById('navUserMenu').classList.remove('open');window.open('MANUAL.html','_blank')">
+          <span class="num-item-icon">📖</span>
+          Feature manual
         </div>
         <div class="num-item" onclick="document.getElementById('onboardOverlay').style.display='block'">
           <span class="num-item-icon">👋</span>

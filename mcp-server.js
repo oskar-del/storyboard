@@ -153,6 +153,24 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       description: "Runs score_skills.py to re-score all skills and update skills-data.json. Use when you want to check skill quality or after editing SKILL.md files.",
       inputSchema: { type: "object", properties: {} },
     },
+    {
+      name: "log_block",
+      description: "Log a block in real time mid-session — it appears in the Today feed within 10 seconds (live Tetris mode). Call this the moment a decision is made, a key insight forms, or when starting/ending a task. Don't wait until end of session. Use for decisions, ideas, and milestones as they happen.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          type:      { type: "string",  description: "'decision' | 'idea' | 'session' | 'rejection' | 'milestone'" },
+          project:   { type: "string",  description: "Project name, e.g. 'Storyboard', 'Opero Agency'" },
+          title:     { type: "string",  description: "One-line description of what just happened" },
+          summary:   { type: "string",  description: "More context — why this matters, what was considered" },
+          task:      { type: "string",  description: "Task window this belongs to, e.g. 'dashboard', 'strategy'" },
+          decisions: { type: "array",   items: { type: "string" }, description: "Specific decisions made (for type=decision)" },
+          ideas:     { type: "array",   items: { type: "string" }, description: "Ideas that emerged" },
+          chips:     { type: "array",   items: { type: "string" }, description: "2-4 short keyword tags" },
+        },
+        required: ["type", "project", "title"],
+      },
+    },
   ],
 }));
 
@@ -391,6 +409,45 @@ Model guidance: Sonnet for sprint work, Opus for architecture decisions only.`;
     }
   }
 
+  // ── log_block — real-time live block (Tetris mode) ───────────────────────
+  if (name === "log_block") {
+    const { type, project, title, summary, task, decisions, ideas, chips } = args;
+    if (!title || !type) {
+      return { content: [{ type: "text", text: "Error: title and type are required" }] };
+    }
+    const now = new Date();
+    const ts = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+    const id = `live-${type}-${Date.now()}`;
+    const newBlock = {
+      id,
+      type,
+      project:   project || "Storyboard",
+      title:     title.substring(0, 120),
+      summary:   summary ? summary.substring(0, 500) : undefined,
+      task:      task || undefined,
+      decisions: decisions?.length ? decisions : undefined,
+      ideas:     ideas?.length ? ideas : undefined,
+      chips:     chips?.length ? chips : undefined,
+      date:      now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
+      ts,
+      _captured: now.toISOString(),
+      _source:   "live-session",
+      _live:     true,
+    };
+    Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
+    const blocks = readJSON(BLOCKS_FILE, []);
+    // Deduplicate — don't log same title twice in same session
+    const dup = blocks.find(b => b._live && b.title === title && b.project === (project||"Storyboard") &&
+      Math.abs((b.ts||0) - ts) < 1);
+    if (dup) {
+      return { content: [{ type: "text", text: `Already logged: ${dup.id}` }] };
+    }
+    blocks.unshift(newBlock);
+    writeJSON(BLOCKS_FILE, blocks);
+    process.stderr.write(`⚡ Live block: [${type}] "${title}" → ${project||"Storyboard"}\n`);
+    return { content: [{ type: "text", text: `⚡ Logged live block: "${title}" (id: ${id})` }] };
+  }
+
   return { content: [{ type: "text", text: `Unknown tool: ${name}` }] };
 });
 
@@ -605,6 +662,63 @@ const httpServer = createServer((req, res) => {
         process.stderr.write(`🧩 Web capture: [${block.type}] "${block.title}" → ${block.project}\n`);
       } catch (e) {
         res.writeHead(400); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
+  // ── /log-block — live block logging mid-session (Tetris mode) ─────────────
+  // Claude calls this endpoint the moment a decision is made, an idea forms,
+  // or a session starts/ends. Blocks appear in the Today feed within 10s.
+  // Required: { type, project, title }  Optional: { summary, task, decisions[], ideas[], chips[] }
+  if (req.method === "POST" && req.url === "/log-block") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const input = JSON.parse(body);
+        if (!input.title || !input.type) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Missing required fields: title, type" }));
+          return;
+        }
+        const now = new Date();
+        const ts = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+        const id = `live-${input.type}-${Date.now()}`;
+        const newBlock = {
+          id,
+          type:     input.type,
+          project:  input.project || "Storyboard",
+          title:    input.title.substring(0, 120),
+          summary:  input.summary ? input.summary.substring(0, 500) : undefined,
+          task:     input.task || undefined,
+          decisions: input.decisions || undefined,
+          ideas:    input.ideas || undefined,
+          chips:    input.chips || undefined,
+          date:     now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
+          ts,
+          _captured: now.toISOString(),
+          _source:  "live-session",
+          _live:    true,
+        };
+        // Remove undefined keys
+        Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
+        const blocks = readJSON(BLOCKS_FILE, []);
+        // Avoid duplicate titles logged in same session
+        const alreadyExists = blocks.find(b => b._live && b.title === newBlock.title && b.project === newBlock.project);
+        if (alreadyExists) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ ok: true, id: alreadyExists.id, duplicate: true }));
+          return;
+        }
+        blocks.unshift(newBlock);
+        writeJSON(BLOCKS_FILE, blocks);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ ok: true, id, block: newBlock }));
+        process.stderr.write(`⚡ Live block: [${input.type}] "${input.title}" → ${input.project || "Storyboard"}\n`);
+      } catch (e) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: e.message }));
       }
     });
     return;
