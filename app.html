@@ -1502,113 +1502,110 @@ body.light-mode .proj-header-deploy.live { background: #f0fdf4; color: #059669; 
 
 /* ── Progression Live Ticker ─────────────────────────────────── */
 .prog-ticker {
-  margin: -4px 0 16px;
-  border-radius: 0 0 var(--r) var(--r);
+  margin: 0 0 18px;
+  border-radius: var(--r);
   overflow: hidden;
   border: 1.5px solid var(--border);
-  border-top: none;
+  box-shadow: var(--shadow);
   position: relative;
 }
 .prog-tape {
-  height: 5px;
+  height: 6px;
   display: flex;
   width: 100%;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .prog-body {
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 9px 14px;
-  min-height: 46px;
+  padding: 10px 14px;
+  min-height: 52px;
 }
 .prog-live {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 3px;
-  padding-right: 12px;
-  margin-right: 4px;
+  padding: 0 12px 0 2px;
+  margin-right: 2px;
   border-right: 1px solid rgba(128,128,128,.15);
   flex-shrink: 0;
 }
 .prog-live-dot {
-  width: 6px; height: 6px; border-radius: 50%;
+  width: 7px; height: 7px; border-radius: 50%;
   background: #22c55e;
   animation: prog-pulse 1.8s ease-in-out infinite;
 }
 .prog-live-label {
-  font-size: 8px; font-weight: 800; letter-spacing: .8px;
-  text-transform: uppercase; color: #22c55e; opacity: .8;
+  font-size: 7px; font-weight: 900; letter-spacing: 1px;
+  text-transform: uppercase; color: #22c55e;
 }
 @keyframes prog-pulse {
-  0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(34,197,94,.5); }
-  50% { opacity:.6; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+  0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(34,197,94,.6); }
+  50% { opacity:.5; box-shadow: 0 0 0 5px rgba(34,197,94,0); }
 }
 .prog-metrics {
   display: flex;
   align-items: stretch;
-  flex: 1;
   gap: 0;
+  flex-shrink: 0;
 }
 .prog-metric {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2px 12px;
+  justify-content: center;
+  padding: 0 11px;
   border-right: 1px solid rgba(128,128,128,.12);
   gap: 1px;
   cursor: default;
 }
-.prog-metric:last-child { border-right: none; }
 .prog-metric-v {
-  font-size: 17px; font-weight: 900; line-height: 1; letter-spacing: -.5px;
+  font-size: 16px; font-weight: 900; line-height: 1; letter-spacing: -.5px;
 }
 .prog-metric-l {
-  font-size: 8px; font-weight: 700; text-transform: uppercase;
+  font-size: 7.5px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .5px; color: var(--text-3);
 }
-.prog-task-selector {
-  margin-left: auto;
-  flex-shrink: 0;
+/* Task bubbles row */
+.prog-tasks {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-left: auto;
+  padding-left: 10px;
 }
-.prog-task-btn {
+.prog-task-chip {
   display: flex; align-items: center; gap: 5px;
-  padding: 5px 10px; border-radius: 8px;
+  padding: 5px 10px; border-radius: 20px;
   border: 1.5px solid var(--border);
-  background: var(--bg); color: var(--text);
-  font-size: 11px; font-weight: 700; cursor: pointer;
-  transition: border-color .12s, background .12s;
-  white-space: nowrap;
+  background: var(--bg);
+  font-size: 10.5px; font-weight: 700; cursor: pointer;
+  transition: border-color .12s, background .12s, color .12s;
+  white-space: nowrap; color: var(--text-2);
+  position: relative;
 }
-.prog-task-btn:hover { border-color: var(--prog-color, #6c63ff); background: rgba(108,99,255,.06); }
-.prog-task-btn.active {
+.prog-task-chip:hover {
   border-color: var(--prog-color, #6c63ff);
-  background: color-mix(in srgb, var(--prog-color, #6c63ff) 10%, transparent);
+  background: rgba(108,99,255,.07);
+  color: var(--text);
+}
+.prog-task-chip.active {
+  border-color: var(--prog-color, #6c63ff);
+  background: color-mix(in srgb, var(--prog-color,#6c63ff) 12%, transparent);
   color: var(--prog-color, #6c63ff);
 }
-.prog-task-dropdown {
-  position: absolute; top: calc(100% + 4px); right: 0;
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: 10px; box-shadow: var(--shadow-lg, 0 8px 32px rgba(0,0,0,.2));
-  z-index: 300; min-width: 180px; overflow: hidden;
-  animation: fadeInDown .1s ease;
+.prog-chip-fill {
+  display: block; height: 3px; width: 24px;
+  border-radius: 2px; overflow: hidden;
+  display: flex; gap: 0;
 }
-@keyframes fadeInDown { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: none; } }
-.prog-task-opt {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 14px; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: background .1s;
-  border-bottom: 1px solid var(--border);
-}
-.prog-task-opt:last-child { border-bottom: none; }
-.prog-task-opt:hover { background: var(--bg); }
-.prog-task-opt.active { color: var(--prog-color, #6c63ff); background: color-mix(in srgb, var(--prog-color,#6c63ff) 6%, transparent); }
-.prog-task-opt-tape {
-  display: flex; height: 3px; width: 40px; border-radius: 2px; overflow: hidden; flex-shrink: 0;
+.prog-chip-pct {
+  font-size: 9px; font-weight: 800; opacity: .6;
 }
 
 /* ── No-thumb block: small icon band instead of big empty box ── */
@@ -7609,7 +7606,6 @@ function toggleProjMenu(enc) {
 
 function closeProjMenus() {
   document.querySelectorAll('.nav-proj-menu.open').forEach(m => m.classList.remove('open'));
-  document.querySelectorAll('.prog-task-dropdown').forEach(d => d.style.display = 'none');
 }
 
 function renameProjPrompt(enc) {
@@ -11613,37 +11609,35 @@ function renderProjectHeader(projName) {
     const decCount  = pb.reduce((n,b) => n + (b.decisions?.length||0), 0);
     const ideaCount = pb.filter(b => b.type === 'idea').length;
     const discCount = pb.filter(b => b.type === 'discussion').length;
-    const trailCount= pb.filter(b => (b.chips||[]).some(c => c.url || c.type === 'trail')).length;
 
-    // Chronological session + compaction tape
+    // Chronological session + compaction tape (full project timeline)
     const timelineBlocks = pb
       .filter(b => b.type === 'session' || b.type === 'compaction')
-      .sort((a,b) => (a.ts||0) - (b.ts||0));
+      .sort((a,b2) => (a.ts||0) - (b2.ts||0));
 
     const tapeHtml = timelineBlocks.length
       ? timelineBlocks.map(b => {
           if (b.type === 'compaction') {
-            return `<div style="width:3px;flex-shrink:0;background:#ef4444;opacity:.9;z-index:1"></div>`;
+            return `<div style="width:4px;flex-shrink:0;background:#ef4444;opacity:.85"></div>`;
           }
           const density = Math.min(((b.decisions?.length||0) + (b.chips?.length||0)) / 8, 1);
-          const op = (0.28 + density * 0.72).toFixed(2);
-          return `<div style="flex:1;min-width:2px;background:${p.color};opacity:${op}"></div>`;
+          const op = (0.25 + density * 0.75).toFixed(2);
+          return `<div style="flex:1;min-width:3px;background:${p.color};opacity:${op}"></div>`;
         }).join('')
-      : `<div style="flex:1;background:var(--border);opacity:.3"></div>`;
+      : `<div style="flex:1;background:var(--border);opacity:.25"></div>`;
 
-    // Gradient bg using project color
-    const hex = p.color.replace('#','');
-    const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), bv = parseInt(hex.slice(4,6),16);
-    const rgb = `${r},${g},${bv}`;
+    // Gradient bg
+    const hex = (p.color||'#6c63ff').replace('#','');
+    const rr = parseInt(hex.slice(0,2),16)||108, gg = parseInt(hex.slice(2,4),16)||99, bb2 = parseInt(hex.slice(4,6),16)||255;
+    const rgb = `${rr},${gg},${bb2}`;
 
-    // Metrics list
+    // Metrics
     const metrics = [
       { v: sessCount,  l: 'Sessions',    c: p.color },
-      { v: compCount,  l: 'Compactions', c: '#ef4444' },
+      { v: compCount,  l: 'Compact.',    c: '#ef4444' },
       { v: decCount,   l: 'Decisions',   c: '#22c55e' },
       { v: ideaCount,  l: 'Ideas',       c: '#f59e0b' },
-      { v: discCount,  l: 'Discussions', c: '#6c63ff' },
-      { v: trailCount, l: 'Trails',      c: '#06b6d4' },
+      { v: discCount,  l: 'Discuss.',    c: '#6c63ff' },
     ];
     const metricsHtml = metrics.map(m =>
       `<div class="prog-metric">
@@ -11652,57 +11646,45 @@ function renderProjectHeader(projName) {
       </div>`
     ).join('');
 
-    // Task selector — right side
-    const pb2 = mergedBlocks().filter(b => b.project === projName);
-    const taskMap3 = {};
-    pb2.forEach(b => {
-      if (!b.task) return;
-      if (!taskMap3[b.task]) taskMap3[b.task] = { sessions:0, decisions:0, color: p.color };
-      if (b.type === 'session') taskMap3[b.task].sessions++;
-      taskMap3[b.task].decisions += (b.decisions?.length||0);
-    });
-    const taskEntries3 = Object.entries(taskMap3).sort((a,b) => b[1].sessions - a[1].sessions);
+    // Task chips — one per task window in this project
     const TICONS2 = { 'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','mobile-pwa':'📱','context-visual':'📊','strategy':'🧠','crm-sales':'💼','website':'🌐','seo-content':'🔍','social-media':'📣','email-campaigns':'📧','airtable':'📋','data-pipeline':'🔄','automation':'⚙','design':'🎨' };
+    const taskMap3 = {};
+    pb.forEach(b => {
+      if (!b.task) return;
+      if (!taskMap3[b.task]) taskMap3[b.task] = { sessions:0, lastTs:0 };
+      if (b.type === 'session') taskMap3[b.task].sessions++;
+      if ((b.ts||0) > taskMap3[b.task].lastTs) taskMap3[b.task].lastTs = b.ts||0;
+    });
+    const taskEntries3 = Object.entries(taskMap3).sort((a,b2) => b2[1].lastTs - a[1].lastTs);
 
-    const taskOptHtml = [
-      `<div class="prog-task-opt${!activeTask?' active':''}" onclick="document.getElementById('prog-task-dd-${projName.replace(/\s+/g,'-')}').style.display='none';activeTask=null;renderFeed()">
-        <span style="font-size:12px">◈</span>
-        <span>All tasks</span>
-      </div>`
-    ].concat(taskEntries3.map(([tn, info]) => {
-      const icon = TICONS2[tn] || '◈';
-      const isAct = activeTask === tn;
-      const fillPct = Math.min(Math.round(info.sessions * 12), 100);
-      const fc = fillPct > 80 ? '#ef4444' : fillPct > 55 ? '#f59e0b' : p.color;
-      const miniTape = Array(Math.min(info.sessions,8)).fill(`<div style="flex:1;height:100%;background:${fc};opacity:.7"></div>`).join('') +
-        Array(Math.max(0,8-info.sessions)).fill(`<div style="flex:1;height:100%;background:var(--border);opacity:.3"></div>`).join('');
-      return `<div class="prog-task-opt${isAct?' active':''}"
-        onclick="document.getElementById('prog-task-dd-${projName.replace(/\s+/g,'-')}').style.display='none';activeTask='${tn}';renderFeed()">
-        <span style="font-size:12px">${icon}</span>
-        <div class="prog-task-opt-tape">${miniTape}</div>
-        <span style="flex:1">${tn.replace(/-/g,' ')}</span>
-        <span style="font-size:9px;color:var(--text-3)">${fillPct}%</span>
-      </div>`;
-    })).join('');
-
-    const activeLabel = activeTask
-      ? `${TICONS2[activeTask]||'◈'} ${activeTask.replace(/-/g,' ')}`
-      : '◈ All tasks';
-
-    const selectorHtml = taskEntries3.length ? `
-      <div class="prog-task-selector" style="position:relative">
-        <div class="prog-task-btn${activeTask?' active':''}"
+    const taskChipsHtml = taskEntries3.length ? `
+      <div class="prog-tasks">
+        <div class="prog-task-chip${!activeTask?' active':''}"
           style="--prog-color:${p.color}"
-          onclick="event.stopPropagation();const dd=document.getElementById('prog-task-dd-${projName.replace(/\s+/g,'-')}');dd.style.display=dd.style.display==='block'?'none':'block'">
-          <span>${activeLabel}</span>
-          <span style="opacity:.5;font-size:9px">▾</span>
+          onclick="activeTask=null;renderFeed()">
+          <span>All</span>
         </div>
-        <div class="prog-task-dropdown" id="prog-task-dd-${projName.replace(/\s+/g,'-')}" style="display:none">
-          ${taskOptHtml}
-        </div>
+        ${taskEntries3.map(([tn, info]) => {
+          const icon = TICONS2[tn] || '◈';
+          const isAct = activeTask === tn;
+          const fillPct = Math.min(Math.round(info.sessions * 12), 100);
+          const fc = fillPct > 80 ? '#ef4444' : fillPct > 55 ? '#f59e0b' : p.color;
+          // Mini fill tape
+          const miniSegs = Math.min(info.sessions, 6);
+          const miniHtml = Array(miniSegs).fill(`<div style="flex:1;height:100%;background:${fc};opacity:.8"></div>`).join('') +
+            Array(Math.max(0, 6-miniSegs)).fill(`<div style="flex:1;height:100%;background:var(--border);opacity:.35"></div>`).join('');
+          return `<div class="prog-task-chip${isAct?' active':''}"
+            style="--prog-color:${p.color}"
+            onclick="activeTask='${tn}';renderFeed()"
+            title="${tn.replace(/-/g,' ')} · ${fillPct}% context">
+            <span style="font-size:11px">${icon}</span>
+            <div class="prog-chip-fill" style="height:3px;width:22px;display:flex;border-radius:2px;overflow:hidden">${miniHtml}</div>
+            <span>${tn.replace(/-/g,' ')}</span>
+          </div>`;
+        }).join('')}
       </div>` : '';
 
-    return `<div class="prog-ticker" style="--prog-color:${p.color};background:linear-gradient(90deg,rgba(${rgb},.08) 0%,rgba(${rgb},.03) 60%,transparent 100%)">
+    return `<div class="prog-ticker" style="--prog-color:${p.color};background:linear-gradient(105deg,rgba(${rgb},.1) 0%,rgba(${rgb},.04) 55%,transparent 100%)">
       <div class="prog-tape">${tapeHtml}</div>
       <div class="prog-body">
         <div class="prog-live">
@@ -11710,7 +11692,7 @@ function renderProjectHeader(projName) {
           <div class="prog-live-label">Live</div>
         </div>
         <div class="prog-metrics">${metricsHtml}</div>
-        ${selectorHtml}
+        ${taskChipsHtml}
       </div>
     </div>`;
   })();
