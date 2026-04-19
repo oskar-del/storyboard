@@ -2901,12 +2901,14 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 }
 .ph-task-card {
   background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px;
-  padding: 10px 12px; cursor: pointer; transition: all .15s; min-width: 100px;
-  display: flex; flex-direction: column; gap: 3px;
+  padding: 12px 14px; cursor: pointer; transition: all .15s; min-width: 130px;
+  display: flex; flex-direction: column;
 }
+.ph-task-ctx { min-width: 150px; }
+.ph-task-ctx.single { min-width: 220px; flex: 2; }
 .ph-task-card:hover { border-color: rgba(108,99,255,.35); background: rgba(108,99,255,.05); transform: translateY(-1px); }
-.ph-task-card.active { box-shadow: 0 2px 8px rgba(0,0,0,.2); }
-.ph-task-card.add-task { opacity: .5; min-width: 80px; }
+.ph-task-card.active { box-shadow: 0 2px 12px rgba(0,0,0,.25); }
+.ph-task-card.add-task { opacity: .4; min-width: 80px; align-items: center; justify-content: center; }
 .ph-task-card.add-task:hover { opacity: 1; }
 .ph-task-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .ph-task-name { font-size: 11px; font-weight: 700; color: var(--text); text-transform: capitalize; line-height: 1.3; }
@@ -11544,26 +11546,72 @@ function renderProjectHeader(projName) {
     if (!entries.length) return '';
     const TICONS = { 'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','mobile-pwa':'📱','context-visual':'📊','strategy':'🧠','crm-sales':'💼','website':'🌐','seo-content':'🔍','social-media':'📣','email-campaigns':'📧','airtable':'📋','data-pipeline':'🔄','automation':'⚙','design':'🎨' };
     const autos2 = AUTOMATIONS.filter(a => a.project === projName && a.enabled);
+    const isSingle = entries.length === 1;
+
+    const taskContextCard = ([taskName, info]) => {
+      const icon = TICONS[taskName] || '◈';
+      const isActive = activeTask === taskName;
+      const hasAuto = autos2.some(a => a.task === taskName);
+      const sessions = info.blocks.filter(b => b.type === 'session');
+      const totalDec = info.blocks.reduce((n,b) => n + (b.decisions?.length||0), 0);
+      const totalIdeas = info.blocks.filter(b => b.type === 'idea').length;
+
+      // Context fill: each session ≈ ~12% of a context window; cap at 100%
+      const fillPct = Math.min(Math.round(sessions.length * 12), 100);
+      const fillColor = fillPct > 80 ? '#ef4444' : fillPct > 55 ? '#f59e0b' : p.color;
+
+      // Session segments — each block in the session list = one segment in the tape
+      const segmentHtml = sessions.length
+        ? sessions.map(b => {
+            const density = Math.min(((b.decisions?.length||0) + (b.chips?.length||0)) / 8, 1);
+            const opacity = 0.25 + density * 0.75;
+            return `<div style="flex:1;height:100%;background:${fillColor};opacity:${opacity.toFixed(2)};border-right:1px solid var(--bg)"></div>`;
+          }).join('')
+        : `<div style="flex:1;height:100%;background:var(--border)"></div>`;
+
+      // Empty remainder
+      const emptySegs = Math.max(0, 8 - sessions.length);
+      const emptyHtml = Array(emptySegs).fill(`<div style="flex:1;height:100%;background:var(--border);opacity:.3;border-right:1px solid var(--bg)"></div>`).join('');
+
+      return `<div class="ph-task-card ph-task-ctx${isActive?' active':''}${isSingle?' single':''}"
+        onclick="setTaskFilter('${taskName}')"
+        style="${isActive ? 'border-color:'+p.color+';background:'+p.color+'08' : ''}">
+
+        <!-- Context tape -->
+        <div style="display:flex;height:5px;border-radius:3px;overflow:hidden;gap:1px;margin-bottom:10px">
+          ${segmentHtml}${emptyHtml}
+        </div>
+
+        <!-- Header row -->
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <span style="font-size:13px">${icon}</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text);flex:1">${taskName.replace(/-/g,' ')}</span>
+          ${hasAuto ? `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:rgba(108,99,255,.12);color:#6c63ff;font-weight:700">AUTO</span>` : ''}
+          ${isActive ? `<span style="font-size:9px;color:${p.color};font-weight:700">ACTIVE</span>` : ''}
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1">
+            <div style="font-size:18px;font-weight:800;color:${fillColor};line-height:1">${fillPct}%</div>
+            <div style="font-size:9px;color:var(--text-3);margin-top:1px">context used</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;font-weight:700;color:var(--text)">${totalDec} <span style="color:#22c55e">✓</span></div>
+            <div style="font-size:9px;color:var(--text-3)">${sessions.length} sessions</div>
+          </div>
+        </div>
+
+      </div>`;
+    };
+
     return `<div class="ph-task-strip">
-      <div class="ph-task-strip-label">Task windows <span style="color:var(--text-3);font-weight:500;margin-left:4px">${entries.length} active</span></div>
+      <div class="ph-task-strip-label">Context windows <span style="color:var(--text-3);font-weight:500;margin-left:4px">${entries.length} task${entries.length!==1?'s':''}</span></div>
       <div class="ph-task-cards">
-        ${entries.map(([taskName, info]) => {
-          const icon = TICONS[taskName] || '◈';
-          const isActive = activeTask === taskName;
-          const hasAuto = autos2.some(a => a.task === taskName);
-          const sessionCount = info.blocks.filter(b=>b.type==='session').length;
-          return `<div class="ph-task-card${isActive?' active':''}" onclick="setTaskFilter('${taskName}')" style="${isActive?'border-color:'+p.color+';background:'+p.color+'10':''}">
-            <div class="ph-task-card-top">
-              <span style="font-size:15px">${icon}</span>
-              ${hasAuto ? `<span class="pd-task-auto-dot"></span>` : ''}
-            </div>
-            <div class="ph-task-name">${taskName.replace(/-/g,' ')}</div>
-            <div class="ph-task-meta">${info.blocks.length} block${info.blocks.length!==1?'s':''}${sessionCount?' · '+sessionCount+' sess':''}${isActive?' · <span style="color:'+p.color+'">active</span>':''}</div>
-          </div>`;
-        }).join('')}
+        ${entries.map(taskContextCard).join('')}
         <div class="ph-task-card add-task" onclick="showAddTaskPrompt('${projName}')" title="Add task window">
-          <div class="ph-task-card-top"><span style="font-size:15px;color:var(--text-3)">+</span></div>
-          <div class="ph-task-name" style="color:var(--text-3)">new task</div>
+          <div style="font-size:20px;color:var(--text-3);margin-bottom:4px">+</div>
+          <div class="ph-task-name" style="color:var(--text-3);font-size:11px">new task</div>
         </div>
       </div>
     </div>`;
