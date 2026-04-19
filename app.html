@@ -10180,31 +10180,56 @@ function openDesignsView() {
   clearAllNavActive();
   document.getElementById('designsBtn')?.classList.add('active');
   const el = document.getElementById('feed');
+
+  // Show loading state, then fetch screenshots from MCP + block data
+  el.innerHTML = `<div class="designs-wrap"><div style="padding:40px 16px;color:var(--text-3);font-size:13px">Loading designs…</div></div>`;
+
+  // Try to fetch live thumbnails from MCP server
+  fetch('http://127.0.0.1:3847/thumbnails')
+    .then(r => r.ok ? r.json() : { thumbnails: [] })
+    .catch(() => ({ thumbnails: [] }))
+    .then(data => _renderDesignsView(data.thumbnails || []));
+}
+
+function _renderDesignsView(liveFiles) {
+  const el = document.getElementById('feed');
   const allBlocks = mergedBlocks();
 
-  // Collect all design assets: block-level thumbs + filmstrip items
-  const designs = [];
+  // ── Collect block-referenced designs ──────────────────────────────────────
+  const blockDesigns = [];
+  const seenPaths = new Set();
   allBlocks.forEach(b => {
     if (b.thumb) {
-      designs.push({
-        blockId: b.id, title: b.title, thumb: b.thumb,
-        project: b.project || 'Unknown', date: b.date, sub: null,
-        kind: 'block'
-      });
+      blockDesigns.push({ blockId: b.id, title: b.title, thumb: b.thumb, project: b.project || 'Unknown', date: b.date, sub: null, kind: 'block' });
+      seenPaths.add(b.thumb);
     }
     if (b.filmstrip?.length) {
       b.filmstrip.forEach((f, fi) => {
         if (f.thumb) {
-          designs.push({
-            blockId: b.id, filmIdx: fi, title: f.label || b.title,
-            thumb: f.thumb, project: b.project || 'Unknown',
-            date: b.date, sub: f.sub, kind: 'filmstrip',
-            blockTitle: b.title
-          });
+          blockDesigns.push({ blockId: b.id, filmIdx: fi, title: f.label || b.title, thumb: f.thumb, project: b.project || 'Unknown', date: b.date, sub: f.sub, kind: 'filmstrip', blockTitle: b.title });
+          seenPaths.add(f.thumb);
         }
       });
     }
   });
+
+  // ── Collect live screenshots not already referenced in blocks ──────────────
+  // Parse project + date from filename: storyboard-live-2026-04-19-19-24.png
+  const screenshotDesigns = liveFiles
+    .filter(f => !seenPaths.has(f.path))
+    .map(f => {
+      const m = f.file.match(/^([a-z\-]+?)-(?:live|dark-mode|light-mode)-(\d{4}-\d{2}-\d{2})-(\d{2}-\d{2})\.png$/);
+      const projSlug = m ? m[1] : null;
+      const dateStr  = m ? m[2] : null;
+      const timeStr  = m ? m[3].replace('-', ':') : null;
+      // Map slug to project name
+      const projMap = { 'storyboard': 'Storyboard', 'opero': 'Opero Agency', 'newbuild': 'New Build Homes', 'curated': 'Curated Estate', 'propertyos': 'PropertyOS', 'hh': 'Hansson Hertzell' };
+      const project = projSlug ? (projMap[projSlug] || 'Storyboard') : 'Storyboard';
+      const label = timeStr ? `${dateStr} ${timeStr}` : f.file.replace('.png','');
+      return { blockId: null, title: label, thumb: f.path, project, date: dateStr || '', sub: 'Auto screenshot', kind: 'screenshot', mtime: f.mtime };
+    });
+
+  const designs = [...blockDesigns, ...screenshotDesigns];
 
   // Update badge
   document.getElementById('designsCount').textContent = designs.length;
@@ -10215,62 +10240,53 @@ function openDesignsView() {
   const sortedProjects = Object.entries(projCounts).sort((a, b) => b[1] - a[1]).map(([p]) => p);
 
   // Filter
-  const filtered = designsProjectFilter === 'All'
-    ? designs
-    : designs.filter(d => d.project === designsProjectFilter);
+  const filtered = designsProjectFilter === 'All' ? designs : designs.filter(d => d.project === designsProjectFilter);
 
   // Group by project
   const grouped = {};
-  filtered.forEach(d => {
-    if (!grouped[d.project]) grouped[d.project] = [];
-    grouped[d.project].push(d);
-  });
+  filtered.forEach(d => { if (!grouped[d.project]) grouped[d.project] = []; grouped[d.project].push(d); });
   const groupOrder = designsProjectFilter === 'All' ? sortedProjects : [designsProjectFilter];
 
   const pillsHtml = [
     `<button class="designs-pill${designsProjectFilter === 'All' ? ' active' : ''}" onclick="designsProjectFilter='All';openDesignsView()">All <span style="opacity:.55">${designs.length}</span></button>`,
     ...sortedProjects.map(p =>
-      `<button class="designs-pill${designsProjectFilter === p ? ' active' : ''}"
-        onclick="designsProjectFilter=${JSON.stringify(p)};openDesignsView()">${p} <span style="opacity:.55">${projCounts[p]}</span></button>`)
+      `<button class="designs-pill${designsProjectFilter === p ? ' active' : ''}" onclick="designsProjectFilter=${JSON.stringify(p)};openDesignsView()">${p} <span style="opacity:.55">${projCounts[p]}</span></button>`)
   ].join('');
+
+  const renderCard = (d) => {
+    const clickHandler = d.blockId ? `openDetail('${d.blockId}')` : `window.open('${d.thumb}','_blank')`;
+    return `<div class="design-card" onclick="${clickHandler}">
+      <img class="design-card-img" src="${d.thumb}" alt=""
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="design-card-img-ph" style="display:none">🖼</div>
+      <div class="design-card-body">
+        <div class="design-card-title">${d.title || 'Untitled'}</div>
+        ${d.sub ? `<div class="design-card-sub">${d.sub}</div>` : ''}
+        ${d.kind === 'filmstrip' && d.blockTitle ? `<div class="design-card-sub" style="opacity:.5">${d.blockTitle}</div>` : ''}
+        <div class="design-card-meta">
+          <span class="design-card-date">${d.date || ''}</span>
+          <span class="design-card-proj" style="color:${(PROJ[d.project] || {color:'#6c63ff'}).color}">${d.project}</span>
+        </div>
+      </div>
+    </div>`;
+  };
 
   const sectionsHtml = groupOrder.map(proj => {
     const cards = grouped[proj] || [];
     if (!cards.length) return '';
     return `<div class="designs-section">
       ${designsProjectFilter === 'All' ? `<div class="designs-section-label">${proj} &mdash; ${cards.length} asset${cards.length !== 1 ? 's' : ''}</div>` : ''}
-      <div class="designs-grid">
-        ${cards.map(d => `
-          <div class="design-card" onclick="openDetail('${d.blockId}')">
-            <img class="design-card-img" src="${d.thumb}" alt=""
-              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-            <div class="design-card-img-ph" style="display:none">🖼</div>
-            <div class="design-card-body">
-              <div class="design-card-title">${d.title || 'Untitled'}</div>
-              ${d.sub ? `<div class="design-card-sub">${d.sub}</div>` : ''}
-              ${d.kind === 'filmstrip' && d.blockTitle ? `<div class="design-card-sub" style="opacity:.5">${d.blockTitle}</div>` : ''}
-              <div class="design-card-meta">
-                <span class="design-card-date">${d.date || ''}</span>
-                <span class="design-card-proj" style="color:${(PROJ[d.project] || {color: '#6c63ff'}).color}">${d.project}</span>
-              </div>
-            </div>
-          </div>`).join('')}
-      </div>
+      <div class="designs-grid">${cards.map(renderCard).join('')}</div>
     </div>`;
   }).join('');
 
   const emptyHtml = filtered.length === 0
-    ? `<div class="designs-empty">
-        <div class="designs-empty-icon">🖼</div>
-        <div>No designs${designsProjectFilter !== 'All' ? ' for ' + designsProjectFilter : ''}.</div>
-        <div style="margin-top:6px;font-size:12px;opacity:.6">Blocks with <code>thumb</code> images or filmstrip versions appear here.</div>
-      </div>`
-    : '';
+    ? `<div class="designs-empty"><div class="designs-empty-icon">🖼</div><div>No designs${designsProjectFilter !== 'All' ? ' for ' + designsProjectFilter : ''}.</div></div>` : '';
 
   el.innerHTML = `<div class="designs-wrap">
     <div class="designs-header">
       <div class="designs-title">Designs</div>
-      <div class="designs-subtitle">${designs.length} visual asset${designs.length !== 1 ? 's' : ''} across ${sortedProjects.length} project${sortedProjects.length !== 1 ? 's' : ''}</div>
+      <div class="designs-subtitle">${designs.length} visual asset${designs.length !== 1 ? 's' : ''} · ${screenshotDesigns.length} auto-captured · ${sortedProjects.length} project${sortedProjects.length !== 1 ? 's' : ''}</div>
     </div>
     <div class="designs-filter-bar">${pillsHtml}</div>
     ${sectionsHtml}${emptyHtml}

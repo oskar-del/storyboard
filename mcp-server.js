@@ -23,7 +23,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync, readdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync, readdirSync, statSync } from "fs";
 import { execSync } from "child_process";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -1224,6 +1224,25 @@ const httpServer = createServer((req, res) => {
     const unprocessed = raws.filter(r => !r.processed);
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ ok: true, count: unprocessed.length, captures: unprocessed }));
+    return;
+  }
+
+  // ── /thumbnails — list all screenshot files in thumbnails/ dir ───────────────
+  if (req.method === "GET" && req.url === "/thumbnails") {
+    const thumbDir = join(STORYBOARD_DIR, "thumbnails");
+    try {
+      const files = readdirSync(thumbDir)
+        .filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f))
+        .map(f => {
+          const stat = statSync(join(thumbDir, f));
+          return { file: f, path: `thumbnails/${f}`, mtime: stat.mtimeMs };
+        })
+        .sort((a, b) => b.mtime - a.mtime); // newest first
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ ok: true, count: files.length, thumbnails: files }));
+    } catch (e) {
+      res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
+    }
     return;
   }
 
