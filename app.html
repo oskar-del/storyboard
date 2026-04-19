@@ -864,14 +864,14 @@ body.light-mode .ctx-fault-reseed { background: rgba(108,99,255,.07); color: #6c
 /* ── Project nav hover menu ─────────────────────────────── */
 .nav-proj-item { position: relative; }
 .nav-proj-menu-btn {
-  display: none; margin-left: auto; flex-shrink: 0;
+  display: block; margin-left: auto; flex-shrink: 0;
   background: none; border: none; padding: 0 4px; cursor: pointer;
-  font-size: 13px; color: var(--text-3); letter-spacing: 1px; line-height: 1;
-  border-radius: 4px;
+  font-size: 11px; color: var(--text-3); letter-spacing: 2px; line-height: 1;
+  border-radius: 4px; opacity: 0.18; transition: opacity .15s, background .1s;
 }
-.nav-proj-menu-btn:hover { background: var(--border); color: var(--text); }
+.nav-proj-menu-btn:hover { background: var(--border); color: var(--text); opacity: 1; }
 .nav-proj-item:hover .nav-proj-menu-btn,
-.nav-proj-row:hover .nav-proj-menu-btn { display: block; }
+.nav-proj-row:hover .nav-proj-menu-btn { opacity: 1; }
 .nav-proj-item:hover .nav-count,
 .nav-proj-row:hover .nav-count { display: none; }
 .nav-proj-menu {
@@ -6460,17 +6460,17 @@ function renderFeed() {
   if (contextWindowsViewActive) { renderContextWindowsView(); return; }
   // Category view — managed by openCategoryView(), don't override
   if (document.getElementById('categoriesBtn')?.classList.contains('active') && activeCatFilter !== undefined && document.querySelector('.cat-view')) { return; }
-  // Ideas view: show all ideas filtered by project pill
+  // Ideas view: show ALL ideas (ignores period filter — it's a backlog, not activity)
   if (ideasViewActive) {
     renderViewFilterBar('ideas');
-    const minTs = periodTs();
-    let allIdeas = [...baseBlocks.filter(b => b.type === 'idea'), ...capturedIdeas]
-      .filter(b => (b.ts||0) >= minTs || minTs === 0)
-      .sort((a,b) => (b.ts||0) - (a.ts||0));
+    renderOverviewStrip();
+    let allIdeas = mergedBlocks()
+      .filter(b => b.type === 'idea')
+      .sort((a, b) => (b.ts||0) - (a.ts||0));
     if (ideasProjectFilter !== 'All') allIdeas = allIdeas.filter(b => b.project === ideasProjectFilter);
     el.innerHTML = allIdeas.length
       ? `<div style="columns:3 200px;column-gap:12px">${allIdeas.map((b,i) => blockHTML(b,i)).join('')}</div>`
-      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No ideas for this project yet.</div>`;
+      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No ideas for ${ideasProjectFilter === 'All' ? 'any project' : ideasProjectFilter} yet.</div>`;
     return;
   }
   const minTs = periodTs();
@@ -10720,6 +10720,7 @@ function toggleDecisionsView() {
                     <span style="color:#15803d">Decisions</span>`;
     // Render only blocks that have decisions, with project filter bar
     renderViewFilterBar('decisions');
+    renderOverviewStrip();
     const feed = document.getElementById('feed');
     let withDecisions = mergedBlocks()
       .filter(b => b.decisions && b.decisions.length > 0)
