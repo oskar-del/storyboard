@@ -6663,8 +6663,8 @@ function renderCanvasView() {
         background:var(--white);border:1px solid var(--border);border-radius:14px;
         padding:20px;cursor:pointer;transition:border-color .15s,transform .1s;
         border-top:3px solid #f59e0b;position:relative;
-        " onmouseover="this.style.borderColor='#f59e0b';this.style.transform='translateY(-2px)'"
-           onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+        " onmouseover="this.style.outline='1px solid #f59e0b44';this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.outline='none';this.style.transform='none'">
         <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:${summary?'8px':'0'}">${b.title||'Untitled idea'}</div>
         ${summary ? `<div style="font-size:12px;color:var(--text-2);line-height:1.55;margin-bottom:10px">${summary}${(b.summary||b.body||'').length>160?'…':''}</div>` : ''}
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:auto">
@@ -6727,11 +6727,33 @@ function renderCanvasView() {
     }
 
     if (rest.length) {
+      const showAll = window._canvasRestExpanded;
+      const visible = showAll ? rest : rest.slice(0, 10);
       html += sectionLabel('All activity', rest.length);
-      html += `<div style="columns:3 200px;column-gap:12px">${rest.slice(0,12).map((b,i)=>blockHTML(b,i)).join('')}</div>`;
+      html += `<div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px">
+        ${visible.map(b => {
+          const icon = TYPE_ICONS[b.type] || '●';
+          const p2   = PROJ[b.project] || { color:'#6c63ff' };
+          const summ = (b.summary||b.body||'').slice(0,90).trim();
+          return `<div onclick="openDetail('${b.id}')" style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:13px;width:18px;text-align:center;flex-shrink:0;opacity:.7">${icon}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.title||'Untitled'}</div>
+              ${summ ? `<div style="font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px">${summ}</div>` : ''}
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+              <span style="font-size:10px;padding:2px 7px;border-radius:4px;background:${p2.color}18;color:${p2.color};font-weight:600;letter-spacing:.02em">${b.type}</span>
+              <span style="font-size:10px;color:var(--text-3);white-space:nowrap">${b.date||''}</span>
+            </div>
+          </div>`;
+        }).join('')}
+        ${rest.length > 10 ? `<div onclick="window._canvasRestExpanded=!window._canvasRestExpanded;renderFeed()" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--text-3);cursor:pointer;text-align:center;transition:color .1s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-3)'">${showAll ? '↑ Show less' : `↓ Show all ${rest.length}`}</div>` : ''}
+      </div>`;
     }
 
-    el.innerHTML = html || `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">No blocks yet.</div>`;
+    el.innerHTML = html
+      ? `<div style="padding:4px 16px 40px">${html}</div>`
+      : `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">No blocks yet.</div>`;
     return;
   }
 
