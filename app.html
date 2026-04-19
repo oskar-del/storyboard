@@ -3520,6 +3520,10 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
     <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
     <!-- ── CONTENT TYPE FILTERS ───────────────────── -->
+    <button class="nav-tool-item" id="designsBtn" onclick="openDesignsView()">
+      <span class="nav-tool-label">Designs</span>
+      <span class="nav-tool-badge" id="designsCount">0</span>
+    </button>
     <button class="nav-tool-item" id="ideasBtn" onclick="toggleIdeasView()">
       <span class="nav-tool-label">Ideas</span>
       <span class="nav-tool-badge yellow" id="ideasCount">0</span>
@@ -3539,10 +3543,6 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
     <button class="nav-tool-item" id="filesBtn" onclick="openFilesView()">
       <span class="nav-tool-label">Files</span>
       <span class="nav-tool-badge" id="filesCount">6</span>
-    </button>
-    <button class="nav-tool-item" id="designsBtn" onclick="openDesignsView()">
-      <span class="nav-tool-label">Designs</span>
-      <span class="nav-tool-badge" id="designsCount">0</span>
     </button>
 
     <div class="nav-divider" style="margin:8px 12px 4px"></div>
@@ -6460,7 +6460,7 @@ function renderFeed() {
   if (contextWindowsViewActive) { renderContextWindowsView(); return; }
   // Category view — managed by openCategoryView(), don't override
   if (document.getElementById('categoriesBtn')?.classList.contains('active') && activeCatFilter !== undefined && document.querySelector('.cat-view')) { return; }
-  // Ideas view: show ALL ideas (ignores period filter — it's a backlog, not activity)
+  // Ideas view: big cards, no period filter (it's a backlog, not activity)
   if (ideasViewActive) {
     renderViewFilterBar('ideas');
     renderOverviewStrip();
@@ -6468,9 +6468,34 @@ function renderFeed() {
       .filter(b => b.type === 'idea')
       .sort((a, b) => (b.ts||0) - (a.ts||0));
     if (ideasProjectFilter !== 'All') allIdeas = allIdeas.filter(b => b.project === ideasProjectFilter);
+
+    const ideaBigCard = (b) => {
+      const p2 = PROJ[b.project] || { color: '#f59e0b' };
+      const chips = (b.chips || b.tags || []).slice(0, 3);
+      const summary = (b.summary || b.body || '').slice(0, 180).trim();
+      return `<div onclick="openDetail('${b.id}')" style="
+        background:var(--white);border:1px solid var(--border);border-radius:14px;
+        padding:20px;cursor:pointer;transition:outline .12s,transform .1s;
+        border-top:3px solid #f59e0b;display:flex;flex-direction:column;
+      " onmouseover="this.style.outline='1.5px solid #f59e0b55';this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.outline='none';this.style.transform='none'">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(245,158,11,.12);color:#d97706">IDEA</span>
+          <span style="font-size:10px;color:${p2.color};font-weight:600">${b.project||''}</span>
+          <span style="font-size:10px;color:var(--text-3);margin-left:auto">${b.date||''}</span>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:${summary?'10px':'0'}">${(b.title||'Untitled idea').replace(/^💡\s*/,'')}</div>
+        ${summary ? `<div style="font-size:12px;color:var(--text-2);line-height:1.6;flex:1">${summary}${(b.summary||b.body||'').length>180?'…':''}</div>` : ''}
+        ${chips.length ? `<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:12px">${chips.map(c=>`<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(245,158,11,.1);color:#d97706;font-weight:600">${c}</span>`).join('')}</div>` : ''}
+      </div>`;
+    };
+
     el.innerHTML = allIdeas.length
-      ? `<div style="columns:3 200px;column-gap:12px">${allIdeas.map((b,i) => blockHTML(b,i)).join('')}</div>`
-      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No ideas for ${ideasProjectFilter === 'All' ? 'any project' : ideasProjectFilter} yet.</div>`;
+      ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding:4px 16px 40px">${allIdeas.map(ideaBigCard).join('')}</div>`
+      : `<div style="padding:60px 0;text-align:center;color:var(--text-3);font-size:13px">
+          <div style="font-size:32px;margin-bottom:12px">💡</div>
+          No ideas for ${ideasProjectFilter === 'All' ? 'any project' : ideasProjectFilter} yet.
+        </div>`;
     return;
   }
   const minTs = periodTs();
