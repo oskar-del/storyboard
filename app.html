@@ -5767,11 +5767,11 @@ function navClick(f) {
   // Canvas now correctly filters to the selected project.
   // Exception: if already on timeline/pipeline/list with a project selected, stay there (user chose that view).
   if (f !== 'All') {
-    const stayViews = ['timeline', 'pipeline', 'list'];
-    if (!stayViews.includes(activeView)) setView('canvas');
+    const stayViews = ['timeline', 'pipeline', 'list', 'grid', 'board', 'journey'];
+    if (!stayViews.includes(activeView)) setView('profile');
   }
-  // Going back to "All work" from canvas → switch to grid (the all-projects overview)
-  if (f === 'All' && activeView === 'canvas') setView('grid');
+  // Going back to "All work" from profile → switch to grid (the all-projects overview)
+  if (f === 'All' && (activeView === 'profile' || activeView === 'canvas')) setView('grid');
   setFilter(f);
 }
 
@@ -6562,6 +6562,10 @@ function renderFeed() {
     fhEl.innerHTML = '';
   }
 
+  // Profile view — board landing page (overview strip + ticker + latest blocks + designs)
+  if (activeView === 'profile' && activeFilter !== 'All') { renderProfileView(activeFilter); return; }
+  // Journey view — chronological film strip of sessions for a board
+  if (activeView === 'journey' && activeFilter !== 'All') { renderJourneyView(); return; }
   // Canvas view — workspace overview, managed by renderCanvasView()
   if (activeView === 'canvas')   { renderCanvasView();   return; }
   if (activeView === 'timeline') { renderTimelineView(); return; }
@@ -6765,6 +6769,317 @@ function renderFeed() {
     }
     el.innerHTML = headerHtml + blocks.map((b, i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
   }
+}
+
+// ═══════════════════════════════════
+// PROFILE VIEW — board landing page (T1)
+// Overview strip + ticker + project header + latest blocks + latest designs
+// ═══════════════════════════════════
+function renderProfileView(projName) {
+  const el = document.getElementById('feed');
+  const fh = document.getElementById('feedHeader');
+  const p = PROJ[projName] || { color:'#6c63ff', icon:'◈' };
+  const all = mergedBlocks();
+  const pb = all.filter(b => b.project === projName);
+
+  // ── View toggle pills (inside the feed, above everything) ──────────
+  const toggleHtml = `
+    <div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;column-span:all;break-inside:avoid">
+      ${[
+        ['profile','Profile'],
+        ['grid','Grid'],
+        ['board','Board'],
+        ['journey','Journey'],
+        ['list','List']
+      ].map(([v,l]) => `<div onclick="setView('${v}');renderFeed()"
+        style="padding:5px 14px;border-radius:20px;cursor:pointer;font-size:11.5px;font-weight:700;
+          border:1.5px solid ${activeView===v ? p.color : 'rgba(255,255,255,.08)'};
+          background:${activeView===v ? `${p.color}18` : 'transparent'};
+          color:${activeView===v ? p.color : 'var(--text-3)'};
+          transition:all .12s">${l}</div>`).join('')}
+    </div>`;
+
+  // ── Stats for overview strip ───────────────────────────────────────
+  const sessCount = pb.filter(b=>b.type==='session').length;
+  const decCount  = pb.reduce((n,b)=>n+(b.decisions?.length||0),0);
+  const ideaCount = pb.filter(b=>b.type==='idea').length;
+  const compCount = pb.filter(b=>b.type==='compaction').length;
+  const discCount = pb.filter(b=>b.type==='discussion').length;
+  const designCount = pb.filter(b=>b.type==='artifact'||b.type==='design'||(b.screenshot&&b.screenshot!=='')).length;
+
+  // Recent sessions (last 3)
+  const recentSess = pb.filter(b=>b.type==='session')
+    .sort((a,b2)=>(b2.ts||0)-(a.ts||0)).slice(0,3);
+
+  const fmtTs = ts => {
+    if (!ts) return '';
+    const s = String(ts);
+    if (s.length === 8) {
+      const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[parseInt(s.slice(4,6))-1]+' '+parseInt(s.slice(6,8));
+    }
+    try { const d=new Date(ts); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate(); } catch(e){return '';}
+  };
+
+  // ── Latest 3 blocks (any type, most recent) ────────────────────────
+  const latestBlocks = pb.sort((a,b2)=>(b2.ts||0)-(a.ts||0)).slice(0,3);
+  const typeIcon = {session:'🧠',idea:'💡',discussion:'💬',compaction:'⚡',intent:'◈',decision:'✓',artifact:'🖼',design:'🖼',rejection:'✕'};
+  const typeColor = {session:p.color,idea:'#f59e0b',discussion:'#06b6d4',compaction:'#ef4444',intent:p.color,decision:'#22c55e',artifact:'#94a3b8',design:'#94a3b8'};
+
+  const latestBlocksHtml = latestBlocks.length ? latestBlocks.map(b => {
+    const tc = typeColor[b.type] || p.color;
+    const ti = typeIcon[b.type] || '◈';
+    const chips = (b.decisions?.length ? [`<span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;background:rgba(34,197,94,.1);color:#22c55e">✓ ${b.decisions.length}</span>`] : [])
+      .concat((b.chips||[]).slice(0,2).map(c=>`<span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;background:rgba(108,99,255,.08);color:${p.color}">${c}</span>`)).join('');
+    return `<div onclick="openDetail('${b.id}')" style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s;flex:1;min-width:0" onmouseover="this.style.borderColor='${tc}55'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+      <div style="height:3px;background:${tc}"></div>
+      <div style="padding:11px 13px">
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:${tc};margin-bottom:5px">${ti} ${b.type} · ${fmtTs(b.ts||b._captured?.slice(0,10))}</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:6px">${(b.title||'').replace(/^[💡🧠💬⚡◈✓🖼✕]\s*/,'').slice(0,90)}</div>
+        ${chips ? `<div style="display:flex;gap:4px;flex-wrap:wrap">${chips}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('') : `<div style="color:var(--text-3);font-size:12px;padding:20px 0">No blocks yet.</div>`;
+
+  // ── Latest designs ─────────────────────────────────────────────────
+  const designs = pb.filter(b=>b.screenshot&&b.screenshot!=='').sort((a,b2)=>(b2.ts||0)-(a.ts||0)).slice(0,4);
+  const designsHtml = designs.length ? designs.map(b=>`
+    <div onclick="openDetail('${b.id}')" style="cursor:pointer;transition:opacity .12s;flex-shrink:0" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <img src="${b.screenshot}" style="width:180px;aspect-ratio:16/9;border-radius:10px;border:1.5px solid var(--border);display:block;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#1e2030,rgba(108,99,255,.2))';this.src=''">
+      <div style="font-size:10.5px;font-weight:700;color:var(--text-2);margin-top:4px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(b.title||'Design').replace(/^[💡🧠💬⚡◈✓🖼✕]\s*/,'').slice(0,40)}</div>
+      <div style="font-size:9.5px;color:var(--text-3)">${fmtTs(b.ts||b._captured?.slice(0,10))}</div>
+    </div>`).join('') : `<div style="font-size:11px;color:var(--text-3)">No designs captured yet.</div>`;
+
+  // ── Overview strip HTML ─────────────────────────────────────────────
+  const ovStripHtml = `
+    <div style="display:grid;grid-template-columns:1fr 160px 1fr 1fr;gap:10px;margin-bottom:10px;column-span:all;break-inside:avoid">
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:${p.color};margin-bottom:8px">${projName}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div><div style="font-size:20px;font-weight:900;color:${p.color};line-height:1;letter-spacing:-.5px">${sessCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)">Sessions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#22c55e;line-height:1;letter-spacing:-.5px">${decCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)">Decisions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#f59e0b;line-height:1;letter-spacing:-.5px">${ideaCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)">Ideas</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#ef4444;line-height:1;letter-spacing:-.5px">${compCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)">Compactions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#06b6d4;line-height:1;letter-spacing:-.5px">${discCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)">Discuss.</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:var(--text-3);line-height:1;letter-spacing:-.5px">${designCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)">Designs</div></div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02));border:1.5px solid rgba(34,197,94,.18);border-radius:var(--r);padding:13px 15px;display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow)">
+        <div style="font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:rgba(34,197,94,.55);margin-bottom:2px">Velocity</div>
+        <div style="font-size:26px;font-weight:900;color:#22c55e;letter-spacing:-1px;line-height:1;margin-bottom:2px">${sessCount > 5 ? '↑' : '→'}${sessCount}×</div>
+        <div style="font-size:10px;color:var(--text-3)">sessions total</div>
+      </div>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3);margin-bottom:6px">Context</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+          <div style="flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden">
+            <div style="height:100%;width:${Math.min(sessCount*12,100)}%;background:${sessCount*12>80?'#ef4444':sessCount*12>55?'#f59e0b':p.color};border-radius:3px;transition:width .3s"></div>
+          </div>
+          <span style="font-size:11px;font-weight:900;color:${sessCount*12>80?'#ef4444':sessCount*12>55?'#f59e0b':p.color}">${Math.min(sessCount*12,100)}%</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-3);margin-bottom:8px">${compCount} compaction${compCount!==1?'s':''} · context resets</div>
+        ${compCount>0?`<div style="font-size:10px;font-weight:700;color:#ef4444">⚡ ${compCount} context compaction${compCount!==1?'s':''}</div>`:'<div style="font-size:10px;color:var(--text-3)">No compactions yet</div>'}
+      </div>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3);margin-bottom:6px">Recent Sessions</div>
+        ${recentSess.map(b=>`<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">
+          <div style="width:5px;height:5px;border-radius:50%;background:${p.color};flex-shrink:0"></div>
+          <div style="font-size:11px;color:var(--text-2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(b.title||'').replace(/^[🧠]\s*/,'')}</div>
+          <div style="font-size:10px;color:var(--text-3);flex-shrink:0">${fmtTs(b.ts||b._captured?.slice(0,10))}</div>
+        </div>`).join('')}
+        ${!recentSess.length?`<div style="font-size:11px;color:var(--text-3)">No sessions yet</div>`:''}
+      </div>
+    </div>`;
+
+  // ── Latest activity section label ──────────────────────────────────
+  const sectionLabel = (txt) => `<div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);padding:16px 0 10px;display:flex;align-items:center;gap:8px;column-span:all;break-inside:avoid">${txt}<span style="flex:1;height:1px;background:var(--border);margin-left:8px"></span></div>`;
+
+  // ── Inject into feedHeader ─────────────────────────────────────────
+  if (fh) fh.innerHTML = toggleHtml + ovStripHtml + renderProjectHeader(projName);
+
+  // ── Main feed: latest blocks + designs ────────────────────────────
+  el.innerHTML = `
+    ${sectionLabel('🕐 Latest Activity')}
+    <div style="display:flex;gap:10px;margin-bottom:4px;column-span:all;break-inside:avoid">
+      ${latestBlocksHtml}
+    </div>
+    ${designs.length ? `
+    ${sectionLabel('🖼 Latest Designs')}
+    <div style="display:flex;gap:12px;flex-wrap:wrap;column-span:all;break-inside:avoid">
+      ${designsHtml}
+    </div>` : ''}
+  `;
+}
+
+// ═══════════════════════════════════
+// JOURNEY VIEW — chronological film strip
+// ═══════════════════════════════════
+function renderJourneyView() {
+  const el = document.getElementById('feed');
+  const fh = document.getElementById('feedHeader');
+  const projName = activeFilter;
+  const p = PROJ[projName] || { color:'#6c63ff', icon:'◈' };
+  const all = mergedBlocks();
+  const pb = all.filter(b => b.project === projName);
+
+  // ── Toggle pills (re-injected with 'journey' active) ──────────────
+  const toggleHtml = `
+    <div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;column-span:all;break-inside:avoid">
+      ${[['profile','Profile'],['grid','Grid'],['board','Board'],['journey','Journey'],['list','List']]
+        .map(([v,l]) => `<div onclick="setView('${v}');renderFeed()"
+          style="padding:5px 14px;border-radius:20px;cursor:pointer;font-size:11.5px;font-weight:700;
+            border:1.5px solid ${activeView===v ? p.color : 'rgba(255,255,255,.08)'};
+            background:${activeView===v ? `${p.color}18` : 'transparent'};
+            color:${activeView===v ? p.color : 'var(--text-3)'};
+            transition:all .12s">${l}</div>`).join('')}
+    </div>`;
+
+  if (fh) fh.innerHTML = toggleHtml + renderProjectHeader(projName);
+
+  // ── Sessions in chronological order (oldest → newest) ─────────────
+  function tsToMs(ts) {
+    if (!ts) return 0;
+    const s = String(ts);
+    if (s.length === 8) return new Date(`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`).getTime();
+    if (ts > 1e10) return ts;
+    return ts * 1000;
+  }
+
+  const sessions = pb.filter(b => b.type === 'session')
+    .sort((a,b2) => tsToMs(a.ts) - tsToMs(b2.ts));
+
+  const compactions = pb.filter(b => b.type === 'compaction')
+    .sort((a,b2) => tsToMs(a.ts) - tsToMs(b2.ts));
+
+  const ideas = pb.filter(b => b.type === 'idea')
+    .sort((a,b2) => tsToMs(b2.ts) - tsToMs(a.ts)).slice(0,8);
+
+  const decisions = pb.reduce((arr, b) => {
+    if (b.decisions?.length) b.decisions.forEach(d => arr.push({text: d, from: b.title, ts: b.ts}));
+    return arr;
+  }, []).slice(-8).reverse();
+
+  const discussions = pb.filter(b => b.type === 'discussion')
+    .sort((a,b2) => tsToMs(b2.ts) - tsToMs(a.ts)).slice(0,5);
+
+  const fmtTs = ts => {
+    const s = String(ts||'');
+    if (s.length === 8) {
+      const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return m[parseInt(s.slice(4,6))-1]+' '+parseInt(s.slice(6,8));
+    }
+    try { const d=new Date(ts); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate(); } catch(e){ return ''; }
+  };
+
+  // Build session cards with compaction markers between them
+  let filmStripHtml = '';
+  sessions.forEach((s, idx) => {
+    const dCount = s.decisions?.length || 0;
+    const iCount = s.ideas?.length || 0;
+    const chips = (s.chips||[]).slice(0,3);
+    const sum = (s.summary||s.body||'').slice(0,130);
+    const trailHtml = s.seedBlocks?.length
+      ? `<div style="margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">seeded with</span>
+          ${s.seedBlocks.slice(0,2).map(sb=>`<span onclick="event.stopPropagation();openDetail('${sb.id}')" style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(108,99,255,.1);color:${p.color};cursor:pointer">📍 ${(sb.title||'block').slice(0,35)}</span>`).join('')}
+          <span style="font-size:9px;color:var(--text-3)">→ thread continues</span>
+        </div>` : '';
+
+    filmStripHtml += `
+      <!-- Session ${idx+1} -->
+      <div onclick="openDetail('${s.id}')" style="display:flex;gap:0;align-items:stretch;cursor:pointer;margin-bottom:0" onmouseover="this.querySelector('.sess-card').style.borderColor='${p.color}55'" onmouseout="this.querySelector('.sess-card').style.borderColor='var(--border)'">
+        <!-- Spine -->
+        <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;padding-top:12px">
+          <div style="width:10px;height:10px;border-radius:50%;background:${p.color};border:2px solid var(--bg);box-shadow:0 0 0 1.5px ${p.color};flex-shrink:0;z-index:1"></div>
+          ${idx < sessions.length-1 ? `<div style="width:2px;flex:1;background:linear-gradient(${p.color}44,${p.color}22);min-height:20px;margin-top:4px"></div>` : ''}
+        </div>
+        <!-- Card -->
+        <div class="sess-card" style="flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:${idx < sessions.length-1 ? '0' : '0'};box-shadow:var(--shadow);transition:border-color .12s;min-width:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:${p.color}">Session ${idx+1}</span>
+            <span style="font-size:10px;color:var(--text-3)">${fmtTs(s.ts)}</span>
+          </div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:${sum?'6px':'0'}">${(s.title||'Session').replace(/^[🧠]\s*/,'')}</div>
+          ${sum ? `<div style="font-size:11.5px;color:var(--text-2);line-height:1.5;margin-bottom:7px">${sum}${(s.summary||s.body||'').length>130?'…':''}</div>` : ''}
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            ${dCount ? `<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(34,197,94,.1);color:#22c55e">✓ ${dCount}</span>` : ''}
+            ${iCount ? `<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(245,158,11,.1);color:#f59e0b">💡 ${iCount}</span>` : ''}
+            ${chips.map(c=>`<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:rgba(108,99,255,.08);color:${p.color}">${c}</span>`).join('')}
+          </div>
+          ${trailHtml}
+        </div>
+      </div>`;
+
+    // Compaction marker between sessions (if next session likely needed one)
+    if (idx < sessions.length-1) {
+      const nextTs = tsToMs(sessions[idx+1]?.ts);
+      const currTs = tsToMs(s.ts);
+      const gapDays = (nextTs - currTs) / 86400000;
+      // Show CONTEXT FULL marker if: gap > 0.5 days OR s.compacted flag
+      if (s.compacted || gapDays > 0.3) {
+        filmStripHtml += `
+          <div style="display:flex;align-items:center;gap:0;margin:0">
+            <div style="width:36px;display:flex;justify-content:center">
+              <div style="width:2px;height:8px;background:${p.color}22"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);margin-left:0;flex:1">
+              <span style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:#ef4444">⚡ Context Reset</span>
+              ${gapDays >= 1 ? `<span style="font-size:9.5px;color:var(--text-3)">${Math.round(gapDays)} day${Math.round(gapDays)>1?'s':''} later</span>` : gapDays >= 0.04 ? `<span style="font-size:9.5px;color:var(--text-3)">${Math.round(gapDays*24)}h later</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0">
+            <div style="width:36px;display:flex;justify-content:center">
+              <div style="width:2px;height:8px;background:${p.color}22"></div>
+            </div>
+          </div>`;
+      } else {
+        filmStripHtml += `<div style="height:8px"></div>`;
+      }
+    }
+  });
+
+  if (!sessions.length) {
+    filmStripHtml = `<div style="padding:40px 0;color:var(--text-3);font-size:12px;text-align:center">No sessions captured yet for ${projName}.</div>`;
+  }
+
+  // ── Right panel ────────────────────────────────────────────────────
+  const rightPanel = `
+    <div style="display:flex;flex-direction:column;gap:14px">
+      ${ideas.length ? `
+      <div>
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;gap:6px">💡 Ideas <span style="font-size:9px;background:rgba(245,158,11,.15);color:#f59e0b;padding:1px 6px;border-radius:4px;font-weight:800">${ideas.length}</span></div>
+        ${ideas.map(b=>`<div onclick="openDetail('${b.id}')" style="padding:7px 9px;border-radius:7px;border:1px solid var(--border);margin-bottom:5px;cursor:pointer;background:var(--white);transition:border-color .1s" onmouseover="this.style.borderColor='${p.color}55'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:11.5px;font-weight:700;color:var(--text);line-height:1.3">${(b.title||'').replace(/^[💡]\s*/,'').slice(0,65)}</div>
+          <div style="font-size:9.5px;color:var(--text-3);margin-top:2px">${fmtTs(b.ts)}</div>
+        </div>`).join('')}
+      </div>` : ''}
+
+      ${decisions.length ? `
+      <div>
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;gap:6px">✓ Decisions <span style="font-size:9px;background:rgba(34,197,94,.15);color:#22c55e;padding:1px 6px;border-radius:4px;font-weight:800">${decisions.length}</span></div>
+        ${decisions.map(d=>`<div style="padding:6px 9px;border-radius:7px;border:1px solid rgba(34,197,94,.15);margin-bottom:5px;background:rgba(34,197,94,.03)">
+          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.3">${String(d.text).slice(0,70)}</div>
+          <div style="font-size:9.5px;color:var(--text-3);margin-top:2px">${(d.from||'').replace(/^[🧠]\s*/,'').slice(0,40)}</div>
+        </div>`).join('')}
+      </div>` : ''}
+
+      ${discussions.length ? `
+      <div>
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:8px">💬 Discussions</div>
+        ${discussions.map(b=>`<div onclick="openDetail('${b.id}')" style="padding:7px 9px;border-radius:7px;border:1px solid var(--border);margin-bottom:5px;cursor:pointer;background:var(--white);transition:border-color .1s" onmouseover="this.style.borderColor='#06b6d455'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.3">${(b.title||'').replace(/^[💬]\s*/,'').slice(0,65)}</div>
+        </div>`).join('')}
+      </div>` : ''}
+    </div>`;
+
+  // ── Two-column layout ──────────────────────────────────────────────
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 240px;gap:16px;align-items:start;column-span:all;break-inside:avoid">
+      <!-- Film strip -->
+      <div>${filmStripHtml}</div>
+      <!-- Right panel -->
+      <div style="position:sticky;top:16px">${rightPanel}</div>
+    </div>`;
 }
 
 // ═══════════════════════════════════
@@ -9033,6 +9348,7 @@ function openAgentPreview(tab) {
       <div class="agent-tabs">
         <button class="agent-tab ${activeAgentTab==='personas'?'active':''}" onclick="switchAgentTab('personas')">👥 Persona Simulation</button>
         <button class="agent-tab ${activeAgentTab==='audit'?'active':''}" onclick="switchAgentTab('audit')">🔎 Website Audit</button>
+        <button class="agent-tab ${activeAgentTab==='automations'?'active':''}" onclick="switchAgentTab('automations')">⚡ Automations</button>
       </div>
 
       <div id="agentTabContent">
@@ -9045,8 +9361,111 @@ function switchAgentTab(tab) {
   activeAgentTab = tab;
   const content = document.getElementById('agentTabContent');
   const tabs = document.querySelectorAll('.agent-tab');
-  tabs.forEach((t,i) => t.classList.toggle('active', (i===0 && tab==='personas')||(i===1 && tab==='audit')));
-  if (content) content.innerHTML = tab === 'personas' ? renderPersonasTab() : renderAuditTab();
+  tabs.forEach((t,i) => t.classList.toggle('active',
+    (i===0 && tab==='personas') || (i===1 && tab==='audit') || (i===2 && tab==='automations')
+  ));
+  if (content) content.innerHTML =
+    tab === 'personas' ? renderPersonasTab() :
+    tab === 'automations' ? renderAutomationsTab() :
+    renderAuditTab();
+}
+
+function renderAutomationsTab() {
+  const statusDot = s => s === 'ok' ? `<span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 0 2px rgba(34,197,94,.25)"></span>`
+    : s === 'disabled' ? `<span style="width:7px;height:7px;border-radius:50%;background:var(--text-3);display:inline-block"></span>`
+    : s === 'manual' ? `<span style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block;box-shadow:0 0 0 2px rgba(245,158,11,.25)"></span>`
+    : `<span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block"></span>`;
+
+  // Group by project
+  const byProject = {};
+  AUTOMATIONS.forEach(a => {
+    if (!byProject[a.project]) byProject[a.project] = [];
+    byProject[a.project].push(a);
+  });
+
+  const enabledCount = AUTOMATIONS.filter(a=>a.enabled).length;
+  const runningCount = AUTOMATIONS.filter(a=>a.status==='running').length;
+
+  let html = `
+    <div>
+      <!-- Summary row -->
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <div style="padding:10px 14px;border-radius:10px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);flex:1;text-align:center">
+          <div style="font-size:22px;font-weight:900;color:#22c55e;line-height:1">${enabledCount}</div>
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">Active</div>
+        </div>
+        <div style="padding:10px 14px;border-radius:10px;background:rgba(108,99,255,.07);border:1px solid rgba(108,99,255,.18);flex:1;text-align:center">
+          <div style="font-size:22px;font-weight:900;color:var(--accent);line-height:1">${AUTOMATIONS.length}</div>
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">Total</div>
+        </div>
+        <div style="padding:10px 14px;border-radius:10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);flex:1;text-align:center">
+          <div style="font-size:22px;font-weight:900;color:#f59e0b;line-height:1">${AUTOMATIONS.filter(a=>!a.enabled).length}</div>
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">Disabled</div>
+        </div>
+      </div>`;
+
+  // Render by project
+  Object.entries(byProject).forEach(([proj, autos]) => {
+    const p = PROJ[proj] || { color:'#6c63ff' };
+    html += `
+      <div style="margin-bottom:18px">
+        <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:${p.color};margin-bottom:8px;display:flex;align-items:center;gap:6px">
+          <span>${p.icon||'◈'}</span> ${proj}
+          <span style="font-size:9px;background:${p.color}15;color:${p.color};padding:1px 7px;border-radius:4px;font-weight:800">${autos.filter(a=>a.enabled).length}/${autos.length}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${autos.map(a => `
+            <div style="background:var(--white);border:1.5px solid ${a.enabled?'var(--border)':'rgba(255,255,255,.04)'};border-radius:10px;padding:11px 13px;transition:border-color .12s;opacity:${a.enabled?'1':'.5'}" ${a.enabled?`onmouseover="this.style.borderColor='${p.color}55'" onmouseout="this.style.borderColor='var(--border)'"`:''}>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+                ${statusDot(a.status)}
+                <span style="font-size:12.5px;font-weight:800;color:var(--text);flex:1">${a.title}</span>
+                <button onclick="event.stopPropagation();triggerAutomation('${a.id}')" style="font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;border:1.5px solid ${p.color};background:${p.color}18;color:${p.color};cursor:${a.enabled?'pointer':'not-allowed'};opacity:${a.enabled?1:.4};white-space:nowrap" ${!a.enabled?'disabled':''}>
+                  ▶ Run
+                </button>
+              </div>
+              <div style="font-size:11px;color:var(--text-2);line-height:1.45;margin-bottom:6px">${a.desc}</div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:9.5px;color:var(--text-3)">
+                <span>⏱ ${a.schedule||'—'}</span>
+                <span>Last: ${a.lastRun||'—'}</span>
+                <span>Next: ${a.nextRun||'—'}</span>
+              </div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+                ${(a.chips||[]).map(c=>`<span style="font-size:9.5px;padding:1px 7px;border-radius:4px;background:${p.color}0d;color:${p.color};font-weight:700">${c}</span>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  });
+
+  html += `</div>`;
+  return html;
+}
+
+async function triggerAutomation(id) {
+  const a = AUTOMATIONS.find(x=>x.id===id);
+  if (!a || !a.enabled) return;
+  // Visual feedback
+  const btn = event.target;
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Starting…';
+  btn.disabled = true;
+  try {
+    const resp = await fetch('http://localhost:3847/preview', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ automationId: id, project: a.project, title: a.title })
+    });
+    if (resp.ok) {
+      btn.innerHTML = '✓ Triggered';
+      btn.style.background = 'rgba(34,197,94,.15)';
+      btn.style.borderColor = '#22c55e';
+      btn.style.color = '#22c55e';
+      setTimeout(() => { btn.innerHTML = origText; btn.disabled = false; btn.style.background = ''; btn.style.borderColor = ''; btn.style.color = ''; }, 3000);
+    } else { throw new Error('Server error'); }
+  } catch(e) {
+    btn.innerHTML = '⚡ Run locally';
+    btn.style.color = '#f59e0b';
+    setTimeout(() => { btn.innerHTML = origText; btn.disabled = false; btn.style.color = ''; }, 2500);
+  }
 }
 
 function renderPersonasTab() {
