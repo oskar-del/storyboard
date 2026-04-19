@@ -1,18 +1,38 @@
 [
   {
-    "id": "sb-apr19-session-polish-day5",
+    "id": "sb-apr19-session-day6-design-system",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 5 — period tabs on project view, idea block redesign, right panel polish",
-    "summary": "Fixed period tabs disappearing when clicking a project in the sidebar — tabs now stay visible and actually filter the project's blocks by time. Redesigned idea blocks from old bright yellow pill aesthetic to proper dark-theme cards with amber left stripe and icon band — consistent with rest of design system. Fixed right panel idea pills to match new amber styling. All shipped to GitHub Pages.",
+    "title": "Day 6 — Design system audit, search ⌘K upgrade, block detail redesign",
+    "summary": "Full design system pass: added semantic TYPE_COLORS so block stripe/icon-band colors reflect type not project (purple=session, amber=idea, green=decision, blue=discussion, red=rejection). Fixed sprint day calculation (Apr 15 = Day 1, today = Day 5). Added discussion block type with proper blue card. Fixed --card CSS variable missing in dark mode (search overlay had no background). Upgraded search with type filter chips, arrow-key navigation, term highlighting, decision match preview, result count footer. Rewrote block detail overlay — proper section order (summary first, then decisions, ideas, related blocks), chips shown in meta row, context window fill bar for sessions, related blocks panel, Carry forward available on ALL blocks. Fixed search hover color inconsistency.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Period tabs persist on canvas/project view — they filter that project's blocks",
-      "Idea blocks = dark card + amber stripe + icon band — no more light-mode pill colours in dark theme",
-      "Right panel idea pills match new amber system"
+      "Block type > project in visual hierarchy — stripe uses semantic TYPE_COLORS not project color",
+      "Sprint start = Apr 15 2026 (Day 1), today Apr 19 = Day 5",
+      "Discussion blocks get dedicated blue card renderer — were falling through to generic",
+      "Block detail: summary first, then decisions → ideas → related blocks",
+      "Carry forward available on ALL blocks, not just seed=true ones",
+      "Search result hover: var(--bg) was near-black in dark mode → rgba(255,255,255,.04)"
     ],
-    "chips": ["period-tabs", "idea-redesign", "dark-theme", "UX polish"],
+    "chips": ["design-system", "type-colors", "search", "detail-overlay", "sprint-day"],
+    "_source": "claude.ai"
+  },
+  {
+    "id": "sb-apr19-session-polish-day5",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 5 — Contextual overview strip, AI usage bar, search command palette",
+    "summary": "Contextual overview strip now adapts to every section: ideas/decisions/skills/context/agents/categories/project each get dedicated stats card. Strip was locked to grid+canvas+all-time; now shows everywhere except timeline/pipeline. AI usage bar added to nav sidebar: session count this month, fill bar, delta vs last month, heavy project detection for automation drain. Strip instant-update fixed for Agents/Categories/Skills views (bypassed renderFeed). Search upgraded: type filter chips, arrow nav, term highlighting, decision match preview.",
+    "date": "Apr 19",
+    "ts": 20260419,
+    "decisions": [
+      "Overview strip is contextual — 7 section variants, not a static banner",
+      "Strip shows in all views (not just grid+all-time) — was a design error limiting its usefulness",
+      "AI usage bar in nav: sessions/month meter + delta + heavy project warning + Console link",
+      "Agents/Categories/Skills activate strip immediately without going through renderFeed"
+    ],
+    "chips": ["overview-strip", "usage-bar", "search", "contextual-UI"],
     "_source": "claude.ai"
   },
   {

@@ -2169,6 +2169,11 @@ body.light-mode .decision { background: #f0fdf4; border-color: #bbf7d0; }
   font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
   padding: 3px 8px; border-radius: 20px; border: 1px solid;
 }
+.detail-chip {
+  font-size: 9px; font-weight: 600; color: var(--text-3);
+  background: rgba(255,255,255,.05); border: 1px solid var(--border);
+  border-radius: 20px; padding: 1px 7px;
+}
 .detail-source-badge {
   font-size: 9px; font-weight: 600; color: var(--text-3);
   padding: 3px 8px; border-radius: 20px; background: var(--bg); border: 1px solid var(--border);
@@ -9846,87 +9851,134 @@ function openDetail(id) {
   const b = mergedBlocks().find(x => x.id === id) || capturedIdeas.find(x => x.id === id);
   if (!b) return;
   _detailOpenId = id;
-  const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
+  const p     = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
+  const tCol  = TYPE_COLORS[b.type] || p.color;
+  const tIcon = TYPE_ICONS[b.type]  || '◈';
+  const tLbl  = TYPE_LABELS[b.type] || (b.type || 'Block');
 
-  document.getElementById('d-stripe').style.background = p.color;
+  // ── Header ────────────────────────────────────────────────────────────────
+  document.getElementById('d-stripe').style.background = tCol;
   document.getElementById('d-proj').style.color = p.color;
-  document.getElementById('d-proj').textContent = `${p.icon} ${b.project}`;
-  document.getElementById('d-title').textContent = b.title.replace('💡 ','');
+  document.getElementById('d-proj').textContent = `${p.icon} ${b.project || ''}`;
+  document.getElementById('d-title').textContent = (b.title||'Untitled').replace('💡 ','').replace('✓ ','').replace('✕ ','');
   document.getElementById('d-date').textContent = blockTimestamp(b);
 
-  // Meta badges
-  const TYPE_COLORS = {
-    session:  { bg:'rgba(124,107,255,.12)', border:'rgba(124,107,255,.35)', text:'#7c6bff' },
-    decision: { bg:'rgba(34,197,94,.1)',    border:'rgba(34,197,94,.3)',    text:'#22c55e' },
-    idea:     { bg:'rgba(251,191,36,.1)',   border:'rgba(251,191,36,.3)',   text:'#f59e0b' },
-    feature:  { bg:'rgba(78,205,196,.1)',   border:'rgba(78,205,196,.3)',   text:'#4ecdc4' },
-  };
-  const tc = TYPE_COLORS[b.type] || TYPE_COLORS.session;
-  let meta = `<span class="detail-type-badge" style="background:${tc.bg};border-color:${tc.border};color:${tc.text}">${b.type||'session'}</span>`;
+  // ── Meta row: type badge + source + chips ────────────────────────────────
+  const chips = (b.chips||[]).filter(Boolean);
+  let meta = `<span class="detail-type-badge" style="background:${tCol}18;border-color:${tCol}50;color:${tCol}">${tIcon} ${tLbl}</span>`;
   if (b._source) meta += `<span class="detail-source-badge">via ${b._source}</span>`;
+  chips.forEach(c => { meta += `<span class="detail-chip">${c}</span>`; });
   document.getElementById('d-meta').innerHTML = meta;
 
-  // Notes (user-editable, stored in localStorage keyed by block id)
-  const storedNotes = localStorage.getItem(`sb_notes_${id}`) || b.notes || '';
-  const notesWrap = document.getElementById('d-notes-wrap');
+  // ── Notes ────────────────────────────────────────────────────────────────
+  const storedNotes = (()=>{ try { return localStorage.getItem(`sb_notes_${id}`); } catch { return ''; } })() || b.notes || '';
   document.getElementById('d-notes').value = storedNotes;
-  notesWrap.style.display = 'block';
+  document.getElementById('d-notes-wrap').style.display = 'block';
 
+  // ── Thumb ─────────────────────────────────────────────────────────────────
   const thumb = document.getElementById('d-thumb');
   if (b.thumb) { thumb.src = b.thumb; thumb.style.display = 'block'; thumb.onerror = () => { thumb.style.display='none'; }; }
   else { thumb.style.display = 'none'; }
 
+  // ── Body: ordered sections ─────────────────────────────────────────────────
   let body = '';
+
+  // 1. Filmstrip (version history)
   if (b.filmstrip?.length) {
     body += `<div class="detail-section">
       <div class="detail-section-title">${b.filmstripTitle||'Version history'}</div>
       <div class="filmstrip">${b.filmstrip.map((f,fi)=>`
-        <div class="film-tile" onclick="openVersion('${b.id}',${fi})" title="View this version">
+        <div class="film-tile" onclick="openVersion('${b.id}',${fi})">
           <img src="${f.thumb}" alt="${f.label}" onerror="this.style.background='${p.bg}';this.style.minHeight='74px'"/>
-          <div class="film-tile-label">
-            <span class="film-tile-v">${f.label}</span>
-            <span class="film-tile-sub">${f.sub}</span>
-          </div>
+          <div class="film-tile-label"><span class="film-tile-v">${f.label}</span><span class="film-tile-sub">${f.sub}</span></div>
         </div>`).join('')}
-      </div>
-    </div>`;
+      </div></div>`;
   }
-  if (b.decisions?.length) {
+
+  // 2. Context window info (session blocks)
+  if (b.type === 'session') {
+    const fillPct = Math.min(40 + ((b.decisions?.length||0) + (b.ideas?.length||0) + (b.chips?.length||0)) * 4, 95);
+    const fillColor = fillPct > 80 ? '#ef4444' : fillPct > 55 ? '#f59e0b' : '#6c63ff';
+    const seedTrail = b.seedBlocks?.length
+      ? `<div style="margin-top:8px;font-size:11px;color:var(--text-3)">Seeded with: ${b.seedBlocks.map(sb=>`<span onclick="closeDetail();openDetail('${sb.id}')" style="color:var(--accent);cursor:pointer;margin-left:4px">📍 ${sb.title||'block'}</span>`).join('')}</div>`
+      : '';
     body += `<div class="detail-section">
-      <div class="detail-section-title">Decisions made</div>
-      <div class="decisions">${b.decisions.map(d=>`
-        <div class="decision"><span class="decision-check">✓</span><span>${d}</span></div>`).join('')}
-      </div>
-    </div>`;
+      <div class="detail-section-title">Context window</div>
+      <div style="background:rgba(108,99,255,.06);border:1px solid rgba(108,99,255,.12);border-radius:10px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${fillPct}%;background:${fillColor};border-radius:3px;transition:width .5s"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:${fillColor}">${fillPct}% full</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;color:var(--text-3)">
+          ${b._source ? `<span>📡 ${b._source}</span>` : ''}
+          ${b.duration ? `<span>⏱ ${b.duration}</span>` : ''}
+          ${b.seed ? `<span style="color:#22c55e">⚡ Seeded next session</span>` : ''}
+        </div>
+        ${seedTrail}
+      </div></div>`;
   }
-  if (b.ideas?.length) {
-    body += `<div class="detail-section">
-      <div class="detail-section-title">Ideas captured</div>
-      <div class="ideas-grid">${b.ideas.map((idea,i)=>`
-        <div class="idea-card" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--text)">💡 ${idea}</div>`).join('')}
-      </div>
-    </div>`;
-  }
-  if (b.summary) {
+
+  // 3. Summary / body — most prominent content
+  const summary = b.summary && b.summary !== 'undefined' ? b.summary : b.body && b.body !== 'undefined' ? b.body : '';
+  if (summary) {
     body += `<div class="detail-section">
       <div class="detail-section-title">Summary</div>
-      <p style="font-size:13px;line-height:1.65;color:var(--text-2)">${b.summary}</p>
+      <p style="font-size:13px;line-height:1.7;color:var(--text-2)">${summary}</p>
     </div>`;
   }
   if (b.rationale) {
     body += `<div class="detail-section">
       <div class="detail-section-title">Rationale</div>
-      <p style="font-size:13px;line-height:1.65;color:var(--text-2)">${b.rationale}</p>
+      <p style="font-size:13px;line-height:1.7;color:var(--text-2)">${b.rationale}</p>
     </div>`;
   }
-  document.getElementById('d-body').innerHTML = body || '';
 
-  // Action bar
-  let actions = `<span class="detail-save-indicator" id="d-save-indicator">✓ Saved</span>`;
-  if (b.seed) {
-    actions += `<button class="detail-action-btn primary" onclick="seedBlock('${id}');showDetailSaved('Seeded!')">⚡ Carry forward</button>`;
+  // 4. Decisions — green list
+  if (b.decisions?.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">✓ Decisions (${b.decisions.length})</div>
+      <div class="decisions">${b.decisions.map(d=>`
+        <div class="decision"><span class="decision-check">✓</span><span>${d}</span></div>`).join('')}
+      </div></div>`;
   }
-  actions += `<button class="detail-action-btn" onclick="deleteDetailBlock('${id}')">🗑 Delete</button>`;
+
+  // 5. Ideas captured — amber
+  if (b.ideas?.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">💡 Ideas (${b.ideas.length})</div>
+      <div class="ideas-grid">${b.ideas.map(idea=>`
+        <div class="idea-card" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--text)">💡 ${idea}</div>`).join('')}
+      </div></div>`;
+  }
+
+  // 6. Related blocks — same project, most recent, excluding self
+  const allForProj = mergedBlocks()
+    .filter(x => x.project === b.project && x.id !== b.id && x.type !== 'session')
+    .sort((a,c)=>(c.ts||0)-(a.ts||0)).slice(0, 4);
+  if (allForProj.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">Related in ${b.project||'this project'}</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        ${allForProj.map(x => {
+          const xc = TYPE_COLORS[x.type] || '#6c63ff';
+          return `<div onclick="openDetail('${x.id}')" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;transition:background .1s" onmouseenter="this.style.background='rgba(255,255,255,.04)'" onmouseleave="this.style.background='var(--bg)'">
+            <span style="font-size:11px">${TYPE_ICONS[x.type]||'◈'}</span>
+            <span style="flex:1;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(x.title||'Untitled').replace('💡 ','')}</span>
+            <span style="font-size:10px;color:var(--text-3);flex-shrink:0">${x.date||''}</span>
+          </div>`;
+        }).join('')}
+      </div></div>`;
+  }
+
+  document.getElementById('d-body').innerHTML = body || `<div style="padding:20px 0;color:var(--text-3);font-size:13px">No content captured for this block.</div>`;
+
+  // ── Action bar ────────────────────────────────────────────────────────────
+  const actions = `
+    <span class="detail-save-indicator" id="d-save-indicator">✓ Saved</span>
+    <button class="detail-action-btn primary" onclick="seedBlock('${id}');showDetailSaved('⚡ Seeded!')">⚡ Carry forward</button>
+    <button class="detail-action-btn" onclick="deleteDetailBlock('${id}')">🗑 Delete</button>`;
   document.getElementById('d-actions').innerHTML = actions;
 
   document.getElementById('overlay').classList.add('open');
