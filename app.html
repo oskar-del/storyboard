@@ -5763,12 +5763,13 @@ function navClick(f) {
     contextWindowsViewActive = false;
     document.getElementById('contextBtn')?.classList.remove('active');
   }
-  // Clicking a specific project → land on Canvas view (project profile: header + blocks)
-  // Canvas now correctly filters to the selected project.
-  // Exception: if already on timeline/pipeline/list with a project selected, stay there (user chose that view).
+  // Clicking a specific project → land on Profile view by default.
+  // Exception: if already viewing a specific project (not All), preserve the current view so
+  // switching between boards keeps you in Journey/Grid/Board/etc.
   if (f !== 'All') {
     const stayViews = ['timeline', 'pipeline', 'list', 'grid', 'board', 'journey', 'story'];
-    if (!stayViews.includes(activeView)) setView('profile');
+    const comingFromAll = activeFilter === 'All';
+    if (comingFromAll || !stayViews.includes(activeView)) setView('profile');
   }
   // Going back to "All work" from profile → switch to grid (the all-projects overview)
   if (f === 'All' && (activeView === 'profile' || activeView === 'canvas')) setView('grid');
@@ -6561,6 +6562,11 @@ function renderFeed() {
   if (fhEl && (activeView !== 'grid' || activeFilter !== 'All' || activePeriod !== 'all')) {
     fhEl.innerHTML = '';
   }
+  // Restore overview strip for non-immersive views
+  // Hide in profile view — profile renders its own per-project stats strip in feedHeader
+  const _ovEl = document.getElementById('overviewStrip');
+  if (_ovEl && !['journey','story','profile'].includes(activeView)) _ovEl.style.display = '';
+  if (_ovEl && activeView === 'profile') _ovEl.style.display = 'none';
 
   // Profile view — board landing page (overview strip + ticker + latest blocks + designs)
   if (activeView === 'profile' && activeFilter !== 'All') { renderProfileView(activeFilter); return; }
@@ -6896,11 +6902,113 @@ function renderProfileView(projName) {
   // ── Latest activity section label ──────────────────────────────────
   const sectionLabel = (txt) => `<div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);padding:16px 0 10px;display:flex;align-items:center;gap:8px;column-span:all;break-inside:avoid">${txt}<span style="flex:1;height:1px;background:var(--border);margin-left:8px"></span></div>`;
 
-  // ── Inject into feedHeader ─────────────────────────────────────────
-  if (fh) fh.innerHTML = toggleHtml + ovStripHtml + renderProjectHeader(projName);
+  // ── Stories ticker — per-story context fill pills ─────────────────
+  // Get unique stories (task field) within this board
+  const taskGroups = {};
+  pb.forEach(b => {
+    const task = b.task || (b.chips||[]).find(c => ['dashboard','chrome-ext','chrome ext','landing','mcp','mcp-server'].includes(c.toLowerCase()));
+    if (task) {
+      if (!taskGroups[task]) taskGroups[task] = { sessions:0, decisions:0 };
+      if (b.type === 'session') taskGroups[task].sessions++;
+      taskGroups[task].decisions += (b.decisions?.length||0);
+    }
+  });
+  const totalSess = sessCount || 1;
+  const fillColor = sessCount*12>80?'#ef4444':sessCount*12>55?'#f59e0b':p.color;
+  const fillPct = Math.min(sessCount*12,100);
 
-  // ── Main feed: latest blocks + designs ────────────────────────────
-  el.innerHTML = `
+  // Build task chips — chip per active story/task (with context fill bar + %)
+  const taskChips = Object.entries(taskGroups).map(([name, data]) => {
+    const pct = Math.round((data.sessions / totalSess) * 100);
+    const chipColor = pct > 80 ? '#ef4444' : pct > 50 ? '#f59e0b' : p.color;
+    const isHot = pct > 80;
+    return `<div style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;background:${isHot?'rgba(239,68,68,.1)':p.color+'0f'};border:1px solid ${isHot?'rgba(239,68,68,.25)':p.color+'28'};cursor:pointer;white-space:nowrap;transition:all .12s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <span style="font-size:11px">${name.includes('dashboard')?'🖥':name.includes('chrome')||name.includes('ext')?'🔌':name.includes('landing')?'🌐':name.includes('mcp')?'⚡':'◈'}</span>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="font-size:10.5px;font-weight:700;color:var(--text-2)">${name}</span>
+          <span style="font-size:9.5px;font-weight:800;color:${chipColor}">${pct}%</span>
+        </div>
+        <div style="width:60px;height:2px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${chipColor};border-radius:2px"></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Build ticker tape — visual horizontal bar showing session density + compaction markers
+  const tapeSegs = sessCount > 0 ? (() => {
+    const segs = [];
+    const sessions = pb.filter(b=>b.type==='session').sort((a,b2)=>(a.ts||0)-(b2.ts||0));
+    sessions.forEach((s, i) => {
+      const opacity = 0.4 + (i / Math.max(sessions.length-1,1)) * 0.55;
+      segs.push(`<div style="flex:1;background:${p.color};opacity:${opacity.toFixed(2)}"></div>`);
+    });
+    const compactions = pb.filter(b=>b.type==='compaction');
+    if (compactions.length) {
+      // Insert red markers proportionally
+      compactions.forEach(() => segs.splice(Math.floor(segs.length*0.6),0,`<div style="width:4px;background:#ef4444;flex-shrink:0"></div>`));
+    }
+    segs.push(`<div style="flex:${Math.max(2,10-sessCount)};background:rgba(255,255,255,.04)"></div>`);
+    return segs.join('');
+  })() : `<div style="flex:1;background:rgba(255,255,255,.05)"></div>`;
+
+  const storiesTickerHtml = `
+    <div style="background:linear-gradient(105deg,${p.color}0f 0%,${p.color}05 60%,transparent 100%);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:10px;box-shadow:var(--shadow);column-span:all;break-inside:avoid">
+      <!-- Tape bar at top -->
+      <div style="height:6px;display:flex;width:100%">${tapeSegs}</div>
+      <!-- Ticker body -->
+      <div style="display:flex;align-items:center;padding:8px 14px;gap:0;min-height:46px;flex-wrap:wrap;row-gap:6px">
+        <!-- ◉ LIVE label -->
+        <div style="display:flex;align-items:center;gap:5px;margin-right:14px;flex-shrink:0">
+          <div style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.25);flex-shrink:0"></div>
+          <span style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#22c55e">Live</span>
+        </div>
+        <!-- Metric columns -->
+        <div style="display:flex;gap:12px;margin-right:16px;flex-shrink:0">
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:900;color:${p.color};letter-spacing:-0.5px;line-height:1">${sessCount}</div>
+            <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">Sessions</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:900;color:#ef4444;letter-spacing:-0.5px;line-height:1">${compCount}</div>
+            <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">Compact.</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:900;color:#22c55e;letter-spacing:-0.5px;line-height:1">${decCount}</div>
+            <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">Decisions</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:900;color:#f59e0b;letter-spacing:-0.5px;line-height:1">${ideaCount}</div>
+            <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">Ideas</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:900;color:#06b6d4;letter-spacing:-0.5px;line-height:1">${discCount}</div>
+            <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)">Discuss.</div>
+          </div>
+        </div>
+        <!-- Divider -->
+        ${Object.keys(taskGroups).length ? `<div style="width:1px;height:32px;background:var(--border);margin-right:12px;flex-shrink:0"></div>` : ''}
+        <!-- Task chips (stories) -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <div style="padding:5px 10px;border-radius:8px;background:${p.color}22;border:1px solid ${p.color}40;cursor:pointer;font-size:10.5px;font-weight:800;color:${p.color}">All</div>
+          ${taskChips}
+        </div>
+        <!-- Context fill bar — right aligned -->
+        <div style="margin-left:auto;display:flex;align-items:center;gap:7px;flex-shrink:0;padding-left:12px">
+          <div style="width:72px;height:4px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden">
+            <div style="height:100%;width:${fillPct}%;background:${fillColor};border-radius:3px;transition:width .3s"></div>
+          </div>
+          <span style="font-size:10.5px;font-weight:900;color:${fillColor}">${fillPct}%</span>
+        </div>
+      </div>
+    </div>`;
+
+  // ── Inject into feedHeader ─────────────────────────────────────────
+  if (fh) fh.innerHTML = toggleHtml + ovStripHtml + storiesTickerHtml;
+
+  // ── Main feed: project canvas card + latest blocks + designs ──────
+  el.innerHTML = renderProjectHeader(projName) + `
     ${sectionLabel('🕐 Latest Activity')}
     <div style="display:flex;gap:10px;margin-bottom:4px;column-span:all;break-inside:avoid">
       ${latestBlocksHtml}
@@ -6959,6 +7067,8 @@ function renderStoryView() {
   const fillColor = fillPct > 80 ? '#ef4444' : fillPct > 55 ? '#f59e0b' : p.color;
 
   // ── feedHeader: breadcrumb + session meta ─────────────────────────
+  const _ovElStory = document.getElementById('overviewStrip');
+  if (_ovElStory) _ovElStory.style.display = 'none';
   fh.innerHTML = `
     <div style="column-span:all;break-inside:avoid">
       <!-- Breadcrumb -->
@@ -7116,7 +7226,9 @@ function renderJourneyView() {
             transition:all .12s">${l}</div>`).join('')}
     </div>`;
 
-  if (fh) fh.innerHTML = toggleHtml + renderProjectHeader(projName);
+  const _ovEl2 = document.getElementById('overviewStrip');
+  if (_ovEl2) _ovEl2.style.display = 'none';
+  if (fh) fh.innerHTML = toggleHtml;
 
   // ── Sessions in chronological order (oldest → newest) ─────────────
   function tsToMs(ts) {
