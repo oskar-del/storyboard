@@ -216,7 +216,7 @@ body.light-mode .topbar {
   transition: background .1s;
 }
 .search-result-item:last-child { border-bottom: none; }
-.search-result-item:hover { background: var(--bg); }
+.search-result-item:hover { background: rgba(255,255,255,.04); }
 .sri-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
 .sri-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.35; }
 .sri-meta { font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
@@ -5357,13 +5357,36 @@ function blockTimestamp(b) {
 // BLOCK HTML (shared between views)
 // ═══════════════════════════════════
 // Type label map
-const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding', intent:'Intent', compaction:'Compaction', rejection:'Rejection' };
+const TYPE_LABELS = { session:'Session', decision:'Decision', idea:'Idea', roadmap:'Roadmap', feature:'Feature', automation:'Automation', skill:'Skill', simulation:'Agent Sim', audit:'Audit Finding', intent:'Intent', compaction:'Compaction', rejection:'Rejection', discussion:'Discussion', trail:'Trail', thinking:'Thinking' };
 const TYPE_ICONS  = { session:'🧠', decision:'✓', idea:'💡', roadmap:'📋', feature:'🔧', automation:'⚡', skill:'📚', simulation:'🤖', audit:'🔎', preview:'🖼️', discussion:'💬', trail:'🔗', thinking:'🫧', intent:'🎯', compaction:'🗜️', rejection:'✕' };
+
+// Semantic type colors — stripe + icon-band use these instead of project color
+// This makes block TYPE immediately readable regardless of project
+const TYPE_COLORS = {
+  session:    '#6c63ff',
+  idea:       '#f59e0b',
+  decision:   '#22c55e',
+  discussion: '#60a5fa',
+  rejection:  '#f87171',
+  skill:      '#a78bfa',
+  roadmap:    '#34d399',
+  feature:    '#4ecdc4',
+  automation: '#10b981',
+  trail:      '#94a3b8',
+  thinking:   '#c084fc',
+  simulation: '#818cf8',
+  audit:      '#fb923c',
+  intent:     '#f43f5e',
+  compaction: '#64748b',
+};
 
 function blockHTML(b, i, featured = false) {
   const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
   const pbg = projBg(b.project);
-  const style = `--block-color:${p.color};--block-bg:${pbg}`;
+  // Use semantic type color for stripe/band; project color used only for the dot
+  const typeColor = TYPE_COLORS[b.type] || p.color;
+  const typeBgAlpha = typeColor + '10'; // ~6% opacity tint for icon band
+  const style = `--block-color:${typeColor};--block-bg:${typeBgAlpha}`;
   const idx = i % 6;
   const featuredClass = featured ? ' block-featured' : '';
   const typeLabel = TYPE_LABELS[b.type] || (b.type||'Block');
@@ -5490,6 +5513,27 @@ function blockHTML(b, i, featured = false) {
           <div class="compaction-fault-note" style="color:rgba(100,116,139,.5);font-style:italic">No note captured — raw conversation was summarized</div>
           <button class="compaction-fault-flag" onclick="event.stopPropagation();openDetail('${b.id}')">+ Add note</button>
         </div>`}
+      </div>`;
+    }
+
+    // ── Discussion block — async thinking, debate, open question ──
+    if (b.type === 'discussion') {
+      return `<div class="block${featuredClass}" style="--block-color:#60a5fa;--block-bg:rgba(96,165,250,.06)" onclick="openDetail('${b.id}')">
+        <div class="block-stripe" style="background:#60a5fa"></div>
+        <div class="block-icon-band" style="background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.15)">
+          <span class="block-icon-band-icon">💬</span>
+          <span class="block-icon-band-label" style="color:#60a5fa">Discussion</span>
+        </div>
+        <div class="block-body">
+          <div class="block-meta">
+            <span class="block-dot" style="background:${p.color}"></span>
+            <span class="block-proj">${b.project||''}</span>
+            <span class="block-date">${displayDate}</span>
+          </div>
+          <div class="block-title">${b.title||'Untitled discussion'}</div>
+          ${summary ? `<div class="block-summary">${summary.slice(0,160)}${summary.length>160?'…':''}</div>` : ''}
+          ${chips.length ? `<div class="block-chips">${chips.map(c=>`<span class="bchip">${c}</span>`).join('')}</div>` : ''}
+        </div>
       </div>`;
     }
 
@@ -8940,10 +8984,10 @@ function renderOverviewStrip() {
   const velSign = velPct >= 0 ? '↑' : '↓';
   const velColor = velPct >= 0 ? '#10b981' : '#ef4444';
 
-  // Sprint card — Day N of 10
-  const sprintStartDate = new Date('2026-04-16');
+  // Sprint card — Day N of 10 (Day 1 = Apr 15 2026)
+  const sprintStartDate = new Date('2026-04-15');
   const now = new Date();
-  const dayNum = Math.min(Math.max(1, Math.round((now - sprintStartDate) / 86400000) + 1), SPRINT_TOTAL_DAYS);
+  const dayNum = Math.min(Math.max(1, Math.floor((now - sprintStartDate) / 86400000) + 1), SPRINT_TOTAL_DAYS);
   const topbarPill = document.getElementById('topbarDayPill');
   if (topbarPill) topbarPill.textContent = `Day ${dayNum}/10`;
   const dayDots = Array.from({length: SPRINT_TOTAL_DAYS}, (_, i) => {
@@ -10851,6 +10895,12 @@ function renderNavUsage() {
   const fillColor = fillPct > 75 ? '#ef4444' : fillPct > 45 ? '#f59e0b' : '#6c63ff';
 
   const monthName = now.toLocaleString('default', { month: 'short' });
+
+  // Update nav plan text dynamically
+  const _sprintStart = new Date('2026-04-15');
+  const _sprintDay   = Math.min(Math.max(1, Math.floor((now - _sprintStart) / 86400000) + 1), 10);
+  const navPlanEl = document.querySelector('.nav-user-plan');
+  if (navPlanEl) navPlanEl.textContent = `Sprint · Day ${_sprintDay}/10`;
 
   el.innerHTML = `
     <div class="nav-usage-header">
