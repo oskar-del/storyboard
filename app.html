@@ -342,6 +342,33 @@ body.light-mode .topbar {
 }
 .nav-tool-badge.accent { background: rgba(108,99,255,.15); color: #6c63ff; }
 .nav-tool-badge.green  { background: rgba(16,185,129,.12); color: #10b981; }
+/* View filter bar — project pills in Ideas / Decisions views */
+.vfb-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; margin-right: 2px; }
+.vfb-pill {
+  padding: 4px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid var(--border); background: transparent; color: var(--text-3);
+  cursor: pointer; transition: all .12s; white-space: nowrap;
+}
+.vfb-pill:hover { border-color: var(--text-3); color: var(--text); }
+.vfb-pill.active { background: var(--text); color: var(--bg-page); border-color: var(--text); }
+body.light-mode .vfb-pill.active { background: #1e1e2e; color: #fff; border-color: #1e1e2e; }
+
+/* De-emphasized utility nav items (Agents, Context, Categories, Inspect) */
+.nav-util-item {
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 11.5px; font-weight: 500; color: var(--text-3);
+  background: transparent; border: none; width: 100%; text-align: left;
+  transition: background .12s, color .12s;
+}
+.nav-util-item:hover { background: rgba(255,255,255,.03); color: var(--text-2); }
+.nav-util-item.active { background: rgba(108,99,255,.08); color: #6c63ff; }
+.nav-util-label { flex: 1; overflow: hidden; white-space: nowrap; }
+.nav-util-badge {
+  font-size: 9.5px; font-weight: 700; padding: 1px 5px;
+  border-radius: 8px; background: rgba(255,255,255,.05); color: var(--text-3);
+  flex-shrink: 0;
+}
 .nav-tool-badge.yellow { background: rgba(245,158,11,.12); color: #f59e0b; }
 
 .nav-item {
@@ -843,8 +870,10 @@ body.light-mode .ctx-fault-reseed { background: rgba(108,99,255,.07); color: #6c
   border-radius: 4px;
 }
 .nav-proj-menu-btn:hover { background: var(--border); color: var(--text); }
-.nav-proj-item:hover .nav-proj-menu-btn { display: block; }
-.nav-proj-item:hover .nav-count { display: none; }
+.nav-proj-item:hover .nav-proj-menu-btn,
+.nav-proj-row:hover .nav-proj-menu-btn { display: block; }
+.nav-proj-item:hover .nav-count,
+.nav-proj-row:hover .nav-count { display: none; }
 .nav-proj-menu {
   display: none; position: absolute; left: 12px; top: calc(100% + 2px);
   background: var(--card); border: 1px solid var(--border);
@@ -2620,6 +2649,31 @@ body.light-mode .cat-block-chip { background: var(--bg); }
 .cat-empty { padding: 40px 0; color: var(--text-3); font-size: 13px; text-align: center; }
 
 /* ── FILES VIEW ──────────────────────────────────────────────────── */
+/* ── DESIGNS GALLERY ─────────────────────────────── */
+.designs-wrap { padding: 20px 0 60px; }
+.designs-header { padding: 0 16px 14px; }
+.designs-title { font-size: 20px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 3px; }
+.designs-subtitle { font-size: 12px; color: var(--text-3); }
+.designs-filter-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 16px 18px; }
+.designs-pill { background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--text-3); font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 20px; cursor: pointer; transition: all .15s; }
+.designs-pill:hover { background: rgba(108,99,255,.1); border-color: rgba(108,99,255,.3); color: var(--text-2); }
+.designs-pill.active { background: rgba(108,99,255,.18); border-color: rgba(108,99,255,.5); color: #a5b4fc; }
+.designs-section { margin-bottom: 28px; padding: 0 16px; }
+.designs-section-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.designs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.design-card { background: var(--card, rgba(255,255,255,.03)); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; cursor: pointer; transition: all .15s; }
+.design-card:hover { border-color: rgba(108,99,255,.4); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+.design-card-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--surface); }
+.design-card-img-ph { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; font-size: 26px; background: var(--surface); color: var(--text-3); }
+.design-card-body { padding: 9px 10px; }
+.design-card-title { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.35; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.design-card-sub { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.design-card-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
+.design-card-date { font-size: 10px; color: var(--text-3); }
+.design-card-proj { font-size: 10px; font-weight: 600; }
+.designs-empty { color: var(--text-3); font-size: 13px; padding: 60px 20px; text-align: center; }
+.designs-empty-icon { font-size: 36px; margin-bottom: 12px; }
+
 .files-wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
 .files-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
 .files-title { font-size: 18px; font-weight: 800; color: var(--text); }
@@ -3382,11 +3436,6 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
           <line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
-      <!-- Context fill meter -->
-      <div class="ctx-fill-meter" id="ctxFillMeter" title="Estimated context window usage for this session">
-        <div class="ctx-fill-bar-wrap"><div class="ctx-fill-bar" id="ctxFillBar" style="width:5%"></div></div>
-        <span class="ctx-fill-label" id="ctxFillLabel">Context</span>
-      </div>
       <!-- OS / AI mode toggle -->
       <div class="mode-toggle" onclick="toggleMode()" title="Switch between Light and Dark mode">
         <div class="mode-toggle-opt" id="modeOS">Light</div>
@@ -3456,8 +3505,6 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
   <!-- LEFT NAV -->
   <nav class="left-nav" id="leftNav">
 
-    <!-- ── OVERVIEW ────────────────────────────────── -->
-    <div class="nav-sec-label">Overview</div>
     <div class="nav-item active" id="nav-All" onclick="navClick('All')">
       <div class="nav-dot" style="background:var(--text-3)"></div>
       <span class="nav-item-text">All work</span>
@@ -3466,69 +3513,55 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
 
     <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <!-- ── ACTIVE PROJECTS ────────────────────────── -->
-    <div class="nav-sec-label">Active projects</div>
     <div id="nav-active-projects"></div>
     <div id="nav-projects" style="display:none"></div>
     <button class="nav-show-more-btn" id="navShowMoreBtn" onclick="toggleMoreProjects()" style="display:none"></button>
 
     <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <!-- ── CAPTURE ────────────────────────────────── -->
-    <div class="nav-sec-label">Capture</div>
+    <!-- ── CONTENT TYPE FILTERS ───────────────────── -->
     <button class="nav-tool-item" id="ideasBtn" onclick="toggleIdeasView()">
-      <span class="nav-tool-icon">💡</span>
       <span class="nav-tool-label">Ideas</span>
       <span class="nav-tool-badge yellow" id="ideasCount">0</span>
     </button>
     <button class="nav-tool-item" id="decisionsBtn" onclick="toggleDecisionsView()">
-      <span class="nav-tool-icon" style="font-size:13px">✓</span>
       <span class="nav-tool-label">Decisions</span>
       <span class="nav-tool-badge green" id="decisionsCount">0</span>
     </button>
 
     <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <!-- ── INTELLIGENCE ───────────────────────────── -->
-    <div class="nav-sec-label">Intelligence</div>
-    <button class="nav-tool-item" id="agentBtn" onclick="openAgentPreview()">
-      <span class="nav-tool-icon">🤖</span>
-      <span class="nav-tool-label">Agents</span>
-      <span class="nav-tool-badge accent" id="agentSimCount">4</span>
-    </button>
-    <button class="nav-tool-item" id="contextBtn" onclick="openContextHub()">
-      <span class="nav-tool-icon">⚡</span>
-      <span class="nav-tool-label">Context</span>
-      <span class="nav-tool-badge" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
-    </button>
-    <button class="nav-tool-item" id="categoriesBtn" onclick="openCategoryView()">
-      <span class="nav-tool-icon">◈</span>
-      <span class="nav-tool-label">Categories</span>
-      <span class="nav-tool-badge accent" id="categoriesCount">9</span>
-    </button>
-    <button class="nav-tool-item" id="inspectBtn2" onclick="toggleInspect()">
-      <span class="nav-tool-icon">🔍</span>
-      <span class="nav-tool-label">Inspect</span>
-    </button>
-
-    <div class="nav-divider" style="margin:6px 12px 4px"></div>
-
-    <!-- ── TOOLS ──────────────────────────────────── -->
-    <div class="nav-sec-label">Tools</div>
+    <!-- ── LIBRARY ────────────────────────────────── -->
     <button class="nav-tool-item" id="promptsBtn" onclick="togglePromptsView()">
-      <span class="nav-tool-icon">📚</span>
       <span class="nav-tool-label">Skills</span>
       <span class="nav-tool-badge" id="skillsCountBadge">35</span>
     </button>
     <button class="nav-tool-item" id="filesBtn" onclick="openFilesView()">
-      <span class="nav-tool-icon">📁</span>
       <span class="nav-tool-label">Files</span>
       <span class="nav-tool-badge" id="filesCount">6</span>
     </button>
-    <!-- Inspect button -->
-    <button class="inspect-btn" id="inspectBtn" onclick="toggleInspect()">
-      <span class="inspect-icon">🔍</span>
-      <span>Inspect</span>
+    <button class="nav-tool-item" id="designsBtn" onclick="openDesignsView()">
+      <span class="nav-tool-label">Designs</span>
+      <span class="nav-tool-badge" id="designsCount">0</span>
+    </button>
+
+    <div class="nav-divider" style="margin:8px 12px 4px"></div>
+
+    <!-- ── POWER TOOLS (de-emphasized) ───────────── -->
+    <button class="nav-util-item" id="agentBtn" onclick="openAgentPreview()">
+      <span class="nav-util-label">Agents</span>
+      <span class="nav-util-badge" id="agentSimCount">4</span>
+    </button>
+    <button class="nav-util-item" id="categoriesBtn" onclick="openCategoryView()">
+      <span class="nav-util-label">Categories</span>
+      <span class="nav-util-badge" id="categoriesCount">9</span>
+    </button>
+    <button class="nav-util-item" id="contextBtn" onclick="openContextHub()">
+      <span class="nav-util-label">Context windows</span>
+      <span class="nav-util-badge" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
+    </button>
+    <button class="nav-util-item" id="inspectBtn2" onclick="toggleInspect()">
+      <span class="nav-util-label">Inspect</span>
       <span class="inspect-score" id="inspectScorePill" style="display:none"></span>
     </button>
 
@@ -3674,6 +3707,9 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
 
     <!-- Overview strip — shown in All / all-time view -->
     <div id="overviewStrip" style="display:none"></div>
+
+    <!-- View-specific project filter bar (Ideas, Decisions) -->
+    <div id="viewFilterBar" style="display:none;padding:0 16px 12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
 
     <!-- Stats + Latest stream — rendered outside CSS columns feed -->
     <div id="feedHeader" style="padding:0 16px 4px"></div>
@@ -5579,6 +5615,19 @@ function setTaskFilter(task) {
   renderFeed();
 }
 
+// ── Clears ALL nav active states (nav items + tool buttons) ──────────
+function clearAllNavActive() {
+  document.querySelectorAll('.nav-item, .nav-proj-row, .nav-tool-item, .nav-util-item').forEach(el => el.classList.remove('active'));
+  // Reset view state flags
+  if (typeof ideasViewActive !== 'undefined')          { ideasViewActive = false; }
+  if (typeof decisionsViewActive !== 'undefined')      { decisionsViewActive = false; }
+  if (typeof skillsViewActive !== 'undefined')         { skillsViewActive = false; }
+  if (typeof contextWindowsViewActive !== 'undefined') { contextWindowsViewActive = false; }
+  if (typeof agentViewActive !== 'undefined')          { agentViewActive = false; }
+  // Hide view filter bar
+  if (typeof hideViewFilterBar === 'function') hideViewFilterBar();
+}
+
 function navClick(f) {
   // On mobile: close sidebar immediately — don't wait for renders
   if (isMobile()) closeAll();
@@ -5638,7 +5687,7 @@ function buildProjRow(name, status, tag, activeFilter) {
     <div class="proj-status-dot ${status}"></div>
     <span class="nav-proj-name">${name}</span>
     <span class="nav-proj-tag${tagClass}">${tag}</span>
-    <button class="nav-proj-menu-btn" onclick="event.stopPropagation();toggleProjMenu('${enc}')" title="Project options" style="opacity:0;transition:opacity .12s">···</button>
+    <button class="nav-proj-menu-btn" onclick="event.stopPropagation();toggleProjMenu('${enc}')" title="Project options">···</button>
     <div class="nav-proj-menu" id="projmenu-${sid}">
       <div class="npm-item" onclick="event.stopPropagation();openProjectDetail('${name}');closeProjMenus()">📋 Open details</div>
       <div class="npm-item" onclick="event.stopPropagation();renameProjPrompt('${enc}')">✏️ Rename</div>
@@ -5672,6 +5721,11 @@ function buildNav() {
   // Files count
   const filesTotal = all.reduce((n, b) => n + (b.stats?.files || 0), 0);
   document.getElementById('filesCount').textContent = filesTotal || '—';
+
+  // Designs count — blocks with thumb + filmstrip items
+  const designsTotal = all.filter(b => b.thumb).length
+    + all.reduce((n, b) => n + (b.filmstrip?.filter(f => f.thumb)?.length || 0), 0);
+  document.getElementById('designsCount').textContent = designsTotal || '—';
 
   // Categories badge — count active categories
   const activeCatCount = ALL_CATEGORIES.filter(c =>
@@ -5945,10 +5999,6 @@ function blockHTML(b, i, featured = false) {
     if (b.type === 'discussion') {
       return `<div class="block${featuredClass}" style="--block-color:#60a5fa;--block-bg:rgba(96,165,250,.06)" onclick="openDetail('${b.id}')">
         <div class="block-stripe" style="background:#60a5fa"></div>
-        <div class="block-icon-band" style="background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.15)">
-          <span class="block-icon-band-icon">💬</span>
-          <span class="block-icon-band-label" style="color:#60a5fa">Discussion</span>
-        </div>
         <div class="block-body">
           <div class="block-meta">
             <span class="block-dot" style="background:${p.color}"></span>
@@ -5965,10 +6015,6 @@ function blockHTML(b, i, featured = false) {
     if (b.type === 'idea') {
       return `<div class="block${featuredClass}" style="--block-color:#f59e0b;--block-bg:rgba(245,158,11,.06)" onclick="openDetail('${b.id}')">
         <div class="block-stripe" style="background:#f59e0b"></div>
-        <div class="block-icon-band" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.15)">
-          <span class="block-icon-band-icon">💡</span>
-          <span class="block-icon-band-label" style="color:#f59e0b">Idea</span>
-        </div>
         <div class="block-body">
           <div class="block-meta">
             <span class="block-dot" style="background:${p.color}"></span>
@@ -5987,7 +6033,7 @@ function blockHTML(b, i, featured = false) {
       ${b.thumb
         ? `<img class="block-thumb" src="${b.thumb}" alt="${b.title||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
            <div class="block-thumb-ph" style="display:none">${p.icon}</div>`
-        : `<div class="block-icon-band"><span class="block-icon-band-icon">${typeIcon}</span><span class="block-icon-band-label">${typeLabel}</span></div>`}
+        : ''}
       <div class="block-body">
         <div class="block-meta">
           <span class="block-dot" style="background:${p.color}"></span>
@@ -6414,13 +6460,17 @@ function renderFeed() {
   if (contextWindowsViewActive) { renderContextWindowsView(); return; }
   // Category view — managed by openCategoryView(), don't override
   if (document.getElementById('categoriesBtn')?.classList.contains('active') && activeCatFilter !== undefined && document.querySelector('.cat-view')) { return; }
-  // Ideas view: show all ideas (static + captured), ignore project filter
+  // Ideas view: show all ideas filtered by project pill
   if (ideasViewActive) {
+    renderViewFilterBar('ideas');
     const minTs = periodTs();
-    const allIdeas = [...baseBlocks.filter(b => b.type === 'idea'), ...capturedIdeas]
+    let allIdeas = [...baseBlocks.filter(b => b.type === 'idea'), ...capturedIdeas]
       .filter(b => (b.ts||0) >= minTs || minTs === 0)
       .sort((a,b) => (b.ts||0) - (a.ts||0));
-    el.innerHTML = `<div style="columns:3 200px;column-gap:12px">${allIdeas.map((b,i) => blockHTML(b,i)).join('')}</div>`;
+    if (ideasProjectFilter !== 'All') allIdeas = allIdeas.filter(b => b.project === ideasProjectFilter);
+    el.innerHTML = allIdeas.length
+      ? `<div style="columns:3 200px;column-gap:12px">${allIdeas.map((b,i) => blockHTML(b,i)).join('')}</div>`
+      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No ideas for this project yet.</div>`;
     return;
   }
   const minTs = periodTs();
@@ -6588,34 +6638,100 @@ function renderCanvasView() {
   // If a specific project is selected, show just that project's canvas card full-width
   // then the filtered blocks below — don't show all-projects overview
   if (activeFilter !== 'All') {
-    // Render header + layer breakdown outside CSS columns in feedHeader
     const fh = document.getElementById('feedHeader');
     const p = PROJ[activeFilter] || { color:'#6c63ff' };
     const projAll = all.filter(b => b.project === activeFilter);
-    const layerCounts = [
-      { label:'Sessions',   icon:'🧠', color:'#6c63ff', n: projAll.filter(b=>b.type==='session').length },
-      { label:'Decisions',  icon:'✓',  color:'#22c55e', n: projAll.reduce((s,b)=>s+(b.decisions?.length||0),0) },
-      { label:'Ideas',      icon:'💡', color:'#f59e0b', n: projAll.filter(b=>b.type==='idea').length },
-      { label:'Discussions',icon:'💬', color:'#60a5fa', n: projAll.filter(b=>b.type==='discussion').length },
-      { label:'Rejections', icon:'✕',  color:'#f87171', n: projAll.filter(b=>b.type==='rejection').length },
-    ];
-    const layerBar = `<div style="display:flex;gap:8px;padding:12px 0 4px;flex-wrap:wrap">
-      ${layerCounts.map(l=>`
-        <div style="flex:1;min-width:80px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 12px;border-top:2px solid ${l.color}">
-          <div style="font-size:18px;font-weight:800;color:${l.color};line-height:1">${l.n}</div>
-          <div style="font-size:10px;color:var(--text-3);font-weight:600;margin-top:3px">${l.icon} ${l.label}</div>
-        </div>`).join('')}
-    </div>`;
-    if (fh) fh.innerHTML = renderProjectHeader(activeFilter) + layerBar;
+    if (fh) fh.innerHTML = renderProjectHeader(activeFilter);
 
-    // Blocks in the columns feed
-    const minTs = periodTs();
-    let projBlocks = projAll.filter(b => b.type !== 'intent');
-    if (minTs) projBlocks = projBlocks.filter(b => (b.ts||0) >= minTs);
-    projBlocks = projBlocks.sort((a,b) => (b.ts||0)-(a.ts||0));
-    el.innerHTML = projBlocks.length
-      ? projBlocks.map((b,i) => blockHTML(b,i)).join('')
-      : `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">${minTs ? 'No blocks in this time period.' : 'No blocks yet.'}</div>`;
+    // ── Partition blocks into sections ──────────────────────────────────
+    const ideas     = projAll.filter(b => b.type === 'idea').sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const shipped   = projAll.filter(b => b.type === 'session' && b.decisions?.length > 0).sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const planned   = projAll.filter(b => ['intent','roadmap','feature'].includes(b.type)).sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const rest      = projAll.filter(b => !['idea','intent','roadmap','feature'].includes(b.type) && !(b.type==='session'&&b.decisions?.length>0)).sort((a,b)=>(b.ts||0)-(a.ts||0));
+
+    // ── Section label ─────────────────────────────────────────────────
+    const sectionLabel = (text, count, color='var(--text-3)') =>
+      `<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:${color};padding:20px 0 10px;display:flex;align-items:center;gap:8px">
+        ${text} <span style="font-weight:500;opacity:.5">${count}</span>
+      </div>`;
+
+    // ── Big idea cards ────────────────────────────────────────────────
+    const ideaCardHTML = (b) => {
+      const chips = (b.chips||b.tags||[]).slice(0,3);
+      const summary = (b.summary||b.body||'').slice(0,160).trim();
+      return `<div onclick="openDetail('${b.id}')" style="
+        background:var(--white);border:1px solid var(--border);border-radius:14px;
+        padding:20px;cursor:pointer;transition:border-color .15s,transform .1s;
+        border-top:3px solid #f59e0b;position:relative;
+        " onmouseover="this.style.borderColor='#f59e0b';this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:${summary?'8px':'0'}">${b.title||'Untitled idea'}</div>
+        ${summary ? `<div style="font-size:12px;color:var(--text-2);line-height:1.55;margin-bottom:10px">${summary}${(b.summary||b.body||'').length>160?'…':''}</div>` : ''}
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:auto">
+          ${chips.map(c=>`<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(245,158,11,.1);color:#d97706;font-weight:600">${c}</span>`).join('')}
+          <span style="margin-left:auto;font-size:10px;color:var(--text-3)">${b.date||''}</span>
+        </div>
+      </div>`;
+    };
+
+    // ── Shipped session card ──────────────────────────────────────────
+    const shippedCardHTML = (b) => {
+      const decs = (b.decisions||[]).slice(0,3);
+      return `<div onclick="openDetail('${b.id}')" style="
+        background:var(--white);border:1px solid var(--border);border-radius:14px;
+        padding:18px;cursor:pointer;transition:border-color .15s;border-top:3px solid #22c55e;
+        " onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(34,197,94,.1);color:#16a34a">SHIPPED</div>
+          <span style="font-size:10px;color:var(--text-3);margin-left:auto">${b.date||''}</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3">${b.title||'Session'}</div>
+        ${decs.map(d=>`<div style="font-size:11.5px;color:var(--text-2);padding:3px 0;border-bottom:1px solid var(--border);display:flex;gap:6px"><span style="color:#22c55e;flex-shrink:0">✓</span>${d}</div>`).join('')}
+        ${b.decisions?.length>3 ? `<div style="font-size:10px;color:var(--text-3);margin-top:5px">+${b.decisions.length-3} more decisions</div>` : ''}
+      </div>`;
+    };
+
+    // ── Planned card ─────────────────────────────────────────────────
+    const plannedCardHTML = (b) => {
+      const summary = (b.summary||b.body||b.title||'').slice(0,120).trim();
+      return `<div onclick="openDetail('${b.id}')" style="
+        background:var(--white);border:1px solid var(--border);border-radius:14px;
+        padding:18px;cursor:pointer;transition:border-color .15s;
+        border-top:3px solid #6c63ff;
+        " onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(108,99,255,.1);color:#6c63ff">${(b.type||'PLANNED').toUpperCase()}</div>
+          <span style="font-size:10px;color:var(--text-3);margin-left:auto">${b.date||''}</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3">${b.title||'Untitled'}</div>
+        ${summary && summary !== b.title ? `<div style="font-size:12px;color:var(--text-2);margin-top:6px;line-height:1.5">${summary}</div>` : ''}
+      </div>`;
+    };
+
+    // ── Assemble sections ─────────────────────────────────────────────
+    let html = '';
+
+    if (ideas.length) {
+      html += sectionLabel('Ideas', ideas.length, '#d97706');
+      html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px">${ideas.map(ideaCardHTML).join('')}</div>`;
+    }
+
+    if (shipped.length) {
+      html += sectionLabel('Shipped', shipped.length, '#15803d');
+      html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px">${shipped.map(shippedCardHTML).join('')}</div>`;
+    }
+
+    if (planned.length) {
+      html += sectionLabel('Planned', planned.length, '#6c63ff');
+      html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px">${planned.map(plannedCardHTML).join('')}</div>`;
+    }
+
+    if (rest.length) {
+      html += sectionLabel('All activity', rest.length);
+      html += `<div style="columns:3 200px;column-gap:12px">${rest.slice(0,12).map((b,i)=>blockHTML(b,i)).join('')}</div>`;
+    }
+
+    el.innerHTML = html || `<div style="padding:40px 24px;color:var(--text-3);font-size:13px">No blocks yet.</div>`;
     return;
   }
 
@@ -7418,7 +7534,7 @@ function buildRecentStream(allBlocks) {
     const date = b.date || (b.ts ? relTime(b.ts) : '');
     const title = b.title || 'Untitled';
     return `<div class="recent-card" style="--rc-color:${col}" onclick="openDetail('${b.id}')">
-      <div class="rc-type"><span>${icon}</span>${lbl}</div>
+      <div class="rc-type">${lbl}</div>
       <div class="rc-title">${title}</div>
       <div class="rc-foot">
         <div class="rc-dot" style="background:${p.color}"></div>
@@ -8382,16 +8498,12 @@ function markSeeded(projectName) {
 
 let contextWindowsViewActive = false;
 function openContextHub() {
-  // Toggle between inline Context Windows view and the overlay hub
-  contextWindowsViewActive = !contextWindowsViewActive;
+  const wasActive = contextWindowsViewActive;
+  clearAllNavActive();
+  contextWindowsViewActive = !wasActive;
   const btn = document.getElementById('contextBtn');
   btn.classList.toggle('active', contextWindowsViewActive);
-
   if (contextWindowsViewActive) {
-    // Deactivate other view modes
-    if (typeof ideasViewActive !== 'undefined') { ideasViewActive = false; document.getElementById('ideasBtn')?.classList.remove('active'); }
-    if (typeof decisionsViewActive !== 'undefined') { decisionsViewActive = false; document.getElementById('decisionsBtn')?.classList.remove('active'); }
-    if (typeof skillsViewActive !== 'undefined') { skillsViewActive = false; document.getElementById('promptsBtn')?.classList.remove('active'); }
     renderContextWindowsView();
   } else {
     renderFeed();
@@ -8662,15 +8774,13 @@ let skillsViewActive = false;
 let skillsSearch = '';
 
 function togglePromptsView() {
-  skillsViewActive = !skillsViewActive;
+  const wasActive = skillsViewActive;
+  clearAllNavActive();
+  skillsViewActive = !wasActive;
   const btn = document.getElementById('promptsBtn');
   btn.classList.toggle('active', skillsViewActive);
   if (skillsViewActive) {
-    // Deactivate other views
-    if (ideasViewActive)     { ideasViewActive = false;     document.getElementById('ideasBtn').classList.remove('active'); }
-    if (decisionsViewActive) { decisionsViewActive = false; document.getElementById('decisionsBtn').classList.remove('active'); }
     activeFilter = 'All';
-    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
     bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
@@ -8735,14 +8845,10 @@ let auditCategories = new Set(['seo','aeo','content','technical']);
 let auditResults = [];
 
 function openAgentPreview(tab) {
+  clearAllNavActive();
   agentViewActive = true;
   if (tab) activeAgentTab = tab;
   const feed = document.getElementById('feed');
-  // Clear other view states
-  skillsViewActive = false; decisionsViewActive = false; ideasViewActive = false;
-  contextWindowsViewActive = false; document.getElementById('contextBtn')?.classList.remove('active');
-  // Deselect nav items
-  document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
   document.getElementById('agentBtn')?.classList.add('active');
   // Update contextual overview strip immediately
   const _ovEl = document.getElementById('overviewStrip');
@@ -9782,22 +9888,80 @@ function renderOverviewStrip() {
   // Next up items — Day 5/6 work
   const nextItems = ['Search ⌘K — full fuzzy search with type filters', 'Usage bar — AI sessions tracker in nav', 'Design system audit + UI polish pass'];
 
-  el.className = 'overview-strip';
-  el.innerHTML = `
-    <!-- Card 1: Contextual -->
-    ${card1}
+  // ── Cards 2 + 3: context-specific for Ideas / Decisions, otherwise velocity + sprint ──
+  let card2 = '', card3 = '';
 
-    <!-- Velocity -->
-    <div class="ov-card">
+  if (section === 'ideas') {
+    const allIdeas = allBlocksRaw.filter(b => b.type === 'idea');
+    const sevenDaysAgo = Date.now() - 7 * 86400000;
+    const thisWeek = allIdeas.filter(b => (b.ts||0) >= sevenDaysAgo).length;
+    const lastWeekStart = Date.now() - 14 * 86400000;
+    const lastWeek = allIdeas.filter(b => (b.ts||0) >= lastWeekStart && (b.ts||0) < sevenDaysAgo).length;
+    const trend = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : 0;
+    const catCounts = {};
+    allIdeas.forEach(b => { const c = getBlockCategory(b); if (c && c !== 'General') catCounts[c] = (catCounts[c]||0)+1; });
+    const topCats = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).slice(0,4);
+    card2 = `<div class="ov-card">
+      <div class="ov-label">This week</div>
+      <div class="ov-num" style="color:#f59e0b">${thisWeek}</div>
+      <div class="ov-sub">${trend >= 0 ? '↑' : '↓'} ${Math.abs(trend)}% vs last week</div>
+      ${topCats.map(([c,n])=>`<div class="ov-activity-row"><span class="ov-act-icon" style="color:#f59e0b">◈</span><span style="flex:1">${c}</span><span class="ov-act-time" style="color:#f59e0b;font-weight:700">${n}</span></div>`).join('')}
+      ${topCats.length === 0 ? '<div class="ov-sub" style="margin-top:6px">No categories yet</div>' : ''}
+    </div>`;
+    const projCounts = {};
+    allIdeas.forEach(b => { if (b.project) projCounts[b.project] = (projCounts[b.project]||0)+1; });
+    const topProjects = Object.entries(projCounts).sort((a,b)=>b[1]-a[1]);
+    const maxCount = topProjects[0]?.[1] || 1;
+    card3 = `<div class="ov-card">
+      <div class="ov-label">By project</div>
+      <div class="ov-num" style="color:#f59e0b">${Object.keys(projCounts).length}</div>
+      <div class="ov-sub">projects with ideas</div>
+      ${topProjects.slice(0,5).map(([p,n])=>`<div class="ov-activity-row">
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${p}</span>
+        <div style="width:60px;height:4px;background:var(--border);border-radius:2px;margin:0 6px;flex-shrink:0">
+          <div style="width:${Math.round(n/maxCount*100)}%;height:100%;background:#f59e0b;border-radius:2px"></div>
+        </div>
+        <span class="ov-act-time" style="color:#f59e0b;font-weight:700">${n}</span>
+      </div>`).join('')}
+    </div>`;
+
+  } else if (section === 'decisions') {
+    const sevenDaysAgo = Date.now() - 7 * 86400000;
+    const allDec = allBlocksRaw.reduce((n,b)=>n+(b.decisions?.length||0),0);
+    const thisWeekDec = allBlocksRaw.filter(b=>(b.ts||0)>=sevenDaysAgo).reduce((n,b)=>n+(b.decisions?.length||0),0);
+    const projCounts = {};
+    allBlocksRaw.forEach(b=>(b.decisions||[]).forEach(()=>{ if(b.project) projCounts[b.project]=(projCounts[b.project]||0)+1; }));
+    const topProjects = Object.entries(projCounts).sort((a,b)=>b[1]-a[1]);
+    const maxCount = topProjects[0]?.[1] || 1;
+    card2 = `<div class="ov-card">
+      <div class="ov-label">This week</div>
+      <div class="ov-num" style="color:#22c55e">${thisWeekDec}</div>
+      <div class="ov-sub">decisions logged</div>
+      <div class="ov-activity-row"><span class="ov-act-icon" style="color:#22c55e">✓</span><span style="flex:1">All time</span><span class="ov-act-time" style="color:#22c55e;font-weight:700">${allDec}</span></div>
+      <div class="ov-activity-row"><span class="ov-act-icon">◈</span><span style="flex:1">Projects with decisions</span><span class="ov-act-time" style="font-weight:700">${Object.keys(projCounts).length}</span></div>
+    </div>`;
+    card3 = `<div class="ov-card">
+      <div class="ov-label">By project</div>
+      <div class="ov-num" style="color:#22c55e">${topProjects.length}</div>
+      <div class="ov-sub">projects with decisions</div>
+      ${topProjects.slice(0,5).map(([p,n])=>`<div class="ov-activity-row">
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${p}</span>
+        <div style="width:60px;height:4px;background:var(--border);border-radius:2px;margin:0 6px;flex-shrink:0">
+          <div style="width:${Math.round(n/maxCount*100)}%;height:100%;background:#22c55e;border-radius:2px"></div>
+        </div>
+        <span class="ov-act-time" style="color:#22c55e;font-weight:700">${n}</span>
+      </div>`).join('')}
+    </div>`;
+
+  } else {
+    card2 = `<div class="ov-card">
       <div class="ov-label">Velocity</div>
       <div class="ov-num" style="color:${velColor}">${velSign} ${Math.abs(velPct)}%</div>
       <div class="ov-sub">vs last week</div>
       <div class="ov-bar-wrap">${bars}</div>
       <div class="ov-bar-label">7-week trend</div>
-    </div>
-
-    <!-- Sprint card -->
-    <div class="sprint-card">
+    </div>`;
+    card3 = `<div class="sprint-card">
       <div class="sprint-left">
         <div class="sprint-name">Storyboard Sprint</div>
         <div class="sprint-sub">10-day MVP build · public sprint</div>
@@ -9813,8 +9977,11 @@ function renderOverviewStrip() {
         ${nextItems.map(item => `<div class="sprint-next-item">${item}</div>`).join('')}
         <button class="sprint-seed-btn" onclick="seedNewChat()">⚡ Carry forward</button>
       </div>
-    </div>
-  `;
+    </div>`;
+  }
+
+  el.className = 'overview-strip';
+  el.innerHTML = `${card1}${card2}${card3}`;
 }
 
 // ══════════════════════════════════════════════════════════
@@ -9825,12 +9992,7 @@ let activeCatFilter = 'all';
 function openCategoryView(filterCat) {
   if (filterCat !== undefined) activeCatFilter = filterCat;
   const el = document.getElementById('feed');
-  // Reset all exclusive view states
-  if (typeof ideasViewActive !== 'undefined')          { ideasViewActive = false; document.getElementById('ideasBtn')?.classList.remove('active'); }
-  if (typeof decisionsViewActive !== 'undefined')      { decisionsViewActive = false; document.getElementById('decisionsBtn')?.classList.remove('active'); }
-  if (typeof skillsViewActive !== 'undefined')         { skillsViewActive = false; document.getElementById('promptsBtn')?.classList.remove('active'); }
-  if (typeof contextWindowsViewActive !== 'undefined') { contextWindowsViewActive = false; document.getElementById('contextBtn')?.classList.remove('active'); }
-  document.querySelectorAll('.nav-item, .nav-proj-row, .nav-tool-item').forEach(n => n.classList.remove('active'));
+  clearAllNavActive();
   document.getElementById('categoriesBtn')?.classList.add('active');
   // Update contextual overview strip immediately
   const _ovEl2 = document.getElementById('overviewStrip');
@@ -9964,10 +10126,114 @@ function openCategoryView(filterCat) {
 // ══════════════════════════════════════════════════════════
 //  FILES VIEW
 // ══════════════════════════════════════════════════════════
+// ── DESIGNS GALLERY ──────────────────────────────────────────────────────────
+let designsProjectFilter = 'All';
+
+function openDesignsView() {
+  clearAllNavActive();
+  document.getElementById('designsBtn')?.classList.add('active');
+  const el = document.getElementById('feed');
+  const allBlocks = mergedBlocks();
+
+  // Collect all design assets: block-level thumbs + filmstrip items
+  const designs = [];
+  allBlocks.forEach(b => {
+    if (b.thumb) {
+      designs.push({
+        blockId: b.id, title: b.title, thumb: b.thumb,
+        project: b.project || 'Unknown', date: b.date, sub: null,
+        kind: 'block'
+      });
+    }
+    if (b.filmstrip?.length) {
+      b.filmstrip.forEach((f, fi) => {
+        if (f.thumb) {
+          designs.push({
+            blockId: b.id, filmIdx: fi, title: f.label || b.title,
+            thumb: f.thumb, project: b.project || 'Unknown',
+            date: b.date, sub: f.sub, kind: 'filmstrip',
+            blockTitle: b.title
+          });
+        }
+      });
+    }
+  });
+
+  // Update badge
+  document.getElementById('designsCount').textContent = designs.length;
+
+  // Count per project
+  const projCounts = {};
+  designs.forEach(d => { projCounts[d.project] = (projCounts[d.project] || 0) + 1; });
+  const sortedProjects = Object.entries(projCounts).sort((a, b) => b[1] - a[1]).map(([p]) => p);
+
+  // Filter
+  const filtered = designsProjectFilter === 'All'
+    ? designs
+    : designs.filter(d => d.project === designsProjectFilter);
+
+  // Group by project
+  const grouped = {};
+  filtered.forEach(d => {
+    if (!grouped[d.project]) grouped[d.project] = [];
+    grouped[d.project].push(d);
+  });
+  const groupOrder = designsProjectFilter === 'All' ? sortedProjects : [designsProjectFilter];
+
+  const pillsHtml = [
+    `<button class="designs-pill${designsProjectFilter === 'All' ? ' active' : ''}" onclick="designsProjectFilter='All';openDesignsView()">All <span style="opacity:.55">${designs.length}</span></button>`,
+    ...sortedProjects.map(p =>
+      `<button class="designs-pill${designsProjectFilter === p ? ' active' : ''}"
+        onclick="designsProjectFilter=${JSON.stringify(p)};openDesignsView()">${p} <span style="opacity:.55">${projCounts[p]}</span></button>`)
+  ].join('');
+
+  const sectionsHtml = groupOrder.map(proj => {
+    const cards = grouped[proj] || [];
+    if (!cards.length) return '';
+    return `<div class="designs-section">
+      ${designsProjectFilter === 'All' ? `<div class="designs-section-label">${proj} &mdash; ${cards.length} asset${cards.length !== 1 ? 's' : ''}</div>` : ''}
+      <div class="designs-grid">
+        ${cards.map(d => `
+          <div class="design-card" onclick="openDetail('${d.blockId}')">
+            <img class="design-card-img" src="${d.thumb}" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="design-card-img-ph" style="display:none">🖼</div>
+            <div class="design-card-body">
+              <div class="design-card-title">${d.title || 'Untitled'}</div>
+              ${d.sub ? `<div class="design-card-sub">${d.sub}</div>` : ''}
+              ${d.kind === 'filmstrip' && d.blockTitle ? `<div class="design-card-sub" style="opacity:.5">${d.blockTitle}</div>` : ''}
+              <div class="design-card-meta">
+                <span class="design-card-date">${d.date || ''}</span>
+                <span class="design-card-proj" style="color:${(PROJ[d.project] || {color: '#6c63ff'}).color}">${d.project}</span>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  const emptyHtml = filtered.length === 0
+    ? `<div class="designs-empty">
+        <div class="designs-empty-icon">🖼</div>
+        <div>No designs${designsProjectFilter !== 'All' ? ' for ' + designsProjectFilter : ''}.</div>
+        <div style="margin-top:6px;font-size:12px;opacity:.6">Blocks with <code>thumb</code> images or filmstrip versions appear here.</div>
+      </div>`
+    : '';
+
+  el.innerHTML = `<div class="designs-wrap">
+    <div class="designs-header">
+      <div class="designs-title">Designs</div>
+      <div class="designs-subtitle">${designs.length} visual asset${designs.length !== 1 ? 's' : ''} across ${sortedProjects.length} project${sortedProjects.length !== 1 ? 's' : ''}</div>
+    </div>
+    <div class="designs-filter-bar">${pillsHtml}</div>
+    ${sectionsHtml}${emptyHtml}
+  </div>`;
+}
+
 function openFilesView() {
   const el = document.getElementById('feed');
   // Reset nav active states
-  document.querySelectorAll('.nav-item, .nav-proj-row, .nav-tool-item').forEach(n => n.classList.remove('active'));
+  clearAllNavActive();
   document.getElementById('filesBtn')?.classList.add('active');
 
   const filtered = filesFilter === 'all' ? FILES : FILES.filter(f => f.type === filesFilter);
@@ -10418,28 +10684,29 @@ function copySkill(name) {
 
 // ── toggleDecisionsView — show only blocks that have decisions ──
 function toggleDecisionsView() {
-  decisionsViewActive = !decisionsViewActive;
+  const wasActive = decisionsViewActive;
+  clearAllNavActive();
+  decisionsViewActive = !wasActive;
   const btn = document.getElementById('decisionsBtn');
   btn.classList.toggle('active', decisionsViewActive);
   if (decisionsViewActive) {
     activeFilter = 'All';
-    ideasViewActive = false;
-    document.getElementById('ideasBtn').classList.remove('active');
-    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
     bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
                     <span class="sep">/</span>
                     <span style="color:#15803d">Decisions</span>`;
-    // Render only blocks that have decisions
+    // Render only blocks that have decisions, with project filter bar
+    renderViewFilterBar('decisions');
     const feed = document.getElementById('feed');
-    const withDecisions = mergedBlocks()
+    let withDecisions = mergedBlocks()
       .filter(b => b.decisions && b.decisions.length > 0)
       .sort((a, b) => (b.ts||0) - (a.ts||0));
+    if (decisionsProjectFilter !== 'All') withDecisions = withDecisions.filter(b => b.project === decisionsProjectFilter);
     feed.innerHTML = withDecisions.length
       ? `<div class="time-lane">Blocks with decisions (${withDecisions.length})</div>` +
         withDecisions.map((b,i) => blockHTML(b, i)).join('')
-      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No decisions logged yet.</div>`;
+      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No decisions for this project yet.</div>`;
   } else {
     setFilter('All');
   }
@@ -11230,6 +11497,31 @@ let capturedIdeas = (() => {
 })();
 let ideasViewActive = false;
 let decisionsViewActive = false;
+let ideasProjectFilter = 'All';
+let decisionsProjectFilter = 'All';
+
+function renderViewFilterBar(type) {
+  const bar = document.getElementById('viewFilterBar');
+  if (!bar) return;
+  const allBlocks = mergedBlocks();
+  const relevant = allBlocks.filter(b => type === 'ideas' ? b.type === 'idea' : (b.decisions?.length > 0));
+  const projCounts = {};
+  relevant.forEach(b => { if (b.project) projCounts[b.project] = (projCounts[b.project]||0)+1; });
+  const projects = Object.entries(projCounts).sort((a,b)=>b[1]-a[1]);
+  const activeProj = type === 'ideas' ? ideasProjectFilter : decisionsProjectFilter;
+  const setter = type === 'ideas'
+    ? `ideasProjectFilter='PROJ';renderFeed();renderViewFilterBar('ideas')`
+    : `decisionsProjectFilter='PROJ';renderFeed();renderViewFilterBar('decisions')`;
+  bar.style.display = 'flex';
+  bar.innerHTML = `<span class="vfb-label">Filter</span>
+    <button class="vfb-pill${activeProj==='All'?' active':''}" onclick="${setter.replace('PROJ','All')}">All</button>
+    ${projects.map(([p,n])=>`<button class="vfb-pill${activeProj===p?' active':''}" onclick="${setter.replace('PROJ', encodeURIComponent(p)).replace("'PROJ'","'"+p.replace(/'/g,"\\'")+"'")}">${p} <span style="opacity:.5;font-weight:400">${n}</span></button>`).join('')}`;
+}
+
+function hideViewFilterBar() {
+  const bar = document.getElementById('viewFilterBar');
+  if (bar) bar.style.display = 'none';
+}
 
 function openIdeaModal() {
   // Populate project selector
@@ -11393,13 +11685,13 @@ function updateIdeasCount() {
 }
 
 function toggleIdeasView() {
-  ideasViewActive = !ideasViewActive;
+  const wasActive = ideasViewActive;
+  clearAllNavActive();
+  ideasViewActive = !wasActive;
   const btn = document.getElementById('ideasBtn');
   btn.classList.toggle('active', ideasViewActive);
   if (ideasViewActive) {
-    // Deactivate project filters, show all ideas
     activeFilter = 'All';
-    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
     bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
