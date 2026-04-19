@@ -10767,10 +10767,38 @@ function toggleDecisionsView() {
       .filter(b => b.decisions && b.decisions.length > 0)
       .sort((a, b) => (b.ts||0) - (a.ts||0));
     if (decisionsProjectFilter !== 'All') withDecisions = withDecisions.filter(b => b.project === decisionsProjectFilter);
+
+    const decisionBigCard = (b) => {
+      const p2 = PROJ[b.project] || { color: '#22c55e' };
+      const decs = b.decisions || [];
+      const visible = decs.slice(0, 4);
+      return `<div onclick="openDetail('${b.id}')" style="
+        background:var(--white);border:1px solid var(--border);border-radius:14px;
+        padding:20px;cursor:pointer;transition:outline .12s,transform .1s;
+        border-top:3px solid #22c55e;display:flex;flex-direction:column;
+      " onmouseover="this.style.outline='1.5px solid #22c55e55';this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.outline='none';this.style.transform='none'">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(34,197,94,.12);color:#15803d">SHIPPED</span>
+          <span style="font-size:10px;color:${p2.color};font-weight:600">${b.project||''}</span>
+          <span style="font-size:10px;color:var(--text-3);margin-left:auto">${b.date||''}</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:12px">${b.title||'Session'}</div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:1">
+          ${visible.map(d => `<div style="font-size:11.5px;color:var(--text-2);padding:5px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;line-height:1.4">
+            <span style="color:#22c55e;flex-shrink:0;font-weight:700">✓</span>${d}
+          </div>`).join('')}
+          ${decs.length > 4 ? `<div style="font-size:10px;color:var(--text-3);padding:5px 0">+${decs.length - 4} more</div>` : ''}
+        </div>
+      </div>`;
+    };
+
     feed.innerHTML = withDecisions.length
-      ? `<div class="time-lane">Blocks with decisions (${withDecisions.length})</div>` +
-        withDecisions.map((b,i) => blockHTML(b, i)).join('')
-      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No decisions for this project yet.</div>`;
+      ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:4px 16px 40px">${withDecisions.map(decisionBigCard).join('')}</div>`
+      : `<div style="padding:60px 0;text-align:center;color:var(--text-3);font-size:13px">
+          <div style="font-size:32px;margin-bottom:12px">✓</div>
+          No decisions for ${decisionsProjectFilter === 'All' ? 'any project' : decisionsProjectFilter} yet.
+        </div>`;
   } else {
     setFilter('All');
   }
