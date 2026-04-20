@@ -230,6 +230,18 @@ body.light-mode .topbar {
   display: flex; flex-direction: column;
   position: relative; z-index: 40;
 }
+/* Scrollable body inside nav — everything between header item and footer */
+.nav-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.nav-scroll-body::-webkit-scrollbar { width: 4px; }
+.nav-scroll-body::-webkit-scrollbar-track { background: transparent; }
+.nav-scroll-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 /* On mobile: left-nav leaves grid flow, becomes fixed overlay */
 @media (max-width: 768px) {
@@ -3624,75 +3636,81 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
       <span class="nav-count" id="cnt-All">—</span>
     </div>
 
-    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+    <!-- ─────────────── SCROLLABLE BODY ─────────────── -->
+    <div class="nav-scroll-body">
 
-    <!-- ── STORIES (real task windows) ──────────────── -->
-    <div style="padding:4px 10px 2px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)">Stories</div>
-    <div id="nav-stories"></div>
+      <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+      <!-- ── STORIES (real task windows) ──────────────── -->
+      <div class="nav-label" style="padding:6px 12px 3px">Stories</div>
+      <div id="nav-stories"></div>
 
-    <!-- ── AUTOMATIONS ───────────────────────────────── -->
-    <div style="padding:4px 10px 2px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)">Automations</div>
-    <div id="nav-automations"></div>
+      <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+      <!-- ── AUTOMATIONS ───────────────────────────────── -->
+      <div class="nav-label" style="padding:6px 12px 3px">Automations</div>
+      <div id="nav-automations"></div>
 
-    <!-- ── BOARDS (projects) ──────────────────────── -->
-    <div style="padding:4px 10px 2px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)">Boards</div>
-    <div id="nav-active-projects"></div>
-    <div id="nav-projects" style="display:none"></div>
-    <button class="nav-show-more-btn" id="navShowMoreBtn" onclick="toggleMoreProjects()" style="display:none"></button>
+      <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+      <!-- ── BOARDS (projects) ──────────────────────── -->
+      <div class="nav-label" style="padding:6px 12px 3px">Boards</div>
+      <div id="nav-active-projects"></div>
+      <div id="nav-projects" style="display:none"></div>
+      <button class="nav-show-more-btn" id="navShowMoreBtn" onclick="toggleMoreProjects()" style="display:none"></button>
 
-    <!-- ── CONTENT TYPE FILTERS ───────────────────── -->
-    <button class="nav-tool-item" id="designsBtn" onclick="openDesignsView()">
-      <span class="nav-tool-label">Designs</span>
-      <span class="nav-tool-badge" id="designsCount">0</span>
-    </button>
-    <button class="nav-tool-item" id="ideasBtn" onclick="toggleIdeasView()">
-      <span class="nav-tool-label">Ideas</span>
-      <span class="nav-tool-badge yellow" id="ideasCount">0</span>
-    </button>
-    <button class="nav-tool-item" id="decisionsBtn" onclick="toggleDecisionsView()">
-      <span class="nav-tool-label">Decisions</span>
-      <span class="nav-tool-badge green" id="decisionsCount">0</span>
-    </button>
+      <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+      <!-- ── CONTENT TYPE FILTERS ───────────────────── -->
+      <button class="nav-tool-item" id="designsBtn" onclick="openDesignsView()">
+        <span class="nav-tool-label">Designs</span>
+        <span class="nav-tool-badge" id="designsCount">0</span>
+      </button>
+      <button class="nav-tool-item" id="ideasBtn" onclick="toggleIdeasView()">
+        <span class="nav-tool-label">Ideas</span>
+        <span class="nav-tool-badge yellow" id="ideasCount">0</span>
+      </button>
+      <button class="nav-tool-item" id="decisionsBtn" onclick="toggleDecisionsView()">
+        <span class="nav-tool-label">Decisions</span>
+        <span class="nav-tool-badge green" id="decisionsCount">0</span>
+      </button>
 
-    <!-- ── LIBRARY ────────────────────────────────── -->
-    <button class="nav-tool-item" id="promptsBtn" onclick="togglePromptsView()">
-      <span class="nav-tool-label">Skills</span>
-      <span class="nav-tool-badge" id="skillsCountBadge">35</span>
-    </button>
-    <button class="nav-tool-item" id="filesBtn" onclick="openFilesView()">
-      <span class="nav-tool-label">Files</span>
-      <span class="nav-tool-badge" id="filesCount">6</span>
-    </button>
+      <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <div class="nav-divider" style="margin:8px 12px 4px"></div>
+      <!-- ── LIBRARY ────────────────────────────────── -->
+      <button class="nav-tool-item" id="promptsBtn" onclick="togglePromptsView()">
+        <span class="nav-tool-label">Skills</span>
+        <span class="nav-tool-badge" id="skillsCountBadge">35</span>
+      </button>
+      <button class="nav-tool-item" id="filesBtn" onclick="openFilesView()">
+        <span class="nav-tool-label">Files</span>
+        <span class="nav-tool-badge" id="filesCount">6</span>
+      </button>
 
-    <!-- ── POWER TOOLS (de-emphasized) ───────────── -->
-    <button class="nav-util-item" id="agentBtn" onclick="openAgentPreview()">
-      <span class="nav-util-label">Agents</span>
-      <span class="nav-util-badge" id="agentSimCount">4</span>
-    </button>
-    <button class="nav-util-item" id="categoriesBtn" onclick="openCategoryView()">
-      <span class="nav-util-label">Categories</span>
-      <span class="nav-util-badge" id="categoriesCount">9</span>
-    </button>
-    <button class="nav-util-item" id="contextBtn" onclick="openContextHub()">
-      <span class="nav-util-label">Context windows</span>
-      <span class="nav-util-badge" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
-    </button>
-    <button class="nav-util-item" id="inspectBtn2" onclick="toggleInspect()">
-      <span class="nav-util-label">Inspect</span>
-      <span class="inspect-score" id="inspectScorePill" style="display:none"></span>
-    </button>
+      <div class="nav-divider" style="margin:8px 12px 4px"></div>
 
-    <!-- AI Usage bar -->
+      <!-- ── POWER TOOLS (de-emphasized) ───────────── -->
+      <button class="nav-util-item" id="agentBtn" onclick="openAgentPreview()">
+        <span class="nav-util-label">Agents</span>
+        <span class="nav-util-badge" id="agentSimCount">4</span>
+      </button>
+      <button class="nav-util-item" id="categoriesBtn" onclick="openCategoryView()">
+        <span class="nav-util-label">Categories</span>
+        <span class="nav-util-badge" id="categoriesCount">9</span>
+      </button>
+      <button class="nav-util-item" id="contextBtn" onclick="openContextHub()">
+        <span class="nav-util-label">Context windows</span>
+        <span class="nav-util-badge" id="contextStaleBadge" style="background:#f97316;color:#fff;display:none">!</span>
+      </button>
+      <button class="nav-util-item" id="inspectBtn2" onclick="toggleInspect()">
+        <span class="nav-util-label">Inspect</span>
+        <span class="inspect-score" id="inspectScorePill" style="display:none"></span>
+      </button>
+
+      <div style="height:8px"></div>
+    </div><!-- end .nav-scroll-body -->
+
+    <!-- AI Usage bar — pinned above footer -->
     <div class="nav-usage" id="navUsage"></div>
 
     <div class="nav-footer">
@@ -5845,25 +5863,40 @@ function buildNav() {
   const catBadgeEl = document.getElementById('categoriesCount');
   if (catBadgeEl) catBadgeEl.textContent = activeCatCount || ALL_CATEGORIES.length;
 
-  // ── STORIES section — real task windows from SESSION_MANIFEST ──
+  // ── STORIES section — compact "Board · task" format ──
+  const BOARD_ABBR = {
+    "Storyboard":       "Storyboard",
+    "Opero Agency":     "Opero",
+    "Costa Blanca":     "NBHCB",
+    "Hansson Hertzell": "H&H",
+    "Cross-Brand":      "Cross",
+    "Charles":          "Charles",
+  };
+  function storyShortName(name) {
+    return name
+      .replace(/^Opero \| \d+: Agency: /, '')   // "Opero | 2: Agency: X" → "X"
+      .replace(/^Opero \| /, '')                 // "Opero | X" → "X"
+      .replace(/^\d+: NBHCB /, m => m.replace('NBHCB ', ''))   // "1: NBHCB X" → "1: X"
+      .replace(/^\d+: H&H /, m => m.replace('H&H ', ''))       // "5: H&H X" → "5: X"
+      .replace(/^\d+: Cross-Brand /, m => m.replace('Cross-Brand ', ''))
+      .replace(/^(Storyboard|Charles) /, '');    // "Storyboard Brain" → "Brain"
+  }
   const storiesEl = document.getElementById('nav-stories');
   if (storiesEl) {
-    const TYPE_ICON = { brain: '🧠', task: '◈' };
     storiesEl.innerHTML = SESSION_MANIFEST.stories.map(s => {
-      const p2 = PROJ[s.board] || { color:'#6c63ff' };
-      const isActive = activeView === 'story' && activeStoryName === s.name && activeFilter === s.board;
-      const isBrain = s.type === 'brain';
+      const p2   = PROJ[s.board] || { color:'#6c63ff' };
+      const abbr = BOARD_ABBR[s.board] || s.board;
+      const short = storyShortName(s.name);
+      const label = `<span style="color:${p2.color};font-weight:700">${abbr}</span><span style="color:var(--text-3);font-weight:400"> · </span>${short}`;
+      const isActive  = activeView === 'story' && activeStoryName === s.name && activeFilter === s.board;
       const isRunning = s.status === 'active' || s.status === 'running';
-      const icon = isBrain ? '🧠' : '◈';
+      const icon = s.type === 'brain' ? '🧠' : '○';
       return `<div onclick="openStoryWindow('${s.name.replace(/'/g,"\\'")}','${s.board}')"
-        style="display:flex;align-items:center;gap:7px;padding:5px 10px 5px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;background:${isActive?p2.color+'18':'transparent'};transition:background .1s"
-        onmouseover="this.style.background='${p2.color}12'" onmouseout="this.style.background='${isActive?p2.color+'18':'transparent'}'">
-        <span style="font-size:11px;flex-shrink:0">${icon}</span>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:11.5px;font-weight:${isActive?'800':'600'};color:${isActive?p2.color:'var(--text-2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name}</div>
-          <div style="font-size:9.5px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.board}</div>
-        </div>
-        ${isRunning ? `<div style="width:6px;height:6px;border-radius:50%;background:#10b981;flex-shrink:0" title="Active"></div>` : ''}
+        style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;background:${isActive?p2.color+'18':'transparent'};transition:background .1s"
+        onmouseover="this.style.background='${p2.color}10'" onmouseout="this.style.background='${isActive?p2.color+'18':'transparent'}'">
+        <span style="font-size:10px;flex-shrink:0;opacity:.7">${icon}</span>
+        <div style="flex:1;min-width:0;font-size:11.5px;font-weight:${isActive?'700':'500'};color:${isActive?p2.color:'var(--text-2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
+        ${isRunning ? `<div style="width:6px;height:6px;border-radius:50%;background:#10b981;flex-shrink:0"></div>` : ''}
       </div>`;
     }).join('') || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">No stories yet</div>`;
   }
@@ -5872,14 +5905,16 @@ function buildNav() {
   const autoNavEl = document.getElementById('nav-automations');
   if (autoNavEl) {
     autoNavEl.innerHTML = SESSION_MANIFEST.automations.map(a => {
-      const p2 = PROJ[a.board] || { color:'#6c63ff' };
+      const p2       = PROJ[a.board] || { color:'#6c63ff' };
+      const abbr     = BOARD_ABBR[a.board] || a.board;
       const dotColor = a.status === 'ok' ? '#10b981' : a.status === 'needs-work' ? '#f59e0b' : '#6b7280';
-      const opacity = a.status === 'disabled' ? '0.45' : '1';
-      return `<div style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:default;border-radius:6px;margin:1px 6px;opacity:${opacity}">
-        <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0;margin-top:1px"></div>
+      const opacity  = a.status === 'disabled' ? '0.35' : '1';
+      const label    = `<span style="color:${p2.color};font-weight:700">${abbr}</span><span style="color:var(--text-3);font-weight:400"> · </span>${a.name}`;
+      return `<div style="display:flex;align-items:center;gap:7px;padding:3px 10px 3px 12px;border-radius:6px;margin:1px 6px;opacity:${opacity}">
+        <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:11px;font-weight:600;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
-          <div style="font-size:9px;color:var(--text-3);opacity:.7">${a.schedule}</div>
+          <div style="font-size:11px;font-weight:500;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
+          <div style="font-size:9px;color:var(--text-3);opacity:.6;margin-top:1px">${a.schedule}</div>
         </div>
       </div>`;
     }).join('') || '';
