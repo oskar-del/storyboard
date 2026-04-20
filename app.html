@@ -1322,8 +1322,12 @@ body.light-mode .pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
 /* ── MAIN ── */
 .main {
   overflow-y: auto;
-  min-width: 0; /* prevent grid blowout */
-  margin-right: var(--right-w); /* always make room for persistent right panel */
+  min-width: 0;
+  margin-right: 0;
+  transition: margin-right .2s cubic-bezier(.4,0,.2,1);
+}
+.right-panel-open .main {
+  margin-right: var(--right-w);
 }
 .main::-webkit-scrollbar { width: 4px; }
 .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -2138,7 +2142,8 @@ body.light-mode .seed-modal-raw { background: #f7f8fa; }
   border-left: 1px solid var(--border);
   display: flex; flex-direction: column;
   z-index: 150;
-  transform: translateX(0); /* always visible */
+  transform: translateX(100%); /* hidden by default */
+  transition: transform .2s cubic-bezier(.4,0,.2,1);
 }
 .right-panel.open {
   transform: translateX(0);
@@ -5684,7 +5689,7 @@ function toggleRight() {
   rightOpen = !rightOpen;
   document.getElementById('rightPanel').classList.toggle('open', rightOpen);
   document.getElementById('panelBtn').classList.toggle('active', rightOpen);
-  // Show backdrop on mobile when panel is open
+  document.body.classList.toggle('right-panel-open', rightOpen);
   if (isMobile()) {
     document.getElementById('backdrop').classList.toggle('show', rightOpen);
   }
@@ -5693,7 +5698,7 @@ function toggleRight() {
 function closeAll() {
   // Close both drawers and backdrop
   document.getElementById('leftNav').classList.remove('mobile-open');
-  if (rightOpen) { rightOpen = false; document.getElementById('rightPanel').classList.remove('open'); document.getElementById('panelBtn').classList.remove('active'); }
+  if (rightOpen) { rightOpen = false; document.getElementById('rightPanel').classList.remove('open'); document.getElementById('panelBtn').classList.remove('active'); document.body.classList.remove('right-panel-open'); }
   document.getElementById('backdrop').classList.remove('show');
 }
 
@@ -5863,7 +5868,7 @@ function buildNav() {
   const catBadgeEl = document.getElementById('categoriesCount');
   if (catBadgeEl) catBadgeEl.textContent = activeCatCount || ALL_CATEGORIES.length;
 
-  // ── STORIES section — compact "Board · task" format ──
+  // ── Board abbreviations + short name helpers ──
   const BOARD_ABBR = {
     "Storyboard":       "Storyboard",
     "Opero Agency":     "Opero",
@@ -5874,50 +5879,115 @@ function buildNav() {
   };
   function storyShortName(name) {
     return name
-      .replace(/^Opero \| \d+: Agency: /, '')   // "Opero | 2: Agency: X" → "X"
-      .replace(/^Opero \| /, '')                 // "Opero | X" → "X"
-      .replace(/^\d+: NBHCB /, m => m.replace('NBHCB ', ''))   // "1: NBHCB X" → "1: X"
-      .replace(/^\d+: H&H /, m => m.replace('H&H ', ''))       // "5: H&H X" → "5: X"
-      .replace(/^\d+: Cross-Brand /, m => m.replace('Cross-Brand ', ''))
-      .replace(/^(Storyboard|Charles) /, '');    // "Storyboard Brain" → "Brain"
+      .replace(/^Opero \| \d+: Agency: /, '')
+      .replace(/^Opero \| /, '')
+      .replace(/^\d+: NBHCB /, m => m.replace('NBHCB ',''))
+      .replace(/^\d+: H&H /, m => m.replace('H&H ',''))
+      .replace(/^\d+: Cross-Brand /, m => m.replace('Cross-Brand ',''))
+      .replace(/^(Storyboard|Charles) /, '');
   }
-  const storiesEl = document.getElementById('nav-stories');
-  if (storiesEl) {
-    storiesEl.innerHTML = SESSION_MANIFEST.stories.map(s => {
-      const p2   = PROJ[s.board] || { color:'#6c63ff' };
-      const abbr = BOARD_ABBR[s.board] || s.board;
-      const short = storyShortName(s.name);
-      const label = `<span style="color:${p2.color};font-weight:700">${abbr}</span><span style="color:var(--text-3);font-weight:400"> · </span>${short}`;
-      const isActive  = activeView === 'story' && activeStoryName === s.name && activeFilter === s.board;
-      const isRunning = s.status === 'active' || s.status === 'running';
-      const icon = s.type === 'brain' ? '🧠' : '○';
-      return `<div onclick="openStoryWindow('${s.name.replace(/'/g,"\\'")}','${s.board}')"
-        style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;background:${isActive?p2.color+'18':'transparent'};transition:background .1s"
-        onmouseover="this.style.background='${p2.color}10'" onmouseout="this.style.background='${isActive?p2.color+'18':'transparent'}'">
-        <span style="font-size:10px;flex-shrink:0;opacity:.7">${icon}</span>
-        <div style="flex:1;min-width:0;font-size:11.5px;font-weight:${isActive?'700':'500'};color:${isActive?p2.color:'var(--text-2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
-        ${isRunning ? `<div style="width:6px;height:6px;border-radius:50%;background:#10b981;flex-shrink:0"></div>` : ''}
-      </div>`;
-    }).join('') || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">No stories yet</div>`;
+  function autoShortName(name, boardAbbr) {
+    // Strip leading board prefix if it repeats ("H&H CRM Outreach" under H&H → "CRM Outreach")
+    const prefixes = ['H&H ', 'NBHCB ', 'Storyboard ', 'Opero ', 'Cross '];
+    for (const p of prefixes) { if (name.startsWith(p)) return name.slice(p.length); }
+    return name;
+  }
+  function navStoryRow(s, isActive) {
+    const p2      = PROJ[s.board] || { color:'#6c63ff' };
+    const abbr    = BOARD_ABBR[s.board] || s.board;
+    const short   = storyShortName(s.name);
+    const running = s.status === 'active' || s.status === 'running';
+    const icon    = s.type === 'brain' ? '🧠' : '○';
+    return `<div onclick="openStoryWindow('${s.name.replace(/'/g,"\\'")}','${s.board}')"
+      style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;background:${isActive?p2.color+'18':'transparent'};transition:background .1s"
+      onmouseover="this.style.background='${p2.color}10'" onmouseout="this.style.background='${isActive?p2.color+'18':'transparent'}'">
+      <span style="font-size:10px;flex-shrink:0;opacity:.65">${icon}</span>
+      <div style="flex:1;min-width:0;font-size:11.5px;font-weight:${isActive?'700':'500'};color:${isActive?p2.color:'var(--text-2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        <span style="color:${p2.color};font-weight:700">${abbr}</span><span style="color:var(--text-3);font-weight:400"> · </span>${short}
+      </div>
+      ${running ? `<div style="width:6px;height:6px;border-radius:50%;background:#10b981;flex-shrink:0"></div>` : ''}
+    </div>`;
   }
 
-  // ── AUTOMATIONS section ─────────────────────────────────────────
+  // ── STORIES — show top 3, collapse the rest ──
+  const STORIES_VISIBLE = 3;
+  const storiesEl = document.getElementById('nav-stories');
+  if (storiesEl) {
+    const stories  = SESSION_MANIFEST.stories;
+    // Active story always first, then rest in order
+    const sorted   = [...stories].sort((a,b) => (b.status==='active'?1:0)-(a.status==='active'?1:0));
+    const visible  = sorted.slice(0, STORIES_VISIBLE);
+    const hidden   = sorted.slice(STORIES_VISIBLE);
+    const expanded = storiesEl.dataset.expanded === '1';
+
+    let html = visible.map(s => {
+      const isActive = activeView==='story' && activeStoryName===s.name && activeFilter===s.board;
+      return navStoryRow(s, isActive);
+    }).join('');
+
+    if (hidden.length) {
+      if (expanded) {
+        html += hidden.map(s => {
+          const isActive = activeView==='story' && activeStoryName===s.name && activeFilter===s.board;
+          return navStoryRow(s, isActive);
+        }).join('');
+        html += `<button onclick="document.getElementById('nav-stories').dataset.expanded='0';buildNav(allBlocksRaw)"
+          style="display:flex;align-items:center;gap:5px;width:100%;padding:3px 12px;background:none;border:none;cursor:pointer;font-size:10.5px;color:var(--text-3);font-weight:600">
+          <span style="font-size:9px">▲</span> Show less
+        </button>`;
+      } else {
+        html += `<button onclick="document.getElementById('nav-stories').dataset.expanded='1';buildNav(allBlocksRaw)"
+          style="display:flex;align-items:center;gap:5px;width:100%;padding:3px 12px;background:none;border:none;cursor:pointer;font-size:10.5px;color:var(--text-3);font-weight:600"
+          onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-3)'">
+          <span style="font-size:9px">▼</span> ${hidden.length} more
+        </button>`;
+      }
+    }
+    storiesEl.innerHTML = html || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">No stories yet</div>`;
+  }
+
+  // ── AUTOMATIONS — show active only, collapse needs-work + disabled ──
   const autoNavEl = document.getElementById('nav-automations');
   if (autoNavEl) {
-    autoNavEl.innerHTML = SESSION_MANIFEST.automations.map(a => {
+    const autos    = SESSION_MANIFEST.automations;
+    const active   = autos.filter(a => a.status === 'ok');
+    const inactive = autos.filter(a => a.status !== 'ok');
+    const autoExp  = autoNavEl.dataset.expanded === '1';
+
+    function autoRow(a) {
       const p2       = PROJ[a.board] || { color:'#6c63ff' };
       const abbr     = BOARD_ABBR[a.board] || a.board;
+      const short    = autoShortName(a.name, abbr);
       const dotColor = a.status === 'ok' ? '#10b981' : a.status === 'needs-work' ? '#f59e0b' : '#6b7280';
-      const opacity  = a.status === 'disabled' ? '0.35' : '1';
-      const label    = `<span style="color:${p2.color};font-weight:700">${abbr}</span><span style="color:var(--text-3);font-weight:400"> · </span>${a.name}`;
-      return `<div style="display:flex;align-items:center;gap:7px;padding:3px 10px 3px 12px;border-radius:6px;margin:1px 6px;opacity:${opacity}">
+      const faded    = a.status !== 'ok';
+      return `<div style="display:flex;align-items:center;gap:7px;padding:3px 10px 3px 12px;border-radius:6px;margin:1px 6px;opacity:${faded?.55:1}">
         <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:11px;font-weight:500;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
-          <div style="font-size:9px;color:var(--text-3);opacity:.6;margin-top:1px">${a.schedule}</div>
+          <div style="font-size:11px;font-weight:500;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            <span style="color:${p2.color};font-weight:700">${abbr}</span><span style="color:var(--text-3);opacity:.5"> · </span>${short}
+          </div>
+          <div style="font-size:9px;color:var(--text-3);opacity:.55;margin-top:1px">${a.schedule}</div>
         </div>
       </div>`;
-    }).join('') || '';
+    }
+
+    let autoHtml = active.map(autoRow).join('');
+    if (inactive.length) {
+      if (autoExp) {
+        autoHtml += inactive.map(autoRow).join('');
+        autoHtml += `<button onclick="document.getElementById('nav-automations').dataset.expanded='0';buildNav(allBlocksRaw)"
+          style="display:flex;align-items:center;gap:5px;width:100%;padding:3px 12px;background:none;border:none;cursor:pointer;font-size:10.5px;color:var(--text-3);font-weight:600">
+          <span style="font-size:9px">▲</span> Show less
+        </button>`;
+      } else {
+        autoHtml += `<button onclick="document.getElementById('nav-automations').dataset.expanded='1';buildNav(allBlocksRaw)"
+          style="display:flex;align-items:center;gap:5px;width:100%;padding:3px 12px;background:none;border:none;cursor:pointer;font-size:10.5px;color:var(--text-3);font-weight:600"
+          onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-3)'">
+          <span style="font-size:9px">▼</span> ${inactive.length} paused
+        </button>`;
+      }
+    }
+    autoNavEl.innerHTML = autoHtml;
   }
 
   // ── Active Projects section (design-v2 style) ──────────────────
