@@ -3525,7 +3525,7 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
 
     <div class="top-center">
       <div class="breadcrumb" id="breadcrumb">
-        <span onclick="setFilter('All')">All work</span>
+        <span onclick="navClick('All')">All work</span>
       </div>
     </div>
 
@@ -5445,7 +5445,8 @@ function setView(v) {
   document.getElementById('timelineBtn').classList.toggle('on',  v === 'timeline');
   document.getElementById('pipelineBtn').classList.toggle('on',  v === 'pipeline');
   // Timeline + Pipeline hide the period tabs; Canvas keeps them (project view uses them)
-  document.getElementById('periodTabs').style.visibility = (v === 'timeline' || v === 'pipeline') ? 'hidden' : '';
+  const _ptEl = document.getElementById('periodTabs');
+  if (_ptEl) _ptEl.style.visibility = (v === 'timeline' || v === 'pipeline') ? 'hidden' : '';
   renderFeed();
 }
 
@@ -5631,15 +5632,15 @@ function closeAll() {
 // ═══════════════════════════════════
 function setFilter(f) {
   activeFilter = f;
-  if (f === 'All') activeTask = null; // clear task filter when going back to All
+  if (f === 'All') { activeTask = null; activeStoryName = null; } // clear task/story when going to All
   // Update both .nav-item and .nav-proj-row active states
   document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => {
     el.classList.toggle('active', el.id === `nav-${f.replace(/ /g,'-')}`);
   });
   const bc = document.getElementById('breadcrumb');
   bc.innerHTML = f === 'All'
-    ? `<span onclick="setFilter('All')">All work</span>`
-    : `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+    ? `<span onclick="navClick('All')">All work</span>`
+    : `<span onclick="navClick('All')" style="color:var(--text-3)">All work</span>
        <span class="sep">/</span>
        <span style="color:var(--text)">${f}</span>`;
   renderFeed();
@@ -5657,7 +5658,7 @@ function setTaskFilter(task) {
   closeProjDrawer();
   const bc = document.getElementById('breadcrumb');
   if (bc && activeFilter !== 'All' && task) {
-    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+    bc.innerHTML = `<span onclick="navClick('All')" style="color:var(--text-3)">All work</span>
       <span class="sep">/</span>
       <span onclick="setFilter('${activeFilter}');activeTask=null;renderFeed();" style="color:var(--text-3);cursor:pointer">${activeFilter}</span>
       <span class="sep">/</span>
@@ -5709,9 +5710,14 @@ function navClick(f) {
     setView('profile');
     activeStoryName = null;
   }
-  // Going back to "All work" from profile → switch to grid (the all-projects overview)
-  if (f === 'All' && (activeView === 'profile' || activeView === 'canvas')) setView('grid');
+  // Going back to "All work" — always switch to grid, always clear story state
+  if (f === 'All') {
+    activeStoryName = null;
+    setView('grid');
+  }
   setFilter(f);
+  // Rebuild nav so STORIES section updates to reflect active board
+  buildNav();
 }
 
 // ═══════════════════════════════════
@@ -6517,31 +6523,23 @@ function renderFeed() {
   const _tbEl = document.getElementById('feedToolbar');
   if (_tbEl) _tbEl.style.display = (activeView === 'story' || activeView === 'profile') ? 'none' : '';
 
-  // Overview strip — contextual banner, show in all main views
-  // Hide only in timeline/pipeline (no meaningful summary) and when period filter is active
+  // Overview strip — show only in grid/board/list/ideas (not profile/story/journey/canvas/timeline/pipeline)
   const ovEl = document.getElementById('overviewStrip');
   if (ovEl) {
-    const isTimelinePipeline = (activeView === 'timeline' || activeView === 'pipeline');
-    const hasPeriodFilter    = (activePeriod !== 'all');
-    const showOv = !isTimelinePipeline && !hasPeriodFilter;
-    if (showOv) {
+    const immersiveViews = ['profile','story','journey','canvas','timeline','pipeline'];
+    if (immersiveViews.includes(activeView) || activePeriod !== 'all') {
+      ovEl.style.display = 'none';
+    } else {
       ovEl.style.display = '';
       renderOverviewStrip();
-    } else {
-      ovEl.style.display = 'none';
     }
   }
 
-  // Clear feedHeader for non-grid views
+  // Clear feedHeader before dispatching — each view populates it fresh
   const fhEl = document.getElementById('feedHeader');
   if (fhEl && (activeView !== 'grid' || activeFilter !== 'All' || activePeriod !== 'all')) {
     fhEl.innerHTML = '';
   }
-  // Restore overview strip for non-immersive views
-  // Hide in profile view — profile renders its own per-project stats strip in feedHeader
-  const _ovEl = document.getElementById('overviewStrip');
-  if (_ovEl && !['journey','story','profile'].includes(activeView)) _ovEl.style.display = '';
-  if (_ovEl && activeView === 'profile') _ovEl.style.display = 'none';
 
   // Profile view — board landing page (overview strip + ticker + latest blocks + designs)
   if (activeView === 'profile' && activeFilter !== 'All') { renderProfileView(activeFilter); return; }
@@ -6799,7 +6797,7 @@ function renderProfileView(projName) {
     const s = String(ts);
     if (s.length === 8) {
       const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      return months[parseInt(s.slice(4,6))-1]+' '+parseInt(s.slice(6,8));
+      const mo=(parseInt(s.slice(4,6))||1)-1; return months[Math.max(0,Math.min(11,mo))]+' '+(parseInt(s.slice(6,8))||'?');
     }
     try { const d=new Date(ts); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate(); } catch(e){return '';}
   };
@@ -6982,89 +6980,6 @@ function renderProfileView(projName) {
   // ── Inject into feedHeader ─────────────────────────────────────────
   if (fh) fh.innerHTML = toggleHtml + ovStripHtml + storiesTickerHtml;
 
-  // ── Board Journey: all sessions chronologically ───────────────────
-  const allSessions = pb.filter(b => b.type === 'session')
-    .sort((a,b2) => (a.ts||0) - (b2.ts||0)); // oldest → newest
-
-  const allCompactions = pb.filter(b => b.type === 'compaction')
-    .sort((a,b2) => (a.ts||0) - (b2.ts||0));
-
-  const fmtJTs = ts => {
-    if (!ts) return '';
-    const s = String(ts);
-    const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    if (s.length === 8) return `${MN[parseInt(s.slice(4,6))-1]} ${parseInt(s.slice(6,8))}`;
-    try { const d=new Date(ts); return `${MN[d.getMonth()]} ${d.getDate()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; } catch(e){ return ''; }
-  };
-
-  // Build journey items (sessions + compaction markers interspersed by ts)
-  const journeyItems = [
-    ...allSessions.map(s => ({ type:'session', block:s })),
-    ...allCompactions.map(c => ({ type:'compaction', block:c }))
-  ].sort((a,b2) => (a.block.ts||0) - (b2.block.ts||0));
-
-  let journeyHtml = '';
-  journeyItems.forEach((item, idx) => {
-    const isLast = idx === journeyItems.length - 1;
-    if (item.type === 'compaction') {
-      journeyHtml += `
-        <div style="display:flex;gap:0;align-items:center;margin:2px 0;column-span:all;break-inside:avoid">
-          <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0">
-            <div style="width:2px;height:12px;background:linear-gradient(${p.color}44,transparent)"></div>
-            <div style="font-size:13px;line-height:1">⚡</div>
-            <div style="width:2px;height:12px;background:linear-gradient(transparent,${p.color}44)"></div>
-          </div>
-          <div style="flex:1;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:7px 13px;display:flex;align-items:center;justify-content:space-between">
-            <div>
-              <span style="font-size:10.5px;font-weight:800;color:#ef4444">Compaction — Context Window Full</span>
-              <span style="font-size:9px;color:var(--text-3);margin-left:8px">${item.block.sessions||''} ${item.block.sessions?'sessions ·':''} ${item.block.decisionsCarried||''} ${item.block.decisionsCarried?'decisions carried':'Automatic'}</span>
-            </div>
-            <span style="font-size:9px;color:var(--text-3)">${fmtJTs(item.block.ts)}</span>
-          </div>
-        </div>`;
-    } else {
-      const s = item.block;
-      const taskIcon = {'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','strategy':'🧠','context-visual':'📊'}[s.task] || '';
-      const taskLabel = s.task ? `<span style="font-size:9px;padding:1px 7px;border-radius:4px;background:${p.color}18;color:${p.color};font-weight:700;margin-left:7px">${taskIcon} ${s.task.replace(/-/g,' ')}</span>` : '';
-      const decs = (s.decisions||[]).slice(0,3);
-      const decHtml = decs.map(d => `<div style="display:flex;align-items:flex-start;gap:6px;padding:2px 0">
-        <span style="color:#22c55e;font-size:11px;margin-top:1px;flex-shrink:0">✓</span>
-        <span style="font-size:11px;color:var(--text-2);line-height:1.4">${d}</span>
-      </div>`).join('');
-      const ideaBlocks = pb.filter(b => b.type==='idea' && b.ts === s.ts).slice(0,3);
-      const ideasHtml = ideaBlocks.map(idea => `
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#f59e0b;font-size:10.5px;font-weight:600;cursor:pointer" onclick="openDetail('${idea.id}')">💡 ${idea.title.replace('💡 ','')}</span>`).join('');
-      const thumb = s.screenshot ? `<div style="width:100px;height:62px;border-radius:6px;background:${p.color}18;border:1px solid ${p.color}22;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center"><img src="${s.screenshot}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=\\'font-size:9px;color:var(--text-3)\\'>screenshot</span>'"></div>` : '';
-
-      journeyHtml += `
-        <div style="display:flex;gap:0;align-items:stretch;column-span:all;break-inside:avoid;margin-bottom:0" onmouseover="this.querySelector('.jcard').style.borderColor='${p.color}55'" onmouseout="this.querySelector('.jcard').style.borderColor='var(--border)'">
-          <!-- spine -->
-          <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;padding-top:16px">
-            <div style="width:10px;height:10px;border-radius:50%;background:${p.color};border:2px solid var(--bg);box-shadow:0 0 0 1.5px ${p.color};flex-shrink:0;z-index:1"></div>
-            ${!isLast ? `<div style="width:2px;flex:1;background:linear-gradient(${p.color}44,${p.color}22);min-height:24px;margin-top:4px"></div>` : ''}
-          </div>
-          <!-- card -->
-          <div class="jcard" onclick="openStory('${s.id}')" style="flex:1;margin:8px 0 8px 6px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:border-color .12s">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-              <div style="display:flex;align-items:center;gap:0">
-                <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">SESSION · ${fmtJTs(s.ts)}</span>
-                ${taskLabel}
-              </div>
-              ${s.task ? `<span onclick="event.stopPropagation();openStoryWindow('${s.task}','${p.name||projName}')" style="font-size:9px;font-weight:700;color:${p.color};cursor:pointer;padding:3px 8px;border-radius:5px;background:${p.color}12">Open →</span>` : ''}
-            </div>
-            <div style="display:flex;gap:10px;align-items:flex-start">
-              ${thumb}
-              <div style="flex:1;min-width:0">
-                <div style="font-size:14px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:7px">${s.title||'Session'}</div>
-                ${decHtml}
-              </div>
-            </div>
-            ${ideasHtml ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">${ideasHtml}</div>` : ''}
-          </div>
-        </div>`;
-    }
-  });
-
   // ── Main feed: project canvas card + latest activity + latest designs ──
   el.innerHTML = renderProjectHeader(projName) + `
     ${sectionLabel('🕐 Latest Activity')}
@@ -7088,7 +7003,20 @@ let activeStoryName = null; // task window name e.g. 'dashboard'
 function openStoryWindow(storyName, boardName) {
   activeStoryName = storyName;
   activeView = 'story';
-  if (boardName) activeFilter = boardName;
+  if (boardName) {
+    activeFilter = boardName;
+    // Sync nav active state to this board
+    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => {
+      el.classList.toggle('active', el.id === `nav-${boardName.replace(/ /g,'-')}`);
+    });
+    // Update breadcrumb to show board > story path
+    const bc = document.getElementById('breadcrumb');
+    if (bc) bc.innerHTML = `<span onclick="navClick('All')" style="color:var(--text-3);cursor:pointer">All work</span>
+       <span class="sep">/</span>
+       <span onclick="navClick('${boardName}')" style="color:var(--text-3);cursor:pointer">${boardName}</span>
+       <span class="sep">/</span>
+       <span style="color:var(--text)">${storyName.replace(/-/g,' ')}</span>`;
+  }
   const dp = document.getElementById('detailPanel');
   if (dp) { dp.classList.remove('open'); _detailOpenId = null; }
   renderFeed();
@@ -7099,13 +7027,24 @@ function openStory(sessionId) {
   // Legacy: find the block's task and open story window for that task
   const s = mergedBlocks().find(b => b.id === sessionId);
   if (s && s.task) { openStoryWindow(s.task, s.project); return; }
-  // Fallback: session-level view
+  // Fallback: session-level view (no task tag)
   activeStoryId = sessionId;
   activeView = 'story';
-  if (s && s.project) activeFilter = s.project;
+  if (s && s.project) {
+    activeFilter = s.project;
+    // Update nav active state + breadcrumb for this board
+    document.querySelectorAll('.nav-item, .nav-proj-row').forEach(el => {
+      el.classList.toggle('active', el.id === `nav-${s.project.replace(/ /g,'-')}`);
+    });
+    const bc = document.getElementById('breadcrumb');
+    if (bc) bc.innerHTML = `<span onclick="navClick('All')" style="color:var(--text-3);cursor:pointer">All work</span>
+       <span class="sep">/</span>
+       <span style="color:var(--text)">${s.project}</span>`;
+  }
   const dp = document.getElementById('detailPanel');
   if (dp) { dp.classList.remove('open'); _detailOpenId = null; }
   renderFeed();
+  buildNav();
 }
 
 function renderStoryView() {
@@ -7130,12 +7069,15 @@ function renderStoryView() {
   const fillColor = fillPct > 80 ? '#ef4444' : fillPct > 55 ? '#f59e0b' : p.color;
   const TICONS_S = {'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','strategy':'🧠','context-visual':'📊'};
   const storyIcon = TICONS_S[storyName] || '◈';
+  // Compute compactions + discussions for this story early — used in stats strip + tape
+  const storyCompactions = storyBlocks.filter(b => b.type === 'compaction').sort((a,b2)=>(a.ts||0)-(b2.ts||0));
+  const storyDiscussions = storyBlocks.filter(b => b.type === 'discussion').length;
 
   const fmtTs = ts => {
     if (!ts) return '';
     const str = String(ts);
     const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    if (str.length === 8) return m[parseInt(str.slice(4,6))-1]+' '+parseInt(str.slice(6,8));
+    if (str.length === 8) { const mo2=(parseInt(str.slice(4,6))||1)-1; return m[Math.max(0,Math.min(11,mo2))]+' '+(parseInt(str.slice(6,8))||'?'); }
     try { const d=new Date(ts); return m[d.getMonth()]+' '+d.getDate()+' · '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); } catch(e){return '';}
   };
 
@@ -7160,10 +7102,13 @@ function renderStoryView() {
     <div style="display:grid;grid-template-columns:1fr 160px 1fr 1fr;gap:10px;margin-bottom:10px;column-span:all">
       <div style="background:var(--white);border:1.5px solid ${p.color}44;border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:${p.color};margin-bottom:6px">${boardName} · ${storyIcon} ${storyName.replace(/-/g,' ')}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-          <div><div style="font-size:20px;font-weight:900;color:${p.color};line-height:1">${sessCount}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Sessions</div></div>
-          <div><div style="font-size:20px;font-weight:900;color:#22c55e;line-height:1">${decisions.length}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Decisions</div></div>
-          <div><div style="font-size:20px;font-weight:900;color:#f59e0b;line-height:1">${ideas.length}</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Ideas</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px 8px">
+          <div><div style="font-size:18px;font-weight:900;color:${p.color};line-height:1">${sessCount}</div><div style="font-size:8.5px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Sessions</div></div>
+          <div><div style="font-size:18px;font-weight:900;color:#22c55e;line-height:1">${decisions.length}</div><div style="font-size:8.5px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Decisions</div></div>
+          <div><div style="font-size:18px;font-weight:900;color:#f59e0b;line-height:1">${ideas.length}</div><div style="font-size:8.5px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Ideas</div></div>
+          <div><div style="font-size:18px;font-weight:900;color:#ef4444;line-height:1">${storyCompactions.length}</div><div style="font-size:8.5px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Compactions</div></div>
+          <div><div style="font-size:18px;font-weight:900;color:#8b5cf6;line-height:1">${storyDiscussions}</div><div style="font-size:8.5px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Discuss.</div></div>
+          <div><div style="font-size:18px;font-weight:900;color:#0ea5e9;line-height:1">${designs.length}</div><div style="font-size:8.5px;font-weight:700;text-transform:uppercase;color:var(--text-3)">Designs</div></div>
         </div>
       </div>
       <div style="background:linear-gradient(135deg,${fillColor}14,${fillColor}05);border:1.5px solid ${fillColor}30;border-radius:var(--r);padding:13px 15px;display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow)">
@@ -7226,7 +7171,8 @@ function renderStoryView() {
         </div>
         <div style="width:1px;height:32px;background:var(--border);margin-right:12px;flex-shrink:0"></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${storyChips}</div>
-        <div style="margin-left:auto;flex-shrink:0">
+        <div style="margin-left:auto;display:flex;gap:8px;flex-shrink:0">
+          <button onclick="showToast('Carry forward: copy key context from this story into your next session')" style="padding:6px 14px;border-radius:8px;background:${p.color}18;border:1.5px solid ${p.color}33;font-size:11px;font-weight:700;color:${p.color};cursor:pointer">🔄 Carry forward</button>
           <button onclick="navClick('${boardName}')" style="padding:6px 14px;border-radius:8px;background:var(--white);border:1.5px solid var(--border);font-size:11px;font-weight:700;color:var(--text-2);cursor:pointer">← Board</button>
         </div>
       </div>
@@ -7236,6 +7182,7 @@ function renderStoryView() {
   if (fh) fh.innerHTML = statsStripHtml + tickerHtml;
 
   // ── Story profile header card — compressed .ph style per T7 spec ──
+  // (storyCompactions and storyDiscussions computed above, before statsStripHtml)
   // Build context tape segments (session density + compaction markers)
   const storyTapeSegs = (() => {
     const segs = [];
@@ -7282,8 +7229,7 @@ function renderStoryView() {
   // ── STORY · CHRONOLOGICAL — sessions as spine ─────────────────────
   const sectionLabel = txt => `<div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);padding:12px 0 8px;display:flex;align-items:center;gap:8px">◉ ${txt}<span style="flex:1;height:1px;background:var(--border);margin-left:4px"></span></div>`;
 
-  // Build compactions for this story
-  const storyCompactions = storyBlocks.filter(b => b.type === 'compaction').sort((a,b2)=>(a.ts||0)-(b2.ts||0));
+  // storyCompactions already defined above (before storyTapeSegs)
   const storyJourneyItems = [
     ...sessions.map(s => ({ type:'session', block:s })),
     ...storyCompactions.map(c => ({ type:'compaction', block:c }))
@@ -7428,7 +7374,7 @@ function renderJourneyView() {
     const s = String(ts||'');
     if (s.length === 8) {
       const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      return m[parseInt(s.slice(4,6))-1]+' '+parseInt(s.slice(6,8));
+      const mo3=(parseInt(s.slice(4,6))||1)-1; return m[Math.max(0,Math.min(11,mo3))]+' '+(parseInt(s.slice(6,8))||'?');
     }
     try { const d=new Date(ts); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate(); } catch(e){ return ''; }
   };
@@ -8071,7 +8017,7 @@ function renderPipelineView() {
   const ideasCards = stageCard(ideas.slice(0,10), b => {
     const p = PROJ[b.project] || { color:'#f59e0b' };
     return `<div class="pipeline-item" style="--item-color:${p.color}" onclick="openDetail('${b.id}')">
-      <div class="pipeline-item-title">${b.title.replace('💡 ','')}</div>
+      <div class="pipeline-item-title">${(b.title||'').replace('💡 ','')}</div>
       <div class="pipeline-item-proj">${b.project}</div>
     </div>`;
   });
@@ -8266,7 +8212,7 @@ function openProjectDetail(name) {
 
   const ideasHTML = ideas.length
     ? `<div style="padding:0 22px 4px;display:flex;flex-wrap:wrap">${ideas.map((b,i)=>`
-        <div class="pd-idea-pill" style="background:${ideaBg(i)};color:${ideaTextColor()}" onclick="openDetail('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}</div>`
+        <div class="pd-idea-pill" style="background:${ideaBg(i)};color:${ideaTextColor()}" onclick="openDetail('${b.id}')">${(b.title||'').replace('💡 ','')}</div>`).join('')}</div>`
     : `<div style="font-size:11px;color:var(--text-3);padding:8px 22px">No ideas yet.</div>`;
 
   const autosHTML = autos.length
@@ -9747,7 +9693,7 @@ function seedProjectContext(projectName) {
     });
     // Also flatten decisions array inside session blocks
     sessions.slice(0,3).forEach(s => {
-      (s.decisions || []).slice(0,3).forEach(d => out += `   ▸ ${d} (from "${s.title.substring(0,35)}…")\n`);
+      (s.decisions || []).slice(0,3).forEach(d => out += `   ▸ ${d} (from "${(s.title||'session').substring(0,35)}…")\n`);
     });
     out += '\n';
   }
@@ -9788,7 +9734,7 @@ function togglePromptsView() {
     activeFilter = 'All';
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
-    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+    bc.innerHTML = `<span onclick="navClick('All')" style="color:var(--text-3)">All work</span>
                     <span class="sep">/</span>
                     <span style="color:#0284c7">Skills</span>`;
     renderSkillsView();
@@ -10436,7 +10382,7 @@ function saveAuditFinding(id) {
   liveBlocks.push(block);
   const btn = document.querySelector(`#finding-${f.id} .audit-finding-save`);
   if (btn) { btn.textContent = '✓ Saved'; btn.style.color = '#10b981'; btn.disabled = true; }
-  showToast(`📥 Saved: "${f.title.substring(0,40)}…"`);
+  showToast(`📥 Saved: "${(f.title||'Finding').substring(0,40)}…"`);
 }
 
 function saveAllAuditFindings(domain) {
@@ -11818,7 +11764,7 @@ function toggleDecisionsView() {
     activeFilter = 'All';
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
-    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+    bc.innerHTML = `<span onclick="navClick('All')" style="color:var(--text-3)">All work</span>
                     <span class="sep">/</span>
                     <span style="color:#15803d">Decisions</span>`;
     // Render only blocks that have decisions, with project filter bar
@@ -12460,7 +12406,7 @@ ${weakSkills.length ? `\n## ⚠️ Skills Needing Attention\n${weakSkills.map(s=
       label: '💡 Open threads',
       rows: allIdeas.map(i => ({
         icon: '💡',
-        text: i.title.replace('💡 ',''),
+        text: (i.title||'').replace('💡 ',''),
         tag: i.project && i.project !== focusName ? i.project : null,
       }))
     });
@@ -12518,7 +12464,7 @@ function renderProjectHeader(projName) {
   const ideas = mergedBlocks().filter(b => b.type === 'idea' && b.project === projName);
   const ideasHtml = ideas.length ? `
     <div class="proj-ideas-row">
-      ${ideas.map(b => `<div class="proj-idea-pill" onclick="openDetail('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}
+      ${ideas.map(b => `<div class="proj-idea-pill" onclick="openDetail('${b.id}')">${(b.title||'').replace('💡 ','')}</div>`).join('')}
     </div>` : '';
 
   // Stats
@@ -12995,7 +12941,7 @@ function toggleIdeasView() {
     activeFilter = 'All';
     document.getElementById('nav-All').classList.add('active');
     const bc = document.getElementById('breadcrumb');
-    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+    bc.innerHTML = `<span onclick="navClick('All')" style="color:var(--text-3)">All work</span>
                     <span class="sep">/</span>
                     <span style="color:#d97706">Ideas</span>`;
   } else {
