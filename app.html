@@ -5703,10 +5703,14 @@ function navClick(f) {
   // Clicking a specific project → land on Profile view by default.
   // Exception: if already viewing a specific project (not All), preserve the current view so
   // switching between boards keeps you in Journey/Grid/Board/etc.
+  // Never stay in 'story' view when clicking a board — story is scoped to a task window.
   if (f !== 'All') {
-    const stayViews = ['timeline', 'pipeline', 'list', 'grid', 'board', 'journey', 'story'];
+    const stayViews = ['timeline', 'pipeline', 'list', 'grid', 'board', 'journey'];
     const comingFromAll = activeFilter === 'All';
-    if (comingFromAll || !stayViews.includes(activeView)) setView('profile');
+    if (comingFromAll || !stayViews.includes(activeView)) {
+      setView('profile');
+      activeStoryName = null; // clear story context when navigating to board
+    }
   }
   // Going back to "All work" from profile → switch to grid (the all-projects overview)
   if (f === 'All' && (activeView === 'profile' || activeView === 'canvas')) setView('grid');
