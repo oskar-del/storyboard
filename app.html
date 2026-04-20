@@ -3626,9 +3626,15 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
 
     <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-    <!-- ── STORIES (task windows) ─────────────────── -->
+    <!-- ── STORIES (real task windows) ──────────────── -->
     <div style="padding:4px 10px 2px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)">Stories</div>
     <div id="nav-stories"></div>
+
+    <div class="nav-divider" style="margin:6px 12px 4px"></div>
+
+    <!-- ── AUTOMATIONS ───────────────────────────────── -->
+    <div style="padding:4px 10px 2px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)">Automations</div>
+    <div id="nav-automations"></div>
 
     <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
@@ -4415,6 +4421,36 @@ const PROJECT_META = {
     northStar: "36 skills averaging 85+/100. Every session auto-loads context. No re-explaining ever needed.",
   },
 };
+
+// ─── Session manifest — real stories & automations from the Claude environment ─
+// Stories = real human task/chat windows, grouped by board
+// Automations = scheduled pipelines — NOT stories, shown separately
+// Source: list_sessions, updated when sessions are renamed/created
+const SESSION_MANIFEST = {
+  stories: [
+    { name: "Storyboard Brain",              board: "Storyboard",      type: "brain", status: "active" },
+    { name: "Opero | Agency Brain",          board: "Opero Agency",    type: "brain", status: "idle"   },
+    { name: "Opero | 2: Agency: Landing Page", board: "Opero Agency",  type: "task",  status: "idle"   },
+    { name: "6: H&H Sales & CRM",            board: "Hansson Hertzell",type: "task",  status: "idle"   },
+    { name: "6: H&H Sales & Crm (2)",        board: "Hansson Hertzell",type: "task",  status: "idle"   },
+    { name: "2: NBHCB SEO & Indexing",       board: "Costa Blanca",    type: "task",  status: "idle"   },
+    { name: "Nbhcb website seo",             board: "Costa Blanca",    type: "task",  status: "idle"   },
+    { name: "Charles Brain",                 board: "Charles",         type: "brain", status: "idle"   },
+  ],
+  automations: [
+    { name: "Daily client outreach drafts",  board: "Hansson Hertzell", schedule: "Daily"            },
+    { name: "Hh fb group posting morning",   board: "Hansson Hertzell", schedule: "Daily 9:00"       },
+    { name: "Hh fb group posting evening",   board: "Hansson Hertzell", schedule: "Daily evening"    },
+    { name: "Hh crm outreach",               board: "Hansson Hertzell", schedule: "Mon/Thu"          },
+    { name: "Hh social pipeline",            board: "Hansson Hertzell", schedule: "Mon/Wed/Fri/Sun"  },
+    { name: "Weekly collaborator email",     board: "Hansson Hertzell", schedule: "Weekly"           },
+    { name: "Email marketing",               board: "Hansson Hertzell", schedule: "Recurring"        },
+    { name: "Newbuild blog pipeline",        board: "Costa Blanca",     schedule: "Mon-Fri 9:06"     },
+    { name: "Newbuild social pipeline",      board: "Costa Blanca",     schedule: "Mon/Wed/Fri/Sun"  },
+    { name: "Weekly gsc monitoring",         board: "Costa Blanca",     schedule: "Weekly"           },
+  ],
+};
+
 // Dark project block backgrounds — subtle rgba tints for dark mode
 const PROJ_DARK_BG = {
   "New Build Homes":    "rgba(16,185,129,.07)",
@@ -5793,37 +5829,42 @@ function buildNav() {
   const catBadgeEl = document.getElementById('categoriesCount');
   if (catBadgeEl) catBadgeEl.textContent = activeCatCount || ALL_CATEGORIES.length;
 
-  // ── STORIES section — task windows across all boards ───────────
+  // ── STORIES section — real task windows from SESSION_MANIFEST ──
   const storiesEl = document.getElementById('nav-stories');
   if (storiesEl) {
-    const storyMap = {}; // key = "board::task"
-    all.forEach(b => {
-      if (!b.task || !b.project) return;
-      const key = `${b.project}::${b.task}`;
-      if (!storyMap[key]) storyMap[key] = { board: b.project, task: b.task, sessions: 0, lastTs: 0, blocks: 0 };
-      storyMap[key].blocks++;
-      if (b.type === 'session') storyMap[key].sessions++;
-      if ((b.ts||0) > storyMap[key].lastTs) storyMap[key].lastTs = b.ts||0;
-    });
-    const stories = Object.values(storyMap).filter(s => s.blocks > 0).sort((a,b2) => b2.lastTs - a.lastTs).slice(0, 12);
-    const TICONS_NAV = {'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','strategy':'🧠','context-visual':'📊','mobile-pwa':'📱','crm-sales':'💼','website':'🌐','seo-content':'🔍','social-media':'📣','automation':'⚙'};
-    storiesEl.innerHTML = stories.map(s => {
+    const TYPE_ICON = { brain: '🧠', task: '◈' };
+    storiesEl.innerHTML = SESSION_MANIFEST.stories.map(s => {
       const p2 = PROJ[s.board] || { color:'#6c63ff' };
-      const fillPct = Math.min(s.sessions * 12, 100);
-      const isActive = activeView === 'story' && activeStoryName === s.task && activeFilter === s.board;
-      const isContextFull = fillPct >= 90;
-      const icon = TICONS_NAV[s.task] || '◈';
-      return `<div onclick="openStoryWindow('${s.task}','${s.board}')"
+      const isActive = activeView === 'story' && activeStoryName === s.name && activeFilter === s.board;
+      const isBrain = s.type === 'brain';
+      const isRunning = s.status === 'active' || s.status === 'running';
+      const icon = isBrain ? '🧠' : '◈';
+      return `<div onclick="openStoryWindow('${s.name.replace(/'/g,"\\'")}','${s.board}')"
         style="display:flex;align-items:center;gap:7px;padding:5px 10px 5px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;background:${isActive?p2.color+'18':'transparent'};transition:background .1s"
         onmouseover="this.style.background='${p2.color}12'" onmouseout="this.style.background='${isActive?p2.color+'18':'transparent'}'">
         <span style="font-size:11px;flex-shrink:0">${icon}</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:11.5px;font-weight:${isActive?'800':'600'};color:${isActive?p2.color:'var(--text-2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.board} · ${s.task.replace(/-/g,' ')}</div>
+          <div style="font-size:11.5px;font-weight:${isActive?'800':'600'};color:${isActive?p2.color:'var(--text-2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name}</div>
+          <div style="font-size:9.5px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.board}</div>
         </div>
-        ${isContextFull ? `<div style="width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0;box-shadow:0 0 0 2px rgba(239,68,68,.2)" title="Context full"></div>` :
-          fillPct > 0 ? `<span style="font-size:9px;font-weight:800;color:${fillPct>70?'#f59e0b':p2.color};flex-shrink:0">${fillPct}%</span>` : ''}
+        ${isRunning ? `<div style="width:6px;height:6px;border-radius:50%;background:#10b981;flex-shrink:0" title="Active"></div>` : ''}
       </div>`;
     }).join('') || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">No stories yet</div>`;
+  }
+
+  // ── AUTOMATIONS section ─────────────────────────────────────────
+  const autoNavEl = document.getElementById('nav-automations');
+  if (autoNavEl) {
+    autoNavEl.innerHTML = SESSION_MANIFEST.automations.map(a => {
+      const p2 = PROJ[a.board] || { color:'#6c63ff' };
+      return `<div style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:default;border-radius:6px;margin:1px 6px">
+        <span style="font-size:10px;flex-shrink:0">⚙</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
+          <div style="font-size:9px;color:var(--text-3);opacity:.7">${a.schedule}</div>
+        </div>
+      </div>`;
+    }).join('') || '';
   }
 
   // ── Active Projects section (design-v2 style) ──────────────────
@@ -7060,7 +7101,7 @@ function renderStoryView() {
   const all = mergedBlocks();
   // All blocks for this story (task window within board)
   const storyBlocks = all.filter(b => b.task === storyName && b.project === boardName);
-  const sessions = storyBlocks.filter(b => b.type === 'session').sort((a,b2) => (a.ts||0)-(b2.ts||0));
+  const sessions = storyBlocks.filter(b => b.type === 'session').sort((a,b2) => (b2.ts||0)-(a.ts||0)); // newest first
   const ideas = storyBlocks.filter(b => b.type === 'idea').sort((a,b2)=>(b2.ts||0)-(a.ts||0));
   const designs = storyBlocks.filter(b => b.screenshot && b.screenshot !== '').sort((a,b2)=>(b2.ts||0)-(a.ts||0));
   const decisions = storyBlocks.reduce((acc,b)=>acc.concat(b.decisions||[]),[]);
