@@ -4089,8 +4089,8 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
         </div>
         <div class="settings-info-grid" style="margin-bottom:16px">
           <div class="settings-info-row"><span>Sprint</span><span id="stgSprintDay" style="color:#6c63ff;font-weight:700">Day ?/10</span></div>
-          <div class="settings-info-row"><span>Sprint start</span><span>15 April 2026</span></div>
-          <div class="settings-info-row"><span>Sprint end</span><span>24 April 2026</span></div>
+          <div class="settings-info-row"><span>Sprint start</span><span>12 April 2026</span></div>
+          <div class="settings-info-row"><span>Sprint end</span><span>21 April 2026</span></div>
           <div class="settings-info-row"><span>GitHub</span><a href="https://github.com/oskar-del/storyboard" target="_blank" style="color:#6c63ff;text-decoration:none">oskar-del/storyboard ↗</a></div>
           <div class="settings-info-row"><span>Landing page</span><a href="index.html" target="_blank" style="color:#6c63ff;text-decoration:none">storyboard.tools ↗</a></div>
           <div class="settings-info-row"><span>Manual</span><a href="MANUAL.html" target="_blank" style="color:#6c63ff;text-decoration:none">Feature reference ↗</a></div>
@@ -5805,7 +5805,7 @@ function buildNav() {
       if (b.type === 'session') storyMap[key].sessions++;
       if ((b.ts||0) > storyMap[key].lastTs) storyMap[key].lastTs = b.ts||0;
     });
-    const stories = Object.values(storyMap).sort((a,b2) => b2.lastTs - a.lastTs).slice(0, 12);
+    const stories = Object.values(storyMap).filter(s => s.blocks > 0).sort((a,b2) => b2.lastTs - a.lastTs).slice(0, 12);
     const TICONS_NAV = {'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','strategy':'🧠','context-visual':'📊','mobile-pwa':'📱','crm-sales':'💼','website':'🌐','seo-content':'🔍','social-media':'📣','automation':'⚙'};
     storiesEl.innerHTML = stories.map(s => {
       const p2 = PROJ[s.board] || { color:'#6c63ff' };
@@ -6875,10 +6875,10 @@ function renderProfileView(projName) {
   const sectionLabel = (txt) => `<div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);padding:16px 0 10px;display:flex;align-items:center;gap:8px;column-span:all;break-inside:avoid">${txt}<span style="flex:1;height:1px;background:var(--border);margin-left:8px"></span></div>`;
 
   // ── Stories ticker — per-story context fill pills ─────────────────
-  // Get unique stories (task field) within this board
+  // Only use explicit task field — never infer from chips (chips are labels, not task windows)
   const taskGroups = {};
   pb.forEach(b => {
-    const task = b.task || (b.chips||[]).find(c => ['dashboard','chrome-ext','chrome ext','landing','mcp','mcp-server'].includes(c.toLowerCase()));
+    const task = b.task;
     if (task) {
       if (!taskGroups[task]) taskGroups[task] = { sessions:0, decisions:0 };
       if (b.type === 'session') taskGroups[task].sessions++;
@@ -10905,8 +10905,8 @@ function renderOverviewStrip() {
   const velSign = velPct >= 0 ? '↑' : '↓';
   const velColor = velPct >= 0 ? '#10b981' : '#ef4444';
 
-  // Sprint card — Day N of 10 (Day 1 = Apr 15 2026)
-  const sprintStartDate = new Date('2026-04-15');
+  // Sprint card — Day N of 10 (Day 1 = Apr 12 2026)
+  const sprintStartDate = new Date('2026-04-12');
   const now = new Date();
   const dayNum = Math.min(Math.max(1, Math.floor((now - sprintStartDate) / 86400000) + 1), SPRINT_TOTAL_DAYS);
   const topbarPill = document.getElementById('topbarDayPill');
@@ -13290,7 +13290,7 @@ function renderNavUsage() {
   const monthName = now.toLocaleString('default', { month: 'short' });
 
   // Update nav plan text dynamically
-  const _sprintStart = new Date('2026-04-15');
+  const _sprintStart = new Date('2026-04-12');
   const _sprintDay   = Math.min(Math.max(1, Math.floor((now - _sprintStart) / 86400000) + 1), 10);
   const navPlanEl = document.querySelector('.nav-user-plan');
   if (navPlanEl) navPlanEl.textContent = `Sprint · Day ${_sprintDay}/10`;
@@ -13587,7 +13587,7 @@ function openSettings() {
   // Update sprint day
   const sprintEl = document.getElementById('stgSprintDay');
   if (sprintEl) {
-    const day = Math.min(Math.max(1, Math.floor((Date.now() - new Date('2026-04-15')) / 86400000) + 1), 10);
+    const day = Math.min(Math.max(1, Math.floor((Date.now() - new Date('2026-04-12')) / 86400000) + 1), 10);
     sprintEl.textContent = `Day ${day}/10`;
   }
   // Update data stats

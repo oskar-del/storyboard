@@ -1,20 +1,74 @@
 [
   {
-    "id": "sb-apr20-session-day7-auto-startup",
+    "id": "sb-apr20-session-day9-story-view-data",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 7 — Auto session startup, session brief card, Tetris mode live",
-    "summary": "Auto session startup shipped: session_start MCP tool + /session-start HTTP endpoint. Claude calls it at the top of every Cowork session before saying anything else. Returns last session, key decisions, hottest project, pending ideas, in-progress items. Formatted as a 3-line brief + one question: 'Continue from X, or start something new?' Today tab now shows a dismissable morning brief card that fetches from /session-start when MCP is connected. Resets when switching back to Today view. SKILL.md updated with AUTO-TRIGGER section — session_start fires before any user response.",
+    "title": "Day 9 \u2014 Story view: board-level stats, single chip, data audit",
+    "summary": "T7 Story view corrected to show board-level data. Stats strip card 1 now uses totalSess/totalDec/totalIdeas/totalComp/totalDisc/totalBoardDesigns (board-level, not story-level). Card 2 now shows Velocity (same as T1 board profile). Card 3 now shows North Star from PROJECT_META. Ticker chip row changed from all-board-stories loop to single current-story chip. Data audit: removed fake task labels (strategy, landing-page, mcp-server, context-visual) from 25 blocks in blocks-data.json \u2014 these were fabricated organizational labels with no real session behind them. chrome-extension task merged into dashboard since all work happened in one conversation. Fixed 14-digit ts timestamp on day6-wrap that was causing 'JAN 11 2612' display bug.",
     "date": "Apr 20",
     "ts": 20260420,
     "decisions": [
-      "session_start fires before Claude says anything else — it IS the opening message, not a follow-up",
-      "Brief is 3 lines max + one question — not a data dump",
-      "Today tab shows the brief as a card (dismissable ✕) — visual confirmation the startup ran",
-      "Brief resets on return to Today so it's always fresh",
-      "If MCP offline, skip silently — no error, just say hello normally"
+      "Story view shows BOARD-level stats in stats strip \u2014 it's a window INTO the board, not a replacement for it",
+      "Ticker shows ONE chip (current story) not all stories \u2014 all-stories ticker was the board's job",
+      "task labels must have a real session to be a real story \u2014 phantom task labels create phantom sidebar items",
+      "ts must always be 8-digit YYYYMMDD format \u2014 longer formats break fmtTs date rendering"
     ],
-    "chips": ["auto-startup", "session-start", "morning-brief", "day7", "mcp-tool"],
+    "chips": [
+      "story-view",
+      "board-stats",
+      "data-cleanup",
+      "timestamp-fix",
+      "day9"
+    ],
+    "_source": "claude.ai",
+    "task": "dashboard"
+  },
+  {
+    "id": "sb-apr20-session-day8-overnight-fixes",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 8 \u2014 Overnight: 22 bugs fixed, nav state machine, story view",
+    "summary": "Autonomous overnight sprint: 22 bugs fixed. T7 Story view \u2014 storyCompactions ReferenceError fixed, stats strip expanded to 6 stats, carry-forward button added. Navigation state machine \u2014 navClick now always calls buildNav(), navClick('All') clears activeStoryName + resets to grid, all 8 breadcrumb 'All work' links now call navClick('All') instead of setFilter (was leaving toolbar hidden). openStoryWindow \u2014 breadcrumb shows All/Board/Story path, nav active state syncs to board row. Performance \u2014 dead journeyHtml loop removed from renderProfileView (~50 LOC), duplicate overviewStrip logic consolidated. Crash prevention \u2014 6 unguarded .replace()/.substring() calls null-guarded. Timestamp month clamping fixed in all 3 fmtTs copies.",
+    "date": "Apr 20",
+    "ts": 20260420,
+    "decisions": [
+      "navClick is the single source of truth for navigation \u2014 setFilter is a side effect, not the trigger",
+      "All breadcrumb links must use navClick('All') not setFilter \u2014 setFilter alone leaves activeView stale",
+      "storyCompactions must be declared before any code that references it (IIFE ordering)",
+      "openStoryWindow updates breadcrumb + nav active state \u2014 story view always knows where it is"
+    ],
+    "chips": [
+      "22-bugs",
+      "nav-state",
+      "story-view",
+      "crash-prevention",
+      "overnight"
+    ],
+    "_source": "claude.ai",
+    "task": "dashboard"
+  },
+  {
+    "id": "sb-apr20-session-day7-auto-startup",
+    "type": "session",
+    "project": "Storyboard",
+    "title": "Day 7 \u2014 Auto session startup, session brief card, Tetris mode live",
+    "summary": "Auto session startup shipped: session_start MCP tool + /session-start HTTP endpoint. Claude calls it at the top of every Cowork session before saying anything else. Returns last session, key decisions, hottest project, pending ideas, in-progress items. Formatted as a 3-line brief + one question: 'Continue from X, or start something new?' Today tab now shows a dismissable morning brief card that fetches from /session-start when MCP is connected. Resets when switching back to Today view. SKILL.md updated with AUTO-TRIGGER section \u2014 session_start fires before any user response.",
+    "date": "Apr 20",
+    "ts": 20260420,
+    "decisions": [
+      "session_start fires before Claude says anything else \u2014 it IS the opening message, not a follow-up",
+      "Brief is 3 lines max + one question \u2014 not a data dump",
+      "Today tab shows the brief as a card (dismissable \u2715) \u2014 visual confirmation the startup ran",
+      "Brief resets on return to Today so it's always fresh",
+      "If MCP offline, skip silently \u2014 no error, just say hello normally"
+    ],
+    "chips": [
+      "auto-startup",
+      "session-start",
+      "morning-brief",
+      "day7",
+      "mcp-tool"
+    ],
     "_source": "claude.ai",
     "task": "dashboard"
   },
@@ -22,18 +76,24 @@
     "id": "sb-apr19-session-day6-wrap",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 6 wrap — Task windows, instruction manual, autonomous polish",
-    "summary": "Task windows strip shipped in two locations: pd-task-strip inside project drawer (Canvas view) and ph-task-strip inline in project header (Grid view, where user actually is). 32 Storyboard blocks tagged with task field across 6 workstreams: dashboard, strategy, landing-page, mcp-server, chrome-extension, context-visual. Instruction manual (MANUAL.html) written and pushed to GitHub — covers every feature with why/how, 12 block types, 6 views, data model, 13 key design decisions, Day 7+ roadmap. Settings About tab now links to MANUAL.html. ph-task-strip fix confirmed working in grid view. All pushed to oskar-del/storyboard.",
+    "title": "Day 6 wrap \u2014 Task windows, instruction manual, autonomous polish",
+    "summary": "Task windows strip shipped in two locations: pd-task-strip inside project drawer (Canvas view) and ph-task-strip inline in project header (Grid view, where user actually is). 32 Storyboard blocks tagged with task field across 6 workstreams: dashboard, strategy, landing-page, mcp-server, chrome-extension, context-visual. Instruction manual (MANUAL.html) written and pushed to GitHub \u2014 covers every feature with why/how, 12 block types, 6 views, data model, 13 key design decisions, Day 7+ roadmap. Settings About tab now links to MANUAL.html. ph-task-strip fix confirmed working in grid view. All pushed to oskar-del/storyboard.",
     "date": "Apr 19",
-    "ts": 20260419090000,
+    "ts": 20260419,
     "decisions": [
-      "Task strip needs two implementations — one for project drawer (Canvas), one for inline header (Grid). User lives in Grid view.",
-      "task field on blocks is first-class — string like 'dashboard', connects blocks to parallel workstreams",
+      "Task strip needs two implementations \u2014 one for project drawer (Canvas), one for inline header (Grid). User lives in Grid view.",
+      "task field on blocks is first-class \u2014 string like 'dashboard', connects blocks to parallel workstreams",
       "activeTask global = null (all tasks) or string (filter feed by task), cleared when setFilter('All') is called",
-      "Instruction manual is a standalone dark HTML — not in-app docs, meant for sharing with collaborators",
-      "MANUAL.html should be updated whenever new features ship — user's explicit ongoing request"
+      "Instruction manual is a standalone dark HTML \u2014 not in-app docs, meant for sharing with collaborators",
+      "MANUAL.html should be updated whenever new features ship \u2014 user's explicit ongoing request"
     ],
-    "chips": ["task-windows", "task-strip", "manual", "day6-wrap", "github"],
+    "chips": [
+      "task-windows",
+      "task-strip",
+      "manual",
+      "day6-wrap",
+      "github"
+    ],
     "_source": "claude.ai",
     "task": "dashboard"
   },
@@ -41,8 +101,8 @@
     "id": "sb-apr20-intent-day7",
     "type": "intent",
     "project": "Storyboard",
-    "title": "Day 7 intentions — live blocks, auto session startup, categories integration",
-    "summary": "Three big features earmarked for Day 7: (1) Live block flow — blocks appear in real time as Claude works, not just at session end. Tetris feel. Each decision logs the moment it's made. (2) Auto session startup — Claude asks 'do you want to load your latest Storyboard context?' at session start, making Storyboard the default context layer. (3) Categories ↔ Tasks — tasks are project-specific instances of cross-project categories. The larger pipe connecting how work flows through Storyboard.",
+    "title": "Day 7 intentions \u2014 live blocks, auto session startup, categories integration",
+    "summary": "Three big features earmarked for Day 7: (1) Live block flow \u2014 blocks appear in real time as Claude works, not just at session end. Tetris feel. Each decision logs the moment it's made. (2) Auto session startup \u2014 Claude asks 'do you want to load your latest Storyboard context?' at session start, making Storyboard the default context layer. (3) Categories \u2194 Tasks \u2014 tasks are project-specific instances of cross-project categories. The larger pipe connecting how work flows through Storyboard.",
     "date": "Apr 20",
     "ts": 20260420,
     "ideas": [
@@ -50,9 +110,14 @@
       "Auto-startup: Storyboard skill reads blocks-data.json and formats today's context in one call",
       "Categories as meta-tasks: a 'strategy' category spans all projects, a 'Storyboard/strategy' task is the instance"
     ],
-    "chips": ["live-blocks", "auto-startup", "categories", "day7", "roadmap"],
-    "_source": "claude.ai",
-    "task": "strategy"
+    "chips": [
+      "live-blocks",
+      "auto-startup",
+      "categories",
+      "day7",
+      "roadmap"
+    ],
+    "_source": "claude.ai"
   },
   {
     "id": "sb-apr19-session-day6-today-settings",
@@ -143,7 +208,7 @@
       "blocks-data.json is the static data layer \u2014 loads on GitHub Pages without MCP"
     ],
     "_source": "claude.ai",
-    "task": "landing-page"
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-session-dashboard-ux-fixes",
@@ -199,7 +264,7 @@
       "Outbound agent monitors meetups/Discord for people describing the exact pain"
     ],
     "_source": "claude.ai",
-    "task": "landing-page"
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-idea-outbound-agent",
@@ -274,7 +339,7 @@
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
-    "task": "strategy"
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-decision-raw-data-file",
@@ -335,7 +400,7 @@
       "Session bootstrap already proves the mechanism \u2014 extend capture to every AI tool, not just Claude"
     ],
     "_source": "claude.ai",
-    "task": "mcp-server"
+    "task": "strategy"
   },
   {
     "id": "sb-apr18-idea-cross-tool-core",
@@ -382,7 +447,7 @@
     "ts": 20260418,
     "_what_was_lost": "Early rejected names, first draft velocity framing, extension adapter specifics",
     "_source": "claude.ai",
-    "task": "context-visual"
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-rejection-morning-brief",
@@ -395,7 +460,7 @@
     "ts": 20260418,
     "_reason": "Doesn't communicate the action. 'Morning' is time-specific. Carry forward is what you actually do.",
     "_source": "claude.ai",
-    "task": "strategy"
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-rejection-memory-layer",
@@ -421,7 +486,7 @@
     "ts": 20260418,
     "_reason": "'Seed' is a developer term. Nobody outside engineering knows what seeding a chat means.",
     "_source": "claude.ai",
-    "task": "strategy"
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-decision-capture-everything",
@@ -454,7 +519,7 @@
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
-    "task": "strategy"
+    "task": "dashboard"
   },
   {
     "id": "sb-apr18-session-day4",
@@ -484,7 +549,7 @@
     ],
     "ts": 20260417,
     "confidence": "high",
-    "task": "chrome-extension"
+    "task": "mcp-server"
   },
   {
     "id": "sb-day1-sprint-session",
@@ -519,7 +584,7 @@
       "Demo data that tells a real story across multiple months and projects"
     ],
     "seed": "Storyboard \u2014 Day 1 Complete\n\nShipped today: landing page (context window hero), skills with category intents, Context Hub (per-project seed + staleness), onboarding (3 paths), browser extension v0.1, MCP /capture-web + /ping endpoints, pitch deck, README.\n\nMCP clients: Claude Desktop, Cursor, Windsurf, Copilot\nExtension coverage: Claude, ChatGPT, Gemini, Perplexity, Replit\n\nNext: block detail overlay, timeline view, Chrome Web Store",
-    "task": "chrome-extension"
+    "task": "dashboard"
   },
   {
     "id": "sb-v5-session",
@@ -570,7 +635,8 @@
       "OS Mode = light (default), AI Mode = dark \u2014 toggled in header, persisted via localStorage",
       "No terminal ever \u2014 screenshots via html2canvas \u2192 POST to MCP HTTP server",
       "Featured blocks = most recent block from top 3 most active projects"
-    ]
+    ],
+    "task": "dashboard"
   },
   {
     "id": "idea-browser-widget",
@@ -579,7 +645,8 @@
     "date": "Apr 17",
     "ts": 20260417,
     "title": "\ud83d\udca1 Browser widget \u2014 capture every AI tool automatically",
-    "summary": "Install once. Works across all AI tabs: Claude, ChatGPT, Gemini, Cursor, Replit, Perplexity. Sessions auto-captured regardless of which AI you're in. This is the moat: no individual AI company can build cross-model capture \u2014 only Storyboard can, because it sits above all of them."
+    "summary": "Install once. Works across all AI tabs: Claude, ChatGPT, Gemini, Cursor, Replit, Perplexity. Sessions auto-captured regardless of which AI you're in. This is the moat: no individual AI company can build cross-model capture \u2014 only Storyboard can, because it sits above all of them.",
+    "task": "chrome-extension"
   },
   {
     "id": "idea-storyboard-api",
@@ -588,7 +655,8 @@
     "date": "Apr 17",
     "ts": 20260417,
     "title": "\ud83d\udca1 Storyboard as open API \u2014 universal AI memory layer",
-    "summary": "Storyboard becomes middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product \u2014 a universal AI memory layer sitting between where you work and where Claude thinks."
+    "summary": "Storyboard becomes middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product \u2014 a universal AI memory layer sitting between where you work and where Claude thinks.",
+    "task": "strategy"
   },
   {
     "id": "idea-ai-economy-shopify",
@@ -597,7 +665,8 @@
     "date": "Apr 17",
     "ts": 20260417,
     "title": "\ud83d\udca1 Shopify for the AI economy \u2014 track everything AI builds",
-    "summary": "A live dashboard tracking all AI-built outputs: revenue, transactions, deployments, uptime. Not just sessions and decisions \u2014 real metrics. Think Shopify dashboard but the products are AI workflows and the sales are automated outputs."
+    "summary": "A live dashboard tracking all AI-built outputs: revenue, transactions, deployments, uptime. Not just sessions and decisions \u2014 real metrics. Think Shopify dashboard but the products are AI workflows and the sales are automated outputs.",
+    "task": "strategy"
   },
   {
     "id": "sb-first-session",
@@ -625,7 +694,8 @@
       "Canvas view \u2014 project card grid with counts instead of a feed",
       "Version snapshots stored in /versions folder with thumbnails",
       "Timeline view to see work density across months"
-    ]
+    ],
+    "task": "dashboard"
   },
   {
     "id": "propertyos-valuation-session",
