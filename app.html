@@ -1311,6 +1311,7 @@ body.light-mode .pd-rm-badge.later { background:#f3f4f6; color:#6b7280; }
 .main {
   overflow-y: auto;
   min-width: 0; /* prevent grid blowout */
+  margin-right: var(--right-w); /* always make room for persistent right panel */
 }
 .main::-webkit-scrollbar { width: 4px; }
 .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -2125,12 +2126,10 @@ body.light-mode .seed-modal-raw { background: #f7f8fa; }
   border-left: 1px solid var(--border);
   display: flex; flex-direction: column;
   z-index: 150;
-  transform: translateX(100%);
-  transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
+  transform: translateX(0); /* always visible */
 }
 .right-panel.open {
   transform: translateX(0);
-  box-shadow: -4px 0 24px rgba(0,0,0,0.10);
 }
 .right-panel-inner {
   flex: 1; overflow-y: auto; padding: 14px 0;
@@ -4182,124 +4181,54 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
   </div>
 </div>
 
-<!-- RIGHT PANEL — Session summary -->
+<!-- RIGHT PANEL — Context (always visible) -->
 <aside class="right-panel" id="rightPanel">
   <div class="right-panel-inner">
 
-    <!-- Seed CTA — most important action -->
-    <div class="rp-section" style="padding-top:14px">
-      <button class="rp-seed-btn" onclick="seedSession()">⚡ Carry forward</button>
-      <button class="rp-flag-btn" id="flagBtn" onclick="flagMoment()">🚩 Flag This Moment</button>
-      <button class="rp-flag-btn" onclick="showSkillSuggestPrompt()" style="background:rgba(108,99,255,0.08);border-color:#6c63ff33;color:#6c63ff;margin-top:6px">💡 Suggest skills</button>
-      <div style="position:relative;margin-top:6px" id="pushBtnWrap"
-        onmouseenter="showPushTooltip()" onmouseleave="hidePushTooltip()">
-        <button class="rp-flag-btn" id="pushBtn" onclick="gitPush()" style="width:100%;transition:background .3s,border-color .3s,color .3s">🚀 Push to GitHub</button>
-        <div id="pushTooltip" style="
-          display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
-          background:#1a1a2e; border:1px solid rgba(255,255,255,.12); border-radius:8px;
-          padding:8px 12px; min-width:190px; max-width:240px; z-index:999;
-          font-size:11px; line-height:1.55; color:#e2e8f0;
-          box-shadow:0 8px 24px rgba(0,0,0,.4); pointer-events:none;
-          white-space:pre-line;
-        "></div>
+    <!-- CONTEXT label -->
+    <div style="padding:10px 13px 6px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">
+      <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.9px;color:var(--text-3)">Context</span>
+      <span id="rp-timer" style="font-size:9px;font-weight:700;color:var(--accent);letter-spacing:.3px;font-variant-numeric:tabular-nums"></span>
+    </div>
+
+    <!-- NOTES scratchpad -->
+    <div style="padding:10px 13px;border-bottom:1px solid var(--border)">
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:6px">📝 Notes</div>
+      <textarea id="rp-notes-area" placeholder="Scratchpad..." onchange="localStorage.setItem('rp_notes',this.value)" oninput="localStorage.setItem('rp_notes',this.value)" style="
+        width:100%;min-height:72px;resize:vertical;
+        background:var(--bg);border:1px solid var(--border);border-radius:7px;
+        padding:7px 9px;font-size:11px;color:var(--text);line-height:1.5;
+        font-family:inherit;outline:none;box-sizing:border-box;
+      "></textarea>
+      <div style="display:flex;gap:5px;margin-top:6px">
+        <button onclick="rpNoteLabelToBoard()" style="flex:1;font-size:10px;font-weight:700;padding:5px 4px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text-2);cursor:pointer">+ label to board</button>
+        <button onclick="rpNoteMakeBlock()" style="flex:1;font-size:10px;font-weight:700;padding:5px 4px;border-radius:6px;border:1px solid var(--accent);background:rgba(108,99,255,.08);color:var(--accent);cursor:pointer">→ make block</button>
       </div>
     </div>
 
-    <!-- Session stats -->
-    <div class="rp-section">
-      <div class="rp-title" style="display:flex;align-items:center;justify-content:space-between">
-        <span>This session</span>
-        <span id="rp-timer" style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.3px;font-variant-numeric:tabular-nums"></span>
-      </div>
-      <div class="rp-session-row">
-        <div class="rp-session-stat">
-          <span class="rp-session-stat-v" id="rp-blocks-today">0</span>
-          <span class="rp-session-stat-l">today</span>
-        </div>
-        <div class="rp-session-stat">
-          <span class="rp-session-stat-v" id="rp-ideas-count">0</span>
-          <span class="rp-session-stat-l">ideas</span>
-        </div>
-        <div class="rp-session-stat">
-          <span class="rp-session-stat-v" id="rp-live-count">0</span>
-          <span class="rp-session-stat-l">live</span>
-        </div>
-      </div>
+    <!-- PINNED blocks -->
+    <div style="padding:10px 13px;border-bottom:1px solid var(--border)">
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:6px">📌 Pinned</div>
+      <div id="rp-pinned"></div>
     </div>
 
-    <!-- Active project North Star -->
-    <div id="rp-northstar-section" style="display:none">
-      <div class="rp-divider"></div>
-      <div class="rp-section">
-        <div class="rp-title">🎯 North Star</div>
-        <div id="rp-northstar" style="font-size:11.5px;color:var(--text);line-height:1.55;font-style:italic;padding:8px 10px;background:var(--bg);border-radius:8px;border:1px solid var(--border)"></div>
-      </div>
+    <!-- AUTOMATIONS -->
+    <div style="padding:10px 13px;border-bottom:1px solid var(--border)">
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:7px">⚡ Automations</div>
+      <div id="rp-automations"></div>
     </div>
 
-    <div class="rp-divider"></div>
-
-    <!-- Today's blocks -->
-    <div class="rp-section">
-      <div class="rp-title">Today's work</div>
-      <div id="rp-today"></div>
+    <!-- CALENDAR heatmap -->
+    <div style="padding:10px 13px;border-bottom:1px solid var(--border)">
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:7px">📅 Calendar</div>
+      <div id="rp-calendar"></div>
     </div>
 
-    <div class="rp-divider"></div>
-
-    <!-- Velocity chart -->
-    <div class="rp-section">
-      <div class="rp-title" style="display:flex;align-items:center;justify-content:space-between">
-        <span>Velocity</span>
-        <span id="vel-subtitle" style="font-size:9px;color:var(--text-3);font-weight:500">blocks / week</span>
-      </div>
-      <div class="vel-wrap" id="vel-chart"></div>
-      <div class="vel-total" id="vel-total"></div>
-    </div>
-
-    <div class="rp-divider"></div>
-
-    <!-- Recent decisions -->
-    <div class="rp-section">
-      <div class="rp-title">Recent decisions</div>
-      <div id="rp-decisions"></div>
-    </div>
-
-    <div class="rp-divider"></div>
-
-    <!-- Seed quality trend -->
-    <div class="rp-section" id="rp-seed-trend-section" style="display:none">
-      <div class="rp-title">Seed quality</div>
-      <div id="rp-seed-trend"></div>
-    </div>
-
-    <div class="rp-divider" id="rp-seed-divider" style="display:none"></div>
-
-    <!-- Ideas captured -->
-    <div class="rp-section">
-      <div class="rp-title">Ideas captured</div>
-      <div id="rp-ideas"></div>
-    </div>
-
-    <div class="rp-divider"></div>
-
-    <!-- Model advisor (compact) -->
-    <div class="rp-section">
-      <div class="rp-title">Model</div>
-      <div class="rp-model">
-        <div class="rp-model-badge" style="background:rgba(108,99,255,.12);color:#a5b4fc">✦ Sonnet 4.6</div>
-        <div class="rp-model-task" style="margin-top:4px;margin-bottom:0">Arch decisions → <strong style="color:#15803d">Opus</strong> &nbsp;|&nbsp; Batch → <strong style="color:#475569">Haiku</strong></div>
-      </div>
-    </div>
-
-    <div class="rp-divider"></div>
-
-    <!-- Quick links -->
-    <div class="rp-section">
-      <div class="rp-title">Pages</div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <a href="products.html" target="_blank" style="font-size:11px;font-weight:600;color:#10b981;text-decoration:none;padding:5px 0;display:flex;align-items:center;gap:5px">🔌 Product Universe →</a>
-        <a href="pitch.html" target="_blank" style="font-size:11px;font-weight:600;color:#6c63ff;text-decoration:none;padding:5px 0;display:flex;align-items:center;gap:5px">⬡ Pitch deck →</a>
-      </div>
+    <!-- LOCAL FOLDER -->
+    <div style="padding:10px 13px">
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:6px">📁 Local folder</div>
+      <div style="font-size:9.5px;color:var(--text-3);margin-bottom:5px;word-break:break-all">~/AI/AGENCY /storyboard/</div>
+      <div id="rp-files"></div>
     </div>
 
   </div>
@@ -8477,80 +8406,147 @@ function buildSeedTrend(all) {
 
 function buildRightPanel() {
   const all = mergedBlocks();
-  const nowTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
 
-  // Today's work blocks
-  const todayBlocks = all.filter(b => (b.ts||0) >= nowTs && b.type !== 'idea').slice(0,6);
-  document.getElementById('rp-today').innerHTML = todayBlocks.length
-    ? todayBlocks.map(b => {
-        const p = PROJ[b.project] || { color:'#6c63ff' };
-        return `<div class="rp-today-block" onclick="openDetail('${b.id}')" style="--block-color:${p.color}">
-          <div class="rp-today-dot" style="background:${p.color}"></div>
-          <div>
-            <div class="rp-today-title">${b.title}</div>
-            <div class="rp-today-proj">${b.project} · ${blockTimestamp(b)}</div>
-          </div>
-        </div>`;
-      }).join('')
-    : `<div style="font-size:11px;color:var(--text-3);padding:8px 0">No blocks logged today yet.</div>`;
-
-  // Session stats
-  const liveCount = all.filter(b => b._live).length;
-  document.getElementById('rp-blocks-today').textContent = todayBlocks.length;
-  document.getElementById('rp-ideas-count').textContent  = all.filter(b => b.type === 'idea').length + capturedIdeas.length;
-  document.getElementById('rp-live-count').textContent   = liveCount;
-
-  // Seed quality trend
-  buildSeedTrend(all);
-
-  // North Star for active project
-  const nsSection = document.getElementById('rp-northstar-section');
-  const nsEl = document.getElementById('rp-northstar');
-  if (nsSection && nsEl && activeFilter !== 'All') {
-    const m = PROJECT_META[activeFilter] || {};
-    if (m.northStar) {
-      nsEl.textContent = m.northStar;
-      nsSection.style.display = '';
-    } else {
-      nsSection.style.display = 'none';
-    }
-  } else if (nsSection) {
-    nsSection.style.display = 'none';
+  // ── Restore notes from localStorage ──────────────────────────────
+  const notesEl = document.getElementById('rp-notes-area');
+  if (notesEl && !notesEl._loaded) {
+    notesEl.value = localStorage.getItem('rp_notes') || '';
+    notesEl._loaded = true;
   }
 
-  // Recent decisions — most recent 5 across all blocks
-  const recentDecisions = [];
-  [...all].sort((a,b)=>(b.ts||0)-(a.ts||0)).forEach(b => {
-    if (recentDecisions.length >= 5) return;
-    (b.decisions||[]).forEach(d => {
-      if (recentDecisions.length < 5) recentDecisions.push({ text: d, project: b.project });
+  // ── PINNED — most-recent intents + key decisions (up to 5) ───────
+  const pinnedEl = document.getElementById('rp-pinned');
+  if (pinnedEl) {
+    const pinned = [];
+    [...all].sort((a,b2)=>(b2.ts||0)-(a.ts||0)).forEach(b => {
+      if (pinned.length >= 5) return;
+      if (b.intent && b.intent.length > 10) {
+        pinned.push({ text: b.intent.slice(0,80) + (b.intent.length>80?'…':''), project: b.project, type:'intent' });
+      }
     });
-  });
-  const decisionsEl = document.getElementById('rp-decisions');
-  if (decisionsEl) {
-    decisionsEl.innerHTML = recentDecisions.length
-      ? recentDecisions.map(d => {
-          const p = PROJ[d.project] || { color:'#6c63ff' };
-          return `<div class="rp-decision-item">
-            <span class="rp-decision-check">✓</span>
-            <div>
-              <div class="rp-decision-text">${d.text}</div>
-              <div class="rp-decision-proj" style="color:${p.color}">${d.project}</div>
-            </div>
-          </div>`;
-        }).join('')
-      : `<div style="font-size:11px;color:var(--text-3);padding:8px 0">No decisions logged yet.</div>`;
+    // fill remainder with recent decisions
+    [...all].sort((a,b2)=>(b2.ts||0)-(a.ts||0)).forEach(b => {
+      (b.decisions||[]).forEach(d => {
+        if (pinned.length < 5) pinned.push({ text: d.slice(0,80)+(d.length>80?'…':''), project: b.project, type:'decision' });
+      });
+    });
+    pinnedEl.innerHTML = pinned.length ? pinned.map(p => {
+      const proj = PROJ[p.project] || { color:'#6c63ff' };
+      const icon = p.type === 'intent' ? '🎯' : '✓';
+      return `<div style="display:flex;gap:6px;align-items:flex-start;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:10px;margin-top:1px;flex-shrink:0">${icon}</span>
+        <div>
+          <div style="font-size:10.5px;color:var(--text);line-height:1.4">${p.text}</div>
+          <div style="font-size:9px;color:${proj.color};margin-top:2px;font-weight:600">${p.project}</div>
+        </div>
+      </div>`;
+    }).join('') : `<div style="font-size:11px;color:var(--text-3);padding:4px 0">Nothing pinned yet.</div>`;
   }
 
-  // Ideas
-  const ideas = all.filter(b => b.type === 'idea').slice(0,5);
-  document.getElementById('rp-ideas').innerHTML = ideas.map((b,i) => `
-    <div class="rp-idea" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2);color:var(--text)" onclick="openDetail('${b.id}')">
-      💡 ${b.title.replace('💡 ','')}
-    </div>`).join('');
+  // ── AUTOMATIONS ───────────────────────────────────────────────────
+  const autoEl = document.getElementById('rp-automations');
+  if (autoEl && typeof AUTOMATIONS !== 'undefined') {
+    autoEl.innerHTML = AUTOMATIONS.map(a => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-size:10.5px;font-weight:700;color:${a.enabled?'var(--text)':'var(--text-3)'}">${a.name}</div>
+          <div style="font-size:9px;color:var(--text-3);margin-top:1px">${a.schedule}</div>
+        </div>
+        <div style="width:8px;height:8px;border-radius:50%;background:${a.enabled?'#10b981':'#475569'};flex-shrink:0"></div>
+      </div>`).join('');
+  } else if (autoEl) {
+    autoEl.innerHTML = `
+      <div style="padding:4px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:10.5px;font-weight:700;color:var(--text)">Blog Pipeline</div><div style="font-size:9px;color:var(--text-3)">Mon–Fri · 9:06</div></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#10b981"></div>
+      </div>
+      <div style="padding:4px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:10.5px;font-weight:700;color:var(--text)">Social Pipeline</div><div style="font-size:9px;color:var(--text-3)">M/W/F/S · 9:01</div></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#10b981"></div>
+      </div>
+      <div style="padding:4px 0;display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:10.5px;font-weight:700;color:var(--text-3)">GSC Monitor</div><div style="font-size:9px;color:var(--text-3)">Daily · disabled</div></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#475569"></div>
+      </div>`;
+  }
 
-  // Velocity chart
-  buildVelocityChart();
+  // ── CALENDAR heatmap (April 2026) ─────────────────────────────────
+  const calEl = document.getElementById('rp-calendar');
+  if (calEl) {
+    // Count sessions per day
+    const dayCounts = {};
+    all.forEach(b => {
+      if (!b.ts) return;
+      const s = String(b.ts);
+      if (s.length === 8) dayCounts[s] = (dayCounts[s]||0) + 1;
+    });
+    const maxCount = Math.max(1, ...Object.values(dayCounts));
+
+    // April 2026: starts on Wednesday (day index 2), 30 days
+    const year = 2026, month = 3; // April
+    const firstDay = new Date(year, month, 1).getDay(); // 0=Sun; April 2026 = Wed = 3
+    const daysInMonth = 30;
+    const dayNames = ['S','M','T','W','T','F','S'];
+
+    let html = `<div style="font-size:9px;font-weight:700;color:var(--text-3);text-align:center;margin-bottom:4px">April 2026</div>`;
+    html += `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center">`;
+    // Day name headers
+    dayNames.forEach(d => html += `<div style="font-size:8px;color:var(--text-3);font-weight:600;padding-bottom:2px">${d}</div>`);
+    // Empty cells before 1st
+    for (let i = 0; i < firstDay; i++) html += `<div></div>`;
+    // Day cells
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key = `2026${String(4).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+      const cnt = dayCounts[key] || 0;
+      const intensity = cnt > 0 ? Math.max(0.2, cnt / maxCount) : 0;
+      const bg = cnt > 0 ? `rgba(108,99,255,${intensity})` : 'var(--border)';
+      const isToday = d === 20; // April 20
+      html += `<div onclick="rpCalendarFilter('${key}')" title="${cnt} blocks" style="
+        width:100%;aspect-ratio:1;border-radius:3px;background:${bg};
+        cursor:pointer;font-size:8px;line-height:1;display:flex;align-items:center;justify-content:center;
+        color:${cnt>3?'#fff':'var(--text-3)'};font-weight:${isToday?'900':'400'};
+        box-shadow:${isToday?'0 0 0 1.5px var(--accent)':'none'};
+      ">${d}</div>`;
+    }
+    html += `</div>`;
+    calEl.innerHTML = html;
+  }
+
+  // ── LOCAL FOLDER files ────────────────────────────────────────────
+  const filesEl = document.getElementById('rp-files');
+  if (filesEl) {
+    const files = [
+      { name:'app.html', size:'284 KB', icon:'📄' },
+      { name:'index.html', size:'2 KB', icon:'📄' },
+      { name:'design-spec.html', size:'89 KB', icon:'🎨' },
+      { name:'GIT_PUSH_DAY7.sh', size:'1 KB', icon:'🚀' },
+    ];
+    filesEl.innerHTML = files.map(f => `
+      <div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:12px">${f.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div>
+        </div>
+        <div style="font-size:9px;color:var(--text-3);flex-shrink:0">${f.size}</div>
+      </div>`).join('');
+  }
+}
+
+// ── Right panel helper actions ─────────────────────────
+function rpNoteLabelToBoard() {
+  const txt = (document.getElementById('rp-notes-area')||{}).value || '';
+  if (!txt.trim()) return;
+  alert('Label "' + txt.slice(0,40) + '…" would be added to ' + (activeFilter||'the current board') + '.');
+}
+function rpNoteMakeBlock() {
+  const txt = (document.getElementById('rp-notes-area')||{}).value || '';
+  if (!txt.trim()) { alert('Write something in Notes first.'); return; }
+  alert('Block created from note: "' + txt.slice(0,60) + '…"');
+}
+function rpCalendarFilter(dateKey) {
+  // dateKey = YYYYMMDD string — filter feed to that day
+  const y = dateKey.slice(0,4), m = dateKey.slice(4,6), d = dateKey.slice(6,8);
+  alert('Calendar filter: ' + y + '-' + m + '-' + d + '\n(Full date-filter coming in Day 8)');
 }
 
 // ── Velocity chart ────────────────────────────────────
