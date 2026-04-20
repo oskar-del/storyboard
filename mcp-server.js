@@ -30,12 +30,13 @@ import { fileURLToPath } from "url";
 import { createServer } from "http";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const STORYBOARD_DIR = __dirname;
-const BLOCKS_FILE    = join(STORYBOARD_DIR, "blocks-data.json");
-const DATA_FILE      = join(STORYBOARD_DIR, "storyboard-data.json");
-const IDEAS_FILE     = join(STORYBOARD_DIR, "ideas.jsonl");
-const MEMORY_FILE    = join(STORYBOARD_DIR, "../../../.auto-memory/MEMORY.md");
-const BUILT_FILE     = join(STORYBOARD_DIR, "../BUILT.md");
+const STORYBOARD_DIR   = __dirname;
+const BLOCKS_FILE      = join(STORYBOARD_DIR, "blocks-data.json");
+const SESSION_LOG_FILE = join(STORYBOARD_DIR, "session-log.json");
+const DATA_FILE        = join(STORYBOARD_DIR, "storyboard-data.json");
+const IDEAS_FILE       = join(STORYBOARD_DIR, "ideas.jsonl");
+const MEMORY_FILE      = join(STORYBOARD_DIR, "../../../.auto-memory/MEMORY.md");
+const BUILT_FILE       = join(STORYBOARD_DIR, "../BUILT.md");
 const POPULATE_SCRIPT = join(STORYBOARD_DIR, "populate_storyboard.py");
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -709,10 +710,70 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
-  // /blocks — return all blocks from blocks-data.json (lets dashboard work from any origin)
+  // /blocks — return all blocks from blocks-data.json + session-log.json (cross-session bridge)
   if (req.method === "GET" && req.url.startsWith("/blocks")) {
     try {
       const data = existsSync(BLOCKS_FILE) ? JSON.parse(readFileSync(BLOCKS_FILE, "utf8")) : [];
+      const sessionLog = existsSync(SESSION_LOG_FILE) ? JSON.parse(readFileSync(SESSION_LOG_FILE, "utf8")) : [];
+      // Merge: session-log blocks first (they'll be deduplicated by id in the dashboard)
+      const merged = [...data, ...sessionLog];
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(merged));
+    } catch {
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify([]));
+    }
+    return;
+  }
+
+  // /log-session — append a block to session-log.json (called by any Cowork session)
+  if (req.method === "POST" && req.url === "/log-session") {
+    let body = "";
+    req.on("data", chunk => { body += chunk; });
+    req.on("end", () => {
+      try {
+        const block = JSON.parse(body);
+        if (!block.title || !block.project) {
+          res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({ error: "Missing title or project" }));
+          return;
+        }
+        const now = new Date();
+        const ts = block.ts || parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
+        const newBlock = {
+          id:        block.id || `log-${block.project.toLowerCase().replace(/\s+/g,"-")}-${Date.now()}`,
+          type:      block.type || "session",
+          project:   block.project,
+          task:      block.task || "",
+          title:     block.title.substring(0, 120),
+          summary:   block.summary || "",
+          decisions: block.decisions || [],
+          ideas:     block.ideas || [],
+          chips:     block.chips || [],
+          date:      block.date || now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
+          ts,
+          _source:   block._source || "session-log",
+          _logged:   now.toISOString(),
+        };
+        const existing = existsSync(SESSION_LOG_FILE) ? JSON.parse(readFileSync(SESSION_LOG_FILE, "utf8")) : [];
+        // Deduplicate by id
+        const deduped = existing.filter(b => b.id !== newBlock.id);
+        deduped.push(newBlock);
+        writeFileSync(SESSION_LOG_FILE, JSON.stringify(deduped, null, 2), "utf8");
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: true, id: newBlock.id }));
+      } catch(e) {
+        res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ error: String(e) }));
+      }
+    });
+    return;
+  }
+
+  // /session-log — GET all cross-session blocks
+  if (req.method === "GET" && req.url === "/session-log") {
+    try {
+      const data = existsSync(SESSION_LOG_FILE) ? JSON.parse(readFileSync(SESSION_LOG_FILE, "utf8")) : [];
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(data));
     } catch {

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "log-propertyos-df440bda",
+    "type": "session",
+    "project": "PropertyOS",
+    "task": "valuation-engine",
+    "title": "PropertyOS valuation engine \u2014 PDF v6, audit pipeline, Inmocosta live",
+    "summary": "Built full PDF valuation report generator with ReportLab. Iterated v1\u2192v6 on layout, fonts, Casafari data integration. Added agency audit pipeline (agency_audit.py). Generated live audit PDF for Inmocosta.",
+    "decisions": [
+      "ReportLab for PDF generation",
+      "Casafari as valuation data source",
+      "Agency audit as standalone tool",
+      "Custom font stack for brand consistency"
+    ],
+    "ideas": [
+      "Mortgage calculator section",
+      "Automated market alert emails"
+    ],
+    "chips": [
+      "PropertyOS",
+      "valuation",
+      "PDF",
+      "Casafari"
+    ],
+    "date": "21 Apr",
+    "ts": 20260421,
+    "_source": "session-log",
+    "_logged": "2026-04-21T00:44:44.458255"
+  }
+]
