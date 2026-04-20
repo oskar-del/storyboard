@@ -4427,27 +4427,43 @@ const PROJECT_META = {
 // Automations = scheduled pipelines — NOT stories, shown separately
 // Source: list_sessions, updated when sessions are renamed/created
 const SESSION_MANIFEST = {
+  // Real task windows (stories) — sourced from Claude projects + Task Brain/BRAIN.md
   stories: [
-    { name: "Storyboard Brain",              board: "Storyboard",      type: "brain", status: "active" },
-    { name: "Opero | Agency Brain",          board: "Opero Agency",    type: "brain", status: "idle"   },
-    { name: "Opero | 2: Agency: Landing Page", board: "Opero Agency",  type: "task",  status: "idle"   },
-    { name: "6: H&H Sales & CRM",            board: "Hansson Hertzell",type: "task",  status: "idle"   },
-    { name: "6: H&H Sales & Crm (2)",        board: "Hansson Hertzell",type: "task",  status: "idle"   },
-    { name: "2: NBHCB SEO & Indexing",       board: "Costa Blanca",    type: "task",  status: "idle"   },
-    { name: "Nbhcb website seo",             board: "Costa Blanca",    type: "task",  status: "idle"   },
-    { name: "Charles Brain",                 board: "Charles",         type: "brain", status: "idle"   },
+    // ── Storyboard ──
+    { name: "Storyboard Brain",                board: "Storyboard",       type: "brain", status: "active" },
+    // ── Opero Agency ──
+    { name: "Opero | Agency Brain",            board: "Opero Agency",     type: "brain", status: "idle"   },
+    { name: "Opero | 2: Agency: Landing Page", board: "Opero Agency",     type: "task",  status: "idle"   },
+    // ── Costa Blanca (NBHCB) — 4 work streams ──
+    { name: "1: NBHCB Content & Social",       board: "Costa Blanca",     type: "task",  status: "idle"   },
+    { name: "2: NBHCB SEO & Indexing",         board: "Costa Blanca",     type: "task",  status: "idle"   },
+    { name: "3: NBHCB Website & Tech",         board: "Costa Blanca",     type: "task",  status: "idle"   },
+    { name: "4: NBHCB Leads & Marketing",      board: "Costa Blanca",     type: "task",  status: "idle"   },
+    // ── Hansson Hertzell (H&H) — 3 work streams ──
+    { name: "5: H&H Marketing & Social",       board: "Hansson Hertzell", type: "task",  status: "idle"   },
+    { name: "6: H&H Sales & CRM",              board: "Hansson Hertzell", type: "task",  status: "idle"   },
+    { name: "7: H&H Legacy & Migration",       board: "Hansson Hertzell", type: "task",  status: "idle"   },
+    // ── Cross-Brand ──
+    { name: "8: Cross-Brand Operations",       board: "Cross-Brand",      type: "task",  status: "idle"   },
+    // ── Charles ──
+    { name: "Charles Brain",                   board: "Charles",          type: "brain", status: "idle"   },
   ],
+  // Real scheduled automations — sourced from Task Brain - Our Schedules.docx
   automations: [
-    { name: "Daily client outreach drafts",  board: "Hansson Hertzell", schedule: "Daily"            },
-    { name: "Hh fb group posting morning",   board: "Hansson Hertzell", schedule: "Daily 9:00"       },
-    { name: "Hh fb group posting evening",   board: "Hansson Hertzell", schedule: "Daily evening"    },
-    { name: "Hh crm outreach",               board: "Hansson Hertzell", schedule: "Mon/Thu"          },
-    { name: "Hh social pipeline",            board: "Hansson Hertzell", schedule: "Mon/Wed/Fri/Sun"  },
-    { name: "Weekly collaborator email",     board: "Hansson Hertzell", schedule: "Weekly"           },
-    { name: "Email marketing",               board: "Hansson Hertzell", schedule: "Recurring"        },
-    { name: "Newbuild blog pipeline",        board: "Costa Blanca",     schedule: "Mon-Fri 9:06"     },
-    { name: "Newbuild social pipeline",      board: "Costa Blanca",     schedule: "Mon/Wed/Fri/Sun"  },
-    { name: "Weekly gsc monitoring",         board: "Costa Blanca",     schedule: "Weekly"           },
+    // ── Hansson Hertzell ──
+    { name: "FB Group Posting — Morning",      board: "Hansson Hertzell", schedule: "Daily 10:08",    status: "ok"       },
+    { name: "FB Group Posting — Evening",      board: "Hansson Hertzell", schedule: "Daily 19:01",    status: "ok"       },
+    { name: "H&H Social Pipeline",             board: "Hansson Hertzell", schedule: "Tue/Thu 9:02",   status: "ok"       },
+    { name: "Daily Client Outreach Drafts",    board: "Hansson Hertzell", schedule: "Mon–Fri 9:03",   status: "ok"       },
+    { name: "H&H CRM Outreach",                board: "Hansson Hertzell", schedule: "Mon/Thu 8:10",   status: "needs-work"},
+    { name: "Weekly Collaborator Email",       board: "Hansson Hertzell", schedule: "Friday 9:07",    status: "ok"       },
+    { name: "Email Marketing",                 board: "Hansson Hertzell", schedule: "Wed 10:04",      status: "needs-work"},
+    // ── Costa Blanca (NBHCB) ──
+    { name: "NBHCB Social Pipeline",           board: "Costa Blanca",     schedule: "Mon/Wed/Fri/Sun", status: "ok"      },
+    { name: "NBHCB Blog Pipeline",             board: "Costa Blanca",     schedule: "Mon–Fri 9:06",   status: "needs-work"},
+    { name: "NBHCB Website SEO",               board: "Costa Blanca",     schedule: "Monday 8:01",    status: "ok"       },
+    { name: "Weekly GSC Monitor",              board: "Costa Blanca",     schedule: "Monday 9:03",    status: "disabled" },
+    { name: "Monthly Schema Validation",       board: "Costa Blanca",     schedule: "1st of month",   status: "disabled" },
   ],
 };
 
