@@ -3646,15 +3646,9 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
 
       <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
-      <!-- ── STORIES (real task windows) ──────────────── -->
+      <!-- ── STORIES ──────────────────────────────────── -->
       <div class="nav-label" style="padding:6px 12px 3px">Stories</div>
       <div id="nav-stories"></div>
-
-      <div class="nav-divider" style="margin:6px 12px 4px"></div>
-
-      <!-- ── AUTOMATIONS ───────────────────────────────── -->
-      <div class="nav-label" style="padding:6px 12px 3px">Automations</div>
-      <div id="nav-automations"></div>
 
       <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
@@ -3663,6 +3657,17 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
       <div id="nav-active-projects"></div>
       <div id="nav-projects" style="display:none"></div>
       <button class="nav-show-more-btn" id="navShowMoreBtn" onclick="toggleMoreProjects()" style="display:none"></button>
+
+      <div class="nav-divider" style="margin:6px 12px 4px"></div>
+
+      <!-- ── AUTOMATIONS — collapsed by default ───────── -->
+      <button onclick="toggleNavAutomations()" id="autoSectionBtn"
+        style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:6px 12px 3px;background:none;border:none;cursor:pointer;text-align:left"
+        onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+        <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3)">Automations</span>
+        <span id="autoSectionChevron" style="font-size:9px;color:var(--text-3)">▶ <span id="autoSectionCount"></span></span>
+      </button>
+      <div id="nav-automations" style="display:none"></div>
 
       <div class="nav-divider" style="margin:6px 12px 4px"></div>
 
@@ -5685,6 +5690,18 @@ function toggleNav() {
 // ═══════════════════════════════════
 // TOGGLE RIGHT PANEL
 // ═══════════════════════════════════
+function toggleNavAutomations() {
+  const el  = document.getElementById('nav-automations');
+  const chv = document.getElementById('autoSectionChevron');
+  if (!el) return;
+  const opening = el.style.display === 'none';
+  el.style.display = opening ? 'block' : 'none';
+  const count = document.getElementById('autoSectionCount')?.textContent || '';
+  if (chv) chv.innerHTML = (opening ? '▼ ' : '▶ ') + `<span id="autoSectionCount">${count}</span>`;
+  // Rebuild content on first expand
+  if (opening && typeof allBlocksRaw !== 'undefined') buildNav(allBlocksRaw);
+}
+
 function toggleRight() {
   rightOpen = !rightOpen;
   document.getElementById('rightPanel').classList.toggle('open', rightOpen);
@@ -5946,9 +5963,18 @@ function buildNav() {
     storiesEl.innerHTML = html || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">No stories yet</div>`;
   }
 
-  // ── AUTOMATIONS — show active only, collapse needs-work + disabled ──
+  // ── AUTOMATIONS — set count badge; content hidden until user expands ──
   const autoNavEl = document.getElementById('nav-automations');
   if (autoNavEl) {
+    // Set the count in the section header
+    const totalAutos = SESSION_MANIFEST.automations.length;
+    const activeAutos = SESSION_MANIFEST.automations.filter(a => a.status === 'ok').length;
+    const countEl = document.getElementById('autoSectionCount');
+    if (countEl) countEl.textContent = `${activeAutos}/${totalAutos}`;
+    // Only rebuild content if already expanded (skip if still collapsed)
+    if (autoNavEl.style.display === 'none') {
+      // content will be rendered on first expand via toggleNavAutomations → buildNav
+    } else {
     const autos    = SESSION_MANIFEST.automations;
     const active   = autos.filter(a => a.status === 'ok');
     const inactive = autos.filter(a => a.status !== 'ok');
@@ -5988,6 +6014,7 @@ function buildNav() {
       }
     }
     autoNavEl.innerHTML = autoHtml;
+    } // end else (expanded)
   }
 
   // ── Active Projects section (design-v2 style) ──────────────────
