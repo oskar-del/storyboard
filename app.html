@@ -3763,7 +3763,7 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
   <main class="main" id="main">
 
     <!-- TOOLBAR -->
-    <div class="feed-toolbar">
+    <div class="feed-toolbar" id="feedToolbar">
       <!-- Time period toggle -->
       <div class="period-tabs" id="periodTabs">
         <button class="period-tab on" onclick="setPeriod('all',this)">All time</button>
@@ -6512,6 +6512,10 @@ function renderFeed() {
   const el = document.getElementById('feed');
   const baseBlocks = mergedBlocks();
 
+  // Restore toolbar visibility — hide in story and profile views (they have own headers)
+  const _tbEl = document.getElementById('feedToolbar');
+  if (_tbEl) _tbEl.style.display = (activeView === 'story' || activeView === 'profile') ? 'none' : '';
+
   // Overview strip — contextual banner, show in all main views
   // Hide only in timeline/pipeline (no meaningful summary) and when period filter is active
   const ovEl = document.getElementById('overviewStrip');
@@ -6978,7 +6982,90 @@ function renderProfileView(projName) {
   // ── Inject into feedHeader ─────────────────────────────────────────
   if (fh) fh.innerHTML = toggleHtml + ovStripHtml + storiesTickerHtml;
 
-  // ── Main feed: project canvas card + latest blocks + designs ──────
+  // ── Board Journey: all sessions chronologically ───────────────────
+  const allSessions = pb.filter(b => b.type === 'session')
+    .sort((a,b2) => (a.ts||0) - (b2.ts||0)); // oldest → newest
+
+  const allCompactions = pb.filter(b => b.type === 'compaction')
+    .sort((a,b2) => (a.ts||0) - (b2.ts||0));
+
+  const fmtJTs = ts => {
+    if (!ts) return '';
+    const s = String(ts);
+    const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    if (s.length === 8) return `${MN[parseInt(s.slice(4,6))-1]} ${parseInt(s.slice(6,8))}`;
+    try { const d=new Date(ts); return `${MN[d.getMonth()]} ${d.getDate()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; } catch(e){ return ''; }
+  };
+
+  // Build journey items (sessions + compaction markers interspersed by ts)
+  const journeyItems = [
+    ...allSessions.map(s => ({ type:'session', block:s })),
+    ...allCompactions.map(c => ({ type:'compaction', block:c }))
+  ].sort((a,b2) => (a.block.ts||0) - (b2.block.ts||0));
+
+  let journeyHtml = '';
+  journeyItems.forEach((item, idx) => {
+    const isLast = idx === journeyItems.length - 1;
+    if (item.type === 'compaction') {
+      journeyHtml += `
+        <div style="display:flex;gap:0;align-items:center;margin:2px 0;column-span:all;break-inside:avoid">
+          <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0">
+            <div style="width:2px;height:12px;background:linear-gradient(${p.color}44,transparent)"></div>
+            <div style="font-size:13px;line-height:1">⚡</div>
+            <div style="width:2px;height:12px;background:linear-gradient(transparent,${p.color}44)"></div>
+          </div>
+          <div style="flex:1;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:7px 13px;display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <span style="font-size:10.5px;font-weight:800;color:#ef4444">Compaction — Context Window Full</span>
+              <span style="font-size:9px;color:var(--text-3);margin-left:8px">${item.block.sessions||''} ${item.block.sessions?'sessions ·':''} ${item.block.decisionsCarried||''} ${item.block.decisionsCarried?'decisions carried':'Automatic'}</span>
+            </div>
+            <span style="font-size:9px;color:var(--text-3)">${fmtJTs(item.block.ts)}</span>
+          </div>
+        </div>`;
+    } else {
+      const s = item.block;
+      const taskIcon = {'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','strategy':'🧠','context-visual':'📊'}[s.task] || '';
+      const taskLabel = s.task ? `<span style="font-size:9px;padding:1px 7px;border-radius:4px;background:${p.color}18;color:${p.color};font-weight:700;margin-left:7px">${taskIcon} ${s.task.replace(/-/g,' ')}</span>` : '';
+      const decs = (s.decisions||[]).slice(0,3);
+      const decHtml = decs.map(d => `<div style="display:flex;align-items:flex-start;gap:6px;padding:2px 0">
+        <span style="color:#22c55e;font-size:11px;margin-top:1px;flex-shrink:0">✓</span>
+        <span style="font-size:11px;color:var(--text-2);line-height:1.4">${d}</span>
+      </div>`).join('');
+      const ideaBlocks = pb.filter(b => b.type==='idea' && b.ts === s.ts).slice(0,3);
+      const ideasHtml = ideaBlocks.map(idea => `
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#f59e0b;font-size:10.5px;font-weight:600;cursor:pointer" onclick="openDetail('${idea.id}')">💡 ${idea.title.replace('💡 ','')}</span>`).join('');
+      const thumb = s.screenshot ? `<div style="width:100px;height:62px;border-radius:6px;background:${p.color}18;border:1px solid ${p.color}22;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center"><img src="${s.screenshot}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=\\'font-size:9px;color:var(--text-3)\\'>screenshot</span>'"></div>` : '';
+
+      journeyHtml += `
+        <div style="display:flex;gap:0;align-items:stretch;column-span:all;break-inside:avoid;margin-bottom:0" onmouseover="this.querySelector('.jcard').style.borderColor='${p.color}55'" onmouseout="this.querySelector('.jcard').style.borderColor='var(--border)'">
+          <!-- spine -->
+          <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;padding-top:16px">
+            <div style="width:10px;height:10px;border-radius:50%;background:${p.color};border:2px solid var(--bg);box-shadow:0 0 0 1.5px ${p.color};flex-shrink:0;z-index:1"></div>
+            ${!isLast ? `<div style="width:2px;flex:1;background:linear-gradient(${p.color}44,${p.color}22);min-height:24px;margin-top:4px"></div>` : ''}
+          </div>
+          <!-- card -->
+          <div class="jcard" onclick="openStory('${s.id}')" style="flex:1;margin:8px 0 8px 6px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:border-color .12s">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div style="display:flex;align-items:center;gap:0">
+                <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3)">SESSION · ${fmtJTs(s.ts)}</span>
+                ${taskLabel}
+              </div>
+              ${s.task ? `<span onclick="event.stopPropagation();openStoryWindow('${s.task}','${p.name||projName}')" style="font-size:9px;font-weight:700;color:${p.color};cursor:pointer;padding:3px 8px;border-radius:5px;background:${p.color}12">Open →</span>` : ''}
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              ${thumb}
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:7px">${s.title||'Session'}</div>
+                ${decHtml}
+              </div>
+            </div>
+            ${ideasHtml ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">${ideasHtml}</div>` : ''}
+          </div>
+        </div>`;
+    }
+  });
+
+  // ── Main feed: project canvas card + journey ──────────────────────
   el.innerHTML = renderProjectHeader(projName) + `
     ${sectionLabel('🕐 Latest Activity')}
     <div style="display:flex;gap:10px;margin-bottom:4px;column-span:all;break-inside:avoid">
@@ -6988,6 +7075,16 @@ function renderProfileView(projName) {
     ${sectionLabel('🖼 Latest Designs')}
     <div style="display:flex;gap:12px;flex-wrap:wrap;column-span:all;break-inside:avoid">
       ${designsHtml}
+    </div>` : ''}
+    ${allSessions.length ? `
+    <div style="column-span:all;break-inside:avoid;margin-top:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">
+        <div style="width:8px;height:8px;border-radius:50%;background:${p.color}"></div>
+        <span style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)">Board Journey · ${allSessions.length} sessions</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:9px;color:var(--text-3)">oldest → newest</span>
+      </div>
+      ${journeyHtml}
     </div>` : ''}
   `;
 }
@@ -7052,9 +7149,11 @@ function renderStoryView() {
     try { const d=new Date(ts); return m[d.getMonth()]+' '+d.getDate()+' · '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); } catch(e){return '';}
   };
 
-  // Hide global overviewStrip
+  // Hide global overviewStrip and view toolbar in story mode
   const _ovS = document.getElementById('overviewStrip');
   if (_ovS) _ovS.style.display = 'none';
+  const _tb = document.getElementById('feedToolbar');
+  if (_tb) _tb.style.display = 'none';
 
   // ── feedHeader: same 4-card stats + ticker (story chip highlighted) ──
   const allBoardBlocks = all.filter(b => b.project === boardName);
@@ -8449,7 +8548,7 @@ function buildRightPanel() {
     autoEl.innerHTML = AUTOMATIONS.map(a => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
         <div>
-          <div style="font-size:10.5px;font-weight:700;color:${a.enabled?'var(--text)':'var(--text-3)'}">${a.name}</div>
+          <div style="font-size:10.5px;font-weight:700;color:${a.enabled?'var(--text)':'var(--text-3)'}">${a.title||a.name||'—'}</div>
           <div style="font-size:9px;color:var(--text-3);margin-top:1px">${a.schedule}</div>
         </div>
         <div style="width:8px;height:8px;border-radius:50%;background:${a.enabled?'#10b981':'#475569'};flex-shrink:0"></div>
