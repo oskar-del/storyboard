@@ -3591,6 +3591,11 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
         </div>
         <span id="topbarDayPill" style="font-size:10px;font-weight:700;color:#6c63ff">Day 3/10</span>
       </div>
+      <!-- Claude activity widget — sessions today + context windows -->
+      <div id="claudeUsagePill" onclick="openSettings()" title="Claude activity today — click for settings" style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:rgba(16,163,127,.07);border:1px solid rgba(16,163,127,.18);cursor:pointer;transition:all .15s" onmouseenter="this.style.background='rgba(16,163,127,.14)'" onmouseleave="this.style.background='rgba(16,163,127,.07)'">
+        <div id="claudeUsageDot" style="width:6px;height:6px;border-radius:50%;background:#10a37f;flex-shrink:0"></div>
+        <span id="claudeUsageLabel" style="font-size:10px;font-weight:700;color:#10a37f;white-space:nowrap">Claude</span>
+      </div>
       <button class="seed-btn" onclick="seedNewChat()">⚡ Carry forward</button>
       <button class="panel-btn" id="panelBtn" onclick="toggleRight()" title="Activity panel">
         <svg width="13" height="12" viewBox="0 0 13 12" fill="none">
@@ -6934,8 +6939,14 @@ function renderFeed() {
           : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">Nothing logged ${label.toLowerCase()}.</div>`);
     }
   } else {
-    // Project-specific view: use journal/narrative layout for grid and list views
-    if (activeView === 'grid' || activeView === 'list') {
+    // Project-specific view
+    if (activeView === 'grid') {
+      // T2 spec: pure masonry block feed — no date headers, just cards
+      // (list view keeps journal/narrative layout)
+      el.innerHTML = headerHtml + blocks.map((b, i) => blockHTML(b, i, false)).join('');
+      return;
+    }
+    if (activeView === 'list') {
       renderJournalView(activeFilter);
       return;
     }
@@ -6956,7 +6967,7 @@ function renderProfileView(projName) {
 
   // ── View toggle pills (inside the feed, above everything) ──────────
   const toggleHtml = `
-    <div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;column-span:all;break-inside:avoid">
+    <div style="display:flex;gap:2px;background:rgba(255,255,255,.04);border-radius:10px;padding:3px;margin-bottom:14px;width:fit-content;column-span:all;break-inside:avoid">
       ${[
         ['profile','Profile'],
         ['grid','Grid'],
@@ -6964,10 +6975,9 @@ function renderProfileView(projName) {
         ['journey','Journey'],
         ['list','List']
       ].map(([v,l]) => `<div onclick="setView('${v}');renderFeed()"
-        style="padding:5px 14px;border-radius:20px;cursor:pointer;font-size:11.5px;font-weight:700;
-          border:1.5px solid ${activeView===v ? p.color : 'rgba(255,255,255,.08)'};
-          background:${activeView===v ? `${p.color}18` : 'transparent'};
-          color:${activeView===v ? p.color : 'var(--text-3)'};
+        style="padding:5px 14px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700;
+          background:${activeView===v ? p.color : 'transparent'};
+          color:${activeView===v ? '#fff' : 'var(--text-3)'};
           transition:all .12s">${l}</div>`).join('')}
     </div>`;
 
@@ -7041,16 +7051,23 @@ function renderProfileView(projName) {
         <div style="font-size:26px;font-weight:900;color:#22c55e;letter-spacing:-1px;line-height:1;margin-bottom:2px">${sessCount > 5 ? '↑' : '→'}${sessCount}×</div>
         <div style="font-size:10px;color:var(--text-3)">sessions total</div>
       </div>
-      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
-        <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3);margin-bottom:6px">Context</div>
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
-          <div style="flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden">
-            <div style="height:100%;width:${Math.min(sessCount*12,100)}%;background:${sessCount*12>80?'#ef4444':sessCount*12>55?'#f59e0b':p.color};border-radius:3px;transition:width .3s"></div>
-          </div>
-          <span style="font-size:11px;font-weight:900;color:${sessCount*12>80?'#ef4444':sessCount*12>55?'#f59e0b':p.color}">${Math.min(sessCount*12,100)}%</span>
-        </div>
-        ${compCount>0?`<div style="font-size:10px;font-weight:700;color:#ef4444">⚡ ${compCount} compaction${compCount!==1?'s':''}</div>`:'<div style="font-size:10px;color:var(--text-3)">No compactions yet</div>'}
-      </div>
+      ${(()=>{
+        // Sprint card — matches design spec T1 third card
+        const SPRINT_START_MS = new Date('2026-04-12').getTime();
+        const SPRINT_DAYS = 10;
+        const sprintDay = Math.min(SPRINT_DAYS, Math.max(1, Math.ceil((Date.now()-SPRINT_START_MS)/(1000*60*60*24))));
+        const sprintRemaining = SPRINT_DAYS - sprintDay;
+        const sprintScore = Math.min(99, Math.round(sessCount*5 + decCount*0.4 + ideaCount*1.5));
+        const sprintDots = Array.from({length:SPRINT_DAYS},(_,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${i<sprintDay?p.color:'rgba(255,255,255,.12)'}"></div>`).join('');
+        return `<div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
+          <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3);margin-bottom:5px">Sprint</div>
+          <div style="font-size:12.5px;font-weight:800;margin-bottom:4px">Storyboard 10-day</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin:5px 0 4px">${sprintDots}</div>
+          <div style="font-size:11px;color:${p.color};font-weight:700;margin-bottom:6px">Day ${sprintDay} · ${sprintRemaining} remaining</div>
+          <div style="font-size:34px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1">${sprintScore}</div>
+          <div style="font-size:9px;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">sprint score</div>
+        </div>`;
+      })()}
       <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3);margin-bottom:6px">Recent Sessions</div>
         ${recentSess.map(b=>`<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">
@@ -7350,7 +7367,10 @@ function renderStoryView() {
         <div style="width:1px;height:32px;background:var(--border);margin-right:12px;flex-shrink:0"></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${storyChips}</div>
         <div style="margin-left:auto;display:flex;gap:8px;flex-shrink:0">
-          <button onclick="showToast('Carry forward: copy key context from this story into your next session')" style="padding:6px 14px;border-radius:8px;background:${p.color}18;border:1.5px solid ${p.color}33;font-size:11px;font-weight:700;color:${p.color};cursor:pointer">🔄 Carry forward</button>
+          ${fillPct > 75
+            ? `<button onclick="openStoryNewWindow('${storyName}','${boardName}')" style="padding:6px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(239,68,68,.18),rgba(245,158,11,.12));border:1.5px solid rgba(239,68,68,.5);font-size:11px;font-weight:800;color:#f87171;cursor:pointer">⚡ Start New Window</button>`
+            : `<button onclick="openStoryNewWindow('${storyName}','${boardName}')" style="padding:6px 14px;border-radius:8px;background:${p.color}18;border:1.5px solid ${p.color}33;font-size:11px;font-weight:700;color:${p.color};cursor:pointer">🔄 Carry forward</button>`
+          }
           <button onclick="navClick('${boardName}')" style="padding:6px 14px;border-radius:8px;background:var(--white);border:1.5px solid var(--border);font-size:11px;font-weight:700;color:var(--text-2);cursor:pointer">← Board</button>
         </div>
       </div>
@@ -7401,6 +7421,16 @@ function renderStoryView() {
       <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 16px;background:${p.color}08;border-top:1px solid ${p.color}15">
         <span style="font-size:13px;flex-shrink:0">🎯</span>
         <div style="font-size:11px;font-weight:600;font-style:italic;color:var(--text);line-height:1.5;flex:1">${intentText.slice(0,120)}</div>
+      </div>` : ''}
+      ${fillPct > 75 ? `
+      <!-- Context full warning -->
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:linear-gradient(105deg,rgba(239,68,68,.08),rgba(245,158,11,.04));border-top:1px solid rgba(239,68,68,.2)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.2);flex-shrink:0;animation:pulse 1.5s infinite"></div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:800;color:#f87171;margin-bottom:1px">Context filling up · ${fillPct}%</div>
+          <div style="font-size:10px;color:var(--text-3)">Start a new window to continue without losing momentum</div>
+        </div>
+        <button onclick="openStoryNewWindow('${storyName}','${boardName}')" style="padding:5px 12px;border-radius:8px;background:rgba(239,68,68,.12);border:1.5px solid rgba(239,68,68,.35);font-size:11px;font-weight:800;color:#f87171;cursor:pointer;white-space:nowrap;flex-shrink:0">⚡ Start New Window</button>
       </div>` : ''}
     </div>`;
 
@@ -7484,12 +7514,19 @@ function renderStoryView() {
           <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-top:3px">${(b.title||'Design').replace(/^[🖼]\s*/,'').slice(0,40)}</div>
         </div>`).join('')}
       </div>` : ''}
-      ${!ideas.length && !designs.length ? `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:11px">No ideas or designs yet</div>` : ''}
+      ${decisions.length ? `<div>
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:8px">✓ Decisions</div>
+        <div style="display:flex;flex-direction:column">
+          ${decisions.slice(0,5).map((d,i)=>`<div style="display:flex;gap:6px;font-size:10.5px;color:var(--text-2);line-height:1.4;padding:5px 0;${i>0?'border-top:1px solid rgba(255,255,255,.04)':''}"><span style="color:#22c55e;flex-shrink:0;margin-top:1px">✓</span><span>${d}</span></div>`).join('')}
+          ${decisions.length > 5 ? `<div style="font-size:10px;color:var(--text-3);padding:5px 0;border-top:1px solid rgba(255,255,255,.04);cursor:pointer">+ ${decisions.length-5} more decisions →</div>` : ''}
+        </div>
+      </div>` : ''}
+      ${!ideas.length && !designs.length && !decisions.length ? `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:11px">No ideas or designs yet</div>` : ''}
     </div>`;
 
   el.innerHTML = `
     ${storyHeaderHtml}
-    <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;align-items:start;column-span:all">
+    <div style="display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start;column-span:all">
       <div>${chronoHtml}</div>
       <div style="position:sticky;top:16px">${rightPanel}</div>
     </div>`;
@@ -9057,6 +9094,99 @@ function showSeedModal(rawText, projName, sections) {
 function closeSeedModal() {
   document.getElementById('seedModalBg').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════
+// CONTEXT FULL → START NEW WINDOW
+// Generates a carry-forward brief for a story and opens the seed modal
+// ═══════════════════════════════════
+function openStoryNewWindow(storyName, boardName) {
+  const all = mergedBlocks();
+  const storyBlocks = all.filter(b => b.task === storyName && b.project === boardName);
+  const sessions = storyBlocks.filter(b => b.type === 'session').sort((a,b2) => (b2.ts||0)-(a.ts||0));
+  const ideas = storyBlocks.filter(b => b.type === 'idea').sort((a,b2) => (b2.ts||0)-(a.ts||0));
+  const decisions = storyBlocks.reduce((acc,b) => acc.concat(b.decisions||[]), []);
+  const compactions = storyBlocks.filter(b => b.type === 'compaction');
+  const latestIntent = storyBlocks.filter(b => b.type==='intent'||b.type==='intentions').sort((a,b2) => (b2.ts||0)-(a.ts||0))[0];
+  const intentText = latestIntent ? (latestIntent.title||'').replace(/^[🎯◈]\s*/,'') : '';
+  const fillPct = Math.min(sessions.length * 12, 100);
+  const recentSessions = sessions.slice(0, 3);
+  const keyDecisions = decisions.slice(-8).reverse();
+  const topIdeas = ideas.slice(0, 5);
+
+  const sections = [];
+
+  sections.push({
+    label: `🧠 Story · ${boardName} / ${storyName.replace(/-/g,' ')}`,
+    rows: [
+      { icon: '📍', text: `Board: ${boardName} · Story: ${storyName.replace(/-/g,' ')}` },
+      { icon: '⚡', text: `${sessions.length} sessions · ${compactions.length} compactions · Context ${fillPct}% full` },
+      ...(intentText ? [{ icon: '🎯', text: `Intent: ${intentText}` }] : []),
+    ]
+  });
+
+  if (recentSessions.length) {
+    sections.push({
+      label: '🗂 Recent Sessions',
+      rows: recentSessions.map((s,i) => ({
+        icon: i === 0 ? '◉' : '○',
+        text: (s.title||'').replace(/^[🧠]\s*/,'').slice(0,100),
+        tag: i === 0 ? 'Latest' : ''
+      }))
+    });
+  }
+
+  if (keyDecisions.length) {
+    sections.push({
+      label: `✓ Key Decisions (${keyDecisions.length})`,
+      rows: keyDecisions.slice(0,6).map(d => ({ icon: '✓', text: String(d).slice(0,100) }))
+    });
+  }
+
+  if (topIdeas.length) {
+    sections.push({
+      label: `💡 Open Ideas (${topIdeas.length})`,
+      rows: topIdeas.slice(0,4).map(b => ({ icon: '💡', text: (b.title||'').replace(/^[💡]\s*/,'').slice(0,80) }))
+    });
+  }
+
+  sections.push({
+    label: '▶ Continue in New Window',
+    rows: [
+      { icon: '→', text: `This is a carry-forward brief for the ${storyName.replace(/-/g,' ')} story in ${boardName}.` },
+      { icon: '→', text: 'Continue exactly where we left off. You have full context above. Start by confirming what\'s next.' }
+    ]
+  });
+
+  const rawLines = [
+    `# Carry Forward: ${boardName} / ${storyName.replace(/-/g,' ')}`,
+    `> Context window at ${fillPct}% — starting a new chat to continue without loss`,
+    '',
+    `## Story: ${storyName.replace(/-/g,' ')}`,
+    `Board: ${boardName}`,
+    `Sessions: ${sessions.length} | Compactions: ${compactions.length}`,
+    intentText ? `Intent: ${intentText}` : '',
+    '',
+    '## Recent Sessions',
+    ...recentSessions.map((s,i) => `${i===0?'→':' '} ${(s.title||'').replace(/^[🧠]\s*/,'')}`),
+    '',
+    keyDecisions.length ? '## Key Decisions' : '',
+    ...keyDecisions.slice(0,8).map(d => `✓ ${d}`),
+    '',
+    topIdeas.length ? '## Open Ideas' : '',
+    ...topIdeas.slice(0,5).map(b => `💡 ${(b.title||'').replace(/^[💡]\s*/,'')}`),
+    '',
+    '---',
+    'Continue from here. You have full context above.',
+  ].filter(l => l !== null && l !== undefined).join('\n');
+
+  showSeedModal(rawLines, boardName, sections);
+
+  // Relabel copy button to reflect carry-forward intent
+  setTimeout(() => {
+    const btn = document.getElementById('seedModalCopyBtn');
+    if (btn) btn.innerHTML = '<span>Copy carry-forward brief</span><span>→</span>';
+  }, 50);
 }
 
 function execSeedCopy() {
@@ -13525,6 +13655,7 @@ function pollData() {
       buildRightPanel();
       autoScreenshot('live');
       setSyncIndicator('live');
+      updateClaudeUsagePill();
     } else {
       setSyncIndicator(serverUp ? 'idle' : 'offline');
     }
@@ -13785,6 +13916,8 @@ setTimeout(() => {
 pollData();
 // Render usage bar on load (re-renders whenever renderFeed is called via liveBlocks update)
 renderNavUsage();
+// Init Claude usage pill
+updateClaudeUsagePill();
 // First-time onboarding check
 checkFirstRun();
 
@@ -14127,6 +14260,57 @@ function clearApiKey() {
     }, 500);
   }
 })();
+
+// ── Claude usage pill — sessions today + context windows ──────────────────────
+function updateClaudeUsagePill() {
+  const label = document.getElementById('claudeUsageLabel');
+  const dot = document.getElementById('claudeUsageDot');
+  if (!label) return;
+
+  const all = mergedBlocks();
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+
+  // Count sessions and compactions today
+  const sessToday = all.filter(b => {
+    if (b.type !== 'session') return false;
+    const ts = String(b.ts || '');
+    if (ts.length === 8) return ts === todayStr;
+    try { const d = new Date(b.ts); return d.toDateString() === now.toDateString(); } catch(e) { return false; }
+  }).length;
+
+  const compToday = all.filter(b => {
+    if (b.type !== 'compaction') return false;
+    const ts = String(b.ts || '');
+    if (ts.length === 8) return ts === todayStr;
+    try { const d = new Date(b.ts); return d.toDateString() === now.toDateString(); } catch(e) { return false; }
+  }).length;
+
+  // Sprint totals
+  const sprintStart = new Date('2026-04-12');
+  const sprintSessions = all.filter(b => b.type === 'session' && new Date(b.ts||0) >= sprintStart).length;
+
+  // Build label
+  if (sessToday === 0) {
+    label.textContent = `0 today · ${sprintSessions}↑`;
+    if (dot) dot.style.background = 'rgba(16,163,127,.4)';
+  } else if (compToday > 0) {
+    label.textContent = `${sessToday} sessions · ${compToday}⚡`;
+    if (dot) { dot.style.background = '#f59e0b'; dot.style.boxShadow = '0 0 0 2px rgba(245,158,11,.2)'; }
+  } else {
+    label.textContent = `${sessToday} today`;
+    if (dot) { dot.style.background = '#10a37f'; dot.style.boxShadow = '0 0 0 2px rgba(16,163,127,.2)'; }
+  }
+
+  // If API key is set, also show a subtle indicator
+  const hasKey = !!localStorage.getItem('sb_anthropic_key');
+  const pill = document.getElementById('claudeUsagePill');
+  if (pill) {
+    pill.title = hasKey
+      ? `Claude: ${sessToday} sessions today · API key set — click for usage`
+      : `Claude: ${sessToday} sessions today · No API key — click to add one`;
+  }
+}
 
 // ── Local pattern-based extraction — no API key required ────────────────────
 function localExtractFromTranscript(text, sourceTitle) {
