@@ -5873,8 +5873,10 @@ function buildNav() {
   if (autoNavEl) {
     autoNavEl.innerHTML = SESSION_MANIFEST.automations.map(a => {
       const p2 = PROJ[a.board] || { color:'#6c63ff' };
-      return `<div style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:default;border-radius:6px;margin:1px 6px">
-        <span style="font-size:10px;flex-shrink:0">⚙</span>
+      const dotColor = a.status === 'ok' ? '#10b981' : a.status === 'needs-work' ? '#f59e0b' : '#6b7280';
+      const opacity = a.status === 'disabled' ? '0.45' : '1';
+      return `<div style="display:flex;align-items:center;gap:7px;padding:4px 10px 4px 12px;cursor:default;border-radius:6px;margin:1px 6px;opacity:${opacity}">
+        <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0;margin-top:1px"></div>
         <div style="flex:1;min-width:0">
           <div style="font-size:11px;font-weight:600;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
           <div style="font-size:9px;color:var(--text-3);opacity:.7">${a.schedule}</div>
@@ -9845,35 +9847,235 @@ function openAgentPreview(tab) {
   if (tab) activeAgentTab = tab;
   const feed = document.getElementById('feed');
   document.getElementById('agentBtn')?.classList.add('active');
-  // Update contextual overview strip immediately
   const _ovEl = document.getElementById('overviewStrip');
   if (_ovEl) { _ovEl.style.display = ''; renderOverviewStrip(); }
 
+  const readyCount  = AGENTS.filter(a => a.status === 'ready').length;
+  const runningCount = AGENTS.filter(a => a.status === 'running').length;
+  const setupCount  = AGENTS.filter(a => a.status === 'needs-setup').length;
+  const totalRuns   = AGENTS.reduce((s, a) => s + (a.runs||0), 0);
+
   feed.innerHTML = `
     <div class="agent-preview-wrap">
-      <div class="agent-preview-header">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <div style="font-size:24px">🤖</div>
-          <div>
-            <div class="agent-preview-title">Agents</div>
-          </div>
-          <div style="margin-left:auto;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(108,99,255,.1);color:var(--accent);border:1px solid rgba(108,99,255,.25)">Research preview</div>
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="font-size:22px">🤖</div>
+        <div>
+          <div style="font-size:17px;font-weight:900;color:var(--text)">Agents</div>
+          <div style="font-size:11px;color:var(--text-3)">Named multi-step workflows — run from here, output saved as blocks in the Board</div>
         </div>
-        <div class="agent-preview-sub">
-          AI agents that work with your storyboard — simulate user types, audit your website, and surface real opportunities.
+        <div style="margin-left:auto;font-size:9.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(108,99,255,.1);color:var(--accent);border:1px solid rgba(108,99,255,.25)">Research preview</div>
+      </div>
+
+      <!-- Stats bar -->
+      <div style="display:flex;gap:8px;margin-bottom:18px">
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 0;text-align:center;flex:1">
+          <div style="font-size:20px;font-weight:900;color:#22c55e;line-height:1">${readyCount}</div>
+          <div style="font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-top:2px">Ready</div>
+        </div>
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 0;text-align:center;flex:1">
+          <div style="font-size:20px;font-weight:900;color:#f59e0b;line-height:1">${runningCount}</div>
+          <div style="font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-top:2px">In Progress</div>
+        </div>
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 0;text-align:center;flex:1">
+          <div style="font-size:20px;font-weight:900;color:#ef4444;line-height:1">${setupCount}</div>
+          <div style="font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-top:2px">Needs Setup</div>
+        </div>
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 0;text-align:center;flex:1">
+          <div style="font-size:20px;font-weight:900;color:var(--text-3);line-height:1">${totalRuns}</div>
+          <div style="font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-top:2px">Total Runs</div>
         </div>
       </div>
 
-      <div class="agent-tabs">
-        <button class="agent-tab ${activeAgentTab==='personas'?'active':''}" onclick="switchAgentTab('personas')">👥 Persona Simulation</button>
-        <button class="agent-tab ${activeAgentTab==='audit'?'active':''}" onclick="switchAgentTab('audit')">🔎 Website Audit</button>
-        <button class="agent-tab ${activeAgentTab==='automations'?'active':''}" onclick="switchAgentTab('automations')">⚡ Automations</button>
+      <!-- Agent grid -->
+      <div id="agentGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        ${renderAgentCards()}
       </div>
 
-      <div id="agentTabContent">
-        ${activeAgentTab === 'personas' ? renderPersonasTab() : renderAuditTab()}
+      <!-- Footer note -->
+      <div style="margin-top:18px;padding:13px 16px;border:1px dashed var(--border);border-radius:10px;font-size:11.5px;color:var(--text-3);line-height:1.7">
+        <strong style="color:var(--text-2)">Agent = named multi-step workflow with inputs.</strong> These live in your /AI folder. Storyboard surfaces them with input forms so you just type the input and press Run. Every run auto-creates a block in the Board.
       </div>
     </div>`;
+}
+
+// ─── Agent definitions ────────────────────────────────────────────────────────
+const AGENTS = [
+  {
+    id: 'agency-audit',
+    name: 'Agency Audit Agent',
+    icon: '◈',
+    color: '#6366f1',
+    board: 'Opero Agency',
+    status: 'ready',
+    runs: 12,
+    lastRun: 'Apr 14',
+    desc: 'Audits any real estate agency website → competitive analysis → branded PDF pitch deck. Steps: crawl site → check SEO + tech → competitor scan → generate PDF → save to /Opero.',
+    pipeline: '→ crawl → SEO check → competitors → PDF → <span style="color:#22c55e;font-weight:700">save to board</span>',
+    fullWidth: true,
+    inputs: [
+      { id: 'agentAuditUrl',  label: 'Agency website URL',      type: 'url',  placeholder: 'https://foxtons.co.uk',  flex: 1 },
+      { id: 'agentAuditName', label: 'Agency name (optional)',  type: 'text', placeholder: 'Foxtons',                flex: 1 },
+    ],
+    outputNote: 'Output → PDF saved to /AI/AGENCY/Opero-Agency/ + block created in Opero board',
+    btnLabel: 'Run now',
+    btnAction: 'runAgentAudit()',
+  },
+  {
+    id: 'content-scout',
+    name: 'Content Scout + Writer',
+    icon: '🏗️',
+    color: '#10b981',
+    board: 'Costa Blanca',
+    status: 'running',
+    runs: 19,
+    nextRun: 'Apr 21',
+    desc: 'RSS + news → trending topics → approved → blog article drafted → Airtable. Runs Mon–Fri 9:06.',
+    runningLabel: 'Running now · scouting 14 sources',
+    btnLabel: 'Run now too',
+    btnAction: "triggerAutomation('auto-nb-blog')",
+  },
+  {
+    id: 'hh-fb-share',
+    name: 'FB Group Sharing',
+    icon: '🏠',
+    color: '#B39960',
+    board: 'Hansson Hertzell',
+    status: 'ready',
+    runs: 147,
+    lastRun: 'Today 10:08',
+    desc: 'Posts latest H&H Facebook page content to 88 groups across 11 languages. Reads BRIEF.md, groups.json, LOG.md.',
+    pipeline: '→ read brief → post to 88 groups → log',
+    btnLabel: 'Run now',
+    btnAction: "triggerAutomation('auto-hh-fb-am')",
+  },
+  {
+    id: 'outreach-drafts',
+    name: 'Daily Client Outreach',
+    icon: '📧',
+    color: '#B39960',
+    board: 'Hansson Hertzell',
+    status: 'ready',
+    runs: 31,
+    lastRun: 'Today',
+    desc: 'Creates 10 personalised Gmail drafts per day from Airtable CRM — language-matched with blog links and property highlights.',
+    pipeline: '→ Airtable CRM → 10 drafts → Gmail',
+    btnLabel: 'Run now',
+    btnAction: "triggerAutomation('auto-hh-drafts')",
+  },
+];
+
+function renderAgentCards() {
+  return AGENTS.map((a, idx) => {
+    const p = PROJ[a.board] || { color: a.color, icon: '◈' };
+    const col = a.color || p.color;
+    const span = a.fullWidth ? 'grid-column:1/-1' : '';
+
+    // Status badge
+    const badge = a.status === 'ready'
+      ? `<div style="font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(34,197,94,.12);color:#22c55e;text-transform:uppercase;letter-spacing:.4px">✓ Ready</div>`
+      : a.status === 'running'
+      ? `<div style="font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(245,158,11,.12);color:#f59e0b;text-transform:uppercase;letter-spacing:.4px">🚧 Running</div>`
+      : `<div style="font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(239,68,68,.1);color:#ef4444;text-transform:uppercase;letter-spacing:.4px">⚠ Needs setup</div>`;
+
+    // Run meta
+    const meta = a.lastRun ? `${a.runs} runs · last: ${a.lastRun}` : a.nextRun ? `${a.runs} runs · next: ${a.nextRun}` : '';
+
+    // Bottom action area
+    let actionArea = '';
+    if (a.status === 'running') {
+      actionArea = `
+        <div style="background:rgba(245,158,11,.05);border:1.5px solid rgba(245,158,11,.15);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:8px">
+          <div style="width:7px;height:7px;border-radius:50%;background:#f59e0b;animation:pulse 1.8s ease-in-out infinite;flex-shrink:0"></div>
+          <div style="font-size:11px;color:#d97706">${a.runningLabel || 'Running now…'}</div>
+          <button onclick="${a.btnAction}" style="margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;background:rgba(245,158,11,.1);color:#d97706;cursor:pointer;border:1px solid rgba(245,158,11,.2)">▶ ${a.btnLabel}</button>
+        </div>`;
+    } else if (a.status === 'needs-setup') {
+      actionArea = `
+        <div style="background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.15);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:8px">
+          <span>⚠</span>
+          <div style="font-size:11px;color:#ef4444">Missing: ANTHROPIC_API_KEY in /storyboard/config.json</div>
+          <button style="margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;background:rgba(239,68,68,.1);color:#ef4444;cursor:pointer;border:1px solid rgba(239,68,68,.2)">Fix →</button>
+        </div>`;
+    } else if (a.inputs && a.inputs.length) {
+      // Form with inputs
+      const inputsHtml = a.inputs.map(inp => `
+        <div style="flex:${inp.flex||1}">
+          <div style="font-size:10px;font-weight:700;color:var(--text-3);margin-bottom:4px">${inp.label}</div>
+          <input id="${inp.id}" type="${inp.type||'text'}" placeholder="${inp.placeholder||''}"
+            style="width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text);box-sizing:border-box;font-family:inherit"
+            onfocus="this.style.borderColor='${col}'" onblur="this.style.borderColor=''">
+        </div>`).join('');
+      actionArea = `
+        <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:8px">▶ Run Agent</div>
+          <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+            ${inputsHtml}
+            <button onclick="${a.btnAction}" style="background:${col};color:#fff;font-size:12px;font-weight:800;padding:9px 18px;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0;border:none">▶ ${a.btnLabel}</button>
+          </div>
+          ${a.outputNote ? `<div style="font-size:10px;color:var(--text-3);margin-top:6px">${a.outputNote}</div>` : ''}
+        </div>`;
+    } else {
+      // Simple run button
+      actionArea = `
+        <div style="display:flex;align-items:center;gap:10px">
+          ${meta ? `<span style="font-size:10px;color:var(--text-3)">${meta}</span>` : ''}
+          <button onclick="${a.btnAction}" style="margin-left:auto;background:${col};color:#fff;font-size:11px;font-weight:800;padding:7px 16px;border-radius:8px;cursor:pointer;border:none">▶ ${a.btnLabel}</button>
+        </div>`;
+    }
+
+    return `
+      <div style="${span};background:var(--white);border:1.5px solid ${col}28;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)"
+        onmouseover="this.style.borderColor='${col}55'" onmouseout="this.style.borderColor='${col}28'">
+        <div style="height:3px;background:${col}"></div>
+        <div style="padding:${a.fullWidth?'14px 16px':'13px 14px'}">
+          <!-- Header row -->
+          <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+            <div style="width:${a.fullWidth?36:32}px;height:${a.fullWidth?36:32}px;border-radius:10px;background:${col}15;border:1.5px solid ${col}30;display:flex;align-items:center;justify-content:center;font-size:${a.fullWidth?17:14}px;flex-shrink:0">${a.icon}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap">
+                <div style="font-size:${a.fullWidth?14:13}px;font-weight:800;color:var(--text)">${a.name}</div>
+                ${badge}
+                ${meta && a.fullWidth ? `<div style="font-size:9px;font-weight:700;color:var(--text-3);margin-left:auto">${meta}</div>` : ''}
+              </div>
+              <div style="font-size:${a.fullWidth?11.5:11}px;color:var(--text-2);line-height:1.5">${a.desc}</div>
+            </div>
+          </div>
+          <!-- Board + pipeline -->
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:${col}15;color:${col};border:1px solid ${col}30">${p.icon||'◈'} ${a.board}</span>
+            ${a.pipeline ? `<span style="font-size:10px;color:var(--text-3)">${a.pipeline}</span>` : ''}
+            ${meta && !a.fullWidth ? `<span style="font-size:9.5px;color:var(--text-3);margin-left:auto">${meta}</span>` : ''}
+          </div>
+          <!-- Action area -->
+          ${actionArea}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function runAgentAudit() {
+  const url  = document.getElementById('agentAuditUrl')?.value?.trim();
+  const name = document.getElementById('agentAuditName')?.value?.trim();
+  if (!url) { document.getElementById('agentAuditUrl')?.focus(); return; }
+  // Expand the card into audit view — show the audit form inline
+  const grid = document.getElementById('agentGrid');
+  if (!grid) return;
+  grid.innerHTML = `
+    <div style="grid-column:1/-1">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <button onclick="openAgentPreview()" style="font-size:11px;color:var(--text-3);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer">← Back to agents</button>
+        <span style="font-size:13px;font-weight:800;color:var(--text)">◈ Agency Audit Agent</span>
+      </div>
+      <div id="agentTabContent">${renderAuditTab()}</div>
+    </div>`;
+  setTimeout(() => {
+    const u = document.getElementById('auditUrlInput');
+    const n = document.getElementById('auditNameInput');
+    if (u && url) u.value = url;
+    if (n && name) n.value = name;
+    runAudit();
+  }, 50);
 }
 
 function switchAgentTab(tab) {
