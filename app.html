@@ -5705,12 +5705,9 @@ function navClick(f) {
   // switching between boards keeps you in Journey/Grid/Board/etc.
   // Never stay in 'story' view when clicking a board — story is scoped to a task window.
   if (f !== 'All') {
-    const stayViews = ['timeline', 'pipeline', 'list', 'grid', 'board', 'journey'];
-    const comingFromAll = activeFilter === 'All';
-    if (comingFromAll || !stayViews.includes(activeView)) {
-      setView('profile');
-      activeStoryName = null; // clear story context when navigating to board
-    }
+    // Clicking a board ALWAYS goes to profile view — no exceptions.
+    setView('profile');
+    activeStoryName = null;
   }
   // Going back to "All work" from profile → switch to grid (the all-projects overview)
   if (f === 'All' && (activeView === 'profile' || activeView === 'canvas')) setView('grid');
@@ -7278,45 +7275,67 @@ function renderStoryView() {
   // ── STORY · CHRONOLOGICAL — sessions as spine ─────────────────────
   const sectionLabel = txt => `<div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);padding:12px 0 8px;display:flex;align-items:center;gap:8px">◉ ${txt}<span style="flex:1;height:1px;background:var(--border);margin-left:4px"></span></div>`;
 
-  const chronoHtml = sessions.length ? `
-    ${sectionLabel('Story · Chronological')}
-    <div style="display:flex;flex-direction:column;gap:12px">
-      ${sessions.map(s => {
-        const sDec = s.decisions || [];
-        const sIdeas = s.ideas || [];
-        const hasShot = s.screenshot && s.screenshot !== '';
-        return `<div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:border-color .12s" onmouseover="this.style.borderColor='${p.color}55'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
-          <div style="height:2px;background:${p.color}"></div>
-          <div style="padding:14px 16px">
-            <!-- Session header -->
-            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:${hasShot||sDec.length||sIdeas.length?'12px':'0'}">
-              <div style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;margin-top:4px"></div>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:${p.color};margin-bottom:3px">Session · ${fmtTs(s.ts)}</div>
-                <div style="font-size:14px;font-weight:800;color:var(--text);line-height:1.35">${(s.title||'').replace(/^[🧠]\s*/,'')}</div>
-              </div>
-              <button onclick="openDetail('${s.id}')" style="padding:4px 10px;border-radius:6px;background:${p.color}12;border:1px solid ${p.color}30;font-size:10px;font-weight:700;color:${p.color};cursor:pointer;flex-shrink:0">Open →</button>
-            </div>
-            <!-- Screenshot -->
-            ${hasShot ? `<div style="margin-bottom:12px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border)">
-              <img src="${s.screenshot}" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.style.display='none'">
-              ${s.screenshotLabel ? `<div style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--text-2);background:var(--bg)">${s.screenshotLabel}</div>` : ''}
-            </div>` : ''}
-            <!-- Decisions -->
-            ${sDec.length ? `<div style="margin-bottom:10px">
-              ${sDec.map(d => `<div style="display:flex;gap:7px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-                <span style="color:#22c55e;font-size:11px;font-weight:900;flex-shrink:0;margin-top:1px">✓</span>
-                <span style="font-size:12px;color:var(--text);line-height:1.4">${String(d)}</span>
-              </div>`).join('')}
-            </div>` : ''}
-            <!-- Ideas as pills -->
-            ${sIdeas.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px">
-              ${sIdeas.map(idea => `<span style="font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2)">💡 ${typeof idea==='string'?idea.slice(0,50):(idea.title||'').slice(0,50)}</span>`).join('')}
-            </div>` : ''}
+  // Build compactions for this story
+  const storyCompactions = storyBlocks.filter(b => b.type === 'compaction').sort((a,b2)=>(a.ts||0)-(b2.ts||0));
+  const storyJourneyItems = [
+    ...sessions.map(s => ({ type:'session', block:s })),
+    ...storyCompactions.map(c => ({ type:'compaction', block:c }))
+  ].sort((a,b2) => (a.block.ts||0) - (b2.block.ts||0));
+
+  let spineHtml = '';
+  storyJourneyItems.forEach((item, idx) => {
+    const isLast = idx === storyJourneyItems.length - 1;
+    if (item.type === 'compaction') {
+      spineHtml += `
+        <div style="display:flex;gap:0;align-items:center;margin:2px 0">
+          <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0">
+            <div style="width:2px;height:12px;background:linear-gradient(${p.color}44,transparent)"></div>
+            <div style="font-size:13px;line-height:1">⚡</div>
+            <div style="width:2px;height:12px;background:linear-gradient(transparent,${p.color}44)"></div>
+          </div>
+          <div style="flex:1;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:7px 13px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:10.5px;font-weight:800;color:#ef4444">Context Window Full — Compaction</span>
+            <span style="font-size:9px;color:var(--text-3)">${fmtTs(item.block.ts)}</span>
           </div>
         </div>`;
-      }).join('')}
-    </div>` : `<div style="padding:40px;text-align:center;color:var(--text-3);font-size:12px">No sessions captured for this story yet.</div>`;
+    } else {
+      const s = item.block;
+      const sDec = (s.decisions || []).slice(0, 4);
+      const hasShot = s.screenshot && s.screenshot !== '';
+      const thumb = hasShot ? `<div style="width:90px;height:56px;border-radius:6px;border:1px solid ${p.color}22;flex-shrink:0;overflow:hidden"><img src="${s.screenshot}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display='none'"></div>` : '';
+      const ideaBlocks = storyBlocks.filter(b => b.type==='idea' && b.ts === s.ts).slice(0,3);
+      const ideaPills = ideaBlocks.map(idea=>`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:#f59e0b;font-size:10px;font-weight:600;cursor:pointer" onclick="openDetail('${idea.id}')">💡 ${(idea.title||'').replace('💡 ','').slice(0,40)}</span>`).join('');
+
+      spineHtml += `
+        <div style="display:flex;gap:0;align-items:stretch" onmouseover="this.querySelector('.sc').style.borderColor='${p.color}55'" onmouseout="this.querySelector('.sc').style.borderColor='var(--border)'">
+          <!-- spine -->
+          <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;padding-top:16px">
+            <div style="width:10px;height:10px;border-radius:50%;background:${p.color};border:2px solid var(--bg);box-shadow:0 0 0 1.5px ${p.color};flex-shrink:0;z-index:1"></div>
+            ${!isLast ? `<div style="width:2px;flex:1;background:linear-gradient(${p.color}44,${p.color}22);min-height:24px;margin-top:4px"></div>` : ''}
+          </div>
+          <!-- card -->
+          <div class="sc" style="flex:1;margin:8px 0 8px 6px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;transition:border-color .12s;cursor:pointer" onclick="openDetail('${s.id}')">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:${p.color}">Session · ${fmtTs(s.ts)}</span>
+              <button onclick="event.stopPropagation();openDetail('${s.id}')" style="padding:3px 9px;border-radius:5px;background:${p.color}12;border:1px solid ${p.color}28;font-size:9.5px;font-weight:700;color:${p.color};cursor:pointer">Open →</button>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              ${thumb}
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:7px">${(s.title||'').replace(/^[🧠]\s*/,'')}</div>
+                ${sDec.map(d=>`<div style="display:flex;align-items:flex-start;gap:6px;padding:2px 0"><span style="color:#22c55e;font-size:11px;flex-shrink:0;margin-top:1px">✓</span><span style="font-size:11px;color:var(--text-2);line-height:1.4">${d}</span></div>`).join('')}
+              </div>
+            </div>
+            ${ideaPills ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">${ideaPills}</div>` : ''}
+          </div>
+        </div>`;
+    }
+  });
+
+  const chronoHtml = storyJourneyItems.length ? `
+    ${sectionLabel('Story · Chronological')}
+    <div style="display:flex;flex-direction:column">${spineHtml}</div>
+  ` : `<div style="padding:40px;text-align:center;color:var(--text-3);font-size:12px">No sessions captured for this story yet.</div>`;
 
   // ── Right panel: Ideas + Designs ──────────────────────────────────
   const rightPanel = `
