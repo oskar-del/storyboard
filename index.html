@@ -359,8 +359,8 @@
     </div>
     <div class="stat-divider"></div>
     <div class="stat">
-      <div class="stat-num">Day 7</div>
-      <div class="stat-label">Of a 10-day public sprint</div>
+      <div class="stat-num" style="color:#4ade80">Day 10</div>
+      <div class="stat-label">Sprint complete ✓ — shipped daily</div>
     </div>
   </div>
 </div>
@@ -1336,16 +1336,40 @@
       </div>
     </div>
 
-    <!-- Days 8-10 placeholder -->
+    <!-- Day 8-9 -->
+    <div style="display:grid;grid-template-columns:56px 1fr;gap:0;position:relative;z-index:1;margin-bottom:24px">
+      <div style="display:flex;flex-direction:column;align-items:center;padding-top:2px">
+        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6c63ff,#818cf8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">8</div>
+        <div style="flex:1;width:1px;background:linear-gradient(to bottom,rgba(108,99,255,0.4),var(--border));margin-top:6px"></div>
+      </div>
+      <div style="padding:0 0 0 16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#818cf8;margin-bottom:6px">Apr 21</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text)">Days 8–9 — Overnight sweep · Story view · 22 bugs fixed</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.7;margin-top:8px;margin-bottom:12px">Autonomous overnight session fixed 22 bugs and shipped the full Story view (T7). When you click any story in the sidebar, you get a dedicated deep-dive: a chronological spine of every session, with compaction chapter breaks, context fill tape, and a right panel showing all ideas, designs, and decisions from that story. Sidebar nav was also corrected to the right order: Stories → Boards → Automations.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <span style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#818cf8">Story view (T7)</span>
+          <span style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#818cf8">22 bugs fixed</span>
+          <span style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#818cf8">Sidebar nav order</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 10 — finale -->
     <div style="display:grid;grid-template-columns:56px 1fr;gap:0;position:relative;z-index:1">
       <div style="display:flex;flex-direction:column;align-items:center;padding-top:2px">
-        <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.04);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--muted);flex-shrink:0">8</div>
+        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">✓</div>
       </div>
-      <div style="padding:8px 0 0 16px">
-        <div style="font-size:13px;color:var(--muted);line-height:1.6">
-          Days 8–10 are still being built.
-          <a href="#waitlist" style="color:var(--accent);font-weight:600;text-decoration:none"> Get notified as they ship →</a>
+      <div style="padding:0 0 0 16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4ade80;margin-bottom:6px">Apr 21 · Sprint complete</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text)">Day 10 — Visual spec complete · Context Full CTA · Cross-session tracking</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.7;margin-top:8px;margin-bottom:12px">Final sprint day. All 8 views match the design spec. The <strong style="color:var(--text)">Context Full → Start New Window</strong> CTA detects when a story's context is filling up and offers one-click carry-forward — it pre-builds the briefing (sessions, decisions, ideas, intent) and opens the seed modal ready to paste into any AI. The <strong style="color:var(--text)">cross-session bridge</strong> means any Cowork session can now log into the same dashboard via a single Python call or HTTP POST — Storyboard sees all your work, not just the session it's open in.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#4ade80">Context Full CTA</span>
+          <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#4ade80">Cross-session bridge</span>
+          <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#4ade80">Design spec complete</span>
+          <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#4ade80">Sprint score 99</span>
         </div>
+        <div style="font-size:11px;color:var(--muted2)"><strong style="color:var(--text)">Day 10 insight:</strong> 10 days. One file. Zero frameworks. The entire dashboard — 14,500+ lines, 8 views, live MCP data, cross-session tracking — is a single HTML file you can open in any browser. The constraint was the point.</div>
       </div>
     </div>
 </section>

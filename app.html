@@ -3575,21 +3575,10 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
         <div id="syncDot" style="width:6px;height:6px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s"></div>
         <span id="syncLabel">—</span>
       </div>
-      <!-- Sprint progress pill -->
+      <!-- Sprint progress pill — bars rendered dynamically by updateSprintPill() -->
       <div id="sprintPill" title="10-day build-in-public sprint" style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(124,107,255,0.1);border:1px solid rgba(124,107,255,0.25);cursor:default">
-        <div style="display:flex;gap:2px;align-items:center">
-          <div style="width:4px;height:12px;border-radius:2px;background:#6c63ff"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:#6c63ff"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-          <div style="width:4px;height:12px;border-radius:2px;background:rgba(124,107,255,0.2)"></div>
-        </div>
-        <span id="topbarDayPill" style="font-size:10px;font-weight:700;color:#6c63ff">Day 3/10</span>
+        <div id="sprintBars" style="display:flex;gap:2px;align-items:center"></div>
+        <span id="topbarDayPill" style="font-size:10px;font-weight:700;color:#6c63ff">—</span>
       </div>
       <!-- Claude activity widget — sessions today + context windows -->
       <div id="claudeUsagePill" onclick="openSettings()" title="Claude activity today — click for settings" style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:rgba(16,163,127,.07);border:1px solid rgba(16,163,127,.18);cursor:pointer;transition:all .15s" onmouseenter="this.style.background='rgba(16,163,127,.14)'" onmouseleave="this.style.background='rgba(16,163,127,.07)'">
@@ -6662,6 +6651,18 @@ function renderJournalView(projName) {
       ].join('');
 
       const pbg = projBg(projName);
+
+      // Compaction blocks render as red divider rows (T5 spec) — not as journal entries
+      if (b.type === 'compaction') {
+        const sessCarried = b.summary ? b.summary.match(/(\d+)\s*session/i)?.[1] : null;
+        html += `<div onclick="openDetail('${b.id}')" style="display:flex;align-items:center;gap:10px;padding:8px 13px;border-radius:8px;margin-bottom:6px;background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.18);cursor:pointer" onmouseover="this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.borderColor='rgba(239,68,68,.18)'">
+          <div style="width:3px;height:24px;border-radius:2px;background:#ef4444;flex-shrink:0"></div>
+          <span style="font-size:11px;font-weight:800;color:#ef4444">⚡ Compaction · ${b.date||''}</span>
+          <span style="font-size:11px;color:var(--text-3)">Context reset · automatic${sessCarried?` · ${sessCarried} sessions carried forward`:''}</span>
+        </div>`;
+        return;
+      }
+
       html += `<div class="journal-entry" style="--block-color:${p.color};--block-bg:${pbg}" onclick="openDetail('${b.id}')">
         <div class="journal-entry-left">
           <div class="journal-entry-icon" style="background:${pbg};border-color:${p.color}44">${typeIcon}</div>
@@ -6830,23 +6831,90 @@ function renderFeed() {
 
   // ── BOARD VIEW ──
   if (activeView === 'board') {
-    // Group by project, keeping PROJ order
-    const projects = activeFilter === 'All' ? Object.keys(PROJ) : [activeFilter];
-    el.innerHTML = headerHtml + projects.map(projName => {
-      const p = PROJ[projName];
-      const projBlocks = blocks.filter(b => b.project === projName);
-      if (!projBlocks.length) return '';
-      return `<div class="board-col" style="--col-color:${p.color};--col-bg:${projBg(projName)}">
-        <div class="board-col-header">
-          <span class="board-col-icon">${p.icon}</span>
-          <span class="board-col-name">${projName}</span>
-          <span class="board-col-count">${projBlocks.length}</span>
-        </div>
-        <div class="board-col-blocks">
-          ${projBlocks.map((b,i) => blockHTML(b, i)).join('')}
-        </div>
+    // T3 spec: Board by Task Window
+    // All view → one column per project
+    // Project view → one column per task/story within that project
+    const TYPE_ICON_MINI = { session:'🧠', idea:'💡', decision:'✓', compaction:'⚡', discussion:'💬', intent:'◈', design:'🖼', rejection:'✕' };
+
+    const miniBlock = (b, projColor) => {
+      const icon = TYPE_ICON_MINI[b.type] || '◈';
+      const typeLabel = (TYPE_LABELS[b.type] || b.type || 'block').replace(/^[^\w]/,'').trim();
+      const dCount = b.decisions?.length || 0;
+      return `<div onclick="openDetail('${b.id}')" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:11px;font-weight:600;color:var(--text-2);cursor:pointer;transition:border-color .12s;line-height:1.4" onmouseover="this.style.borderColor='${projColor}44'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:3px">${icon} ${typeLabel}${dCount ? ` · ✓${dCount}` : ''}</div>
+        <div style="overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${(b.title||'Untitled').replace(/^[🧠💡✓⚡💬◈🖼✕]\s*/,'')}</div>
       </div>`;
-    }).join('');
+    };
+
+    const contextTape = (sessCount, projColor) => {
+      const fill = Math.min(sessCount * 12, 100);
+      const fillColor = fill > 80 ? '#ef4444' : fill > 55 ? '#f59e0b' : projColor;
+      return `<div style="height:4px;display:flex;width:100%;border-radius:2px 2px 0 0;overflow:hidden">
+        <div style="width:${fill}%;background:${fillColor};transition:width .3s"></div>
+        <div style="flex:1;background:rgba(255,255,255,.06)"></div>
+      </div>`;
+    };
+
+    if (activeFilter === 'All') {
+      // All projects — one column per project
+      const projects = Object.keys(PROJ);
+      el.innerHTML = `<div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-start">` +
+        projects.map(projName => {
+          const p = PROJ[projName] || { color:'#6c63ff', icon:'◈' };
+          const projBlocks = blocks.filter(b => b.project === projName);
+          if (!projBlocks.length) return '';
+          const sessCount = projBlocks.filter(b=>b.type==='session').length;
+          const fill = Math.min(sessCount*12,100);
+          const fillColor = fill>80?'#ef4444':fill>55?'#f59e0b':p.color;
+          return `<div style="flex:0 0 230px;background:var(--white);border:1.5px solid ${fill>80?'rgba(239,68,68,.25)':'var(--border)'};border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+            ${contextTape(sessCount, p.color)}
+            <div style="padding:11px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px">
+              <span style="font-size:13px">${p.icon}</span>
+              <span style="font-size:12px;font-weight:800;flex:1;color:var(--text)">${projName}</span>
+              <span style="font-size:11px;font-weight:800;color:${fillColor}">${fill}%</span>
+            </div>
+            <div style="padding:9px;display:flex;flex-direction:column;gap:6px">
+              ${projBlocks.slice(0,5).map(b => miniBlock(b, p.color)).join('')}
+              ${projBlocks.length>5?`<div style="font-size:10px;color:var(--text-3);padding:5px 8px;border:1px dashed rgba(255,255,255,.08);border-radius:7px;text-align:center;cursor:pointer" onclick="navClick('${projName}')">+${projBlocks.length-5} more →</div>`:''}
+            </div>
+          </div>`;
+        }).join('') + `</div>`;
+    } else {
+      // Project-specific — one column per task/story (T3 spec)
+      const p = PROJ[activeFilter] || { color:'#6c63ff', icon:'◈' };
+      const projBlocks = blocks.filter(b => b.project === activeFilter);
+      // Group by task
+      const taskMap = {};
+      projBlocks.forEach(b => {
+        const t = b.task || '(general)';
+        if (!taskMap[t]) taskMap[t] = [];
+        taskMap[t].push(b);
+      });
+      const tasks = Object.keys(taskMap).sort((a,b2) => (taskMap[b2][0].ts||0)-(taskMap[a][0].ts||0));
+
+      el.innerHTML = headerHtml + `<div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-start">` +
+        tasks.map(taskName => {
+          const taskBlocks = taskMap[taskName].sort((a,b2)=>(b2.ts||0)-(a.ts||0));
+          const sessCount = taskBlocks.filter(b=>b.type==='session').length;
+          const fill = Math.min(sessCount*12,100);
+          const fillColor = fill>80?'#ef4444':fill>55?'#f59e0b':p.color;
+          const TICONS_B = {'dashboard':'🖥','landing-page':'🌐','mcp-server':'⚡','chrome-extension':'🔌','strategy':'🧠','context-visual':'📊','valuation-engine':'📊','audit-pipeline':'📋'};
+          const tIcon = TICONS_B[taskName] || '◈';
+          return `<div style="flex:0 0 230px;background:var(--white);border:1.5px solid ${fill>80?'rgba(239,68,68,.25)':'var(--border)'};border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+            ${contextTape(sessCount, p.color)}
+            <div style="padding:11px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px">
+              <span style="font-size:13px">${tIcon}</span>
+              <span style="font-size:12px;font-weight:800;flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${taskName.replace(/-/g,' ')}</span>
+              <span style="font-size:11px;font-weight:800;color:${fillColor}">${fill}%</span>
+            </div>
+            <div style="padding:9px;display:flex;flex-direction:column;gap:6px">
+              ${taskBlocks.slice(0,6).map(b => miniBlock(b, p.color)).join('')}
+              ${taskBlocks.length>6?`<div style="font-size:10px;color:var(--text-3);padding:5px 8px;border:1px dashed rgba(255,255,255,.08);border-radius:7px;text-align:center;cursor:pointer">+${taskBlocks.length-6} more</div>`:''}
+            </div>
+          </div>`;
+        }).join('') + `</div>
+        <div style="margin-top:18px;padding:13px 16px;border:1px dashed rgba(255,255,255,.08);border-radius:10px;font-size:12px;color:var(--text-3);line-height:1.7">🔮 <strong style="color:var(--text-2)">Multi-AI future:</strong> When ChatGPT / Gemini connect, their task windows appear here with their own AI badge. One board, all your active contexts.</div>`;
+    }
     return;
   }
 
@@ -13916,8 +13984,9 @@ setTimeout(() => {
 pollData();
 // Render usage bar on load (re-renders whenever renderFeed is called via liveBlocks update)
 renderNavUsage();
-// Init Claude usage pill
+// Init Claude usage pill + sprint pill
 updateClaudeUsagePill();
+updateSprintPill();
 // First-time onboarding check
 checkFirstRun();
 
@@ -14260,6 +14329,44 @@ function clearApiKey() {
     }, 500);
   }
 })();
+
+// ── Sprint pill — dynamic bars based on current sprint day ────────────────────
+function updateSprintPill() {
+  const SPRINT_START = new Date('2026-04-12');
+  const SPRINT_DAYS  = 10;
+  const now = new Date();
+  const dayNum = Math.min(SPRINT_DAYS, Math.max(1, Math.ceil((now - SPRINT_START) / 86400000)));
+  const isComplete = dayNum >= SPRINT_DAYS;
+
+  // Bars
+  const barsEl = document.getElementById('sprintBars');
+  if (barsEl) {
+    barsEl.innerHTML = Array.from({length: SPRINT_DAYS}, (_, i) => {
+      const done    = i < dayNum - 1;
+      const today   = i === dayNum - 1;
+      const bg = done    ? '#6c63ff'
+               : today   ? '#a78bfa'
+               :            'rgba(124,107,255,0.18)';
+      const h  = today ? '16px' : '12px';
+      return `<div style="width:4px;height:${h};border-radius:2px;background:${bg};transition:height .2s"></div>`;
+    }).join('');
+  }
+
+  // Label
+  const label = document.getElementById('topbarDayPill');
+  if (label) {
+    label.textContent = isComplete ? '✓ Sprint done' : `Day ${dayNum}/10`;
+    label.style.color = isComplete ? '#4ade80' : '#a78bfa';
+  }
+
+  // Pill border color on completion
+  const pill = document.getElementById('sprintPill');
+  if (pill && isComplete) {
+    pill.style.borderColor = 'rgba(74,222,128,0.35)';
+    pill.style.background  = 'rgba(74,222,128,0.08)';
+    pill.title = '10-day sprint complete ✓';
+  }
+}
 
 // ── Claude usage pill — sessions today + context windows ──────────────────────
 function updateClaudeUsagePill() {
