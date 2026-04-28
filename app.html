@@ -3794,10 +3794,10 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
     <div class="feed-toolbar" id="feedToolbar">
       <!-- Time period toggle -->
       <div class="period-tabs" id="periodTabs">
-        <button class="period-tab on" onclick="setPeriod('all',this)">All time</button>
+        <button class="period-tab" onclick="setPeriod('all',this)">All time</button>
         <button class="period-tab" onclick="setPeriod('month',this)">This month</button>
         <button class="period-tab" onclick="setPeriod('week',this)">This week</button>
-        <button class="period-tab" onclick="setPeriod('today',this)">Today</button>
+        <button class="period-tab on" onclick="setPeriod('today',this)">Today</button>
       </div>
       <!-- View mode toggle -->
       <div class="view-tabs">
@@ -5462,7 +5462,7 @@ let skillsData = {};  // keyed by skill name → { score, grade, dimensions, wor
 // STATE
 // ═══════════════════════════════════
 let activeFilter = 'All';
-let activePeriod = 'all';
+let activePeriod = 'today'; // open on Today feed by default
 let activeView = 'grid';
 let activeTask = null; // task window filter — null = all tasks
 let navCollapsed = false;
@@ -6808,8 +6808,13 @@ function renderFeed() {
 
   // Project header when a specific project is selected
   const headerHtml = (activeFilter !== 'All') ? renderProjectHeader(activeFilter) : '';
-  // Always sort newest first — so new blocks appear at the top of the flow
-  const blocks = [...raw].sort((a,b) => (b.ts||0) - (a.ts||0));
+  // Always sort newest first — ts for date, _logged for intraday precision
+  const _byRecency = (a,b) => {
+    const td = (b.ts||0) - (a.ts||0);
+    if (td !== 0) return td;
+    return (new Date(b._logged||0)) - (new Date(a._logged||0));
+  };
+  const blocks = [...raw].sort(_byRecency);
 
   // Featured block logic (All view only): most recent real block from each of
   // the top 3 most active projects gets a visual "featured" treatment
@@ -7987,15 +7992,16 @@ function renderTodayDigest(todayBlocks, allBaseBlocks) {
   const dayName = now.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' });
 
   // Gather all today's decisions from both block arrays and session block arrays
-  const sessions   = todayBlocks.filter(b => b.type === 'session').sort((a,b)=>(b.ts||0)-(a.ts||0));
-  const ideas      = todayBlocks.filter(b => b.type === 'idea').sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const _recency = (a,b) => { const td=(b.ts||0)-(a.ts||0); return td!==0?td:(new Date(b._logged||0))-(new Date(a._logged||0)); };
+  const sessions   = todayBlocks.filter(b => b.type === 'session').sort(_recency);
+  const ideas      = todayBlocks.filter(b => b.type === 'idea').sort(_recency);
   const decisions  = []; // flat list: { text, blockId, blockTitle, project }
   todayBlocks.forEach(b => {
     (b.decisions||[]).forEach(d => {
       decisions.push({ text:d, blockId:b.id, blockTitle:b.title, project:b.project });
     });
   });
-  const other = todayBlocks.filter(b => !['session','idea'].includes(b.type)).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const other = todayBlocks.filter(b => !['session','idea'].includes(b.type)).sort(_recency);
 
   // Stats vs yesterday (yesterday = same data filter but with yesterday's ts)
   const total = todayBlocks.length;
