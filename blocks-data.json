@@ -1,17 +1,449 @@
 [
   {
+    "id": "sb-apr29-rejection-github-pages-primary",
+    "type": "rejection",
+    "project": "Storyboard",
+    "task": "architecture",
+    "title": "Rejected: GitHub Pages as primary dashboard URL",
+    "summary": "Using GitHub Pages as the main dashboard URL requires a git push on every data update. This creates a manual step that breaks the automatic flow. Decision: 127.0.0.1:3848 is the primary URL. GitHub Pages is secondary — for sharing only.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "chips": [
+      "Storyboard",
+      "rejection",
+      "architecture",
+      "GitHub-Pages"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-discussion-sync-reliability",
+    "type": "discussion",
+    "project": "Storyboard",
+    "task": "sync",
+    "title": "Cowork scheduler can skip tasks — OS-level LaunchAgent is the fallback",
+    "summary": "The storyboard-session-sync Cowork task skipped 22 hours today despite being set to every 15 minutes. Root cause: Cowork scheduler recalculates nextRunAt on restart and can miscalculate. Fix: OS-level LaunchAgent (auto-sync.sh) for git push, independent of Cowork. Session reading still requires Cowork MCP.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "chips": [
+      "Storyboard",
+      "reliability",
+      "scheduler",
+      "discussion"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-discussion-local-vs-cloud",
+    "type": "discussion",
+    "project": "Storyboard",
+    "task": "architecture",
+    "title": "Local-first vs cloud: 127.0.0.1 is the real dashboard, GitHub Pages is sharing",
+    "summary": "The real dashboard is at 127.0.0.1:3848/app.html — live data, no git push needed. GitHub Pages is for sharing with others. For daily personal use, the local server is what matters. The MCP LaunchAgent keeps it always running.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "chips": [
+      "Storyboard",
+      "architecture",
+      "local-first",
+      "discussion"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-discussion-story-vs-board",
+    "type": "discussion",
+    "project": "Storyboard",
+    "task": "architecture",
+    "title": "Story = Claude chat session. Board = project. Not the other way.",
+    "summary": "Critical model clarification: a Story is a Claude chat session (one conversation). A Board is a project that aggregates stories. The STORIES sidebar should show actual Claude chat sessions, not internal named contexts from SESSION_MANIFEST. This distinction changes how the whole sidebar is built.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "chips": [
+      "Storyboard",
+      "architecture",
+      "model",
+      "discussion"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-hh-outreach-swedish",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "outreach",
+    "title": "Daily outreach — 10 Gmail drafts for Swedish Costa Blanca leads",
+    "summary": "Created 10 personalised Swedish-language Gmail drafts for Costa Blanca prospects from Airtable CRM. Draft-first approach — review before sending.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "decisions": [
+      "Draft-first always — no auto-send",
+      "Swedish segment gets Swedish language content"
+    ],
+    "ideas": [],
+    "chips": [
+      "H&H",
+      "outreach",
+      "Swedish",
+      "Gmail"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-nbhcb-social-5-posts",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "social",
+    "title": "NBHCB social pipeline — 5 posts scheduled across platforms",
+    "summary": "Full social pipeline run. 5 posts scheduled across Instagram, Facebook, TikTok, YouTube, Pinterest via Postiz. Logged to Airtable content calendar.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "decisions": [
+      "5 posts per pipeline run is the right cadence"
+    ],
+    "ideas": [],
+    "chips": [
+      "NBHCB",
+      "social",
+      "Postiz",
+      "scheduled"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-hh-social-edificio-vento",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "social",
+    "title": "H&H social pipeline — Edificio Vento content plan, 4 captions",
+    "summary": "All 11 H&H Airtable properties are Edificio Vento Torrevieja €158K–€488K. No Social Posts table, Postiz not connected. Wrote content plan + 4 Facebook/Instagram captions. Identified 4 blockers before automation goes live.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "decisions": [
+      "Plan content before building automation — don't automate empty pipelines",
+      "Posting schedule Tue/Thu/Sat for Edificio Vento series"
+    ],
+    "ideas": [
+      "Build H&H PropertyCard Remotion template (Navy/Gold/Cream, DM Sans)",
+      "Add Social Posts table to H&H Airtable"
+    ],
+    "chips": [
+      "H&H",
+      "social",
+      "Edificio Vento",
+      "content"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-propertyos-portal-scrapers",
+    "type": "session",
+    "project": "PropertyOS",
+    "task": "scraper",
+    "title": "PropertyOS portal scrapers fixed — 5/7 portals working",
+    "summary": "Fixed all 5 directly-scrapable portals: Pisos.com (new URL format), Fotocasa (exact price span), Kyero (JSON-LD + CDN images), ThinkSpain (features-list class), Grupo Inmocosta (Inmovilla JSON). Idealista and Habitaclia need Apify (token resets May 1).",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "decisions": [
+      "Apify for Idealista — WAF too strong for direct scraping",
+      "Token resets May 1 — add APIFY_TOKEN to .env then"
+    ],
+    "ideas": [
+      "Auto-refresh portal scrapers when new WAF patterns detected"
+    ],
+    "chips": [
+      "PropertyOS",
+      "scraper",
+      "portals",
+      "fixed"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr29-storyboard-ux",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "dashboard",
+    "title": "Storyboard UX: Today default, CSS columns fix, Stories real sessions",
+    "summary": "Fixed critical Today view layout bug — CSS multi-column was slicing cards across 3 columns. Added today-view class toggle. Fixed Stories sidebar to show real Claude sessions. Word-boundary title truncation. Today is now default landing view.",
+    "date": "Apr 29",
+    "ts": 20260429,
+    "decisions": [
+      "feed.today-view forces columns:1 — the root cause of all the card-splitting",
+      "Stories sidebar: real sessions from session-log, not static manifest",
+      "Title first (text-1 weight), project name below in color",
+      "activePeriod defaults to today"
+    ],
+    "ideas": [
+      "Right panel could show yesterday's summary or today session count",
+      "blocks-data.json and session-log.json need to merge into one auto-updated source"
+    ],
+    "chips": [
+      "Storyboard",
+      "ux",
+      "today-view",
+      "css-fix"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-idea-opero-audit-product",
+    "type": "idea",
+    "project": "Opero Agency",
+    "task": "product",
+    "title": "Agency audit as a productized offer — white + dark deck variants",
+    "summary": "The Richard James audit deck system (dark for in-person, white for email) could become a repeatable productized offer. Score-based audit with CRITICAL/HIGH/MEDIUM action tags. €X per audit. Scales without custom work each time.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "chips": [
+      "Opero",
+      "audit",
+      "product",
+      "idea"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-idea-local-first-dashboard",
+    "type": "idea",
+    "project": "Storyboard",
+    "task": "architecture",
+    "title": "Local-first dashboard — not everything needs to go to cloud",
+    "summary": "Tech people at yesterday's meeting raised valid point: not everyone wants their work data in a cloud. A local-first architecture where the dashboard runs entirely on-device (127.0.0.1) and only syncs to GitHub Pages if the user wants sharing could be the right model. Privacy by default.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "chips": [
+      "architecture",
+      "local-first",
+      "privacy",
+      "idea"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-nbhcb-gsc-monitoring",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "seo",
+    "title": "GSC monitoring Apr 20 — 90% healthy, /golf/las-colinas 404 week 2",
+    "summary": "Weekly GSC check. 9/10 URLs healthy. /golf/las-colinas returning 404 for a second consecutive week. Sitemap lastmod not updating on deploys — possible automation issue.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "decisions": [
+      "Flag /golf/las-colinas for 301 redirect or page restore",
+      "Investigate sitemap regeneration not running on deploys"
+    ],
+    "ideas": [],
+    "chips": [
+      "GSC",
+      "SEO",
+      "monitoring",
+      "NBHCB"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-hh-email-audit",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email-audit",
+    "title": "Email audit — 161 active subs, April send gap, UK agents 44% open",
+    "summary": "Audited MailerLite health for H&H. Found 161 active subscribers, no April newsletters sent to buyer segments, stale W15 drafts, sync gap between CRM and MailerLite groups. UK agent referral campaign had 44% open rate.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "decisions": [
+      "Delete stale EN/SE/NL W15 drafts",
+      "Follow up UK agent referral list (157 engaged contacts)",
+      "Sync CRM Campaigns table — stuck in Draft since February"
+    ],
+    "ideas": [
+      "Add RESEND_API_KEY so leads surface automatically",
+      "Airtable→MailerLite group sync for active clients"
+    ],
+    "chips": [
+      "email",
+      "MailerLite",
+      "audit",
+      "H&H"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-opero-richard-james-audit",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "uk-audit",
+    "title": "Opero Audit — Richard James v2 white theme PPTX, score 39",
+    "summary": "Built v2 of Richard James agency audit deck with white theme. Score: 39/100. Split cover layout — dark navy left panel, white right with big score as hero. White cards with light borders. CRITICAL red tags on priority actions. Dual versions: dark v1 for in-person, light v2 for web/email PDF.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "decisions": [
+      "White theme v2 alongside dark v1 — both kept",
+      "Dark for in-person presentations, light for email/web",
+      "CRITICAL red tags more alarming on white — right effect for sales"
+    ],
+    "ideas": [
+      "Send v2 as PDF to Richard James prospect"
+    ],
+    "chips": [
+      "audit",
+      "Richard James",
+      "pptx",
+      "UK",
+      "Opero"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-hh-newsletter-w18",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email",
+    "title": "W18 newsletter sent — 2,010 subscribers, CB South English segment",
+    "summary": "Built and sent Week 18 newsletter. 5 properties featured: Villa Villamartin €599k, Villa San Miguel €425k, Apartment Punta Prima €345k, Villa Orihuela Costa €279k, Bungalow Villamartin €169k. Campaign scheduled via MailerLite API.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "decisions": [
+      "Send to all non-Swedish CB South (English + Spanish + French + Dutch)",
+      "5 properties per newsletter is the right density",
+      "MailerLite schedule_campaign for immediate delivery"
+    ],
+    "ideas": [
+      "Subscriber cleanup after send completes"
+    ],
+    "chips": [
+      "newsletter",
+      "W18",
+      "MailerLite",
+      "CB-South"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr28-propertyos-video-reel",
+    "type": "session",
+    "project": "PropertyOS",
+    "task": "video",
+    "title": "PropertyOS video reel pipeline — real YouTube walkthrough clips",
+    "summary": "Built full pipeline: listing URL → scrape real data → download YouTube walkthrough → extract best clips at 10s/23s/45s → render Remotion reel. No stock footage. Real property video as hero. Three-template suite planned: standard, Cinematic, TikTok Rapid.",
+    "date": "Apr 28",
+    "ts": 20260428,
+    "decisions": [
+      "Use real YouTube walkthrough clips — no stock footage",
+      "Extract 3 clips at 10s/23s/45s as default keyframes",
+      "Three templates: standard, Cinematic (slow fades), TikTok Rapid"
+    ],
+    "ideas": [
+      "Cinematic variant — slow fades, luxury feel",
+      "TikTok Rapid variant with video cuts instead of stills"
+    ],
+    "chips": [
+      "PropertyOS",
+      "video",
+      "Remotion",
+      "reel"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr24-decision-cross-session-bridge",
+    "type": "decision",
+    "project": "Storyboard",
+    "task": "dashboard",
+    "title": "Cross-session bridge: session-log.json is the universal intake",
+    "summary": "Any Claude session can write to Storyboard by posting to /log-session endpoint or writing directly to session-log.json. The /blocks endpoint merges it with blocks-data.json automatically. This makes Storyboard work across all projects without any code changes per project.",
+    "date": "Apr 24",
+    "ts": 20260424,
+    "chips": [
+      "architecture",
+      "cross-session",
+      "decision"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr24-day10-sprint-finale",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "dashboard",
+    "title": "Day 10 — Sprint finale: Context Full CTA, cross-session bridge, visual diff complete",
+    "summary": "Final sprint day. Completed all visual diff fixes against design-spec. Built Context Full → Start New Window CTA. Added Claude usage pill to topbar. Fixed T2 grid to pure masonry. Built cross-session block bridge: session-log.json + /log-session MCP endpoint + log-session.py — any Cowork session can now post to Storyboard.",
+    "date": "Apr 24",
+    "ts": 20260424,
+    "decisions": [
+      "Context Full CTA uses fillPct>75 threshold for Start New Window vs Carry forward",
+      "Claude usage pill shows sessions today + compactions",
+      "T2 grid = pure masonry, T2 list = journal/narrative",
+      "Cross-session bridge writes to session-log.json, /blocks merges it automatically",
+      "log-session.py falls back to direct file write if MCP offline"
+    ],
+    "ideas": [
+      "Auto-call log-session.py at end of every Cowork session via skill",
+      "Usage widget could poll Anthropic API if key set"
+    ],
+    "chips": [
+      "Day10",
+      "sprint-finale",
+      "cross-session",
+      "context-full"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr21-idea-propertyos-mortgage",
+    "type": "idea",
+    "project": "PropertyOS",
+    "task": "valuation-engine",
+    "title": "Mortgage calculator section in valuation PDF",
+    "summary": "Add a mortgage calculator section to the PropertyOS valuation PDF — monthly payments at 70%, 80% LTV, different rates. Could be the most useful page for buyers.",
+    "date": "Apr 21",
+    "ts": 20260421,
+    "chips": [
+      "PropertyOS",
+      "mortgage",
+      "PDF"
+    ],
+    "_source": "session-sync"
+  },
+  {
+    "id": "sb-apr21-propertyos-valuation-pdf",
+    "type": "session",
+    "project": "PropertyOS",
+    "task": "valuation-engine",
+    "title": "PropertyOS valuation engine — PDF v6, Casafari live, Inmocosta audit",
+    "summary": "Built full PDF valuation report generator with ReportLab. Iterated v1→v6 on layout, fonts, Casafari data integration. Added agency audit pipeline. Generated live audit PDF for Inmocosta.",
+    "date": "Apr 21",
+    "ts": 20260421,
+    "decisions": [
+      "ReportLab for PDF generation — full layout control",
+      "Casafari as primary valuation data source",
+      "Agency audit as standalone pipeline tool"
+    ],
+    "ideas": [
+      "Mortgage calculator section in valuation PDF",
+      "Automated market alert emails when valuations change"
+    ],
+    "chips": [
+      "PropertyOS",
+      "valuation",
+      "PDF",
+      "Casafari"
+    ],
+    "_source": "session-sync"
+  },
+  {
     "id": "sb-apr20-session-day9-story-view-data",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 9 \u2014 Story view: board-level stats, single chip, data audit",
-    "summary": "T7 Story view corrected to show board-level data. Stats strip card 1 now uses totalSess/totalDec/totalIdeas/totalComp/totalDisc/totalBoardDesigns (board-level, not story-level). Card 2 now shows Velocity (same as T1 board profile). Card 3 now shows North Star from PROJECT_META. Ticker chip row changed from all-board-stories loop to single current-story chip. Data audit: removed fake task labels (strategy, landing-page, mcp-server, context-visual) from 25 blocks in blocks-data.json \u2014 these were fabricated organizational labels with no real session behind them. chrome-extension task merged into dashboard since all work happened in one conversation. Fixed 14-digit ts timestamp on day6-wrap that was causing 'JAN 11 2612' display bug.",
+    "title": "Day 9 — Story view: board-level stats, single chip, data audit",
+    "summary": "T7 Story view corrected to show board-level data. Stats strip card 1 now uses totalSess/totalDec/totalIdeas/totalComp/totalDisc/totalBoardDesigns (board-level, not story-level). Card 2 now shows Velocity (same as T1 board profile). Card 3 now shows North Star from PROJECT_META. Ticker chip row changed from all-board-stories loop to single current-story chip. Data audit: removed fake task labels (strategy, landing-page, mcp-server, context-visual) from 25 blocks in blocks-data.json — these were fabricated organizational labels with no real session behind them. chrome-extension task merged into dashboard since all work happened in one conversation. Fixed 14-digit ts timestamp on day6-wrap that was causing 'JAN 11 2612' display bug.",
     "date": "Apr 20",
     "ts": 20260420,
     "decisions": [
-      "Story view shows BOARD-level stats in stats strip \u2014 it's a window INTO the board, not a replacement for it",
-      "Ticker shows ONE chip (current story) not all stories \u2014 all-stories ticker was the board's job",
-      "task labels must have a real session to be a real story \u2014 phantom task labels create phantom sidebar items",
-      "ts must always be 8-digit YYYYMMDD format \u2014 longer formats break fmtTs date rendering"
+      "Story view shows BOARD-level stats in stats strip — it's a window INTO the board, not a replacement for it",
+      "Ticker shows ONE chip (current story) not all stories — all-stories ticker was the board's job",
+      "task labels must have a real session to be a real story — phantom task labels create phantom sidebar items",
+      "ts must always be 8-digit YYYYMMDD format — longer formats break fmtTs date rendering"
     ],
     "chips": [
       "story-view",
@@ -27,15 +459,15 @@
     "id": "sb-apr20-session-day8-overnight-fixes",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 8 \u2014 Overnight: 22 bugs fixed, nav state machine, story view",
-    "summary": "Autonomous overnight sprint: 22 bugs fixed. T7 Story view \u2014 storyCompactions ReferenceError fixed, stats strip expanded to 6 stats, carry-forward button added. Navigation state machine \u2014 navClick now always calls buildNav(), navClick('All') clears activeStoryName + resets to grid, all 8 breadcrumb 'All work' links now call navClick('All') instead of setFilter (was leaving toolbar hidden). openStoryWindow \u2014 breadcrumb shows All/Board/Story path, nav active state syncs to board row. Performance \u2014 dead journeyHtml loop removed from renderProfileView (~50 LOC), duplicate overviewStrip logic consolidated. Crash prevention \u2014 6 unguarded .replace()/.substring() calls null-guarded. Timestamp month clamping fixed in all 3 fmtTs copies.",
+    "title": "Day 8 — Overnight: 22 bugs fixed, nav state machine, story view",
+    "summary": "Autonomous overnight sprint: 22 bugs fixed. T7 Story view — storyCompactions ReferenceError fixed, stats strip expanded to 6 stats, carry-forward button added. Navigation state machine — navClick now always calls buildNav(), navClick('All') clears activeStoryName + resets to grid, all 8 breadcrumb 'All work' links now call navClick('All') instead of setFilter (was leaving toolbar hidden). openStoryWindow — breadcrumb shows All/Board/Story path, nav active state syncs to board row. Performance — dead journeyHtml loop removed from renderProfileView (~50 LOC), duplicate overviewStrip logic consolidated. Crash prevention — 6 unguarded .replace()/.substring() calls null-guarded. Timestamp month clamping fixed in all 3 fmtTs copies.",
     "date": "Apr 20",
     "ts": 20260420,
     "decisions": [
-      "navClick is the single source of truth for navigation \u2014 setFilter is a side effect, not the trigger",
-      "All breadcrumb links must use navClick('All') not setFilter \u2014 setFilter alone leaves activeView stale",
+      "navClick is the single source of truth for navigation — setFilter is a side effect, not the trigger",
+      "All breadcrumb links must use navClick('All') not setFilter — setFilter alone leaves activeView stale",
       "storyCompactions must be declared before any code that references it (IIFE ordering)",
-      "openStoryWindow updates breadcrumb + nav active state \u2014 story view always knows where it is"
+      "openStoryWindow updates breadcrumb + nav active state — story view always knows where it is"
     ],
     "chips": [
       "22-bugs",
@@ -51,16 +483,16 @@
     "id": "sb-apr20-session-day7-auto-startup",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 7 \u2014 Auto session startup, session brief card, Tetris mode live",
-    "summary": "Auto session startup shipped: session_start MCP tool + /session-start HTTP endpoint. Claude calls it at the top of every Cowork session before saying anything else. Returns last session, key decisions, hottest project, pending ideas, in-progress items. Formatted as a 3-line brief + one question: 'Continue from X, or start something new?' Today tab now shows a dismissable morning brief card that fetches from /session-start when MCP is connected. Resets when switching back to Today view. SKILL.md updated with AUTO-TRIGGER section \u2014 session_start fires before any user response.",
+    "title": "Day 7 — Auto session startup, session brief card, Tetris mode live",
+    "summary": "Auto session startup shipped: session_start MCP tool + /session-start HTTP endpoint. Claude calls it at the top of every Cowork session before saying anything else. Returns last session, key decisions, hottest project, pending ideas, in-progress items. Formatted as a 3-line brief + one question: 'Continue from X, or start something new?' Today tab now shows a dismissable morning brief card that fetches from /session-start when MCP is connected. Resets when switching back to Today view. SKILL.md updated with AUTO-TRIGGER section — session_start fires before any user response.",
     "date": "Apr 20",
     "ts": 20260420,
     "decisions": [
-      "session_start fires before Claude says anything else \u2014 it IS the opening message, not a follow-up",
-      "Brief is 3 lines max + one question \u2014 not a data dump",
-      "Today tab shows the brief as a card (dismissable \u2715) \u2014 visual confirmation the startup ran",
+      "session_start fires before Claude says anything else — it IS the opening message, not a follow-up",
+      "Brief is 3 lines max + one question — not a data dump",
+      "Today tab shows the brief as a card (dismissable ✕) — visual confirmation the startup ran",
       "Brief resets on return to Today so it's always fresh",
-      "If MCP offline, skip silently \u2014 no error, just say hello normally"
+      "If MCP offline, skip silently — no error, just say hello normally"
     ],
     "chips": [
       "auto-startup",
@@ -76,16 +508,16 @@
     "id": "sb-apr19-session-day6-wrap",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 6 wrap \u2014 Task windows, instruction manual, autonomous polish",
-    "summary": "Task windows strip shipped in two locations: pd-task-strip inside project drawer (Canvas view) and ph-task-strip inline in project header (Grid view, where user actually is). 32 Storyboard blocks tagged with task field across 6 workstreams: dashboard, strategy, landing-page, mcp-server, chrome-extension, context-visual. Instruction manual (MANUAL.html) written and pushed to GitHub \u2014 covers every feature with why/how, 12 block types, 6 views, data model, 13 key design decisions, Day 7+ roadmap. Settings About tab now links to MANUAL.html. ph-task-strip fix confirmed working in grid view. All pushed to oskar-del/storyboard.",
+    "title": "Day 6 wrap — Task windows, instruction manual, autonomous polish",
+    "summary": "Task windows strip shipped in two locations: pd-task-strip inside project drawer (Canvas view) and ph-task-strip inline in project header (Grid view, where user actually is). 32 Storyboard blocks tagged with task field across 6 workstreams: dashboard, strategy, landing-page, mcp-server, chrome-extension, context-visual. Instruction manual (MANUAL.html) written and pushed to GitHub — covers every feature with why/how, 12 block types, 6 views, data model, 13 key design decisions, Day 7+ roadmap. Settings About tab now links to MANUAL.html. ph-task-strip fix confirmed working in grid view. All pushed to oskar-del/storyboard.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Task strip needs two implementations \u2014 one for project drawer (Canvas), one for inline header (Grid). User lives in Grid view.",
-      "task field on blocks is first-class \u2014 string like 'dashboard', connects blocks to parallel workstreams",
+      "Task strip needs two implementations — one for project drawer (Canvas), one for inline header (Grid). User lives in Grid view.",
+      "task field on blocks is first-class — string like 'dashboard', connects blocks to parallel workstreams",
       "activeTask global = null (all tasks) or string (filter feed by task), cleared when setFilter('All') is called",
-      "Instruction manual is a standalone dark HTML \u2014 not in-app docs, meant for sharing with collaborators",
-      "MANUAL.html should be updated whenever new features ship \u2014 user's explicit ongoing request"
+      "Instruction manual is a standalone dark HTML — not in-app docs, meant for sharing with collaborators",
+      "MANUAL.html should be updated whenever new features ship — user's explicit ongoing request"
     ],
     "chips": [
       "task-windows",
@@ -101,8 +533,8 @@
     "id": "sb-apr20-intent-day7",
     "type": "intent",
     "project": "Storyboard",
-    "title": "Day 7 intentions \u2014 live blocks, auto session startup, categories integration",
-    "summary": "Three big features earmarked for Day 7: (1) Live block flow \u2014 blocks appear in real time as Claude works, not just at session end. Tetris feel. Each decision logs the moment it's made. (2) Auto session startup \u2014 Claude asks 'do you want to load your latest Storyboard context?' at session start, making Storyboard the default context layer. (3) Categories \u2194 Tasks \u2014 tasks are project-specific instances of cross-project categories. The larger pipe connecting how work flows through Storyboard.",
+    "title": "Day 7 intentions — live blocks, auto session startup, categories integration",
+    "summary": "Three big features earmarked for Day 7: (1) Live block flow — blocks appear in real time as Claude works, not just at session end. Tetris feel. Each decision logs the moment it's made. (2) Auto session startup — Claude asks 'do you want to load your latest Storyboard context?' at session start, making Storyboard the default context layer. (3) Categories ↔ Tasks — tasks are project-specific instances of cross-project categories. The larger pipe connecting how work flows through Storyboard.",
     "date": "Apr 20",
     "ts": 20260420,
     "ideas": [
@@ -123,17 +555,17 @@
     "id": "sb-apr19-session-day6-today-settings",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 6 \u2014 Today digest, morning kickoff card, Settings panel rebuild",
+    "title": "Day 6 — Today digest, morning kickoff card, Settings panel rebuild",
     "summary": "Today digest shipped: CSS for all td-* classes, staggered drop-in animation (Tetris feel) for cards, morning kickoff card with inline textarea, project selector, and instant block creation on Enter. Settings panel rebuilt from scratch: 4 tabs (Appearance, Data, AI, About). Appearance tab has dark/light toggle and compact mode switch. Data tab shows live storage stats (block count, local count, KB used, project count) plus Export JSON, Import JSON with merge, and Clear local blocks. AI tab has API key with status. About tab shows sprint day, GitHub link, landing page link. Import function merges JSON without duplicates. Compact mode CSS reduces card padding globally. Sprint bar toggle wired to settings. Block drop-in animation added as CSS keyframe, fires on Today first render and on each new kickoff block.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Settings panel needs 4 tabs \u2014 API key alone is not a settings panel",
-      "Data tab shows live stats (merged block count, localStorage size) \u2014 makes it feel like a real app",
-      "Import merges by ID deduplication \u2014 safe to import multiple times",
+      "Settings panel needs 4 tabs — API key alone is not a settings panel",
+      "Data tab shows live stats (merged block count, localStorage size) — makes it feel like a real app",
+      "Import merges by ID deduplication — safe to import multiple times",
       "Compact mode is a CSS class toggle (sb-compact) on body, persisted in localStorage",
       "Today digest drop-in animation uses staggered delays (40ms per card) for Tetris feel",
-      "Morning kickoff card replaces bare empty state \u2014 first thought of the day becomes first block"
+      "Morning kickoff card replaces bare empty state — first thought of the day becomes first block"
     ],
     "chips": [
       "settings",
@@ -149,17 +581,17 @@
     "id": "sb-apr19-session-day6-design-system",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 6 \u2014 Design system audit, search \u2318K upgrade, block detail redesign",
-    "summary": "Full design system pass: added semantic TYPE_COLORS so block stripe/icon-band colors reflect type not project (purple=session, amber=idea, green=decision, blue=discussion, red=rejection). Fixed sprint day calculation (Apr 15 = Day 1, today = Day 5). Added discussion block type with proper blue card. Fixed --card CSS variable missing in dark mode (search overlay had no background). Upgraded search with type filter chips, arrow-key navigation, term highlighting, decision match preview, result count footer. Rewrote block detail overlay \u2014 proper section order (summary first, then decisions, ideas, related blocks), chips shown in meta row, context window fill bar for sessions, related blocks panel, Carry forward available on ALL blocks. Fixed search hover color inconsistency.",
+    "title": "Day 6 — Design system audit, search ⌘K upgrade, block detail redesign",
+    "summary": "Full design system pass: added semantic TYPE_COLORS so block stripe/icon-band colors reflect type not project (purple=session, amber=idea, green=decision, blue=discussion, red=rejection). Fixed sprint day calculation (Apr 15 = Day 1, today = Day 5). Added discussion block type with proper blue card. Fixed --card CSS variable missing in dark mode (search overlay had no background). Upgraded search with type filter chips, arrow-key navigation, term highlighting, decision match preview, result count footer. Rewrote block detail overlay — proper section order (summary first, then decisions, ideas, related blocks), chips shown in meta row, context window fill bar for sessions, related blocks panel, Carry forward available on ALL blocks. Fixed search hover color inconsistency.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Block type > project in visual hierarchy \u2014 stripe uses semantic TYPE_COLORS not project color",
+      "Block type > project in visual hierarchy — stripe uses semantic TYPE_COLORS not project color",
       "Sprint start = Apr 15 2026 (Day 1), today Apr 19 = Day 5",
-      "Discussion blocks get dedicated blue card renderer \u2014 were falling through to generic",
-      "Block detail: summary first, then decisions \u2192 ideas \u2192 related blocks",
+      "Discussion blocks get dedicated blue card renderer — were falling through to generic",
+      "Block detail: summary first, then decisions → ideas → related blocks",
       "Carry forward available on ALL blocks, not just seed=true ones",
-      "Search result hover: var(--bg) was near-black in dark mode \u2192 rgba(255,255,255,.04)"
+      "Search result hover: var(--bg) was near-black in dark mode → rgba(255,255,255,.04)"
     ],
     "chips": [
       "design-system",
@@ -175,13 +607,13 @@
     "id": "sb-apr19-session-polish-day5",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 5 \u2014 Contextual overview strip, AI usage bar, search command palette",
+    "title": "Day 5 — Contextual overview strip, AI usage bar, search command palette",
     "summary": "Contextual overview strip now adapts to every section: ideas/decisions/skills/context/agents/categories/project each get dedicated stats card. Strip was locked to grid+canvas+all-time; now shows everywhere except timeline/pipeline. AI usage bar added to nav sidebar: session count this month, fill bar, delta vs last month, heavy project detection for automation drain. Strip instant-update fixed for Agents/Categories/Skills views (bypassed renderFeed). Search upgraded: type filter chips, arrow nav, term highlighting, decision match preview.",
     "date": "Apr 19",
     "ts": 20260419,
     "decisions": [
-      "Overview strip is contextual \u2014 7 section variants, not a static banner",
-      "Strip shows in all views (not just grid+all-time) \u2014 was a design error limiting its usefulness",
+      "Overview strip is contextual — 7 section variants, not a static banner",
+      "Strip shows in all views (not just grid+all-time) — was a design error limiting its usefulness",
       "AI usage bar in nav: sessions/month meter + delta + heavy project warning + Console link",
       "Agents/Categories/Skills activate strip immediately without going through renderFeed"
     ],
@@ -198,14 +630,14 @@
     "id": "sb-apr18-decision-public-url",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Public URL confirmed live \u2014 oskar-del.github.io/storyboard",
-    "summary": "GitHub Pages is serving the sprint at https://oskar-del.github.io/storyboard/. Visitors get blocks-data.json loaded as static data \u2014 full sprint history visible without running the MCP server. App shows 'Demo' instead of 'server off' on GitHub Pages. Push button hidden in demo mode. This is the URL to hand out at Claude meetups.",
+    "title": "Public URL confirmed live — oskar-del.github.io/storyboard",
+    "summary": "GitHub Pages is serving the sprint at https://oskar-del.github.io/storyboard/. Visitors get blocks-data.json loaded as static data — full sprint history visible without running the MCP server. App shows 'Demo' instead of 'server off' on GitHub Pages. Push button hidden in demo mode. This is the URL to hand out at Claude meetups.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "GitHub Pages = the demo/meetup URL \u2014 always current after every push",
+      "GitHub Pages = the demo/meetup URL — always current after every push",
       "Demo mode: shows 'Demo' not 'server off', hides push button",
-      "blocks-data.json is the static data layer \u2014 loads on GitHub Pages without MCP"
+      "blocks-data.json is the static data layer — loads on GitHub Pages without MCP"
     ],
     "_source": "claude.ai",
     "task": "dashboard"
@@ -214,8 +646,8 @@
     "id": "sb-apr18-session-dashboard-ux-fixes",
     "type": "session",
     "project": "Storyboard",
-    "title": "Day 4 \u2014 dashboard UX overhaul + compounding context visual",
-    "summary": "Overview strip now persists across project views and shows project-scoped stats (STORYBOARD \u00b7 TODAY). Canvas view respects activeFilter \u2014 clicking a project lands on the project profile, all view toggles stay filtered to that project. Mobile sidebar fixed \u2014 closes immediately on tap, not after renders. Skills 'needs work' button fixed \u2014 __weak__ sentinel was leaking into search, now bypasses text match. Sprint next-up items updated. Compounding context visual built (compounding-context.html). Agent Preview marked complete. Go-to-market, outbound agent, and 'built with Storyboard' blocks captured.",
+    "title": "Day 4 — dashboard UX overhaul + compounding context visual",
+    "summary": "Overview strip now persists across project views and shows project-scoped stats (STORYBOARD · TODAY). Canvas view respects activeFilter — clicking a project lands on the project profile, all view toggles stay filtered to that project. Mobile sidebar fixed — closes immediately on tap, not after renders. Skills 'needs work' button fixed — __weak__ sentinel was leaking into search, now bypasses text match. Sprint next-up items updated. Compounding context visual built (compounding-context.html). Agent Preview marked complete. Go-to-market, outbound agent, and 'built with Storyboard' blocks captured.",
     "date": "Apr 18",
     "ts": 20260418,
     "chips": [
@@ -226,8 +658,8 @@
     ],
     "decisions": [
       "Overview strip stays visible on project views, scoped to project stats",
-      "Project click \u2192 Canvas view as default landing (not grid dump)",
-      "Mobile sidebar closes first, renders after \u2014 never blocks interaction",
+      "Project click → Canvas view as default landing (not grid dump)",
+      "Mobile sidebar closes first, renders after — never blocks interaction",
       "Compounding context visual is a marketing asset, not just a feature demo"
     ],
     "_source": "claude.ai",
@@ -237,13 +669,13 @@
     "id": "sb-apr18-discussion-built-with-storyboard",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Built with Storyboard \u2014 the velocity proof story",
-    "summary": "The most powerful part of the origin story: Storyboard was built using Storyboard. Every session compaction produced higher-quality context than any normal AI user gets. The intent blocks, rejection captures, and discussion docs seeded each new session \u2014 so the work got more effective as the product got better. The velocity increased because the memory layer increased. This is the 'eating our own dog food' proof that nobody else can claim: we didn't just build a memory tool, we experienced the compound effect of it while building it. This needs to be a core part of the origin narrative and eventual case study. Comparable to Figma designed in Figma, Linear tracked in Linear. Nobody doing context-layer tooling for AI can say this yet because nobody built the capture layer first.",
+    "title": "Built with Storyboard — the velocity proof story",
+    "summary": "The most powerful part of the origin story: Storyboard was built using Storyboard. Every session compaction produced higher-quality context than any normal AI user gets. The intent blocks, rejection captures, and discussion docs seeded each new session — so the work got more effective as the product got better. The velocity increased because the memory layer increased. This is the 'eating our own dog food' proof that nobody else can claim: we didn't just build a memory tool, we experienced the compound effect of it while building it. This needs to be a core part of the origin narrative and eventual case study. Comparable to Figma designed in Figma, Linear tracked in Linear. Nobody doing context-layer tooling for AI can say this yet because nobody built the capture layer first.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
       "The 'built with Storyboard' story is a marketing asset, not just a feature demo",
-      "Velocity increase is the measurable proof \u2014 sessions got faster as blocks accumulated",
+      "Velocity increase is the measurable proof — sessions got faster as blocks accumulated",
       "This becomes the origin story once we're ready to go public"
     ],
     "_source": "claude.ai",
@@ -253,12 +685,12 @@
     "id": "sb-apr18-discussion-gtm-launch-strategy",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Go-to-market \u2014 the full launch sequence",
-    "summary": "PHASE 1 \u2014 MEETUPS FIRST (now, no public content yet): Attend Claude/AI meetups, get 5-10 real people testing it face-to-face. No blog posts, no LinkedIn blast yet. Reason: no point sending traffic to something nobody has validated. The product needs one person to see it live and say 'I need this.' PHASE 2 \u2014 EARLY TESTERS (when Phase 1 gives signal): Small circle of testers from meetup contacts. Gather real feedback before public. PHASE 3 \u2014 PUBLIC CONTENT BLAST (when product is ready for public): (1) SEO articles \u2014 write all the pain-point articles, publish them on the storyboard landing page. Own the keyword clusters: 'AI context loss', 'AI session reset problem', 'how to preserve AI conversation context', 'cross-AI tool memory'. Target AI magazines, journals, relevant publications. (2) LinkedIn \u2014 pain-framed posts, the four invisible layers story, the painkiller framing. Designed to hit the right early adopter. (3) Substack \u2014 longer-form, narrative pieces. (4) Paid ads \u2014 boost the best-performing organic content, not cold campaigns. Amplify what already resonates. (5) Outbound agent \u2014 automated agent that monitors AI meetup pages, Discord groups, relevant communities, sends targeted outreach to people actively discussing the exact pain we solve. NOT DOING ANY OF THIS until post-meetup validation. The right sequence: face-to-face \u2192 testers \u2192 signal \u2192 blast.",
+    "title": "Go-to-market — the full launch sequence",
+    "summary": "PHASE 1 — MEETUPS FIRST (now, no public content yet): Attend Claude/AI meetups, get 5-10 real people testing it face-to-face. No blog posts, no LinkedIn blast yet. Reason: no point sending traffic to something nobody has validated. The product needs one person to see it live and say 'I need this.' PHASE 2 — EARLY TESTERS (when Phase 1 gives signal): Small circle of testers from meetup contacts. Gather real feedback before public. PHASE 3 — PUBLIC CONTENT BLAST (when product is ready for public): (1) SEO articles — write all the pain-point articles, publish them on the storyboard landing page. Own the keyword clusters: 'AI context loss', 'AI session reset problem', 'how to preserve AI conversation context', 'cross-AI tool memory'. Target AI magazines, journals, relevant publications. (2) LinkedIn — pain-framed posts, the four invisible layers story, the painkiller framing. Designed to hit the right early adopter. (3) Substack — longer-form, narrative pieces. (4) Paid ads — boost the best-performing organic content, not cold campaigns. Amplify what already resonates. (5) Outbound agent — automated agent that monitors AI meetup pages, Discord groups, relevant communities, sends targeted outreach to people actively discussing the exact pain we solve. NOT DOING ANY OF THIS until post-meetup validation. The right sequence: face-to-face → testers → signal → blast.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "No public marketing until post-meetup validation \u2014 wrong sequence wastes reach",
+      "No public marketing until post-meetup validation — wrong sequence wastes reach",
       "SEO articles go on the storyboard landing page itself, not a separate blog",
       "Paid ads = amplify organic signal, not cold campaigns",
       "Outbound agent monitors meetups/Discord for people describing the exact pain"
@@ -270,8 +702,8 @@
     "id": "sb-apr18-idea-outbound-agent",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Outbound agent \u2014 monitors meetups, Discord, AI communities for pain signal",
-    "summary": "An automated agent that continuously checks: AI meetup pages (Meetup.com, Eventbrite), Discord servers (Anthropic, OpenAI, AI builders), Reddit (r/ClaudeAI, r/ChatGPT, r/LocalLLaMA), relevant Slack groups. When it finds someone describing context loss, AI reset frustration, cross-tool friction \u2014 it surfaces them and drafts targeted outreach. Not spam, precision targeting. People already describing the pain we solve.",
+    "title": "Outbound agent — monitors meetups, Discord, AI communities for pain signal",
+    "summary": "An automated agent that continuously checks: AI meetup pages (Meetup.com, Eventbrite), Discord servers (Anthropic, OpenAI, AI builders), Reddit (r/ClaudeAI, r/ChatGPT, r/LocalLLaMA), relevant Slack groups. When it finds someone describing context loss, AI reset frustration, cross-tool friction — it surfaces them and drafts targeted outreach. Not spam, precision targeting. People already describing the pain we solve.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -282,7 +714,7 @@
     "type": "decision",
     "project": "Storyboard",
     "title": "No public content until post-meetup validation",
-    "summary": "Decision: hold all SEO articles, LinkedIn posts, Substack, paid ads until after first meetup validation cycle. Rationale: sending traffic before real user signal is wasteful and potentially damaging. The sequence is meetups \u2192 testers \u2192 signal \u2192 blast. Content strategy is fully planned and ready to execute, just not yet.",
+    "summary": "Decision: hold all SEO articles, LinkedIn posts, Substack, paid ads until after first meetup validation cycle. Rationale: sending traffic before real user signal is wasteful and potentially damaging. The sequence is meetups → testers → signal → blast. Content strategy is fully planned and ready to execute, just not yet.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -292,13 +724,13 @@
     "id": "sb-apr18-discussion-painkillers-vs-presents",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Painkillers vs Presents \u2014 the two-layer messaging framework",
-    "summary": "Painkillers get people in the door \u2014 problems they already feel. Presents make them stay and tell people \u2014 things they didn't know they were missing until they see it. PAINKILLERS: (1) The four-layer amnesia pain \u2014 'reset pain' is too small. When a session ends you lose all four invisible layers at once: Discussion (the WHY \u2014 what was debated), Trail (the HOW \u2014 what was tried and executed), Thinking (the AI's own reasoning), Rejection (what was ruled out and why). No other tool captures any of these. The full chain lost: Thinking \u2192 Discussion \u2192 Decision \u2192 Trail \u2192 Artifact. (2) Cognitive load pain \u2014 the structure of your AI work only lives in your head, nowhere else. (3) Cross-tool pain \u2014 every AI is an island, you can't carry context between tools. (4) Safety pain \u2014 laptop gone, everything gone, nobody warned you. PRESENTS: (1) Cross-project intelligence \u2014 the 10th campaign learns from the 9 before it. (2) Skills and prompts compounding \u2014 your way of working gets sharper over time. (3) The active intent layer \u2014 your data working for you, not just stored. You can't sell a present as a painkiller. Show it, don't pitch it.",
+    "title": "Painkillers vs Presents — the two-layer messaging framework",
+    "summary": "Painkillers get people in the door — problems they already feel. Presents make them stay and tell people — things they didn't know they were missing until they see it. PAINKILLERS: (1) The four-layer amnesia pain — 'reset pain' is too small. When a session ends you lose all four invisible layers at once: Discussion (the WHY — what was debated), Trail (the HOW — what was tried and executed), Thinking (the AI's own reasoning), Rejection (what was ruled out and why). No other tool captures any of these. The full chain lost: Thinking → Discussion → Decision → Trail → Artifact. (2) Cognitive load pain — the structure of your AI work only lives in your head, nowhere else. (3) Cross-tool pain — every AI is an island, you can't carry context between tools. (4) Safety pain — laptop gone, everything gone, nobody warned you. PRESENTS: (1) Cross-project intelligence — the 10th campaign learns from the 9 before it. (2) Skills and prompts compounding — your way of working gets sharper over time. (3) The active intent layer — your data working for you, not just stored. You can't sell a present as a painkiller. Show it, don't pitch it.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
       "Painkillers = get them in the door. Presents = make them stay and tell people.",
-      "Never pitch a Present as a Painkiller \u2014 show it, don't describe it",
+      "Never pitch a Present as a Painkiller — show it, don't describe it",
       "The categories/cross-project view is a Present, not a Painkiller"
     ],
     "_source": "claude.ai",
@@ -308,8 +740,8 @@
     "id": "sb-apr18-discussion-four-pains",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "The four core pain points \u2014 in order",
-    "summary": "Pain 1 (headline): The reset pain. Every session starts blank. You re-explain, re-decide, re-discover \u2014 on repeat. Pain 2 (headline): The cognitive load pain. The structure of your AI work only exists in your head. Which project holds what, what was decided, what the pipeline is \u2014 it's all a mental map you carry alone. Storyboard puts it on the screen. Pain 3 (closer): The cross-tool pain. You start in ChatGPT, you can't pick it up in Claude. Every AI tool is an island. Pain 4 (closer): The safety pain. Laptop stolen, everything gone. Nobody warned you. \u2014 Pains 1+2 are the headline that makes people stop. Pains 3+4 are the 'and by the way' that makes the decision obvious. Not every pain needs to be the hero, but all of them belong in the story.",
+    "title": "The four core pain points — in order",
+    "summary": "Pain 1 (headline): The reset pain. Every session starts blank. You re-explain, re-decide, re-discover — on repeat. Pain 2 (headline): The cognitive load pain. The structure of your AI work only exists in your head. Which project holds what, what was decided, what the pipeline is — it's all a mental map you carry alone. Storyboard puts it on the screen. Pain 3 (closer): The cross-tool pain. You start in ChatGPT, you can't pick it up in Claude. Every AI tool is an island. Pain 4 (closer): The safety pain. Laptop stolen, everything gone. Nobody warned you. — Pains 1+2 are the headline that makes people stop. Pains 3+4 are the 'and by the way' that makes the decision obvious. Not every pain needs to be the hero, but all of them belong in the story.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -319,13 +751,13 @@
     "id": "sb-apr18-discussion-two-pains",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Two distinct pain points \u2014 reset pain vs cognitive load pain",
-    "summary": "These are two separate pains that need separate plain-English headlines. Pain 1: The reset pain \u2014 every session starts blank, you lose momentum, re-explain decisions, re-discover what you already knew. Pain 2: The cognitive load pain \u2014 serious AI users carry an invisible mental map all day. Which project holds what, what was decided where, what the pipeline looks like, where things are going. It only lives in your head. Fragile and exhausting. Storyboard externalises it \u2014 makes the thing in your head visible on a screen. These are two different product promises and two different buyer emotions.",
+    "title": "Two distinct pain points — reset pain vs cognitive load pain",
+    "summary": "These are two separate pains that need separate plain-English headlines. Pain 1: The reset pain — every session starts blank, you lose momentum, re-explain decisions, re-discover what you already knew. Pain 2: The cognitive load pain — serious AI users carry an invisible mental map all day. Which project holds what, what was decided where, what the pipeline looks like, where things are going. It only lives in your head. Fragile and exhausting. Storyboard externalises it — makes the thing in your head visible on a screen. These are two different product promises and two different buyer emotions.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "Don't collapse both pains into one tagline \u2014 they're different emotions and different buyers",
-      "Pain 2 (cognitive load) may be the more universal pain \u2014 every serious AI user feels it, even if they can't name it"
+      "Don't collapse both pains into one tagline — they're different emotions and different buyers",
+      "Pain 2 (cognitive load) may be the more universal pain — every serious AI user feels it, even if they can't name it"
     ],
     "_source": "claude.ai",
     "task": "strategy"
@@ -334,8 +766,8 @@
     "id": "sb-apr18-decision-backup-in-settings",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Backup lives in Settings/Account \u2014 not in the topbar",
-    "summary": "Backup is infrastructure, not a daily action. The right model: account setup \u2192 backup destination configured once \u2192 runs silently forever. User never thinks about it again until they need it (stolen laptop, new machine, moving). The topbar \ud83d\udcbe button is a temporary scaffold only. Long-term: Settings \u2192 Account \u2192 Backup. Configure once, forget. Same mental model as Dropbox.",
+    "title": "Backup lives in Settings/Account — not in the topbar",
+    "summary": "Backup is infrastructure, not a daily action. The right model: account setup → backup destination configured once → runs silently forever. User never thinks about it again until they need it (stolen laptop, new machine, moving). The topbar 💾 button is a temporary scaffold only. Long-term: Settings → Account → Backup. Configure once, forget. Same mental model as Dropbox.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -345,8 +777,8 @@
     "id": "sb-apr18-decision-raw-data-file",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Raw data file is the backup unit \u2014 one dense file, push to GitHub, later to S3",
-    "summary": "The backup strategy is not 'sync every file' \u2014 it's one dense compacted file that contains everything: all blocks, all discussions, all decisions, full /AI folder inventory. That file is what gets pushed to GitHub now. Later it's what goes to S3 or equivalent cloud storage. Simple, portable, readable by any AI tool. The raw file IS the product in a sense \u2014 if you can restore from it, nothing is ever truly lost.",
+    "title": "Raw data file is the backup unit — one dense file, push to GitHub, later to S3",
+    "summary": "The backup strategy is not 'sync every file' — it's one dense compacted file that contains everything: all blocks, all discussions, all decisions, full /AI folder inventory. That file is what gets pushed to GitHub now. Later it's what goes to S3 or equivalent cloud storage. Simple, portable, readable by any AI tool. The raw file IS the product in a sense — if you can restore from it, nothing is ever truly lost.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -356,8 +788,8 @@
     "id": "sb-apr18-idea-full-workspace-backup",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Full AI workspace backup \u2014 not just blocks-data, everything in /AI",
-    "summary": "Need a comprehensive backup of the entire AI workspace: every website project, every tool, every task window being tracked in Storyboard. This means: (1) a full folder inventory/manifest of /AI, (2) a human-readable summary of what each project is and where it stands, (3) all of it backed up to GitHub or cloud. If the laptop is gone tomorrow, the owner should be able to reconstruct everything from the backup \u2014 not just the Storyboard blocks but the full picture of every project in flight. This is both a safety feature and a product feature: the AI workspace snapshot.",
+    "title": "Full AI workspace backup — not just blocks-data, everything in /AI",
+    "summary": "Need a comprehensive backup of the entire AI workspace: every website project, every tool, every task window being tracked in Storyboard. This means: (1) a full folder inventory/manifest of /AI, (2) a human-readable summary of what each project is and where it stands, (3) all of it backed up to GitHub or cloud. If the laptop is gone tomorrow, the owner should be able to reconstruct everything from the backup — not just the Storyboard blocks but the full picture of every project in flight. This is both a safety feature and a product feature: the AI workspace snapshot.",
     "date": "Apr 18",
     "ts": 20260418,
     "_priority": "high",
@@ -368,8 +800,8 @@
     "id": "sb-apr18-idea-cloud-storage",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Cloud storage / backup \u2014 laptop stolen, everything is gone",
-    "summary": "Right now all Storyboard data lives locally. Laptop stolen, hard drive fails, new computer \u2014 entire AI work history vanishes. Every decision, discussion, block: gone. Cloud sync fixes this. Opt-in (some users work with sensitive data and won't want it). The compacted context file / dense raw backup is the thing to save \u2014 not raw transcripts, but the distilled intent. People will pay for the safety feeling alone. Also unlocks cross-device access (phone, second machine). Natural paid tier: local free, cloud sync paid.",
+    "title": "Cloud storage / backup — laptop stolen, everything is gone",
+    "summary": "Right now all Storyboard data lives locally. Laptop stolen, hard drive fails, new computer — entire AI work history vanishes. Every decision, discussion, block: gone. Cloud sync fixes this. Opt-in (some users work with sensitive data and won't want it). The compacted context file / dense raw backup is the thing to save — not raw transcripts, but the distilled intent. People will pay for the safety feeling alone. Also unlocks cross-device access (phone, second machine). Natural paid tier: local free, cloud sync paid.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -379,7 +811,7 @@
     "id": "sb-apr18-idea-plain-english-tagline",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Plain-English tagline \u2014 the technical framing loses normal users",
+    "title": "Plain-English tagline — the technical framing loses normal users",
     "summary": "'A visual intent layer across AI platforms' is perfect for investors and power users. Zero meaning for a normal person. The actual pain in plain English: 'Every time you open a new AI chat, it has no idea who you are or what you're building. Storyboard fixes that.' Find the version that hits the emotion first, then earns the right to explain the architecture.",
     "date": "Apr 18",
     "ts": 20260418,
@@ -390,14 +822,14 @@
     "id": "sb-apr18-discussion-cross-tool-context",
     "type": "discussion",
     "project": "Storyboard",
-    "title": "Cross-tool context continuity \u2014 the real moat",
-    "summary": "Context loss isn't just a within-session problem. It's a cross-tool problem. You start in ChatGPT, you can't pick it up in Claude. You prototype in Cursor, you lose the decisions when you switch. Every AI tool is an island. Storyboard is the bridge. The value isn't the bridge itself \u2014 it's the accumulated intent. After a month, your Storyboard has distilled decisions from 50 sessions across 4 tools. That's a layer no individual AI company can replicate. It's built from how YOU actually work.",
+    "title": "Cross-tool context continuity — the real moat",
+    "summary": "Context loss isn't just a within-session problem. It's a cross-tool problem. You start in ChatGPT, you can't pick it up in Claude. You prototype in Cursor, you lose the decisions when you switch. Every AI tool is an island. Storyboard is the bridge. The value isn't the bridge itself — it's the accumulated intent. After a month, your Storyboard has distilled decisions from 50 sessions across 4 tools. That's a layer no individual AI company can replicate. It's built from how YOU actually work.",
     "date": "Apr 18",
     "ts": 20260418,
     "decisions": [
-      "Cross-tool context loss is a painkiller problem \u2014 will get worse as people work across more AI tools",
+      "Cross-tool context loss is a painkiller problem — will get worse as people work across more AI tools",
       "Storyboard is the only layer that sits above all tools and holds intent across all of them",
-      "Session bootstrap already proves the mechanism \u2014 extend capture to every AI tool, not just Claude"
+      "Session bootstrap already proves the mechanism — extend capture to every AI tool, not just Claude"
     ],
     "_source": "claude.ai",
     "task": "strategy"
@@ -406,8 +838,8 @@
     "id": "sb-apr18-idea-cross-tool-core",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Cross-tool context transfer as core product \u2014 start in one AI, continue in another",
-    "summary": "Not just a feature \u2014 potentially a second core product. Start a session in ChatGPT, Storyboard captures it. Open Claude, it seeds from Storyboard automatically. No re-explaining. No lost decisions. The AI tool becomes interchangeable; the intent layer is what persists. This is the painkiller that grows bigger as the AI tool ecosystem fragments further.",
+    "title": "Cross-tool context transfer as core product — start in one AI, continue in another",
+    "summary": "Not just a feature — potentially a second core product. Start a session in ChatGPT, Storyboard captures it. Open Claude, it seeds from Storyboard automatically. No re-explaining. No lost decisions. The AI tool becomes interchangeable; the intent layer is what persists. This is the painkiller that grows bigger as the AI tool ecosystem fragments further.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -418,11 +850,11 @@
     "type": "rejection",
     "project": "Storyboard",
     "title": "Visual intent layer for AI work",
-    "summary": "Rejected as core framing \u2014 'for AI work' is generic, anyone could say it. Replaced with 'across AI platforms'.",
+    "summary": "Rejected as core framing — 'for AI work' is generic, anyone could say it. Replaced with 'across AI platforms'.",
     "replacedBy": "A visual intent layer across AI platforms",
     "date": "Apr 18",
     "ts": 20260418,
-    "_reason": "'For AI work' has no differentiation. 'Across AI platforms' signals the cross-tool vision \u2014 that Storyboard sits above Claude, ChatGPT, Cursor, Gemini, all of them. That's the actual moat.",
+    "_reason": "'For AI work' has no differentiation. 'Across AI platforms' signals the cross-tool vision — that Storyboard sits above Claude, ChatGPT, Cursor, Gemini, all of them. That's the actual moat.",
     "_source": "claude.ai",
     "task": "strategy"
   },
@@ -430,8 +862,8 @@
     "id": "sb-apr18-intent-storyboard",
     "type": "intent",
     "project": "Storyboard",
-    "title": "Storyboard \u2014 a visual intent layer across AI platforms",
-    "summary": "Storyboard sits above all AI tools. It captures sessions, decisions, and ideas from any tool \u2014 Claude, ChatGPT, Cursor, Gemini \u2014 and seeds them back into any new session. The AI tool becomes interchangeable. The intent layer is what persists. Context windows end. Intent doesn't.",
+    "title": "Storyboard — a visual intent layer across AI platforms",
+    "summary": "Storyboard sits above all AI tools. It captures sessions, decisions, and ideas from any tool — Claude, ChatGPT, Cursor, Gemini — and seeds them back into any new session. The AI tool becomes interchangeable. The intent layer is what persists. Context windows end. Intent doesn't.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -441,7 +873,7 @@
     "id": "sb-apr18-compaction-day4",
     "type": "compaction",
     "project": "Storyboard",
-    "title": "Memory compressed \u2014 Day 4 context",
+    "title": "Memory compressed — Day 4 context",
     "summary": "Context compaction mid-session. Lost: detailed discussion of extension adapter architecture, early rejected names, first draft of the velocity framing.",
     "date": "Apr 18",
     "ts": 20260418,
@@ -454,8 +886,8 @@
     "type": "rejection",
     "project": "Storyboard",
     "title": "Morning brief",
-    "summary": "Rejected as primary label \u2014 doesn't communicate the action. Too passive. Replaced with 'Carry forward \u2192'",
-    "replacedBy": "Carry forward \u2192",
+    "summary": "Rejected as primary label — doesn't communicate the action. Too passive. Replaced with 'Carry forward →'",
+    "replacedBy": "Carry forward →",
     "date": "Apr 18",
     "ts": 20260418,
     "_reason": "Doesn't communicate the action. 'Morning' is time-specific. Carry forward is what you actually do.",
@@ -467,7 +899,7 @@
     "type": "rejection",
     "project": "Storyboard",
     "title": "Visual memory layer",
-    "summary": "Rejected as core framing \u2014 memory is backward-looking, past-tense. Replaced with 'visual intent layer'.",
+    "summary": "Rejected as core framing — memory is backward-looking, past-tense. Replaced with 'visual intent layer'.",
     "replacedBy": "Visual intent layer",
     "date": "Apr 18",
     "ts": 20260418,
@@ -479,9 +911,9 @@
     "id": "sb-apr18-rejection-seed-label",
     "type": "rejection",
     "project": "Storyboard",
-    "title": "Seed next chat / Seed \u2192",
-    "summary": "Rejected \u2014 technical jargon, meaningless to non-engineers. Replaced with 'Carry forward \u2192'.",
-    "replacedBy": "Carry forward \u2192",
+    "title": "Seed next chat / Seed →",
+    "summary": "Rejected — technical jargon, meaningless to non-engineers. Replaced with 'Carry forward →'.",
+    "replacedBy": "Carry forward →",
     "date": "Apr 18",
     "ts": 20260418,
     "_reason": "'Seed' is a developer term. Nobody outside engineering knows what seeding a chat means.",
@@ -492,7 +924,7 @@
     "id": "sb-apr18-decision-capture-everything",
     "type": "decision",
     "project": "Storyboard",
-    "title": "Capture everything raw \u2014 decide what to keep later",
+    "title": "Capture everything raw — decide what to keep later",
     "summary": "Don't ask users to categorize at capture time. Capture friction kills capture rate. AI extracts structure afterward. 'Decide what to keep' is a lighter cognitive task than 'decide what to capture'.",
     "date": "Apr 18",
     "ts": 20260418,
@@ -504,7 +936,7 @@
     "type": "decision",
     "project": "Storyboard",
     "title": "API key model: BYOK first, hosted service second",
-    "summary": "Phase 1 power users paste their own Anthropic key. Phase 2 is a hosted subscription. Local pattern extraction is the floor \u2014 always works with zero config.",
+    "summary": "Phase 1 power users paste their own Anthropic key. Phase 2 is a hosted subscription. Local pattern extraction is the floor — always works with zero config.",
     "date": "Apr 18",
     "ts": 20260418,
     "_source": "claude.ai",
@@ -514,7 +946,7 @@
     "id": "sb-apr18-idea-claude-design",
     "type": "idea",
     "project": "Storyboard",
-    "title": "Claude Design integration \u2014 export Discussion docs as visual one-pagers",
+    "title": "Claude Design integration — export Discussion docs as visual one-pagers",
     "summary": "Anthropic launched Claude Design (Apr 17). Natural complement: Claude Design makes outputs visual, Storyboard makes the process visible. 'Send to Claude Design' button on Discussion docs.",
     "date": "Apr 18",
     "ts": 20260418,
@@ -529,7 +961,7 @@
     "ts": 20260418,
     "_source": "claude.ai",
     "_captured": "2026-04-18T18:00:00.000Z",
-    "title": "Day 4 session \u2014 total capture pipeline",
+    "title": "Day 4 session — total capture pipeline",
     "summary": "Built review inbox, /raw-capture, /process-transcript, /confirm-candidates, local pattern extraction, Settings overlay, seed quality rating, since-you-were-away banner, Claude Design export.",
     "contextBlocks": 41,
     "contextFill": 78,
@@ -539,9 +971,9 @@
     "id": "decision-integration-architecture",
     "type": "decision",
     "project": "Storyboard",
-    "title": "MCP-first architecture \u2014 browser extension is a bridge, not the plan",
-    "body": "Every AI tool integration goes through mcp-server.js as universal intake. Browser extension covers tools that don't support MCP yet (ChatGPT, Gemini). When those tools adopt MCP, we plug in via config \u2014 no server changes. Always monitor when new tools add MCP support. The _source field on every block tracks which tool captured it.",
-    "rationale": "Claude has the most capable environment right now but others will follow. Build the pipes ready \u2014 when they open, just connect.",
+    "title": "MCP-first architecture — browser extension is a bridge, not the plan",
+    "body": "Every AI tool integration goes through mcp-server.js as universal intake. Browser extension covers tools that don't support MCP yet (ChatGPT, Gemini). When those tools adopt MCP, we plug in via config — no server changes. Always monitor when new tools add MCP support. The _source field on every block tracks which tool captured it.",
+    "rationale": "Claude has the most capable environment right now but others will follow. Build the pipes ready — when they open, just connect.",
     "tags": [
       "architecture",
       "mcp",
@@ -560,7 +992,7 @@
     "_source": "claude.ai",
     "_captured": "2026-04-17T16:00:00.000Z",
     "status": "done",
-    "title": "Day 1 sprint \u2014 landing page, browser extension, pitch deck, Context Hub",
+    "title": "Day 1 sprint — landing page, browser extension, pitch deck, Context Hub",
     "summary": "Full Day 1 of the 10-day sprint. Built the new landing page from scratch with context window hero message. Added Skills view with category intents and skill-by-task suggestions. Context Hub overlay with per-project seed and staleness tracking. First-visit onboarding with 3 paths. Browser extension v0.1 covering Claude, ChatGPT, Gemini, Cursor, Perplexity. MCP server HTTP endpoints /ping and /capture-web. Living investor pitch deck (10 slides, keyboard nav). README completely rewritten. GitHub Pages enabled.",
     "chips": [
       "Landing page",
@@ -571,19 +1003,19 @@
       "Onboarding"
     ],
     "decisions": [
-      "Hero message: 'Context windows end. Your project doesn't.' \u2014 most relatable pain point",
+      "Hero message: 'Context windows end. Your project doesn't.' — most relatable pain point",
       "Skills organized by category with editable intent statements to prevent steering drift",
-      "Context Hub shows staleness \u2014 orange badge when unseen sessions exist for a project",
+      "Context Hub shows staleness — orange badge when unseen sessions exist for a project",
       "Browser extension is bridge for non-MCP tools; MCP is always the primary pipe",
-      "Pitch deck lives as pitch.html \u2014 updated every sprint day as traction grows",
-      "Copilot added as MCP client \u2014 Microsoft adopted MCP in early 2026"
+      "Pitch deck lives as pitch.html — updated every sprint day as traction grows",
+      "Copilot added as MCP client — Microsoft adopted MCP in early 2026"
     ],
     "ideas": [
-      "Chrome Web Store submission \u2014 unlocks normal install flow for non-developers",
-      "Screen recording showing full loop: capture \u2192 dashboard \u2192 Seed \u2192 paste",
+      "Chrome Web Store submission — unlocks normal install flow for non-developers",
+      "Screen recording showing full loop: capture → dashboard → Seed → paste",
       "Demo data that tells a real story across multiple months and projects"
     ],
-    "seed": "Storyboard \u2014 Day 1 Complete\n\nShipped today: landing page (context window hero), skills with category intents, Context Hub (per-project seed + staleness), onboarding (3 paths), browser extension v0.1, MCP /capture-web + /ping endpoints, pitch deck, README.\n\nMCP clients: Claude Desktop, Cursor, Windsurf, Copilot\nExtension coverage: Claude, ChatGPT, Gemini, Perplexity, Replit\n\nNext: block detail overlay, timeline view, Chrome Web Store",
+    "seed": "Storyboard — Day 1 Complete\n\nShipped today: landing page (context window hero), skills with category intents, Context Hub (per-project seed + staleness), onboarding (3 paths), browser extension v0.1, MCP /capture-web + /ping endpoints, pitch deck, README.\n\nMCP clients: Claude Desktop, Cursor, Windsurf, Copilot\nExtension coverage: Claude, ChatGPT, Gemini, Perplexity, Replit\n\nNext: block detail overlay, timeline view, Chrome Web Store",
     "task": "dashboard"
   },
   {
@@ -595,22 +1027,22 @@
     "_source": "claude.ai",
     "_captured": "2026-04-17T14:00:00.000Z",
     "status": "done",
-    "title": "Dashboard v5 \u2014 Search \u00b7 FAB \u00b7 Stats Bar \u00b7 Dynamic Seed",
-    "summary": "Global search overlay (\u2318K), FAB speed-dial for capture, stats bar, localStorage persistence, fully dynamic seedNewChat(). MCP tools added: git_push, score_skills.",
+    "title": "Dashboard v5 — Search · FAB · Stats Bar · Dynamic Seed",
+    "summary": "Global search overlay (⌘K), FAB speed-dial for capture, stats bar, localStorage persistence, fully dynamic seedNewChat(). MCP tools added: git_push, score_skills.",
     "chips": [
-      "\u2318K Search",
+      "⌘K Search",
       "FAB Speed-dial",
       "Stats Bar",
       "Dynamic Seed"
     ],
     "decisions": [
-      "Search as overlay \u2014 keeps feed clean, \u2318K is muscle memory for most users",
-      "FAB becomes speed-dial: Idea / Decision / Block \u2014 rotates to \u00d7 when open",
-      "capturedIdeas persisted to localStorage \u2014 survive page refreshes without MCP"
+      "Search as overlay — keeps feed clean, ⌘K is muscle memory for most users",
+      "FAB becomes speed-dial: Idea / Decision / Block — rotates to × when open",
+      "capturedIdeas persisted to localStorage — survive page refreshes without MCP"
     ],
     "ideas": [
-      "Mobile PWA install flow \u2014 'Add to Home Screen' prompt on first visit",
-      "Export whole storyboard as markdown \u2014 for handoff or backup"
+      "Mobile PWA install flow — 'Add to Home Screen' prompt on first visit",
+      "Export whole storyboard as markdown — for handoff or backup"
     ],
     "task": "dashboard"
   },
@@ -623,8 +1055,8 @@
     "_source": "claude.ai",
     "_captured": "2026-04-17T10:00:00.000Z",
     "status": "done",
-    "title": "Dashboard v3 \u2014 Dark mode \u00b7 Decisions \u00b7 Flag This Moment",
-    "summary": "Major UI sprint. OS/AI mode toggle (light vs dark, persisted). Period tab filtering. FOCUS card in nav. Right panel as session summary \u2014 Seed Next Chat CTA + today's work + ideas. Decisions nav item with live count. Flag This Moment captures timestamped snapshot to clipboard.",
+    "title": "Dashboard v3 — Dark mode · Decisions · Flag This Moment",
+    "summary": "Major UI sprint. OS/AI mode toggle (light vs dark, persisted). Period tab filtering. FOCUS card in nav. Right panel as session summary — Seed Next Chat CTA + today's work + ideas. Decisions nav item with live count. Flag This Moment captures timestamped snapshot to clipboard.",
     "chips": [
       "AI Mode",
       "Decisions nav",
@@ -632,8 +1064,8 @@
       "Period filtering"
     ],
     "decisions": [
-      "OS Mode = light (default), AI Mode = dark \u2014 toggled in header, persisted via localStorage",
-      "No terminal ever \u2014 screenshots via html2canvas \u2192 POST to MCP HTTP server",
+      "OS Mode = light (default), AI Mode = dark — toggled in header, persisted via localStorage",
+      "No terminal ever — screenshots via html2canvas → POST to MCP HTTP server",
       "Featured blocks = most recent block from top 3 most active projects"
     ],
     "task": "dashboard"
@@ -644,8 +1076,8 @@
     "project": "Storyboard",
     "date": "Apr 17",
     "ts": 20260417,
-    "title": "\ud83d\udca1 Browser widget \u2014 capture every AI tool automatically",
-    "summary": "Install once. Works across all AI tabs: Claude, ChatGPT, Gemini, Cursor, Replit, Perplexity. Sessions auto-captured regardless of which AI you're in. This is the moat: no individual AI company can build cross-model capture \u2014 only Storyboard can, because it sits above all of them.",
+    "title": "💡 Browser widget — capture every AI tool automatically",
+    "summary": "Install once. Works across all AI tabs: Claude, ChatGPT, Gemini, Cursor, Replit, Perplexity. Sessions auto-captured regardless of which AI you're in. This is the moat: no individual AI company can build cross-model capture — only Storyboard can, because it sits above all of them.",
     "task": "chrome-extension"
   },
   {
@@ -654,8 +1086,8 @@
     "project": "Storyboard",
     "date": "Apr 17",
     "ts": 20260417,
-    "title": "\ud83d\udca1 Storyboard as open API \u2014 universal AI memory layer",
-    "summary": "Storyboard becomes middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product \u2014 a universal AI memory layer sitting between where you work and where Claude thinks.",
+    "title": "💡 Storyboard as open API — universal AI memory layer",
+    "summary": "Storyboard becomes middleware: Slack posts to it, Claude Desktop MCP writes to it, email hooks write to it. Open API means any tool can read/write context. Not a Claude product — a universal AI memory layer sitting between where you work and where Claude thinks.",
     "task": "strategy"
   },
   {
@@ -664,8 +1096,8 @@
     "project": "Storyboard",
     "date": "Apr 17",
     "ts": 20260417,
-    "title": "\ud83d\udca1 Shopify for the AI economy \u2014 track everything AI builds",
-    "summary": "A live dashboard tracking all AI-built outputs: revenue, transactions, deployments, uptime. Not just sessions and decisions \u2014 real metrics. Think Shopify dashboard but the products are AI workflows and the sales are automated outputs.",
+    "title": "💡 Shopify for the AI economy — track everything AI builds",
+    "summary": "A live dashboard tracking all AI-built outputs: revenue, transactions, deployments, uptime. Not just sessions and decisions — real metrics. Think Shopify dashboard but the products are AI workflows and the sales are automated outputs.",
     "task": "strategy"
   },
   {
@@ -676,8 +1108,8 @@
     "ts": 20260414,
     "_source": "claude.ai",
     "status": "done",
-    "title": "First build \u2014 app shell, masonry grid, dark theme foundation",
-    "summary": "Day zero. Built the initial Storyboard app shell: masonry block grid, project filter sidebar, right panel, dark/light theme. Loaded blocks-data.json as the data source. Established the core data model: blocks have id, type, project, title, summary, ts, decisions[], ideas[]. Session block \u2192 decision block \u2192 idea block distinction decided here.",
+    "title": "First build — app shell, masonry grid, dark theme foundation",
+    "summary": "Day zero. Built the initial Storyboard app shell: masonry block grid, project filter sidebar, right panel, dark/light theme. Loaded blocks-data.json as the data source. Established the core data model: blocks have id, type, project, title, summary, ts, decisions[], ideas[]. Session block → decision block → idea block distinction decided here.",
     "chips": [
       "v1 App shell",
       "Masonry grid",
@@ -685,13 +1117,13 @@
       "Theme foundation"
     ],
     "decisions": [
-      "Single-file HTML \u2014 no build tools, no npm for the UI itself",
-      "blocks-data.json as the source of truth \u2014 MCP server writes to it, dashboard polls it",
-      "Three block types at launch: session, decision, idea \u2014 keep it simple",
+      "Single-file HTML — no build tools, no npm for the UI itself",
+      "blocks-data.json as the source of truth — MCP server writes to it, dashboard polls it",
+      "Three block types at launch: session, decision, idea — keep it simple",
       "localStorage for captured ideas/decisions so they survive refresh"
     ],
     "ideas": [
-      "Canvas view \u2014 project card grid with counts instead of a feed",
+      "Canvas view — project card grid with counts instead of a feed",
       "Version snapshots stored in /versions folder with thumbnails",
       "Timeline view to see work density across months"
     ],
@@ -705,8 +1137,8 @@
     "ts": 20260410,
     "_source": "claude.ai",
     "status": "done",
-    "title": "Valuation engine v2 \u2014 Catastro API + pisos.com scraping live",
-    "summary": "Major milestone. Catastro API integration confirmed working \u2014 returns cadastral value, surface area, and construction year for any Spanish property reference. pisos.com scraper returns 10-15 comparable listings per query. Valuation algorithm: 60% market comps, 30% cadastral reference, 10% location premium. Flask web interface scaffolded. First end-to-end valuation run returned \u20ac285,000 estimate vs agent quote of \u20ac310,000 \u2014 within 9%.",
+    "title": "Valuation engine v2 — Catastro API + pisos.com scraping live",
+    "summary": "Major milestone. Catastro API integration confirmed working — returns cadastral value, surface area, and construction year for any Spanish property reference. pisos.com scraper returns 10-15 comparable listings per query. Valuation algorithm: 60% market comps, 30% cadastral reference, 10% location premium. Flask web interface scaffolded. First end-to-end valuation run returned €285,000 estimate vs agent quote of €310,000 — within 9%.",
     "chips": [
       "Catastro API",
       "pisos.com scraper",
@@ -714,13 +1146,13 @@
       "Flask UI"
     ],
     "decisions": [
-      "Valuation formula: 60% market / 30% cadastral / 10% location \u2014 weighted blend beats any single source",
-      "Flask over FastAPI \u2014 simpler, fewer deps, good enough for internal tool",
-      "Cache Catastro responses for 30 days \u2014 data doesn't change that fast",
-      "Confidence score displayed alongside estimate \u2014 be honest about uncertainty"
+      "Valuation formula: 60% market / 30% cadastral / 10% location — weighted blend beats any single source",
+      "Flask over FastAPI — simpler, fewer deps, good enough for internal tool",
+      "Cache Catastro responses for 30 days — data doesn't change that fast",
+      "Confidence score displayed alongside estimate — be honest about uncertainty"
     ],
     "ideas": [
-      "PDF report output \u2014 client-ready valuation document with comps and methodology",
+      "PDF report output — client-ready valuation document with comps and methodology",
       "Historical price trend chart per postcode",
       "Rental yield calculator alongside sale valuation"
     ]
@@ -733,7 +1165,7 @@
     "ts": 20260407,
     "_source": "cursor",
     "status": "done",
-    "title": "Interactive map view \u2014 Leaflet.js + property pins live",
+    "title": "Interactive map view — Leaflet.js + property pins live",
     "summary": "Built the map view using Leaflet.js. Properties plot as colour-coded pins: green (below market), orange (at market), red (above market). Clicking a pin opens the valuation card. 47 Costa Blanca properties loaded from XML feed as test dataset. Map tiles from OpenStreetMap. Filter panel: price range, property type, bedrooms, distance from beach.",
     "chips": [
       "Leaflet.js",
@@ -742,14 +1174,14 @@
       "Price filters"
     ],
     "decisions": [
-      "Colour by price vs market \u2014 green/orange/red \u2014 instantly readable without numbers",
-      "OpenStreetMap tiles \u2014 free, no API key, loads fast",
-      "Cluster pins at zoom-out \u2014 prevents overlap on large datasets",
-      "Filter panel as sidebar, not modal \u2014 always visible, no extra click"
+      "Colour by price vs market — green/orange/red — instantly readable without numbers",
+      "OpenStreetMap tiles — free, no API key, loads fast",
+      "Cluster pins at zoom-out — prevents overlap on large datasets",
+      "Filter panel as sidebar, not modal — always visible, no extra click"
     ],
     "ideas": [
       "Heatmap layer showing average price per area",
-      "Draw-a-zone tool \u2014 let user draw polygon to get stats for that area",
+      "Draw-a-zone tool — let user draw polygon to get stats for that area",
       "Save map view as shareable link"
     ]
   },
@@ -771,8 +1203,8 @@
     "ts": 20260324,
     "_source": "claude.ai",
     "status": "done",
-    "title": "PropertyOS kickoff \u2014 architecture, data sources, first scraper",
-    "summary": "Project started. Goal: AI-powered property valuation tool for the Costa Blanca market. Researched data sources: Catastro (official registry), pisos.com, fotocasa, idealista. Built first scraper for pisos.com \u2014 returns price/m\u00b2, bedrooms, location for any postcode. Python stack: requests + BeautifulSoup + pandas. Decided to start with Costa Blanca only \u2014 narrow the geography, go deep.",
+    "title": "PropertyOS kickoff — architecture, data sources, first scraper",
+    "summary": "Project started. Goal: AI-powered property valuation tool for the Costa Blanca market. Researched data sources: Catastro (official registry), pisos.com, fotocasa, idealista. Built first scraper for pisos.com — returns price/m², bedrooms, location for any postcode. Python stack: requests + BeautifulSoup + pandas. Decided to start with Costa Blanca only — narrow the geography, go deep.",
     "chips": [
       "Architecture",
       "pisos.com scraper",
@@ -780,15 +1212,15 @@
       "Market research"
     ],
     "decisions": [
-      "Costa Blanca only at launch \u2014 depth over breadth, we know this market",
+      "Costa Blanca only at launch — depth over breadth, we know this market",
       "Python for scraping and data layer, Flask for web UI",
-      "Four data sources: Catastro, pisos.com, fotocasa, idealista \u2014 cross-reference for confidence",
-      "Price per m\u00b2 as the atomic unit \u2014 normalises across property sizes"
+      "Four data sources: Catastro, pisos.com, fotocasa, idealista — cross-reference for confidence",
+      "Price per m² as the atomic unit — normalises across property sizes"
     ],
     "ideas": [
       "Extend to whole Spain after Costa Blanca is proven",
       "Mobile app version for agents at viewings",
-      "Integration with H&H CRM \u2014 auto-valuation on new lead"
+      "Integration with H&H CRM — auto-valuation on new lead"
     ]
   },
   {
@@ -797,7 +1229,7 @@
     "project": "PropertyOS",
     "date": "Apr 10",
     "ts": 20260410,
-    "title": "\ud83d\udca1 PDF valuation report \u2014 client-ready with methodology",
+    "title": "💡 PDF valuation report — client-ready with methodology",
     "summary": "Generate a branded PDF after every valuation: summary page, comparable properties table, price trend chart, confidence score explanation, H&H branding. Agents can send it directly to clients. Makes the tool feel professional, not like an internal spreadsheet."
   },
   {
@@ -806,7 +1238,7 @@
     "project": "PropertyOS",
     "date": "Apr 7",
     "ts": 20260407,
-    "title": "\ud83d\udca1 CRM integration \u2014 auto-valuation when new lead comes in",
+    "title": "💡 CRM integration — auto-valuation when new lead comes in",
     "summary": "When a new lead hits the CRM with a property reference, PropertyOS auto-runs the valuation and attaches it to the contact record. Agent opens the lead and already has the valuation ready. Zero extra work."
   },
   {
@@ -817,8 +1249,8 @@
     "ts": 20260405,
     "_source": "claude.ai",
     "status": "done",
-    "title": "Opero brand positioning \u2014 5 pillars, pricing, client playbook",
-    "summary": "Defined the full Opero positioning: AI implementation agency, not a traditional agency. Five pillars: Strategy, Build, Automate, Train, Scale. Pricing: Discovery \u20ac2,500 / Build \u20ac8,000\u201325,000 / Retainer \u20ac3,000/month. Client playbook written: onboarding doc, first-session script, skill audit process. Landing page structure decided.",
+    "title": "Opero brand positioning — 5 pillars, pricing, client playbook",
+    "summary": "Defined the full Opero positioning: AI implementation agency, not a traditional agency. Five pillars: Strategy, Build, Automate, Train, Scale. Pricing: Discovery €2,500 / Build €8,000–25,000 / Retainer €3,000/month. Client playbook written: onboarding doc, first-session script, skill audit process. Landing page structure decided.",
     "chips": [
       "Brand positioning",
       "5 pillars",
@@ -826,15 +1258,15 @@
       "Client playbook"
     ],
     "decisions": [
-      "Agency name: Opero \u2014 from Latin 'operor' (to work, to be active) \u2014 clean, memorable, no AI clich\u00e9",
-      "Domain: opero.ai \u2014 short, clear, available",
-      "Tagline: 'Build faster. Think clearer. Ship more.' \u2014 active, not feature-focused",
-      "Pricing anchored at Discovery sprint \u2014 low barrier, high value, natural upsell to Build",
-      "No hourly billing \u2014 project and retainer only, forces scoping discipline"
+      "Agency name: Opero — from Latin 'operor' (to work, to be active) — clean, memorable, no AI cliché",
+      "Domain: opero.ai — short, clear, available",
+      "Tagline: 'Build faster. Think clearer. Ship more.' — active, not feature-focused",
+      "Pricing anchored at Discovery sprint — low barrier, high value, natural upsell to Build",
+      "No hourly billing — project and retainer only, forces scoping discipline"
     ],
     "ideas": [
-      "Skill marketplace \u2014 sell curated, scored skill packs per industry",
-      "Public skill library \u2014 curate and score all Claude skills found online",
+      "Skill marketplace — sell curated, scored skill packs per industry",
+      "Public skill library — curate and score all Claude skills found online",
       "Client dashboard showing ROI from AI workflows we built for them"
     ]
   },
@@ -846,7 +1278,7 @@
     "ts": 20260405,
     "_source": "claude.ai",
     "status": "done",
-    "title": "opero.ai landing page \u2014 hero, services, social proof, CTA",
+    "title": "opero.ai landing page — hero, services, social proof, CTA",
     "summary": "Full landing page built: nav, hero with animated subheadline, 5 service cards, social proof section (client logos + results), team section, email capture, footer. JSON-LD schema for organization. Mobile-first responsive. Dark professional theme with accent colour.",
     "chips": [
       "Landing page",
@@ -855,10 +1287,10 @@
       "JSON-LD"
     ],
     "decisions": [
-      "Dark theme with bright accent \u2014 stands out from generic agency white pages",
-      "Results-first social proof: '47 automations shipped', '12 clients', '\u20ac2.4M pipeline generated'",
-      "Email capture before full contact form \u2014 lower friction for first touch",
-      "No chatbot widget \u2014 Opero is high-touch, chatbots contradict the positioning"
+      "Dark theme with bright accent — stands out from generic agency white pages",
+      "Results-first social proof: '47 automations shipped', '12 clients', '€2.4M pipeline generated'",
+      "Email capture before full contact form — lower friction for first touch",
+      "No chatbot widget — Opero is high-touch, chatbots contradict the positioning"
     ]
   },
   {
@@ -866,8 +1298,8 @@
     "type": "decision",
     "project": "Opero Agency",
     "title": "Opero niche: professional services + real estate first",
-    "body": "Focus the first 6 months entirely on professional services firms and real estate agencies. These clients have predictable workflows, high LTV, and are far enough behind on AI that there's genuine urgency. Avoid e-commerce and D2C \u2014 too much tooling already exists, margin is thin, clients are price-sensitive.",
-    "rationale": "Better to be the obvious choice in two verticals than a vague option everywhere. Real estate is already our domain \u2014 it's the fastest sales cycle.",
+    "body": "Focus the first 6 months entirely on professional services firms and real estate agencies. These clients have predictable workflows, high LTV, and are far enough behind on AI that there's genuine urgency. Avoid e-commerce and D2C — too much tooling already exists, margin is thin, clients are price-sensitive.",
+    "rationale": "Better to be the obvious choice in two verticals than a vague option everywhere. Real estate is already our domain — it's the fastest sales cycle.",
     "ts": 20260320,
     "confidence": "high"
   },
@@ -879,7 +1311,7 @@
     "ts": 20260402,
     "_source": "claude.ai",
     "status": "done",
-    "title": "Opero CRM \u2014 Airtable base with 18 fields, client pipeline live",
+    "title": "Opero CRM — Airtable base with 18 fields, client pipeline live",
     "summary": "Airtable CRM built from scratch. Client table: 18 fields covering contact info, deal stage, project type, estimated value, notes, next action date. Pipeline view configured. First 3 prospects entered. Automations: new record triggers Slack notification, deal stage change sends internal email summary.",
     "chips": [
       "Airtable CRM",
@@ -888,10 +1320,10 @@
       "Slack automation"
     ],
     "decisions": [
-      "Airtable over HubSpot \u2014 faster to customise, cheaper, we control the schema",
+      "Airtable over HubSpot — faster to customise, cheaper, we control the schema",
       "Deal stages: Prospect / Discovery / Proposal / Active / Complete / Churned",
-      "Estimated project value field mandatory \u2014 forces qualification early",
-      "Slack notification on new prospect \u2014 no lead goes unnoticed"
+      "Estimated project value field mandatory — forces qualification early",
+      "Slack notification on new prospect — no lead goes unnoticed"
     ]
   },
   {
@@ -900,8 +1332,8 @@
     "project": "Opero Agency",
     "date": "Apr 5",
     "ts": 20260405,
-    "title": "\ud83d\udca1 Skill marketplace \u2014 curated skill packs per industry",
-    "summary": "Most Claude users don't know what a good skill looks like. We curate, score, and sell them. Agency wants Facebook targeting? Buy the paid-ads skill pack. Real estate agency? Buy the property marketing bundle. The Storyboard skills inspector scores tell people their skills are weak \u2014 Opero sells the fix."
+    "title": "💡 Skill marketplace — curated skill packs per industry",
+    "summary": "Most Claude users don't know what a good skill looks like. We curate, score, and sell them. Agency wants Facebook targeting? Buy the paid-ads skill pack. Real estate agency? Buy the property marketing bundle. The Storyboard skills inspector scores tell people their skills are weak — Opero sells the fix."
   },
   {
     "id": "idea-opero-roi-dashboard",
@@ -909,8 +1341,8 @@
     "project": "Opero Agency",
     "date": "Apr 5",
     "ts": 20260405,
-    "title": "\ud83d\udca1 Client ROI dashboard \u2014 show the value we created",
-    "summary": "Every Opero client gets a live dashboard: hours saved per week, automations running, revenue influenced, content published. Makes the retainer a no-brainer renewal \u2014 they can see the number. Also makes case studies almost write themselves."
+    "title": "💡 Client ROI dashboard — show the value we created",
+    "summary": "Every Opero client gets a live dashboard: hours saved per week, automations running, revenue influenced, content published. Makes the retainer a no-brainer renewal — they can see the number. Also makes case studies almost write themselves."
   },
   {
     "id": "costa-seo-engine-session",
@@ -920,7 +1352,7 @@
     "ts": 20260317,
     "_source": "claude.ai",
     "status": "done",
-    "title": "SEO engine \u2014 9-language AI descriptions, JSON-LD schemas live",
+    "title": "SEO engine — 9-language AI descriptions, JSON-LD schemas live",
     "summary": "Built the complete SEO content generation pipeline for newbuildhomescostablanca.com. AI property descriptions in 9 languages using Anthropic SDK. 14 JSON-LD schema types: Product, RealEstateListing, FAQ, Place, Article, GolfCourse, Breadcrumb, VideoObject. Auto-generated alt tags per image type. Voice-search optimised FAQs (15+ per page). hreflang for all 9 languages.",
     "chips": [
       "9 languages",
@@ -930,14 +1362,14 @@
       "FAQ engine"
     ],
     "decisions": [
-      "AI descriptions generated at build time via Anthropic SDK \u2014 not runtime, keeps TTFB fast",
-      "9 languages: EN, SV, NL, DE, FR, ES, PL, NO, DA \u2014 match actual buyer demographics",
-      "14 schema types \u2014 overkill feels right when competing for featured snippets",
+      "AI descriptions generated at build time via Anthropic SDK — not runtime, keeps TTFB fast",
+      "9 languages: EN, SV, NL, DE, FR, ES, PL, NO, DA — match actual buyer demographics",
+      "14 schema types — overkill feels right when competing for featured snippets",
       "Voice search FAQs: 'What is the best area to buy property in Costa Blanca?' format"
     ],
     "ideas": [
       "Dynamic pricing badges using live feed data",
-      "Schema for upcoming developments \u2014 future launches indexed before they go live",
+      "Schema for upcoming developments — future launches indexed before they go live",
       "Competitor gap analysis: find queries they rank for that we don't have pages for yet"
     ]
   },
@@ -949,7 +1381,7 @@
     "ts": 20260310,
     "_source": "claude.ai",
     "status": "done",
-    "title": "Blog pipeline \u2014 12 articles published, 3 languages each",
+    "title": "Blog pipeline — 12 articles published, 3 languages each",
     "summary": "Built the full blog content pipeline using the real-estate-blog-writer skill. 12 articles published across EN, SV, NL. Topics: area guides (Benidorm, Alicante, Torrevieja), buying guides (new vs resale, legal process, mortgage), golf property guides (La Manga, Las Colinas), market reports. Passed AEO audit gate: 100/100 on all 12. Internal linking structure complete.",
     "chips": [
       "12 articles",
@@ -958,15 +1390,15 @@
       "Internal linking"
     ],
     "decisions": [
-      "Article structure: intro \u2192 featured snippet block \u2192 5 H2 sections \u2192 FAQ \u2192 CTA",
-      "Featured snippet block in first 100 words \u2014 targets 'People also ask' boxes",
+      "Article structure: intro → featured snippet block → 5 H2 sections → FAQ → CTA",
+      "Featured snippet block in first 100 words — targets 'People also ask' boxes",
       "Internal links from every article to 2 development pages + 1 area page",
-      "Publish EN first, then SV, then NL \u2014 prioritise by traffic opportunity"
+      "Publish EN first, then SV, then NL — prioritise by traffic opportunity"
     ],
     "ideas": [
-      "RSS feed monitoring for competitor blog topics \u2014 auto-adapt their angles",
-      "Video summary reel for each article \u2014 TikTok/Reels repurposing",
-      "Email newsletter using blog content as base \u2014 monthly digest"
+      "RSS feed monitoring for competitor blog topics — auto-adapt their angles",
+      "Video summary reel for each article — TikTok/Reels repurposing",
+      "Email newsletter using blog content as base — monthly digest"
     ]
   },
   {
@@ -977,7 +1409,7 @@
     "ts": 20260217,
     "_source": "cursor",
     "status": "done",
-    "title": "XML feed parser \u2014 REDSP + Background Properties, 847 listings live",
+    "title": "XML feed parser — REDSP + Background Properties, 847 listings live",
     "summary": "Built the full data pipeline. REDSP XML feed: 612 properties. Background Properties feed: 235. Town name normalisation: 140 aliases mapped to canonical names. Region mapping: 6 Costa Blanca regions (North, Central, South, Inland, Costa, Urban). Deduplication by ref number. 1-hour cache. Feed health dashboard showing last updated, record counts, parse errors.",
     "chips": [
       "REDSP feed",
@@ -986,24 +1418,24 @@
       "Deduplication"
     ],
     "decisions": [
-      "Unified feed service \u2014 both sources normalised to same schema before hitting the UI",
-      "Region mapping lives in config, not code \u2014 easy to add new regions",
-      "1-hour cache with stale-while-revalidate \u2014 no API hammering, no stale data",
-      "Feed health dashboard visible to admin only \u2014 catch parse errors fast"
+      "Unified feed service — both sources normalised to same schema before hitting the UI",
+      "Region mapping lives in config, not code — easy to add new regions",
+      "1-hour cache with stale-while-revalidate — no API hammering, no stale data",
+      "Feed health dashboard visible to admin only — catch parse errors fast"
     ],
     "ideas": [
-      "Third feed source: Kyero.com \u2014 would add ~400 more properties",
-      "Price history tracking \u2014 store feed snapshots, show price changes over time",
-      "Webhook on new listing \u2014 auto-trigger social media post"
+      "Third feed source: Kyero.com — would add ~400 more properties",
+      "Price history tracking — store feed snapshots, show price changes over time",
+      "Webhook on new listing — auto-trigger social media post"
     ]
   },
   {
     "id": "decision-costa-content-moat",
     "type": "decision",
     "project": "Costa Blanca",
-    "title": "Content moat strategy \u2014 own every long-tail query in 9 languages",
-    "body": "Don't compete on homepage keywords. Own the long-tail: 'new build apartments Torrevieja under 200k', 'golf property La Manga 3 bedrooms', 'buying new build in Spain as a Swede'. 9 languages \u00d7 every town \u00d7 every property type \u00d7 every buyer persona = thousands of indexed pages no single competitor can replicate manually.",
-    "rationale": "Every competitor targets the same 20 head keywords. The tail is undefended and converts better \u2014 someone searching this specifically is 3x more likely to be a real buyer.",
+    "title": "Content moat strategy — own every long-tail query in 9 languages",
+    "body": "Don't compete on homepage keywords. Own the long-tail: 'new build apartments Torrevieja under 200k', 'golf property La Manga 3 bedrooms', 'buying new build in Spain as a Swede'. 9 languages × every town × every property type × every buyer persona = thousands of indexed pages no single competitor can replicate manually.",
+    "rationale": "Every competitor targets the same 20 head keywords. The tail is undefended and converts better — someone searching this specifically is 3x more likely to be a real buyer.",
     "ts": 20260210,
     "confidence": "high"
   },
@@ -1015,7 +1447,7 @@
     "ts": 20260201,
     "_source": "claude.ai",
     "status": "done",
-    "title": "Site launch \u2014 Next.js 14, Vercel, first 50 property pages indexed",
+    "title": "Site launch — Next.js 14, Vercel, first 50 property pages indexed",
     "summary": "newbuildhomescostablanca.com went live. Next.js 14 with App Router. ISR on property pages (1 hour revalidation). Sitemap generated with 847 URLs. Google Search Console verified. First crawl showed 50 pages indexed within 24 hours. Core Web Vitals: LCP 1.2s, CLS 0, FID <50ms. All green.",
     "chips": [
       "Next.js 14",
@@ -1025,15 +1457,15 @@
       "Search Console"
     ],
     "decisions": [
-      "Next.js 14 App Router \u2014 ISR is the right model for a property site: fresh but not real-time",
-      "Vercel for hosting \u2014 edge network, zero-config deploys, analytics included",
-      "ISR revalidation at 1 hour \u2014 matches feed update frequency",
-      "Sitemap auto-generated from feed at build time \u2014 always current"
+      "Next.js 14 App Router — ISR is the right model for a property site: fresh but not real-time",
+      "Vercel for hosting — edge network, zero-config deploys, analytics included",
+      "ISR revalidation at 1 hour — matches feed update frequency",
+      "Sitemap auto-generated from feed at build time — always current"
     ],
     "ideas": [
-      "Property alert emails \u2014 users subscribe to area/price/type, get notified on new listings",
-      "Compare tool \u2014 side-by-side two properties",
-      "WhatsApp CTA on every property page \u2014 frictionless first contact"
+      "Property alert emails — users subscribe to area/price/type, get notified on new listings",
+      "Compare tool — side-by-side two properties",
+      "WhatsApp CTA on every property page — frictionless first contact"
     ]
   },
   {
@@ -1042,7 +1474,7 @@
     "project": "Costa Blanca",
     "title": "Single-domain multi-language strategy over subdomain approach",
     "body": "All 9 languages live under newbuildhomescostablanca.com/[lang]/ using Next.js i18n routing with hreflang tags. No subdomains (sv.newbuild... etc). Single domain consolidates all link equity, easier to manage canonical URLs, and the /es/ path still ranks well in practice.",
-    "rationale": "Subdomain approach splits domain authority. With a new site, every point of authority matters. One domain, many language paths, proper hreflang \u2014 this is the Google-recommended approach anyway.",
+    "rationale": "Subdomain approach splits domain authority. With a new site, every point of authority matters. One domain, many language paths, proper hreflang — this is the Google-recommended approach anyway.",
     "ts": 20260115,
     "confidence": "high"
   },
@@ -1054,7 +1486,7 @@
     "ts": 20260115,
     "_source": "claude.ai",
     "status": "done",
-    "title": "Project kickoff \u2014 architecture, brand, domain, tech stack decided",
+    "title": "Project kickoff — architecture, brand, domain, tech stack decided",
     "summary": "New Build Homes Costa Blanca project started. Goal: rank #1 for new build property searches in Costa Blanca across 9 European languages. Tech stack: Next.js 14, Tailwind, Vercel, Anthropic SDK for AI content. Brand system: navy/gold/cream. Domain registered. Competitive analysis: 8 competitors, none with multilingual AI content. Gap identified.",
     "chips": [
       "Project kickoff",
@@ -1063,15 +1495,15 @@
       "Competitive analysis"
     ],
     "decisions": [
-      "Next.js 14 App Router over Gatsby \u2014 better ISR story, active ecosystem",
+      "Next.js 14 App Router over Gatsby — better ISR story, active ecosystem",
       "9 languages at launch: EN, SV, NL, DE, FR, ES, PL, NO, DA",
-      "AI content via Anthropic SDK at build time \u2014 not runtime, not a third-party CMS",
-      "Tailwind for styling \u2014 utility classes, no custom CSS framework to maintain"
+      "AI content via Anthropic SDK at build time — not runtime, not a third-party CMS",
+      "Tailwind for styling — utility classes, no custom CSS framework to maintain"
     ],
     "ideas": [
-      "Remotion video reels for each property \u2014 TikTok/Reels content engine",
-      "Airtable as content calendar \u2014 blog, social, email all in one place",
-      "MailerLite for email \u2014 language-based segmentation from day one"
+      "Remotion video reels for each property — TikTok/Reels content engine",
+      "Airtable as content calendar — blog, social, email all in one place",
+      "MailerLite for email — language-based segmentation from day one"
     ]
   },
   {
@@ -1080,8 +1512,8 @@
     "project": "Costa Blanca",
     "date": "Jan 15",
     "ts": 20260115,
-    "title": "\ud83d\udca1 Remotion video reels \u2014 one property, four video formats",
-    "summary": "Each property auto-generates 4 Remotion video formats: PropertyShowcase (30s), PropertyCarousel, AreaGuide, InvestmentCase. Batch render \u2192 auto-post to TikTok, Instagram, Pinterest. One data entry point drives the entire content machine."
+    "title": "💡 Remotion video reels — one property, four video formats",
+    "summary": "Each property auto-generates 4 Remotion video formats: PropertyShowcase (30s), PropertyCarousel, AreaGuide, InvestmentCase. Batch render → auto-post to TikTok, Instagram, Pinterest. One data entry point drives the entire content machine."
   },
   {
     "id": "idea-costa-alerts",
@@ -1089,7 +1521,7 @@
     "project": "Costa Blanca",
     "date": "Feb 1",
     "ts": 20260201,
-    "title": "\ud83d\udca1 Property alert emails \u2014 subscribe to area + price + type",
+    "title": "💡 Property alert emails — subscribe to area + price + type",
     "summary": "User sets criteria (area, max price, bedrooms, property type). Feed parser checks on every refresh. New match triggers MailerLite transactional email within 1 hour. The user who signed up for alerts is 10x more likely to book a viewing than a cold visitor."
   },
   {
@@ -1100,8 +1532,8 @@
     "ts": 20260301,
     "_source": "claude.ai",
     "status": "done",
-    "title": "First client project \u2014 automation audit + 3 workflows shipped",
-    "summary": "Delivered first Opero client project: automation audit for a 12-person law firm. Found 8 automation opportunities. Built 3 workflows: client intake form \u2192 CRM + calendar invite, contract sent trigger \u2192 reminder sequence, invoice issued \u2192 payment follow-up chain. Client saved est. 11 hours/week. Case study approved for website.",
+    "title": "First client project — automation audit + 3 workflows shipped",
+    "summary": "Delivered first Opero client project: automation audit for a 12-person law firm. Found 8 automation opportunities. Built 3 workflows: client intake form → CRM + calendar invite, contract sent trigger → reminder sequence, invoice issued → payment follow-up chain. Client saved est. 11 hours/week. Case study approved for website.",
     "chips": [
       "First client",
       "Law firm",
@@ -1109,15 +1541,15 @@
       "11 hrs/week saved"
     ],
     "decisions": [
-      "Audit-first model works \u2014 client felt heard before we sold anything",
-      "Make \u2192 Zapier \u2192 native tools hierarchy: Make for complex, Zapier for simple, native when possible",
-      "Automated intake saves ~4hrs/week alone \u2014 use this as the lead case study",
-      "Fixed-price deliverable over hourly \u2014 client trusted the scope, we moved fast"
+      "Audit-first model works — client felt heard before we sold anything",
+      "Make → Zapier → native tools hierarchy: Make for complex, Zapier for simple, native when possible",
+      "Automated intake saves ~4hrs/week alone — use this as the lead case study",
+      "Fixed-price deliverable over hourly — client trusted the scope, we moved fast"
     ],
     "ideas": [
-      "Automation ROI calculator for the sales process \u2014 show expected savings before discovery",
-      "Template library of the 8 most common law firm automations \u2014 productise the audit output",
-      "Quarterly business review with each client \u2014 show compounding value over time"
+      "Automation ROI calculator for the sales process — show expected savings before discovery",
+      "Template library of the 8 most common law firm automations — productise the audit output",
+      "Quarterly business review with each client — show compounding value over time"
     ]
   },
   {
@@ -1128,7 +1560,7 @@
     "ts": 20260210,
     "_source": "claude.ai",
     "status": "done",
-    "title": "hanssonhertzell.se \u2014 15 FAQ pages, featured snippet sweep",
+    "title": "hanssonhertzell.se — 15 FAQ pages, featured snippet sweep",
     "summary": "Built 15 new FAQ pages for the H&H site using hh-seo-content skill. Each page: 15+ questions, featured snippet blocks, internal links to property listings. Topics: buying process in Spain, legal guide, area guides (Costa Blanca, Costa del Sol, Mallorca), financing options. Content audit tool confirmed all pages pass before publishing.",
     "chips": [
       "15 FAQ pages",
@@ -1137,14 +1569,14 @@
       "Content audit"
     ],
     "decisions": [
-      "FAQ structure: question as H2, answer in first sentence, detail in 3-4 sentences \u2014 targets snippet",
-      "Every page links to at least 3 property listing pages \u2014 FAQ as top-of-funnel, listings as conversion",
-      "Swedish-language pages first \u2014 H&H client base is 60% Swedish",
-      "Content audit gate runs before every publish \u2014 non-negotiable"
+      "FAQ structure: question as H2, answer in first sentence, detail in 3-4 sentences — targets snippet",
+      "Every page links to at least 3 property listing pages — FAQ as top-of-funnel, listings as conversion",
+      "Swedish-language pages first — H&H client base is 60% Swedish",
+      "Content audit gate runs before every publish — non-negotiable"
     ],
     "ideas": [
-      "FAQ schema on every page \u2014 Google rich results opportunity",
-      "Video FAQ format \u2014 short Loom-style explanations embedded on each page",
+      "FAQ schema on every page — Google rich results opportunity",
+      "Video FAQ format — short Loom-style explanations embedded on each page",
       "Link from FAQ pages to blog posts for deeper reading"
     ]
   },
@@ -1153,7 +1585,7 @@
     "type": "decision",
     "project": "H&H Costa Blanca",
     "title": "Email strategy: language-based segmentation, monthly digest",
-    "body": "H&H subscriber list segmented into 4 language groups: Swedish (60%), English (25%), German (10%), Other (5%). Monthly digest per group with language-matched content: 3 new listings, 1 area feature, market update, 1 legal/buying tip. No generic newsletters \u2014 every email should feel locally relevant.",
+    "body": "H&H subscriber list segmented into 4 language groups: Swedish (60%), English (25%), German (10%), Other (5%). Monthly digest per group with language-matched content: 3 new listings, 1 area feature, market update, 1 legal/buying tip. No generic newsletters — every email should feel locally relevant.",
     "rationale": "Generic newsletters get 8% open rates. Language-matched, relevant content gets 24%+. A Swedish reader doesn't want to read about German mortgage rules.",
     "ts": 20260108,
     "confidence": "high"
@@ -1166,7 +1598,7 @@
     "ts": 20260122,
     "_source": "claude.ai",
     "status": "done",
-    "title": "MailerLite setup \u2014 4 language groups, H&H branded template",
+    "title": "MailerLite setup — 4 language groups, H&H branded template",
     "summary": "MailerLite account configured for H&H. Subscriber list imported and segmented: 847 Swedish, 312 English, 124 German, 67 Other. Branded HTML email template built: navy header, gold dividers, cream background. Unsubscribe in correct language per group. First campaign sent to Swedish list: 26.4% open rate, 4.1% CTR.",
     "chips": [
       "MailerLite",
@@ -1175,10 +1607,10 @@
       "26.4% open rate"
     ],
     "decisions": [
-      "Custom HTML template over drag-and-drop \u2014 brand consistency is non-negotiable",
-      "Table-based layout for email \u2014 Gmail and Outlook both render it correctly",
-      "Unsubscribe link text translated per language \u2014 legal requirement, also right thing to do",
-      "Send day: Tuesday 10am recipient timezone \u2014 highest open rates in testing"
+      "Custom HTML template over drag-and-drop — brand consistency is non-negotiable",
+      "Table-based layout for email — Gmail and Outlook both render it correctly",
+      "Unsubscribe link text translated per language — legal requirement, also right thing to do",
+      "Send day: Tuesday 10am recipient timezone — highest open rates in testing"
     ]
   },
   {
@@ -1187,8 +1619,8 @@
     "project": "H&H Costa Blanca",
     "date": "Jan 22",
     "ts": 20260122,
-    "title": "\ud83d\udca1 WhatsApp CTA on every property page \u2014 frictionless first contact",
-    "summary": "Replace the contact form as primary CTA with a WhatsApp button. Pre-filled message: 'Hi, I'm interested in [property name] \u2014 can we talk?' Agents respond faster via WhatsApp, clients feel it's more personal. Data: WhatsApp CTAs convert 3x better than forms for property leads in Southern Europe."
+    "title": "💡 WhatsApp CTA on every property page — frictionless first contact",
+    "summary": "Replace the contact form as primary CTA with a WhatsApp button. Pre-filled message: 'Hi, I'm interested in [property name] — can we talk?' Agents respond faster via WhatsApp, clients feel it's more personal. Data: WhatsApp CTAs convert 3x better than forms for property leads in Southern Europe."
   },
   {
     "id": "hh-january-session",
@@ -1198,7 +1630,7 @@
     "ts": 20260108,
     "_source": "claude.ai",
     "status": "done",
-    "title": "H&H brand system \u2014 colour tokens, typography, CMS component library",
+    "title": "H&H brand system — colour tokens, typography, CMS component library",
     "summary": "Defined the complete H&H brand system for digital use. Colours: Navy #1E2A38, Gold #B39960, Cream #FAF8F5. Typography: DM Sans for all weights. Component library: property card, agent card, CTA button styles, divider treatments, email section templates. Documented in hh-brand-kit skill for consistent reference.",
     "chips": [
       "Brand system",
@@ -1207,10 +1639,10 @@
       "Component library"
     ],
     "decisions": [
-      "Navy/Gold/Cream \u2014 classic, trustworthy, luxury without being cold",
-      "DM Sans over custom font \u2014 Google Fonts, loads fast, 9 weights available",
-      "Brand kit as a skill file \u2014 any future Claude session automatically stays on-brand",
-      "Gold only for accents and dividers, never for body text \u2014 preserve the premium feel"
+      "Navy/Gold/Cream — classic, trustworthy, luxury without being cold",
+      "DM Sans over custom font — Google Fonts, loads fast, 9 weights available",
+      "Brand kit as a skill file — any future Claude session automatically stays on-brand",
+      "Gold only for accents and dividers, never for body text — preserve the premium feel"
     ]
   },
   {
@@ -1219,7 +1651,7 @@
     "project": "H&H Costa Blanca",
     "date": "Feb 10",
     "ts": 20260210,
-    "title": "\ud83d\udca1 Client portal \u2014 track their property search in one place",
+    "title": "💡 Client portal — track their property search in one place",
     "summary": "Authenticated portal for H&H clients: saved searches, shortlisted properties, viewing appointments, document uploads, agent chat. Replaces the email thread chaos. Clients feel they have a professional process; agents have one place to manage everything. Build on Airtable as the data layer."
   }
 ]

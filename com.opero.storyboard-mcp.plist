@@ -6,8 +6,8 @@
     <string>com.opero.storyboard-mcp</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/bin/bash</string>
-        <string>/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/start-mcp.sh</string>
+        <string>/opt/homebrew/bin/node</string>
+        <string>/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/mcp-server.js</string>
     </array>
     <key>WorkingDirectory</key>
     <string>/Users/oskarpeterson/Documents/AI/AGENCY /storyboard</string>
@@ -19,5 +19,12 @@
     <string>/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/mcp-server.log</string>
     <key>StandardErrorPath</key>
     <string>/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/mcp-server.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/oskarpeterson</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
 </dict>
 </plist>
