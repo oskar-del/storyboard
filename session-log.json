@@ -26,5 +26,267 @@
     "ts": 20260421,
     "_source": "session-log",
     "_logged": "2026-04-21T00:44:44.458255"
+  },
+  {
+    "id": "sync-opero-agency-brain2",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "propertyos-video",
+    "title": "PropertyOS video reel pipeline \u2014 real property walkthrough clips",
+    "summary": "Built full pipeline: listing URL \u2192 scrape real data \u2192 download YouTube walkthrough \u2192 extract best clips at 10s/23s/45s \u2192 render Remotion reel. No stock footage. Real property video as hero. Three-template suite planned: standard, Cinematic (slow fades, luxury), TikTok Rapid.",
+    "decisions": [
+      "Use real YouTube walkthrough clips extracted from listing URL",
+      "Extract 3 clips at 10s, 23s, 45s as default keyframes",
+      "Three templates: standard, Cinematic, TikTok Rapid"
+    ],
+    "ideas": [
+      "Cinematic variant next \u2014 slow fades, luxury feel",
+      "TikTok Rapid variant with video cuts instead of stills"
+    ],
+    "chips": [
+      "PropertyOS",
+      "video",
+      "Remotion",
+      "reel"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_415ae2e4-4200-4e4b-ad5e-9b9b8732c97b",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "sync-hh-sales-crm",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "newsletter-w18",
+    "title": "W18 newsletter sent \u2014 2,010 subscribers, CB South English",
+    "summary": "Built and sent Week 18 newsletter to all active non-Swedish CB South subscribers. 5 properties featured: Villa Villamartin \u20ac599k, Villa San Miguel \u20ac425k, Apartment Punta Prima \u20ac345k, Villa Orihuela Costa \u20ac279k, Bungalow Villamartin \u20ac169k. Campaign scheduled and queued via MailerLite API.",
+    "decisions": [
+      "Send to all non-Swedish CB South (English + Spanish + French + Dutch)",
+      "5 properties per newsletter",
+      "MailerLite schedule_campaign for instant delivery"
+    ],
+    "ideas": [
+      "Subscriber cleanup after send completes"
+    ],
+    "chips": [
+      "newsletter",
+      "W18",
+      "MailerLite",
+      "CB-South"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_c88809a5-75fd-4bb7-a3a1-a205c65fd598",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "sync-opero-uk-audit",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "uk-agency-audits",
+    "title": "Opero Audit \u2014 Richard James v2 white theme pptx",
+    "summary": "Built v2 of the Richard James agency audit deck with white theme. Score: 39. Split cover layout \u2014 dark navy left panel, white right with big score as hero. White cards with light borders for all pillar slides. CRITICAL red tags on priority actions pop hard on white background. Dual versions: dark v1 for in-person walkthroughs, light v2 for web embed/email PDF.",
+    "decisions": [
+      "White theme v2 alongside dark v1 \u2014 both kept",
+      "Dark v1 for in-person presentations, light v2 for email/web",
+      "CRITICAL red tags more alarming on white \u2014 right effect for sales conversations"
+    ],
+    "ideas": [
+      "Send v2 as PDF to Richard James prospect"
+    ],
+    "chips": [
+      "audit",
+      "Richard James",
+      "pptx",
+      "UK"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_b9389861-6747-49c3-972f-251c47940a5e",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "log-storyboard-5c228a86",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "dashboard",
+    "title": "Day 10 \u2014 Sprint finale: Context Full CTA, cross-session bridge, visual diff complete",
+    "summary": "Final sprint day. Completed all visual diff fixes against design-spec (Sprint card, toggle pills, T7 260px right panel, Decisions section). Built Context Full \u2192 Start New Window CTA that detects fillPct>75 and opens seed modal with carry-forward brief. Added Claude usage pill to topbar (sessions today, compactions, API key indicator). Fixed T2 grid view to pure masonry per spec. Built cross-session block bridge: session-log.json + /log-session MCP endpoint + log-session.py \u2014 any Cowork session can now post to Storyboard.",
+    "decisions": [
+      "Context Full CTA uses existing seed modal infrastructure",
+      "fillPct threshold 75% for Start New Window vs Carry forward",
+      "Claude usage pill shows sessions today + compactions, polls on data refresh",
+      "T2 grid = pure masonry, T2 list = journal/narrative (split)",
+      "Cross-session bridge writes to session-log.json, /blocks merges it automatically",
+      "log-session.py falls back to direct file write if MCP offline",
+      "SESSION_LOG_FILE constant added to mcp-server.js"
+    ],
+    "ideas": [
+      "Auto-call log-session.py at end of every Cowork session via skill",
+      "Usage widget could poll Anthropic API if key set",
+      "Context Full CTA: add estimated tokens remaining"
+    ],
+    "chips": [
+      "Day10",
+      "sprint-finale",
+      "visual-diff",
+      "cross-session"
+    ],
+    "date": "24 Apr",
+    "ts": 20260424,
+    "_source": "session-log",
+    "_logged": "2026-04-24T11:03:19.108634"
+  },
+  {
+    "id": "log-storyboard-8dcf874d",
+    "type": "compaction",
+    "project": "Storyboard",
+    "task": "sprint-complete",
+    "title": "Day 10 sprint complete \u2014 pushed to GitHub Pages",
+    "summary": "All Day 10 features shipped and live. T3 board task-window columns, T5 compaction dividers, dynamic sprint pill, context-full Start New Window CTA, Claude usage pill, cross-session logging bridge. Sprint closed.",
+    "decisions": [
+      "Cross-session logging via session-log.json merged at /blocks",
+      "log-session.py CLI from any Cowork session",
+      "Sprint pill dynamically calculated from April 12 start"
+    ],
+    "ideas": [],
+    "chips": [
+      "sprint-complete",
+      "day10",
+      "shipped"
+    ],
+    "date": "27 Apr",
+    "ts": 20260427,
+    "_source": "session-log",
+    "_logged": "2026-04-27T17:48:56.438861"
+  },
+  {
+    "id": "sync-a6f9d9de",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "agency-landing-page",
+    "title": "Fixed SETUP.md errors for Agency Landing Page build",
+    "summary": "Corrected errors in SETUP.md and provided instructions for task window to re-read and re-execute the setup from scratch without asking permission.",
+    "decisions": [
+      "Fix SETUP.md before re-executing build",
+      "Task window instructed to re-run from top after correction"
+    ],
+    "ideas": [],
+    "chips": [
+      "Agency",
+      "landing-page",
+      "setup"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_a6f9d9de-9456-4dbc-a040-ab549852ec2b",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "sync-bb4f734a",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email-marketing-audit",
+    "title": "Email audit \u2014 161 active subs, April send gap, UK agents 44% open",
+    "summary": "Audited MailerLite subscriber health and campaign status for H&H. Found 161 active subscribers total, no April newsletters sent to buyer segments, stale Week 15 drafts, and a sync gap between H&H CRM and MailerLite groups. UK agent referral campaign had 44% open rate.",
+    "decisions": [
+      "Delete stale EN/SE/NL W15 drafts (1 or 0 subs each)",
+      "Refresh French draft as W17 edition",
+      "Follow up UK agent referral list (157 engaged contacts)",
+      "Sync CRM Campaigns table \u2014 stuck in Draft since February"
+    ],
+    "ideas": [
+      "Add RESEND_API_KEY so leads don't go unnoticed",
+      "Airtable\u2192MailerLite group sync for active clients"
+    ],
+    "chips": [
+      "email",
+      "MailerLite",
+      "audit",
+      "H&H"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_bb4f734a-65cd-4c34-85d1-04e04ad37585",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "sync-0ff8ea8f",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "weekly-gsc-monitoring",
+    "title": "GSC monitoring Apr 20 \u2014 90% healthy, /golf/las-colinas 404 wk 2",
+    "summary": "Weekly GSC check for April 20. 9/10 URLs healthy and stable including previously-fixed filtered pages and translated routes. /golf/las-colinas still returning 404 for a second consecutive week. Sitemap lastmod not updating on deploys \u2014 possible automation issue.",
+    "decisions": [
+      "Flag /golf/las-colinas for 301 redirect or page restore",
+      "Investigate sitemap regeneration not running on deploys"
+    ],
+    "ideas": [],
+    "chips": [
+      "GSC",
+      "SEO",
+      "monitoring",
+      "NBHCB"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_0ff8ea8f-7f3a-4116-97a2-649bc1875399",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "sync-230f57a2",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-website-seo",
+    "title": "NBHCB health check \u2014 social calendar expiring, 3 leads unactioned",
+    "summary": "Site health check April 20. All pages loading, Swedish translations confirmed. Social posting calendar expires April 21 \u2014 batch-render pipeline needs re-run. Three buyer leads unactioned (oldest 25 days old). RESEND_API_KEY still missing from Netlify.",
+    "decisions": [
+      "Re-run batch-render-developments.ts for next 30 days",
+      "Add RESEND_API_KEY to Netlify to surface leads automatically",
+      "Action overdue buyer leads: Hakan Seicamet, Wolfgang Spielmann, Ma\u0142gorzata Kobus"
+    ],
+    "ideas": [
+      "Five high-priority blog articles still unwritten from backlog"
+    ],
+    "chips": [
+      "NBHCB",
+      "health-check",
+      "leads",
+      "social"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-sync",
+    "_session_id": "local_230f57a2-5dbd-4301-a856-f2678b6b318f",
+    "_logged": "2026-04-28T00:00:00.000000"
+  },
+  {
+    "id": "log-storyboard-100bd941",
+    "type": "compaction",
+    "project": "Storyboard",
+    "task": "ux-iteration",
+    "title": "v10 snapshot saved \u2014 pre-Today-feed redesign",
+    "summary": "Saved app-v10-snapshot.html (14,849 lines) before starting UX iteration on Today view. Audit findings: Today filter shows project cards not session feed, Stories/Boards distinction unclear, sidebar overloaded, server-off false negative.",
+    "decisions": [
+      "Always snapshot before visual iterations",
+      "Today feed is the one targeted change \u2014 no wider redesign"
+    ],
+    "ideas": [],
+    "chips": [
+      "snapshot",
+      "v10",
+      "ux-audit"
+    ],
+    "date": "28 Apr",
+    "ts": 20260428,
+    "_source": "session-log",
+    "_logged": "2026-04-28T17:00:02.157439"
   }
 ]

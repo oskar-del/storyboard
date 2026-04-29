@@ -5920,41 +5920,60 @@ function buildNav() {
     </div>`;
   }
 
-  // ── STORIES — show top 3, collapse the rest ──
-  const STORIES_VISIBLE = 3;
+  // ── STORIES — real chat sessions from session-log, newest first ──
+  const STORIES_VISIBLE = 6;
   const storiesEl = document.getElementById('nav-stories');
   if (storiesEl) {
-    const stories  = SESSION_MANIFEST.stories;
-    // Active story always first, then rest in order
-    const sorted   = [...stories].sort((a,b) => (b.status==='active'?1:0)-(a.status==='active'?1:0));
-    const visible  = sorted.slice(0, STORIES_VISIBLE);
-    const hidden   = sorted.slice(STORIES_VISIBLE);
-    const expanded = storiesEl.dataset.expanded === '1';
+    // Pull all session-type blocks, sort by _logged then ts descending
+    const sessionBlocks = all
+      .filter(b => b.type === 'session')
+      .sort((a, b) => {
+        const la = new Date(a._logged || 0), lb = new Date(b._logged || 0);
+        const td = lb - la;
+        return td !== 0 ? td : (b.ts||0) - (a.ts||0);
+      });
 
-    let html = visible.map(s => {
-      const isActive = activeView==='story' && activeStoryName===s.name && activeFilter===s.board;
-      return navStoryRow(s, isActive);
-    }).join('');
+    const expanded = storiesEl.dataset.expanded === '1';
+    const visible  = sessionBlocks.slice(0, STORIES_VISIBLE);
+    const hidden   = sessionBlocks.slice(STORIES_VISIBLE);
+
+    const sessionRow = (b) => {
+      const p2    = PROJ[b.project] || { color:'#6c63ff', icon:'◈' };
+      const title = (b.title || 'Untitled').replace(/^[🧠💡✓⚡💬◈🖼✕]\s*/,'').slice(0, 42);
+      const isToday = b.ts >= parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+      const timeLabel = isToday
+        ? (b._logged && b._logged !== '2026-04-28T00:00:00.000000' ? new Date(b._logged).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : 'today')
+        : (b.date || '');
+      return `<div onclick="openDetail('${b.id}')"
+        style="display:flex;align-items:flex-start;gap:7px;padding:5px 10px 5px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;transition:background .1s"
+        onmouseover="this.style.background='${p2.color}10'" onmouseout="this.style.background='transparent'">
+        <div style="width:7px;height:7px;border-radius:50%;background:${p2.color};flex-shrink:0;margin-top:4px"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;font-weight:700;color:${p2.color};letter-spacing:.2px;margin-bottom:1px">${b.project}</div>
+          <div style="font-size:11.5px;font-weight:500;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3">${title}</div>
+        </div>
+        <div style="font-size:9.5px;color:var(--text-3);flex-shrink:0;margin-top:3px">${timeLabel}</div>
+      </div>`;
+    };
+
+    let html = visible.map(sessionRow).join('');
 
     if (hidden.length) {
       if (expanded) {
-        html += hidden.map(s => {
-          const isActive = activeView==='story' && activeStoryName===s.name && activeFilter===s.board;
-          return navStoryRow(s, isActive);
-        }).join('');
-        html += `<button onclick="document.getElementById('nav-stories').dataset.expanded='0';buildNav(allBlocksRaw)"
+        html += hidden.map(sessionRow).join('');
+        html += `<button onclick="document.getElementById('nav-stories').dataset.expanded='0';buildNav()"
           style="display:flex;align-items:center;gap:5px;width:100%;padding:3px 12px;background:none;border:none;cursor:pointer;font-size:10.5px;color:var(--text-3);font-weight:600">
           <span style="font-size:9px">▲</span> Show less
         </button>`;
       } else {
-        html += `<button onclick="document.getElementById('nav-stories').dataset.expanded='1';buildNav(allBlocksRaw)"
+        html += `<button onclick="document.getElementById('nav-stories').dataset.expanded='1';buildNav()"
           style="display:flex;align-items:center;gap:5px;width:100%;padding:3px 12px;background:none;border:none;cursor:pointer;font-size:10.5px;color:var(--text-3);font-weight:600"
           onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-3)'">
           <span style="font-size:9px">▼</span> ${hidden.length} more
         </button>`;
       }
     }
-    storiesEl.innerHTML = html || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">No stories yet</div>`;
+    storiesEl.innerHTML = html || `<div style="padding:6px 12px;font-size:11px;color:var(--text-3)">Sessions will appear here automatically</div>`;
   }
 
   // ── AUTOMATIONS — set count badge; content hidden until user expands ──
