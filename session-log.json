@@ -1444,5 +1444,323 @@
     "_source": "session-sync",
     "_session_id": "local_245a6725-6126-4358-9550-7566b568cc38",
     "_logged": "2026-04-29T14:50:57.471899"
+  },
+  {
+    "id": "sync-storyboard-sync-cba875e1",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Storyboard session sync \u2014 0 new sessions logged",
+    "summary": "Automated session sync run checked new idle sessions against the existing log. All new sessions found either had no messages or were previous sync meta-sessions. No new entries were written to session-log.json and no git push was performed.",
+    "decisions": [
+      "Skip sessions with no messages",
+      "Skip meta-sync sessions as low-value entries"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "session-sync",
+      "storyboard"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_cba875e1-7021-4db1-9fcd-e452e26430e8",
+    "_logged": "2026-04-29T15:50:28.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-adc19e82",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Storyboard session sync \u2014 0 new sessions logged",
+    "summary": "Automated session sync run checked new idle sessions against the existing log. All discovered sessions had no messages or were prior automated sync runs. No new entries were written and no git push was triggered.",
+    "decisions": [
+      "Skip empty sessions",
+      "Skip previous automated sync runs"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "session-sync",
+      "storyboard"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_adc19e82-7c73-478f-8314-d221b0c9ea51",
+    "_logged": "2026-04-29T15:50:28.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-b5f2075f",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Storyboard session sync \u2014 0 new sessions logged",
+    "summary": "Automated session sync run reviewed 5 new idle sessions. Four had no messages and one was a prior automated sync run. Nothing was written to the log and no git push was made.",
+    "decisions": [
+      "Skip sessions with no messages",
+      "Do not log sync meta-sessions"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "session-sync",
+      "storyboard"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_b5f2075f-bb89-4f14-9f98-8c98106f17d7",
+    "_logged": "2026-04-29T15:50:28.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-fa491eb8",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Storyboard session sync \u2014 1 new session logged, git pushed",
+    "summary": "Automated session sync run identified and logged 1 new session from the idle session list. Four other new sessions had no messages and were skipped. The updated session-log.json was committed and pushed to GitHub Pages.",
+    "decisions": [
+      "Log only sessions with meaningful content",
+      "Push to GitHub after each new entry"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "session-sync",
+      "storyboard",
+      "git-push"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_fa491eb8-7ba6-4847-9a1b-30590e657671",
+    "_logged": "2026-04-29T15:50:28.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-8eb1e28d",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 API connection refused",
+    "summary": "Scheduled sync task fired but failed immediately with ConnectionRefused error. No sessions were read or logged. The Cowork API was not reachable at the time of the run.",
+    "decisions": [
+      "Skip run on API connection failure"
+    ],
+    "ideas": [],
+    "chips": [
+      "sync",
+      "failed",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_8eb1e28d-2b94-4c2c-8d28-4c40bd0e89b7",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-53e7de9f",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 API connection refused",
+    "summary": "Scheduled sync task fired but failed immediately with ConnectionRefused error. No sessions were read or logged. The Cowork API was not reachable at the time of the run.",
+    "decisions": [
+      "Skip run on API connection failure"
+    ],
+    "ideas": [],
+    "chips": [
+      "sync",
+      "failed",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_53e7de9f-227e-42d8-9667-505216b943e0",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-fd0b816b",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 FailedToOpenSocket",
+    "summary": "Scheduled sync task failed with FailedToOpenSocket on first API call. No sessions were read or logged.",
+    "decisions": [],
+    "ideas": [],
+    "chips": [
+      "sync",
+      "failed",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_fd0b816b-4954-4839-9360-ea11d6ca8ede",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-247778ca",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 FailedToOpenSocket",
+    "summary": "Scheduled sync task failed with FailedToOpenSocket on first API call. No sessions were read or logged.",
+    "decisions": [],
+    "ideas": [],
+    "chips": [
+      "sync",
+      "failed",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_247778ca-ab2d-45ed-b2f0-fa4d4edaf148",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-521849c6",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 FailedToOpenSocket",
+    "summary": "Scheduled sync task failed with FailedToOpenSocket on first API call. No sessions were read or logged.",
+    "decisions": [],
+    "ideas": [],
+    "chips": [
+      "sync",
+      "failed",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_521849c6-17c5-4c75-b499-3286847ae1a3",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-f8a513fe",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 0 new, git lock blocked push",
+    "summary": "Sync ran successfully but found no new sessions with messages to add. Git push was blocked by stale index.lock and HEAD.lock files from a concurrent sync run. Local file unchanged; no data lost.",
+    "decisions": [
+      "Git lock files must be cleared manually or by macOS"
+    ],
+    "ideas": [],
+    "chips": [
+      "sync",
+      "git-lock",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_f8a513fe-d113-40e3-b712-29d4795d9144",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-f84090d3",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 4 entries added, git push failed",
+    "summary": "Sync ran and added 4 new session entries to session-log.json (bringing total to 62). Git push failed due to stale lock files from a concurrent sync run. Local file was written successfully; dashboard update pending lock resolution.",
+    "decisions": [
+      "Continue if local write succeeds even when git fails"
+    ],
+    "ideas": [
+      "Need to implement git lock cleanup or retry logic"
+    ],
+    "chips": [
+      "sync",
+      "git-lock",
+      "partial-success",
+      "automated"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_f84090d3-eb9b-4ccd-8f1d-d70a0db9c29c",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-hh-fb-evening-4ef67ea0",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting-evening",
+    "title": "H&H FB Group Posting Evening \u2014 Run 44 blocked (screen locked)",
+    "summary": "Scheduled evening run to share H&H Facebook posts to 88 target groups was blocked. Chrome extension connected and navigated to facebook.com/hanssonhertzell successfully but all page interaction returned 'Permission denied by user' due to the screen being locked. No posts were shared; LOG.md updated with Run 44 entry.",
+    "decisions": [
+      "Log blocked runs and continue without posting"
+    ],
+    "ideas": [
+      "Use caffeinate -d to keep screen awake during scheduled task window"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "blocked",
+      "screen-lock"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_4ef67ea0-45a0-4dda-9e34-d28f5fd46aa7",
+    "_logged": "2026-04-29T19:48:10.000000"
+  },
+  {
+    "id": "sync-storyboard-sync-7d0c7015",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 0 new sessions, git lock conflict",
+    "summary": "Automated sync run found no new sessions to add (one candidate had no messages and was skipped). A git index.lock held by a concurrent process blocked the push; since no new entries were needed, the local file remained current.",
+    "decisions": [
+      "Skipped sessions with no messages",
+      "Skipped git push due to index.lock conflict from concurrent sync"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "session-sync",
+      "git-lock"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_7d0c7015-c091-4e1d-8bf9-c5d982c4720d",
+    "_logged": "2026-04-29T20:05:46.561423"
+  },
+  {
+    "id": "sync-storyboard-sync-33a073d6",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Storyboard session sync \u2014 8 new sessions added, git push failed",
+    "summary": "Automated sync read 40 sessions and identified 8 new ones to add to session-log.json (total 62\u219270). Entries captured include H&H Facebook group posting (blocked by screen lock) and multiple prior sync failure records. Git push failed due to stale .git/index.lock; Terminal access request timed out with no user present.",
+    "decisions": [
+      "Added 8 new session entries locally",
+      "Git push skipped due to stale index.lock \u2014 local file correct"
+    ],
+    "ideas": [
+      "Consider a lock-clearing mechanism for automated git pushes"
+    ],
+    "chips": [
+      "automation",
+      "session-sync",
+      "git-lock",
+      "H&H"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_33a073d6-cf45-46bb-8792-a7dc37762d81",
+    "_logged": "2026-04-29T20:05:46.561423"
   }
 ]
