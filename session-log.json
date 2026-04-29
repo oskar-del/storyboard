@@ -1421,5 +1421,28 @@
     "_source": "session-sync",
     "_session_id": "local_6f66be0e-866e-4e4a-a30b-45a4d30149f2",
     "_logged": "2026-04-29T14:37:02.939120"
+  },
+  {
+    "id": "sync-storyboard-session-sync-245a6725",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Auto-sync: logged sessions 1b9b7f35 and 6f66be0e",
+    "summary": "Automated storyboard session sync run that identified 2 new idle sessions (local_1b9b7f35 and local_6f66be0e, both prior sync runs) and appended them to session-log.json. Git push completed successfully with no errors. No running sessions required carry-forward briefs.",
+    "decisions": [
+      "Sessions with no messages are skipped",
+      "Sync-type sessions are logged as Storyboard project entries"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "session-sync",
+      "storyboard"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_245a6725-6126-4358-9550-7566b568cc38",
+    "_logged": "2026-04-29T14:50:57.471899"
   }
 ]
