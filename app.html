@@ -3099,6 +3099,13 @@ body.sb-compact .td-card-title { font-size: 12px; }
 .td-wrap {
   max-width: 780px; margin: 0 auto; padding: 24px 20px 48px;
   display: flex; flex-direction: column; gap: 28px;
+  column-span: all; /* escape CSS multi-column layout */
+  break-inside: avoid;
+}
+/* When Today view is active, reset feed to single column */
+.feed.today-view {
+  columns: 1 !important;
+  column-gap: 0;
 }
 .td-header {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap;
@@ -6745,6 +6752,9 @@ function renderFeed() {
   const el = document.getElementById('feed');
   const baseBlocks = mergedBlocks();
 
+  // Remove today-view class unless we're about to render Today (re-added in renderTodayDigest)
+  el.classList.remove('today-view');
+
   // Restore toolbar visibility — hide in story and profile views (they have own headers)
   const _tbEl = document.getElementById('feedToolbar');
   if (_tbEl) _tbEl.style.display = (activeView === 'story' || activeView === 'profile') ? 'none' : '';
@@ -8016,6 +8026,7 @@ function renderCanvasView() {
 function renderTodayDigest(todayBlocks, allBaseBlocks) {
   const el = document.getElementById('feed');
   if (!el) return;
+  el.classList.add('today-view'); // collapse columns for Today layout
 
   const now  = new Date();
   const dayName = now.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' });
