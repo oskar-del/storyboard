@@ -1919,5 +1919,341 @@
     "_source": "session-sync",
     "_session_id": "local_13920a0e-2d43-412f-8fcf-63abb0eec6aa",
     "_logged": "2026-04-29T21:06:26.581286"
+  },
+  {
+    "id": "sync-ccebacfb-daily-outreach-fail",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "Daily outreach drafts failed \u2014 all MCP tools returned Stream closed errors",
+    "summary": "Scheduled run on April 22 attempted to pull CRM clients from Airtable and create Gmail drafts. All MCP connections (Airtable, Gmail, bash) failed with 'Stream closed' errors from the first call. No drafts were created and no Airtable records were modified.",
+    "decisions": [
+      "Task aborted cleanly with a full failure report",
+      "No partial writes made"
+    ],
+    "ideas": [
+      "May need connection health check before heavy scheduled tasks"
+    ],
+    "chips": [
+      "outreach",
+      "email",
+      "failure",
+      "airtable",
+      "gmail"
+    ],
+    "date": "22 Apr",
+    "ts": 20260422,
+    "_source": "session-sync",
+    "_session_id": "local_ccebacfb-93e7-4190-8964-9e37c66cbc5b",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-181c60b3-blog-pipeline-apr22",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog pipeline Apr 22: 4 content ideas scouted and pushed to Airtable",
+    "summary": "Phase 1 ran successfully on April 22, identifying 4 high-scoring articles: Spain's new \u20ac7bn housing Plan Estatal 2026-2030, micro flat investment returns, expat renovation grants, and British buyers shifting to working vs retiring. All 4 pushed to Airtable Content Ideas. Phase 2 skipped as no items were marked Approved.",
+    "decisions": [
+      "Skipped topics already covered by existing blog slugs (Beckham Law, digital nomad visa)",
+      "All 4 source URLs confirmed as new before pushing"
+    ],
+    "ideas": [
+      "Oskar needs to review growing 'New' backlog in Airtable and approve items for writing"
+    ],
+    "chips": [
+      "blog",
+      "content-scout",
+      "airtable",
+      "seo"
+    ],
+    "date": "22 Apr",
+    "ts": 20260422,
+    "_source": "session-sync",
+    "_session_id": "local_181c60b3-fe1e-4229-b201-dc94fd7f8ef6",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-42fe6fcd-hh-fb-morning-run36",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group morning check Run 36 \u2014 no new post since April 7",
+    "summary": "Run 36 confirmed the H&H Facebook page still shows the April 7 bungalow at Lomas de Cabo Roig (\u20ac159K) as the most recent timeline post. All 3 Featured posts remain known and are skipped per brief rules. No groups were shared.",
+    "decisions": [
+      "No new post to share \u2014 automated skip",
+      "LOG.md updated with Run 36 result"
+    ],
+    "ideas": [],
+    "chips": [
+      "facebook",
+      "automation",
+      "hh",
+      "social"
+    ],
+    "date": "22 Apr",
+    "ts": 20260422,
+    "_source": "session-sync",
+    "_session_id": "local_42fe6fcd-3096-4319-8483-a0aa6590b7b3",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-be92c251-newbuild-social-apr22",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Newbuild social pipeline Apr 22: Denia\u2013Ibiza ferry post scheduled across 5 channels",
+    "summary": "Travel category article 'Denia to Ibiza Ferry: Your Weekend Escape from Costa Blanca' was selected (Travel had never been used on a Wednesday). Two Remotion stills rendered and 5 posts scheduled for April 23 on Instagram, Facebook, TikTok, YouTube, and Pinterest. Digital asset and social post records logged in Airtable. A stray test post was created during debugging and may need manual deletion in Postiz.",
+    "decisions": [
+      "Travel category chosen as it hadn't been used on Wednesday \u2014 variety optimization",
+      "Used torrevieja-harbour-sunset and benitachell-cliff-cove images for harbour/Ibiza theme"
+    ],
+    "ideas": [
+      "Check Postiz to delete stray test post (cmo9st8a300bqpa0yeh0v4ep0) before 10:00 CEST Apr 23"
+    ],
+    "chips": [
+      "social",
+      "remotion",
+      "postiz",
+      "airtable",
+      "newbuild"
+    ],
+    "date": "22 Apr",
+    "ts": 20260422,
+    "_source": "session-sync",
+    "_session_id": "local_be92c251-29e4-46b9-9a64-f38dd6aac730",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-66e1b317-hh-fb-evening-run35",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group evening check Run 35 \u2014 no new post, LOG.md updated",
+    "summary": "Run 35 on April 20 (evening) confirmed the H&H Facebook page still shows the April 7 bungalow as the most recent post. DOM inspection confirmed 3 posts \u2014 all Featured posts. LOG.md updated.",
+    "decisions": [
+      "No new post \u2192 no groups shared"
+    ],
+    "ideas": [],
+    "chips": [
+      "facebook",
+      "automation",
+      "hh",
+      "social"
+    ],
+    "date": "20 Apr",
+    "ts": 20260420,
+    "_source": "session-sync",
+    "_session_id": "local_66e1b317-bf63-4edf-913c-d722dddea3c4",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-726c7cee-blog-pipeline-apr21",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog pipeline Apr 21: 3 content ideas pushed \u2014 housing shortage, investment growth, prices",
+    "summary": "Phase 1 on April 21 identified 3 high-scoring articles: Spain housing shortage heading toward 800K homes (score 9), Spain real estate investment set to grow 10% in 2026 (score 6), and record property prices at \u20ac2,709/m\u00b2 (score 6). All 3 pushed to Airtable. Phase 2 skipped \u2014 no Approved records in Content Ideas. Oskar was flagged that 14 New items await review.",
+    "decisions": [
+      "Skipped 9 candidates already covered by existing slugs or Content Ideas",
+      "Score threshold of 5 applied"
+    ],
+    "ideas": [
+      "14 Content Ideas with Status 'New' need Oskar's review to unlock Phase 2 writing"
+    ],
+    "chips": [
+      "blog",
+      "content-scout",
+      "airtable",
+      "seo"
+    ],
+    "date": "21 Apr",
+    "ts": 20260421,
+    "_source": "session-sync",
+    "_session_id": "local_726c7cee-44bd-4b14-ab40-1ae219eab4ba",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-8b68abb8-hh-fb-morning-run34",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group morning check Run 34 \u2014 no new post, LOG.md updated",
+    "summary": "Run 34 confirmed no new Facebook timeline post since the April 7 bungalow (Run 19). Facebook lazy-loading showed skeleton placeholders only. LOG.md updated.",
+    "decisions": [
+      "No new post \u2192 no groups shared"
+    ],
+    "ideas": [],
+    "chips": [
+      "facebook",
+      "automation",
+      "hh",
+      "social"
+    ],
+    "date": "21 Apr",
+    "ts": 20260421,
+    "_source": "session-sync",
+    "_session_id": "local_8b68abb8-4f39-4916-b33e-2c30c43dca1d",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-f2074529-hh-social-pipeline-apr21",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H social pipeline setup: 6-post content plan created for Edificio Vento",
+    "summary": "Pipeline audited 11 H&H CRM properties (all from Edificio Vento, Torrevieja) and identified 5 flagged for social posting from \u20ac158K to \u20ac488K. Generated a full 2-week 6-post plan with Facebook/Instagram captions, alt text, and hashtags in H&H brand voice. No posts were scheduled \u2014 initial Postiz setup and Remotion templates needed before live automation can run.",
+    "decisions": [
+      "Content captions ready to use manually in the meantime",
+      "Identified 3 setup blockers: H&H Postiz channels, Navy/Gold/Cream Remotion templates, Social Posts table in H&H CRM"
+    ],
+    "ideas": [
+      "Clone NBHCB Remotion templates with H&H branding to unblock automation",
+      "Add Social Posts table to H&H Airtable CRM"
+    ],
+    "chips": [
+      "social",
+      "hh",
+      "postiz",
+      "remotion",
+      "airtable",
+      "content"
+    ],
+    "date": "21 Apr",
+    "ts": 20260421,
+    "_source": "session-sync",
+    "_session_id": "local_f2074529-74c0-4921-b5ed-ea1549d1b71f",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-00f8bd67-opero-agency-brain-crash",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "agency-brain-brainstorm",
+    "title": "PropertyOS brainstorm session crashed \u2014 prompt too long, SaaS roadmap ideas captured",
+    "summary": "Oskar shared an extensive brainstorm on PropertyOS SaaS product ideas targeting Spanish real estate agencies. Session crashed with 'Prompt is too long' errors. Key ideas covered: valuation tool + sales presentation deck, buyer-facing property comparison portal, website widget for lead capture, interactive buyer journey presentations, agent XML feed aggregation, Docusign contract signing, visual brand audit AI agent, and a full-stack marketing plan bundled with each valuation.",
+    "decisions": [
+      "Oskar wants to offer first 100 agents the tool for free, then charge ~\u20ac29/month",
+      "Goal: 100 paying agencies = \u20ac3K/month within first sales push"
+    ],
+    "ideas": [
+      "Buyer valuation app that profiles clients against data points and suggests best matching properties",
+      "Visual brand audit agent to scan logos, Facebook banners, YouTube against brand guidelines",
+      "Bundle social reels + email campaigns with every property listing as upsell",
+      "Property tracking tool: notify agent when new matching listing appears on Idealista before client sees it",
+      "3 presentation design themes: modern, classic, ibiza/chic/corporate",
+      "Printable presentations with QR codes for schools, restaurants, beach access"
+    ],
+    "chips": [
+      "propertyos",
+      "saas",
+      "brainstorm",
+      "roadmap",
+      "opero"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_00f8bd67-62d5-4a2c-994f-85faa0f5d1d4",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-52335ff9-hh-fb-evening-run33",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group evening check Run 33 \u2014 no new post since April 7",
+    "summary": "Run 33 on April 20 (evening) confirmed H&H page still shows the April 7 bungalow as the most recent post. DOM inspection showed only 3 Featured posts. LOG.md updated.",
+    "decisions": [
+      "No new post \u2192 no groups shared"
+    ],
+    "ideas": [],
+    "chips": [
+      "facebook",
+      "automation",
+      "hh",
+      "social"
+    ],
+    "date": "20 Apr",
+    "ts": 20260420,
+    "_source": "session-sync",
+    "_session_id": "local_52335ff9-fe7f-4e72-b054-7e96991f401d",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-3f282b7d-hh-fb-morning-run32",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group morning check Run 32 \u2014 no new post, page height stable",
+    "summary": "Run 32 on April 20 (morning) confirmed H&H page still shows the April 7 bungalow as most recent post. Page height stable at 2961 (vs 2976 in Run 31), confirming no new content loaded. DOM confirmed 3 links \u2014 all Featured posts. LOG.md updated.",
+    "decisions": [
+      "No new post \u2192 no groups shared",
+      "Page height metric used as secondary confirmation of no new content"
+    ],
+    "ideas": [],
+    "chips": [
+      "facebook",
+      "automation",
+      "hh",
+      "social"
+    ],
+    "date": "20 Apr",
+    "ts": 20260420,
+    "_source": "session-sync",
+    "_session_id": "local_3f282b7d-2bdf-4703-a303-1115c78d1da4",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-dedb9e99-outreach-drafts-swedish",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "10 Swedish client outreach Gmail drafts created and Airtable records tagged",
+    "summary": "Pulled 10 uncontacted Swedish-language clients from H&H Airtable CRM and created personalized Gmail drafts for each with language-appropriate greetings, market context, region-specific property mentions, and relevant blog links. Clients tagged in Airtable with 'Outreach: Queued'. All drafts used casual Swedish tone with 'Hej [First Name]' greeting.",
+    "decisions": [
+      "All 10 clients were Swedish-language \u2014 used Swedish blog links and casual 'du' tone",
+      "Gmail sign-off kept to 'Oskar' only \u2014 no phone/title appended per instructions"
+    ],
+    "ideas": [],
+    "chips": [
+      "outreach",
+      "email",
+      "gmail",
+      "airtable",
+      "crm",
+      "swedish"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_dedb9e99-df0c-45f0-9ddd-f0bbbe01a26c",
+    "_logged": "2026-04-29T21:20:15.843201"
+  },
+  {
+    "id": "sync-68617645-blog-pipeline-apr20",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog pipeline Apr 20: 3 content ideas pushed \u2014 market defiance, apartment demand, expat guide",
+    "summary": "Phase 1 on April 20 evaluated ~25 candidates from 7 search queries. 3 qualified articles pushed to Airtable: Spain property market defying regulation (Olive Press, score 8), apartment demand surging as investment purchases drop (RussSpain, score 10), and expat living on the Costa Blanca 2026 guide (Investropa, score 7). Phase 2 skipped \u2014 no Approved records found.",
+    "decisions": [
+      "10 existing topics skipped (slugs already exist for Golden Visa, Beckham Law, Digital Nomad, etc.)",
+      "14 Content Ideas already in 'New' queue waiting review before writing can begin"
+    ],
+    "ideas": [
+      "Oskar needs to review and approve items in Airtable to unblock Phase 2 article writing"
+    ],
+    "chips": [
+      "blog",
+      "content-scout",
+      "airtable",
+      "seo"
+    ],
+    "date": "20 Apr",
+    "ts": 20260420,
+    "_source": "session-sync",
+    "_session_id": "local_68617645-62a1-4949-ae4a-2196280c95e6",
+    "_logged": "2026-04-29T21:20:15.843201"
   }
 ]
