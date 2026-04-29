@@ -5939,20 +5939,30 @@ function buildNav() {
 
     const sessionRow = (b) => {
       const p2    = PROJ[b.project] || { color:'#6c63ff', icon:'◈' };
-      const title = (b.title || 'Untitled').replace(/^[🧠💡✓⚡💬◈🖼✕]\s*/,'').slice(0, 42);
+      // Clean title: strip emoji prefix, truncate cleanly at word boundary
+      let rawTitle = (b.title || 'Untitled').replace(/^[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}✓⚡◈✕]\s*/u,'').trim();
+      // Truncate at word boundary around 34 chars
+      const MAX = 34;
+      const cleanTitle = rawTitle.length > MAX
+        ? rawTitle.slice(0, MAX).replace(/\s+\S*$/, '') + '…'
+        : rawTitle;
+      // Project short name
+      const projShort = (b.project || '').split(' ').slice(0,2).join(' ');
       const isToday = b.ts >= parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
       const timeLabel = isToday
-        ? (b._logged && b._logged !== '2026-04-28T00:00:00.000000' ? new Date(b._logged).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : 'today')
+        ? (b._logged && b._logged.slice(11,19) !== '00:00:00'
+            ? new Date(b._logged).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})
+            : 'today')
         : (b.date || '');
       return `<div onclick="openDetail('${b.id}')"
-        style="display:flex;align-items:flex-start;gap:7px;padding:5px 10px 5px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;transition:background .1s"
-        onmouseover="this.style.background='${p2.color}10'" onmouseout="this.style.background='transparent'">
-        <div style="width:7px;height:7px;border-radius:50%;background:${p2.color};flex-shrink:0;margin-top:4px"></div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:10px;font-weight:700;color:${p2.color};letter-spacing:.2px;margin-bottom:1px">${b.project}</div>
-          <div style="font-size:11.5px;font-weight:500;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3">${title}</div>
+        style="display:flex;align-items:center;gap:0;padding:0 8px 0 0;cursor:pointer;border-radius:6px;margin:1px 6px;transition:background .15s;overflow:hidden"
+        onmouseover="this.style.background='${p2.color}12'" onmouseout="this.style.background='transparent'">
+        <div style="width:3px;height:36px;background:${p2.color};border-radius:2px;flex-shrink:0;margin-right:10px;opacity:.7"></div>
+        <div style="flex:1;min-width:0;padding:6px 0">
+          <div style="font-size:11.5px;font-weight:600;color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3">${cleanTitle}</div>
+          <div style="font-size:10px;color:${p2.color};font-weight:600;margin-top:1px;opacity:.9">${projShort}</div>
         </div>
-        <div style="font-size:9.5px;color:var(--text-3);flex-shrink:0;margin-top:3px">${timeLabel}</div>
+        <div style="font-size:9.5px;color:var(--text-3);flex-shrink:0;margin-left:6px">${timeLabel}</div>
       </div>`;
     };
 
