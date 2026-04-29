@@ -1,5 +1,70 @@
 [
   {
+    "id": "sync-opero-portal-scraper-apr29",
+    "type": "session",
+    "project": "Opero",
+    "task": "saas-valuation-engine",
+    "title": "Opero Agency Brain 2 \u2014 portal scraper fixed, 5 portals working",
+    "summary": "Fixed all 5 directly-scrapable property portals in the PropertyOS valuation engine. Pisos.com: new URL format + features-summary class. Fotocasa: exact price span match (was picking up listing ID). Kyero: JSON-LD price + CDN image upgrade. ThinkSpain: features-list label:value format. Grupo Inmocosta: Inmovilla JSON. Idealista/Habitaclia need Apify (token resets May 1).",
+    "decisions": [
+      "Pisos.com uses /comprar/TYPE-SLUG/ URL format, features-summary class for beds/baths/m2",
+      "Fotocasa: target exact <span class='re-DetailHeader-price'> not container (was appending price drop text)",
+      "Kyero: JSON-LD Offer price, CDN images upgraded to 1200x800",
+      "ThinkSpain: features-list with label:value format, s1600x1200 CDN photos from JS",
+      "Idealista blocked by WAF \u2014 use Apify from May 1 when token resets"
+    ],
+    "ideas": [
+      "Set APIFY_TOKEN in /AI/SAAS/.env on May 1 to unlock Idealista",
+      "Marketing Suite will work end-to-end once Anthropic API is topped up"
+    ],
+    "chips": [
+      {
+        "label": "5 portals fixed",
+        "type": "decision"
+      },
+      {
+        "label": "Idealista: May 1",
+        "type": "idea"
+      }
+    ],
+    "source": "session-sync",
+    "session_id": "local_415ae2e4-4200-4e4b-ad5e-9b9b8732c97b",
+    "ts": 20260429,
+    "_logged": "2026-04-29T16:25:00.000Z"
+  },
+  {
+    "id": "sync-opero-hq-dashboard-apr29",
+    "type": "session",
+    "project": "Opero",
+    "task": "opero-hq",
+    "title": "Review UK agency audit \u2014 Opero HQ Dashboard built as live artifact",
+    "summary": "Built the Opero HQ Dashboard as a persistent live artifact. Shows full Airtable lead pipeline (filtered, sorted by lead quality, status breakdown UK vs Sweden). Email section shows last 6 MailerLite campaigns with open/click rates colour-coded. W18 CB North English send showing 4.46% open, 1.96% click on 919 sends. Placeholder cards for Website Analytics, Audit Widget, Marketing Suite.",
+    "decisions": [
+      "Dashboard pulls fresh data every open via Airtable + MailerLite MCPs",
+      "Lead status flow: Audit Sold \u2192 Contacted \u2192 Prospect \u2192 New",
+      "Market split tracked: UK vs Sweden",
+      "Email metrics colour-coded: green/amber/red by open rate"
+    ],
+    "ideas": [
+      "Wire in Website Analytics when built",
+      "Add Audit Widget and Marketing Suite cards when ready"
+    ],
+    "chips": [
+      {
+        "label": "HQ dashboard live",
+        "type": "decision"
+      },
+      {
+        "label": "UK + SE pipeline",
+        "type": "idea"
+      }
+    ],
+    "source": "session-sync",
+    "session_id": "local_b9389861-6747-49c3-972f-251c47940a5e",
+    "ts": 20260429,
+    "_logged": "2026-04-29T16:25:00.000Z"
+  },
+  {
     "id": "sync-storyboard-apr29",
     "type": "session",
     "project": "Storyboard",
@@ -1258,5 +1323,103 @@
     "_source": "session-sync",
     "_session_id": "local_70091480-8289-4bab-920a-83197c1d1367",
     "_logged": "2026-04-29T13:35:42.291830"
+  },
+  {
+    "id": "sync-storyboard-sync-539f0b93",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Session sync: backfilled 20 missing blocks, LaunchAgent auto-push setup",
+    "summary": "Ran the storyboard session sync task which identified and logged 1 new session. Backfilled 20 missing Storyboard blocks covering Apr 21\u201329 (a 9-day data gap). Set up an OS-level LaunchAgent for auto-push every 15 minutes. User was frustrated about the historical data gap that had gone unnoticed.",
+    "decisions": [
+      "Backfilled 20 missing session blocks for Apr 21\u201329 rather than leaving gap",
+      "Configured LaunchAgent for auto-push every 15 min (survives restarts)"
+    ],
+    "ideas": [
+      "Auto-push via LaunchAgent ensures data stays current without manual intervention"
+    ],
+    "chips": [
+      "storyboard",
+      "session-sync",
+      "launchagent",
+      "backfill"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_539f0b93-0479-426f-ba71-6da710319c80",
+    "_logged": "2026-04-29T13:50:42.751089"
+  },
+  {
+    "id": "sync-storyboard-sync-837db7d7",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-session-sync",
+    "title": "Session sync: git push blocked by concurrent Storyboard brain process",
+    "summary": "The scheduled storyboard session sync ran and successfully synced 1 new session to session-log.json. The git push was blocked because the actively-running 'Storyboard brain' session held a git index.lock on the same repo. Local file update succeeded; push was deferred until the lock was released.",
+    "decisions": [
+      "Local file update proceeds even if git push fails",
+      "Git lock conflicts from concurrent sessions are logged but do not abort the sync"
+    ],
+    "ideas": [
+      "Consider adding a retry loop for git push to handle transient lock conflicts"
+    ],
+    "chips": [
+      "storyboard",
+      "session-sync",
+      "git",
+      "automation"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_837db7d7-8158-42e2-9dff-b1e2185f32a3",
+    "_logged": "2026-04-29T14:04:54.227187"
+  },
+  {
+    "id": "sync-storyboard-sync-1b9b7f35",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Session sync: 1 new session logged, git push blocked by index.lock",
+    "summary": "Storyboard session sync ran and identified one new session with content. The session-log.json was updated to 53 entries. Git push was blocked because the Storyboard brain session held the git index.lock at the time.",
+    "decisions": [
+      "Skip empty sessions, only log sessions with actual content",
+      "Proceed with local file update even when git push fails"
+    ],
+    "ideas": [],
+    "chips": [
+      "session-sync",
+      "storyboard",
+      "git-blocked"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_1b9b7f35-2dca-442c-8ec5-24ac8e52abc5",
+    "_logged": "2026-04-29T14:37:02.939120"
+  },
+  {
+    "id": "sync-storyboard-sync-6f66be0e",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "session-sync",
+    "title": "Session sync: logged local_1b9b7f35, briefed Storyboard brain (69 turns)",
+    "summary": "Storyboard session sync found local_1b9b7f35 as the only new session with content; others (bbdbb643, 86e4f6a7, 13920a0e, cd55ea0c) were empty and skipped. Read the Storyboard brain session transcript (69 turns) and ran bash to finalize the sync and git push.",
+    "decisions": [
+      "Only log sessions with actual message content",
+      "Write carry-forward brief for Storyboard brain given its 69-turn length"
+    ],
+    "ideas": [],
+    "chips": [
+      "session-sync",
+      "storyboard",
+      "carry-forward"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_6f66be0e-866e-4e4a-a30b-45a4d30149f2",
+    "_logged": "2026-04-29T14:37:02.939120"
   }
 ]
