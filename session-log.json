@@ -1,5 +1,139 @@
 [
   {
+    "id": "sync-storyboard-apr29",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "dashboard-ux",
+    "title": "Today view fixed — CSS columns bug, Stories real sessions, visual polish",
+    "summary": "Fixed critical Today view layout bug (CSS multi-column was slicing cards across 3 columns). Implemented today-view class toggle. Fixed Stories sidebar to show real Claude sessions from session-log.json with left color bar design. Added word-boundary title truncation. Today is now the default landing view with proper intraday sort.",
+    "decisions": [
+      "feed.today-view class forces columns:1 when Today is active",
+      "column-span:all on .td-wrap as CSS fallback",
+      "Stories sidebar: title first (text-1), project name below in color — not dot + stacked project/title",
+      "Word-boundary truncation at 34 chars with ellipsis",
+      "activePeriod defaults to 'today' on load"
+    ],
+    "ideas": [
+      "Right panel of Today view — show today session count or yesterday summary instead of placeholder",
+      "GitHub Pages version shows Demo — need auto-push of session-log.json to keep it live"
+    ],
+    "chips": ["Storyboard", "dashboard", "ux-fix", "today-view"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T14:26:00.000000"
+  },
+  {
+    "id": "sync-hh-social-apr29",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "social-pipeline",
+    "title": "H&H social pipeline — Edificio Vento content plan, 4 captions ready",
+    "summary": "Checked H&H Airtable CRM — 11 properties all from Edificio Vento development in Torrevieja (€158K–€488K). No Social Posts table exists yet, Postiz not connected for H&H. Wrote full content plan with 4 complete Facebook/Instagram captions + Facebook group teasers. Identified 4 blockers before automation goes live: Postiz channels, Airtable property flags, Remotion Navy/Gold template, Social Posts table.",
+    "decisions": [
+      "Content plan saved before automation — don't build automation to empty Airtable",
+      "Posting schedule: Tue/Thu/Sat for Edificio Vento series",
+      "Remotion H&H template needed: Navy #1E2A38, Gold #B39960, DM Sans"
+    ],
+    "ideas": [
+      "Add Social Posts table to H&H Airtable base",
+      "Build H&H PropertyCard Remotion template (Navy/Gold/Cream)"
+    ],
+    "chips": ["H&H", "social", "Edificio Vento", "content-plan"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T10:00:00.000000"
+  },
+  {
+    "id": "sync-hh-crm-outreach-apr29",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "crm-outreach",
+    "title": "H&H CRM outreach — Gmail drafts created for active clients",
+    "summary": "Created Gmail outreach drafts for H&H CRM clients. Three draft emails created via Gmail API.",
+    "decisions": [
+      "Draft-first approach — review before sending"
+    ],
+    "ideas": [],
+    "chips": ["H&H", "CRM", "outreach", "Gmail"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T09:30:00.000000"
+  },
+  {
+    "id": "sync-hh-fb-morning-apr29",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "fb-group-post",
+    "title": "H&H FB group morning post — blocked by screen lock (Run 45)",
+    "summary": "Chrome extension connected, tab opened to facebook.com/hanssonhertzell but all page interaction tools returned Permission denied. Same recurring screen-lock issue. No post shared. Requires unlocked screen + active user session + caffeinate -d to run successfully.",
+    "decisions": [
+      "Screen must be unlocked for Chrome extension Facebook permissions",
+      "Run caffeinate -d in Terminal before triggering task"
+    ],
+    "ideas": [
+      "Schedule FB post tasks only during active working hours, not overnight"
+    ],
+    "chips": ["H&H", "Facebook", "blocked", "screen-lock"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T08:00:00.000000"
+  },
+  {
+    "id": "sync-newbuild-social-apr29",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "social-pipeline",
+    "title": "NBHCB social pipeline — 5 posts scheduled (77 turns)",
+    "summary": "Full social pipeline run for New Build Homes Costa Blanca. All 5 posts scheduled across channels. Logged to Airtable.",
+    "decisions": [
+      "5 posts scheduled this run",
+      "Airtable log updated after scheduling"
+    ],
+    "ideas": [],
+    "chips": ["NBHCB", "social", "scheduled", "Postiz"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T09:00:00.000000"
+  },
+  {
+    "id": "sync-newbuild-blog-apr29",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "blog-pipeline",
+    "title": "NBHCB blog pipeline — running (22 turns, content audit in progress)",
+    "summary": "Blog pipeline running — 22 assistant turns. Currently auditing approved status of blog articles and compiling what's new to add. Still in progress.",
+    "decisions": [],
+    "ideas": [],
+    "chips": ["NBHCB", "blog", "pipeline", "running"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T11:00:00.000000"
+  },
+  {
+    "id": "sync-hh-daily-outreach-apr29",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-outreach",
+    "title": "Daily client outreach — 10 Gmail drafts for Swedish Costa Blanca leads",
+    "summary": "Creating 10 personalised Gmail outreach drafts for Swedish clients with general Costa Blanca interest. Currently generating first 5. All clients are Swedish-language segment.",
+    "decisions": [
+      "Swedish-language drafts for all 10 clients",
+      "Costa Blanca general interest segment targeted"
+    ],
+    "ideas": [],
+    "chips": ["H&H", "outreach", "Swedish", "Gmail"],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-log",
+    "_logged": "2026-04-29T11:30:00.000000"
+  },
+  {
     "id": "log-propertyos-df440bda",
     "type": "session",
     "project": "PropertyOS",
