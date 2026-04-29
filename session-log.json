@@ -1891,5 +1891,33 @@
     "_source": "session-sync",
     "_session_id": "local_00302f03-9ad6-4f97-b517-3b363300c0ca",
     "_logged": "2026-04-29T20:35:32.754349"
+  },
+  {
+    "id": "sync-hh-outreach-drafts-a1b2c3d4",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach",
+    "title": "Created 5 Gmail draft emails for daily H&H CRM client outreach",
+    "summary": "Automated scheduled task ran and created 5 Gmail draft emails for client outreach via the H&H CRM pipeline. All drafts were generated using the Gmail MCP and queued for review and sending. No user interaction was required.",
+    "decisions": [
+      "Used Gmail draft creation (not direct send) to allow human review before sending",
+      "Ran as fully automated scheduled task with no user input"
+    ],
+    "ideas": [
+      "Consider adding a summary email or Airtable log entry after each outreach batch"
+    ],
+    "chips": [
+      "gmail",
+      "crm",
+      "outreach",
+      "drafts",
+      "automation",
+      "scheduled-task"
+    ],
+    "date": "29 Apr",
+    "ts": 20260429,
+    "_source": "session-sync",
+    "_session_id": "local_13920a0e-2d43-412f-8fcf-63abb0eec6aa",
+    "_logged": "2026-04-29T21:06:26.581286"
   }
 ]
