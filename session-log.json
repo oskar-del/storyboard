@@ -4,10 +4,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "email-marketing",
-    "title": "H&H Sales & CRM — MailerLite W18 campaign built via Custom HTML editor",
+    "title": "H&H Sales & CRM \u2014 MailerLite W18 campaign built via Custom HTML editor",
     "summary": "Built W18 newsletter campaign in MailerLite using Chrome automation. Navigated editor selection modal, used Custom HTML workaround for Growing Business plan. Created campaign, injected branded H&H HTML template via Ace editor JavaScript injection technique.",
     "decisions": [
-      "Custom HTML editor requires Premium — used Ace editor injection workaround",
+      "Custom HTML editor requires Premium \u2014 used Ace editor injection workaround",
       "Campaign created and HTML injected via JavaScript tool"
     ],
     "ideas": [
@@ -29,10 +29,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-posting",
-    "title": "H&H FB evening post Run 47 — blocked (API connection refused)",
+    "title": "H&H FB evening post Run 47 \u2014 blocked (API connection refused)",
     "summary": "Scheduled FB group posting task ran but failed immediately with ConnectionRefused API error. Anthropic API quota likely exhausted. No posts made.",
     "decisions": [
-      "Task auto-skipped — API unavailable"
+      "Task auto-skipped \u2014 API unavailable"
     ],
     "ideas": [
       "Top up Anthropic API credits to unblock all scheduled tasks"
@@ -53,7 +53,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "infrastructure",
-    "title": "Storyboard server fixed — serve.js on port 3849, dashboard live",
+    "title": "Storyboard server fixed \u2014 serve.js on port 3849, dashboard live",
     "summary": "Diagnosed and fixed persistent server failure caused by wrong node path (/opt/homebrew vs /usr/local/bin/node) in all LaunchAgent configs. Port 3847/3848 conflicts from zombie processes blocked every start attempt. Built minimal serve.js on port 3849 as clean bypass. Dashboard now live at 127.0.0.1:3849/app.html.",
     "decisions": [
       "Node path on this machine: /usr/local/bin/node (not /opt/homebrew)",
@@ -84,14 +84,14 @@
     "type": "session",
     "project": "Opero",
     "task": "saas-valuation-engine",
-    "title": "Opero Agency Brain 2 — portal scraper fixed, 5 portals working",
+    "title": "Opero Agency Brain 2 \u2014 portal scraper fixed, 5 portals working",
     "summary": "Fixed all 5 directly-scrapable property portals in the PropertyOS valuation engine. Pisos.com: new URL format + features-summary class. Fotocasa: exact price span match (was picking up listing ID). Kyero: JSON-LD price + CDN image upgrade. ThinkSpain: features-list label:value format. Grupo Inmocosta: Inmovilla JSON. Idealista/Habitaclia need Apify (token resets May 1).",
     "decisions": [
       "Pisos.com uses /comprar/TYPE-SLUG/ URL format, features-summary class for beds/baths/m2",
       "Fotocasa: target exact <span class='re-DetailHeader-price'> not container (was appending price drop text)",
       "Kyero: JSON-LD Offer price, CDN images upgraded to 1200x800",
       "ThinkSpain: features-list with label:value format, s1600x1200 CDN photos from JS",
-      "Idealista blocked by WAF — use Apify from May 1 when token resets"
+      "Idealista blocked by WAF \u2014 use Apify from May 1 when token resets"
     ],
     "ideas": [
       "Set APIFY_TOKEN in /AI/SAAS/.env on May 1 to unlock Idealista",
@@ -117,11 +117,11 @@
     "type": "session",
     "project": "Opero",
     "task": "opero-hq",
-    "title": "Review UK agency audit — Opero HQ Dashboard built as live artifact",
+    "title": "Review UK agency audit \u2014 Opero HQ Dashboard built as live artifact",
     "summary": "Built the Opero HQ Dashboard as a persistent live artifact. Shows full Airtable lead pipeline (filtered, sorted by lead quality, status breakdown UK vs Sweden). Email section shows last 6 MailerLite campaigns with open/click rates colour-coded. W18 CB North English send showing 4.46% open, 1.96% click on 919 sends. Placeholder cards for Website Analytics, Audit Widget, Marketing Suite.",
     "decisions": [
       "Dashboard pulls fresh data every open via Airtable + MailerLite MCPs",
-      "Lead status flow: Audit Sold → Contacted → Prospect → New",
+      "Lead status flow: Audit Sold \u2192 Contacted \u2192 Prospect \u2192 New",
       "Market split tracked: UK vs Sweden",
       "Email metrics colour-coded: green/amber/red by open rate"
     ],
@@ -149,18 +149,18 @@
     "type": "session",
     "project": "Storyboard",
     "task": "dashboard-ux",
-    "title": "Today view fixed — CSS columns bug, Stories real sessions, visual polish",
+    "title": "Today view fixed \u2014 CSS columns bug, Stories real sessions, visual polish",
     "summary": "Fixed critical Today view layout bug (CSS multi-column was slicing cards across 3 columns). Implemented today-view class toggle. Fixed Stories sidebar to show real Claude sessions from session-log.json with left color bar design. Added word-boundary title truncation. Today is now the default landing view with proper intraday sort.",
     "decisions": [
       "feed.today-view class forces columns:1 when Today is active",
       "column-span:all on .td-wrap as CSS fallback",
-      "Stories sidebar: title first (text-1), project name below in color — not dot + stacked project/title",
+      "Stories sidebar: title first (text-1), project name below in color \u2014 not dot + stacked project/title",
       "Word-boundary truncation at 34 chars with ellipsis",
       "activePeriod defaults to 'today' on load"
     ],
     "ideas": [
-      "Right panel of Today view — show today session count or yesterday summary instead of placeholder",
-      "GitHub Pages version shows Demo — need auto-push of session-log.json to keep it live"
+      "Right panel of Today view \u2014 show today session count or yesterday summary instead of placeholder",
+      "GitHub Pages version shows Demo \u2014 need auto-push of session-log.json to keep it live"
     ],
     "chips": [
       "Storyboard",
@@ -178,10 +178,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "social-pipeline",
-    "title": "H&H social pipeline — Edificio Vento content plan, 4 captions ready",
-    "summary": "Checked H&H Airtable CRM — 11 properties all from Edificio Vento development in Torrevieja (€158K–€488K). No Social Posts table exists yet, Postiz not connected for H&H. Wrote full content plan with 4 complete Facebook/Instagram captions + Facebook group teasers. Identified 4 blockers before automation goes live: Postiz channels, Airtable property flags, Remotion Navy/Gold template, Social Posts table.",
+    "title": "H&H social pipeline \u2014 Edificio Vento content plan, 4 captions ready",
+    "summary": "Checked H&H Airtable CRM \u2014 11 properties all from Edificio Vento development in Torrevieja (\u20ac158K\u2013\u20ac488K). No Social Posts table exists yet, Postiz not connected for H&H. Wrote full content plan with 4 complete Facebook/Instagram captions + Facebook group teasers. Identified 4 blockers before automation goes live: Postiz channels, Airtable property flags, Remotion Navy/Gold template, Social Posts table.",
     "decisions": [
-      "Content plan saved before automation — don't build automation to empty Airtable",
+      "Content plan saved before automation \u2014 don't build automation to empty Airtable",
       "Posting schedule: Tue/Thu/Sat for Edificio Vento series",
       "Remotion H&H template needed: Navy #1E2A38, Gold #B39960, DM Sans"
     ],
@@ -205,10 +205,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "crm-outreach",
-    "title": "H&H CRM outreach — Gmail drafts created for active clients",
+    "title": "H&H CRM outreach \u2014 Gmail drafts created for active clients",
     "summary": "Created Gmail outreach drafts for H&H CRM clients. Three draft emails created via Gmail API.",
     "decisions": [
-      "Draft-first approach — review before sending"
+      "Draft-first approach \u2014 review before sending"
     ],
     "ideas": [],
     "chips": [
@@ -227,7 +227,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB group morning post — blocked by screen lock (Run 45)",
+    "title": "H&H FB group morning post \u2014 blocked by screen lock (Run 45)",
     "summary": "Chrome extension connected, tab opened to facebook.com/hanssonhertzell but all page interaction tools returned Permission denied. Same recurring screen-lock issue. No post shared. Requires unlocked screen + active user session + caffeinate -d to run successfully.",
     "decisions": [
       "Screen must be unlocked for Chrome extension Facebook permissions",
@@ -252,7 +252,7 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "social-pipeline",
-    "title": "NBHCB social pipeline — 5 posts scheduled (77 turns)",
+    "title": "NBHCB social pipeline \u2014 5 posts scheduled (77 turns)",
     "summary": "Full social pipeline run for New Build Homes Costa Blanca. All 5 posts scheduled across channels. Logged to Airtable.",
     "decisions": [
       "5 posts scheduled this run",
@@ -275,8 +275,8 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "blog-pipeline",
-    "title": "NBHCB blog pipeline — running (22 turns, content audit in progress)",
-    "summary": "Blog pipeline running — 22 assistant turns. Currently auditing approved status of blog articles and compiling what's new to add. Still in progress.",
+    "title": "NBHCB blog pipeline \u2014 running (22 turns, content audit in progress)",
+    "summary": "Blog pipeline running \u2014 22 assistant turns. Currently auditing approved status of blog articles and compiling what's new to add. Still in progress.",
     "decisions": [],
     "ideas": [],
     "chips": [
@@ -295,7 +295,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "daily-outreach",
-    "title": "Daily client outreach — 10 Gmail drafts for Swedish Costa Blanca leads",
+    "title": "Daily client outreach \u2014 10 Gmail drafts for Swedish Costa Blanca leads",
     "summary": "Creating 10 personalised Gmail outreach drafts for Swedish clients with general Costa Blanca interest. Currently generating first 5. All clients are Swedish-language segment.",
     "decisions": [
       "Swedish-language drafts for all 10 clients",
@@ -318,8 +318,8 @@
     "type": "session",
     "project": "PropertyOS",
     "task": "valuation-engine",
-    "title": "PropertyOS valuation engine — PDF v6, audit pipeline, Inmocosta live",
-    "summary": "Built full PDF valuation report generator with ReportLab. Iterated v1→v6 on layout, fonts, Casafari data integration. Added agency audit pipeline (agency_audit.py). Generated live audit PDF for Inmocosta.",
+    "title": "PropertyOS valuation engine \u2014 PDF v6, audit pipeline, Inmocosta live",
+    "summary": "Built full PDF valuation report generator with ReportLab. Iterated v1\u2192v6 on layout, fonts, Casafari data integration. Added agency audit pipeline (agency_audit.py). Generated live audit PDF for Inmocosta.",
     "decisions": [
       "ReportLab for PDF generation",
       "Casafari as valuation data source",
@@ -346,15 +346,15 @@
     "type": "session",
     "project": "Opero Agency",
     "task": "propertyos-video",
-    "title": "PropertyOS video reel pipeline — real property walkthrough clips",
-    "summary": "Built full pipeline: listing URL → scrape real data → download YouTube walkthrough → extract best clips at 10s/23s/45s → render Remotion reel. No stock footage. Real property video as hero. Three-template suite planned: standard, Cinematic (slow fades, luxury), TikTok Rapid.",
+    "title": "PropertyOS video reel pipeline \u2014 real property walkthrough clips",
+    "summary": "Built full pipeline: listing URL \u2192 scrape real data \u2192 download YouTube walkthrough \u2192 extract best clips at 10s/23s/45s \u2192 render Remotion reel. No stock footage. Real property video as hero. Three-template suite planned: standard, Cinematic (slow fades, luxury), TikTok Rapid.",
     "decisions": [
       "Use real YouTube walkthrough clips extracted from listing URL",
       "Extract 3 clips at 10s, 23s, 45s as default keyframes",
       "Three templates: standard, Cinematic, TikTok Rapid"
     ],
     "ideas": [
-      "Cinematic variant next — slow fades, luxury feel",
+      "Cinematic variant next \u2014 slow fades, luxury feel",
       "TikTok Rapid variant with video cuts instead of stills"
     ],
     "chips": [
@@ -374,8 +374,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "newsletter-w18",
-    "title": "W18 newsletter sent — 2,010 subscribers, CB South English",
-    "summary": "Built and sent Week 18 newsletter to all active non-Swedish CB South subscribers. 5 properties featured: Villa Villamartin €599k, Villa San Miguel €425k, Apartment Punta Prima €345k, Villa Orihuela Costa €279k, Bungalow Villamartin €169k. Campaign scheduled and queued via MailerLite API.",
+    "title": "W18 newsletter sent \u2014 2,010 subscribers, CB South English",
+    "summary": "Built and sent Week 18 newsletter to all active non-Swedish CB South subscribers. 5 properties featured: Villa Villamartin \u20ac599k, Villa San Miguel \u20ac425k, Apartment Punta Prima \u20ac345k, Villa Orihuela Costa \u20ac279k, Bungalow Villamartin \u20ac169k. Campaign scheduled and queued via MailerLite API.",
     "decisions": [
       "Send to all non-Swedish CB South (English + Spanish + French + Dutch)",
       "5 properties per newsletter",
@@ -401,12 +401,12 @@
     "type": "session",
     "project": "Opero Agency",
     "task": "uk-agency-audits",
-    "title": "Opero Audit — Richard James v2 white theme pptx",
-    "summary": "Built v2 of the Richard James agency audit deck with white theme. Score: 39. Split cover layout — dark navy left panel, white right with big score as hero. White cards with light borders for all pillar slides. CRITICAL red tags on priority actions pop hard on white background. Dual versions: dark v1 for in-person walkthroughs, light v2 for web embed/email PDF.",
+    "title": "Opero Audit \u2014 Richard James v2 white theme pptx",
+    "summary": "Built v2 of the Richard James agency audit deck with white theme. Score: 39. Split cover layout \u2014 dark navy left panel, white right with big score as hero. White cards with light borders for all pillar slides. CRITICAL red tags on priority actions pop hard on white background. Dual versions: dark v1 for in-person walkthroughs, light v2 for web embed/email PDF.",
     "decisions": [
-      "White theme v2 alongside dark v1 — both kept",
+      "White theme v2 alongside dark v1 \u2014 both kept",
       "Dark v1 for in-person presentations, light v2 for email/web",
-      "CRITICAL red tags more alarming on white — right effect for sales conversations"
+      "CRITICAL red tags more alarming on white \u2014 right effect for sales conversations"
     ],
     "ideas": [
       "Send v2 as PDF to Richard James prospect"
@@ -428,8 +428,8 @@
     "type": "session",
     "project": "Storyboard",
     "task": "dashboard",
-    "title": "Day 10 — Sprint finale: Context Full CTA, cross-session bridge, visual diff complete",
-    "summary": "Final sprint day. Completed all visual diff fixes against design-spec (Sprint card, toggle pills, T7 260px right panel, Decisions section). Built Context Full → Start New Window CTA that detects fillPct>75 and opens seed modal with carry-forward brief. Added Claude usage pill to topbar (sessions today, compactions, API key indicator). Fixed T2 grid view to pure masonry per spec. Built cross-session block bridge: session-log.json + /log-session MCP endpoint + log-session.py — any Cowork session can now post to Storyboard.",
+    "title": "Day 10 \u2014 Sprint finale: Context Full CTA, cross-session bridge, visual diff complete",
+    "summary": "Final sprint day. Completed all visual diff fixes against design-spec (Sprint card, toggle pills, T7 260px right panel, Decisions section). Built Context Full \u2192 Start New Window CTA that detects fillPct>75 and opens seed modal with carry-forward brief. Added Claude usage pill to topbar (sessions today, compactions, API key indicator). Fixed T2 grid view to pure masonry per spec. Built cross-session block bridge: session-log.json + /log-session MCP endpoint + log-session.py \u2014 any Cowork session can now post to Storyboard.",
     "decisions": [
       "Context Full CTA uses existing seed modal infrastructure",
       "fillPct threshold 75% for Start New Window vs Carry forward",
@@ -460,7 +460,7 @@
     "type": "compaction",
     "project": "Storyboard",
     "task": "sprint-complete",
-    "title": "Day 10 sprint complete — pushed to GitHub Pages",
+    "title": "Day 10 sprint complete \u2014 pushed to GitHub Pages",
     "summary": "All Day 10 features shipped and live. T3 board task-window columns, T5 compaction dividers, dynamic sprint pill, context-full Start New Window CTA, Claude usage pill, cross-session logging bridge. Sprint closed.",
     "decisions": [
       "Cross-session logging via session-log.json merged at /blocks",
@@ -506,17 +506,17 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "email-marketing-audit",
-    "title": "Email audit — 161 active subs, April send gap, UK agents 44% open",
+    "title": "Email audit \u2014 161 active subs, April send gap, UK agents 44% open",
     "summary": "Audited MailerLite subscriber health and campaign status for H&H. Found 161 active subscribers total, no April newsletters sent to buyer segments, stale Week 15 drafts, and a sync gap between H&H CRM and MailerLite groups. UK agent referral campaign had 44% open rate.",
     "decisions": [
       "Delete stale EN/SE/NL W15 drafts (1 or 0 subs each)",
       "Refresh French draft as W17 edition",
       "Follow up UK agent referral list (157 engaged contacts)",
-      "Sync CRM Campaigns table — stuck in Draft since February"
+      "Sync CRM Campaigns table \u2014 stuck in Draft since February"
     ],
     "ideas": [
       "Add RESEND_API_KEY so leads don't go unnoticed",
-      "Airtable→MailerLite group sync for active clients"
+      "Airtable\u2192MailerLite group sync for active clients"
     ],
     "chips": [
       "email",
@@ -535,8 +535,8 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "weekly-gsc-monitoring",
-    "title": "GSC monitoring Apr 20 — 90% healthy, /golf/las-colinas 404 wk 2",
-    "summary": "Weekly GSC check for April 20. 9/10 URLs healthy and stable including previously-fixed filtered pages and translated routes. /golf/las-colinas still returning 404 for a second consecutive week. Sitemap lastmod not updating on deploys — possible automation issue.",
+    "title": "GSC monitoring Apr 20 \u2014 90% healthy, /golf/las-colinas 404 wk 2",
+    "summary": "Weekly GSC check for April 20. 9/10 URLs healthy and stable including previously-fixed filtered pages and translated routes. /golf/las-colinas still returning 404 for a second consecutive week. Sitemap lastmod not updating on deploys \u2014 possible automation issue.",
     "decisions": [
       "Flag /golf/las-colinas for 301 redirect or page restore",
       "Investigate sitemap regeneration not running on deploys"
@@ -559,12 +559,12 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "nbhcb-website-seo",
-    "title": "NBHCB health check — social calendar expiring, 3 leads unactioned",
-    "summary": "Site health check April 20. All pages loading, Swedish translations confirmed. Social posting calendar expires April 21 — batch-render pipeline needs re-run. Three buyer leads unactioned (oldest 25 days old). RESEND_API_KEY still missing from Netlify.",
+    "title": "NBHCB health check \u2014 social calendar expiring, 3 leads unactioned",
+    "summary": "Site health check April 20. All pages loading, Swedish translations confirmed. Social posting calendar expires April 21 \u2014 batch-render pipeline needs re-run. Three buyer leads unactioned (oldest 25 days old). RESEND_API_KEY still missing from Netlify.",
     "decisions": [
       "Re-run batch-render-developments.ts for next 30 days",
       "Add RESEND_API_KEY to Netlify to surface leads automatically",
-      "Action overdue buyer leads: Hakan Seicamet, Wolfgang Spielmann, Małgorzata Kobus"
+      "Action overdue buyer leads: Hakan Seicamet, Wolfgang Spielmann, Ma\u0142gorzata Kobus"
     ],
     "ideas": [
       "Five high-priority blog articles still unwritten from backlog"
@@ -586,11 +586,11 @@
     "type": "compaction",
     "project": "Storyboard",
     "task": "ux-iteration",
-    "title": "v10 snapshot saved — pre-Today-feed redesign",
+    "title": "v10 snapshot saved \u2014 pre-Today-feed redesign",
     "summary": "Saved app-v10-snapshot.html (14,849 lines) before starting UX iteration on Today view. Audit findings: Today filter shows project cards not session feed, Stories/Boards distinction unclear, sidebar overloaded, server-off false negative.",
     "decisions": [
       "Always snapshot before visual iterations",
-      "Today feed is the one targeted change — no wider redesign"
+      "Today feed is the one targeted change \u2014 no wider redesign"
     ],
     "ideas": [],
     "chips": [
@@ -608,7 +608,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "email-marketing-audit",
-    "title": "Email marketing audit — 1,503 active subs, high unsubscribe rates flagged",
+    "title": "Email marketing audit \u2014 1,503 active subs, high unsubscribe rates flagged",
     "summary": "Full MailerLite + Airtable email marketing audit for April 29. Found 1,503 active subscribers (stale ~4,578 figure in config). W18 CB South EN sent to 2,010 subs: 26.5% open, 4% click, but 1.74% unsub rate (well above 0.5% benchmark). W18 CB North EN: 18.8% open, 1.09% unsub. Two drafts need content: Price Reduction Torrevieja Bungalow and W18 CB South Swedish. Six stale drafts identified for cleanup.",
     "decisions": [
       "Elevated unsubscribes likely caused by sending to all-active regardless of language",
@@ -637,14 +637,14 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "weekly-gsc-monitoring",
-    "title": "Weekly GSC check #3 — 90% healthy, /golf/las-colinas 404 third week",
-    "summary": "Third weekly GSC health check for newbuildhomescostablanca.com. 9/10 core URLs return 200 including previously-broken French blog and Torrevieja filter. /golf/las-colinas still 404 for the third consecutive week — escalated to high priority. Sitemap shows 13,927 URLs (down 193 from April 1's 14,120, likely property feed churn). All April 1 fixes continue to hold.",
+    "title": "Weekly GSC check #3 \u2014 90% healthy, /golf/las-colinas 404 third week",
+    "summary": "Third weekly GSC health check for newbuildhomescostablanca.com. 9/10 core URLs return 200 including previously-broken French blog and Torrevieja filter. /golf/las-colinas still 404 for the third consecutive week \u2014 escalated to high priority. Sitemap shows 13,927 URLs (down 193 from April 1's 14,120, likely property feed churn). All April 1 fixes continue to hold.",
     "decisions": [
-      "/golf/las-colinas 404 now high priority — needs slug investigation or 301 redirect",
+      "/golf/las-colinas 404 now high priority \u2014 needs slug investigation or 301 redirect",
       "Sitemap URL drop of 193 attributed to property feed churn, not technical issue"
     ],
     "ideas": [
-      "Investigate /golf/las-colinas route — was the page removed or was slug renamed?"
+      "Investigate /golf/las-colinas route \u2014 was the page removed or was slug renamed?"
     ],
     "chips": [
       "GSC",
@@ -664,15 +664,15 @@
     "type": "session",
     "project": "Storyboard",
     "task": "sync-reliability",
-    "title": "Storyboard sync reliability — git push fix, LaunchAgent proposed",
-    "summary": "Diagnosed why sessions weren't appearing on GitHub Pages: file was written but not pushed. Guided git push to fix. Discussed architectural limit: sync task only runs when Cowork is open, can't guarantee no missed runs. Proposed LaunchAgent as OS-level fix — a shell script running every 15 min to git push after Cowork sync writes the file, independent of app state.",
+    "title": "Storyboard sync reliability \u2014 git push fix, LaunchAgent proposed",
+    "summary": "Diagnosed why sessions weren't appearing on GitHub Pages: file was written but not pushed. Guided git push to fix. Discussed architectural limit: sync task only runs when Cowork is open, can't guarantee no missed runs. Proposed LaunchAgent as OS-level fix \u2014 a shell script running every 15 min to git push after Cowork sync writes the file, independent of app state.",
     "decisions": [
-      "git push was the immediate fix — commits existed, just not pushed",
+      "git push was the immediate fix \u2014 commits existed, just not pushed",
       "LaunchAgent proposed as permanent fix for push reliability",
       "Scheduler architectural limit: sync only runs with Cowork open"
     ],
     "ideas": [
-      "Build Mac LaunchAgent that runs git push every 15 min — OS-level reliability",
+      "Build Mac LaunchAgent that runs git push every 15 min \u2014 OS-level reliability",
       "LaunchAgent would work even when Cowork is closed or Mac restarts"
     ],
     "chips": [
@@ -693,7 +693,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB morning post Run 46 — blocked (screen locked)",
+    "title": "H&H FB morning post Run 46 \u2014 blocked (screen locked)",
     "summary": "Scheduled morning run blocked by screen lock. Chrome extension connected and navigated to facebook.com/hanssonhertzell but screenshot permission denied. Same recurring issue as many prior runs. Last confirmed shared post remains Run 19 (April 7 bungalow in Lomas de Cabo Roig).",
     "decisions": [
       "Screen must be unlocked for Chrome extension Facebook permissions"
@@ -719,7 +719,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB morning post Run 45 — blocked (permission denied)",
+    "title": "H&H FB morning post Run 45 \u2014 blocked (permission denied)",
     "summary": "Morning run blocked. Chrome connected, tab opened to facebook.com/hanssonhertzell, but all page interaction tools returned Permission denied by user. Variation of recurring screen-lock issue. No post checked or shared.",
     "decisions": [
       "Facebook domain permission requires active user session"
@@ -742,8 +742,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB evening post Run 44 — blocked (screen locked)",
-    "summary": "Evening scheduled run blocked. Chrome connected and navigated successfully but screenshot denied with Permission denied by user — screen locked. Same as many prior runs. LOG.md updated. No groups posted.",
+    "title": "H&H FB evening post Run 44 \u2014 blocked (screen locked)",
+    "summary": "Evening scheduled run blocked. Chrome connected and navigated successfully but screenshot denied with Permission denied by user \u2014 screen locked. Same as many prior runs. LOG.md updated. No groups posted.",
     "decisions": [],
     "ideas": [],
     "chips": [
@@ -763,7 +763,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "session-sync",
-    "title": "Storyboard session sync — 4 sessions logged to session-log.json",
+    "title": "Storyboard session sync \u2014 4 sessions logged to session-log.json",
     "summary": "Automated sync run read recent idle sessions and appended 4 new entries to session-log.json. Skipped local_bbdbb643 (no messages). Ran git push to keep GitHub Pages live.",
     "decisions": [
       "Skip sessions with no messages"
@@ -785,10 +785,10 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "blog-pipeline",
-    "title": "NBHCB blog pipeline — 1 new article found (Olive Press Q1 2026 final stats)",
-    "summary": "Content scout run for April 28-29. Compared all search results against existing 57 Content Ideas URLs and 200 Blog Article slugs. Found 1 genuinely new article: Olive Press Q1 2026 final stats with updated 12.9% growth data — different URL and figures from the April 7 article already in the table. No approved articles found; Phase 2 skipped.",
+    "title": "NBHCB blog pipeline \u2014 1 new article found (Olive Press Q1 2026 final stats)",
+    "summary": "Content scout run for April 28-29. Compared all search results against existing 57 Content Ideas URLs and 200 Blog Article slugs. Found 1 genuinely new article: Olive Press Q1 2026 final stats with updated 12.9% growth data \u2014 different URL and figures from the April 7 article already in the table. No approved articles found; Phase 2 skipped.",
     "decisions": [
-      "Only 1 new article passed dedup — rest already covered by existing slugs",
+      "Only 1 new article passed dedup \u2014 rest already covered by existing slugs",
       "Olive Press Q1 final stats added as new Content Idea (status: New)"
     ],
     "ideas": [],
@@ -809,7 +809,7 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "social-pipeline",
-    "title": "NBHCB social pipeline — Digital Assets and Social Posts logged to Airtable",
+    "title": "NBHCB social pipeline \u2014 Digital Assets and Social Posts logged to Airtable",
     "summary": "Social pipeline run completed Airtable logging phase. Created Digital Assets and Social Posts records in Airtable after posts were scheduled to Postiz channels.",
     "decisions": [
       "Simultaneous Airtable record creation for efficiency"
@@ -832,7 +832,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "daily-outreach",
-    "title": "Daily client outreach drafts — 3 Gmail drafts created",
+    "title": "Daily client outreach drafts \u2014 3 Gmail drafts created",
     "summary": "Automated outreach run created 3 personalised Gmail draft emails for H&H CRM clients. Drafts ready for Oskar to review and send.",
     "decisions": [
       "Draft-first approach before sending"
@@ -855,8 +855,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "social-pipeline",
-    "title": "H&H social pipeline Week 17 — 6 captions ready, automation still blocked",
-    "summary": "Week 17 content plan generated for April 24–30. Checked H&H Airtable CRM (10 Edificio Vento properties). Wrote 6 posts focused on spring timing and mid-range units (€182K–€265K) not featured recently, plus a rental yield education post. Same blockers remain: Postiz H&H channel setup needed, all 10 CRM entries are still Edificio Vento units limiting variety.",
+    "title": "H&H social pipeline Week 17 \u2014 6 captions ready, automation still blocked",
+    "summary": "Week 17 content plan generated for April 24\u201330. Checked H&H Airtable CRM (10 Edificio Vento properties). Wrote 6 posts focused on spring timing and mid-range units (\u20ac182K\u2013\u20ac265K) not featured recently, plus a rental yield education post. Same blockers remain: Postiz H&H channel setup needed, all 10 CRM entries are still Edificio Vento units limiting variety.",
     "decisions": [
       "Week 17 angle: spring timing hook + mid-range Vento units + rental yield education",
       "Content plan saved; automation blocked until Postiz H&H channels set up"
@@ -883,10 +883,10 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "blog-pipeline",
-    "title": "NBHCB blog pipeline Apr 28 — 4 new content ideas added to Airtable",
+    "title": "NBHCB blog pipeline Apr 28 \u2014 4 new content ideas added to Airtable",
     "summary": "Content scout run for April 28. Evaluated ~25 candidate articles against 200 existing blog slugs and 53 Content Ideas. Added 4 new records to Airtable: Lisa Frain investment article (score 13), Portfolio Deluxe rental property 2026 (score 9), Taylor Wimpey Murcia La Manga expansion (score 11), Spanish coastal prices 2026 (score 7). No approved articles found, Phase 2 skipped.",
     "decisions": [
-      "Rental property guide passes dedup despite buy-to-let slug — 2026 NRU Registry is a new angle",
+      "Rental property guide passes dedup despite buy-to-let slug \u2014 2026 NRU Registry is a new angle",
       "Content Ideas now has ~42 articles awaiting review, 0 Approved"
     ],
     "ideas": [
@@ -910,8 +910,8 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "social-pipeline",
-    "title": "NBHCB social pipeline Apr 25 — 5 posts scheduled, N9261 Villa Ciudad Quesada",
-    "summary": "Clean social pipeline run. Selected N9261 luxury 3-bed villa in Ciudad Quesada (€1,050,000) — villa type in rotation, Costa Blanca South. Rendered 2 stills (1080×1080 and 1000×1500). Scheduled 5 posts for April 25 across Instagram, Facebook, TikTok, YouTube, and Pinterest via Postiz. Logged Digital Assets and Social Posts to Airtable. PROGRESS.md updated.",
+    "title": "NBHCB social pipeline Apr 25 \u2014 5 posts scheduled, N9261 Villa Ciudad Quesada",
+    "summary": "Clean social pipeline run. Selected N9261 luxury 3-bed villa in Ciudad Quesada (\u20ac1,050,000) \u2014 villa type in rotation, Costa Blanca South. Rendered 2 stills (1080\u00d71080 and 1000\u00d71500). Scheduled 5 posts for April 25 across Instagram, Facebook, TikTok, YouTube, and Pinterest via Postiz. Logged Digital Assets and Social Posts to Airtable. PROGRESS.md updated.",
     "decisions": [
       "N9261 selected: villa rotation, CBSouth, luxury tier differentiates from recent mid-range",
       "Next run: Sunday April 26 (Blog Article link post type)"
@@ -936,7 +936,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "daily-outreach",
-    "title": "Daily client outreach drafts — 8 Gmail drafts created",
+    "title": "Daily client outreach drafts \u2014 8 Gmail drafts created",
     "summary": "Automated outreach run created 8 personalised Gmail draft emails for H&H CRM clients. All drafts ready for Oskar to review and send.",
     "decisions": [],
     "ideas": [],
@@ -957,7 +957,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB morning post Run 43 — blocked (screen locked, Apr 27)",
+    "title": "H&H FB morning post Run 43 \u2014 blocked (screen locked, Apr 27)",
     "summary": "April 27 morning scheduled run blocked. Chrome extension connected and navigated to Facebook successfully but all interaction tools returned Permission denied by user. Same screen-lock failure. No post checked or shared.",
     "decisions": [],
     "ideas": [],
@@ -978,7 +978,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "crm-outreach",
-    "title": "H&H CRM outreach — 3 Gmail drafts created (Apr 28)",
+    "title": "H&H CRM outreach \u2014 3 Gmail drafts created (Apr 28)",
     "summary": "CRM outreach run created 3 personalised Gmail drafts for H&H leads from Airtable. Ready for Oskar to review and send.",
     "decisions": [],
     "ideas": [],
@@ -999,7 +999,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB evening post Run 42 — blocked (screen locked, Apr 26)",
+    "title": "H&H FB evening post Run 42 \u2014 blocked (screen locked, Apr 26)",
     "summary": "April 26 evening run blocked. Chrome navigate worked but screenshot and all interaction tools failed with Permission denied. Screen was locked. No groups posted. Recommended: use caffeinate or run manually from active session.",
     "decisions": [],
     "ideas": [],
@@ -1020,8 +1020,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB morning post Run 41 — blocked (screen locked, Apr 26)",
-    "summary": "Chrome extension connected, Facebook tab loaded, but screenshot and JavaScript tools returned Permission denied by user — screen locked. Same pattern as Runs 37, 38 and others. No groups posted.",
+    "title": "H&H FB morning post Run 41 \u2014 blocked (screen locked, Apr 26)",
+    "summary": "Chrome extension connected, Facebook tab loaded, but screenshot and JavaScript tools returned Permission denied by user \u2014 screen locked. Same pattern as Runs 37, 38 and others. No groups posted.",
     "decisions": [],
     "ideas": [],
     "chips": [
@@ -1041,7 +1041,7 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "social-pipeline",
-    "title": "NBHCB social pipeline — 5 posts scheduled, Airtable logged",
+    "title": "NBHCB social pipeline \u2014 5 posts scheduled, Airtable logged",
     "summary": "Social pipeline run completed. All 5 posts scheduled via Postiz for designated channels. Digital Assets and Social Posts records logged to Airtable after scheduling completed.",
     "decisions": [],
     "ideas": [],
@@ -1062,8 +1062,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB morning post Run 40 — complete, no new posts (Apr 25)",
-    "summary": "Run 40 succeeded with unlocked screen. H&H page profile confirmed active. Featured section: 3 older posts (4 March villa, 15 January El Chaparral, Calpe solar villa) — all skipped per rules. Timeline most recent post: same April 7 bungalow as Run 19 (Facebook regenerates pfbid encoding). No new posts to share.",
+    "title": "H&H FB morning post Run 40 \u2014 complete, no new posts (Apr 25)",
+    "summary": "Run 40 succeeded with unlocked screen. H&H page profile confirmed active. Featured section: 3 older posts (4 March villa, 15 January El Chaparral, Calpe solar villa) \u2014 all skipped per rules. Timeline most recent post: same April 7 bungalow as Run 19 (Facebook regenerates pfbid encoding). No new posts to share.",
     "decisions": [
       "No group shares when no new posts since last share"
     ],
@@ -1086,10 +1086,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB group posting — group 8 posted, new reliable click pattern found",
-    "summary": "Successful active-screen run posting to H&H Facebook groups. Group 8 'Costa Blanca Advertise' confirmed posted. Discovered new reliable interaction pattern: use find for 'Create a public post textbox in dialog' to get ref, then click by ref before typing — avoids coordinate timing issue that blocked previous runs.",
+    "title": "H&H FB group posting \u2014 group 8 posted, new reliable click pattern found",
+    "summary": "Successful active-screen run posting to H&H Facebook groups. Group 8 'Costa Blanca Advertise' confirmed posted. Discovered new reliable interaction pattern: use find for 'Create a public post textbox in dialog' to get ref, then click by ref before typing \u2014 avoids coordinate timing issue that blocked previous runs.",
     "decisions": [
-      "New pattern: find dialog textbox by ref, click by ref, then type — not coordinate clicks",
+      "New pattern: find dialog textbox by ref, click by ref, then type \u2014 not coordinate clicks",
       "This pattern resolves the main posting failure mode"
     ],
     "ideas": [
@@ -1113,10 +1113,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "weekly-collaborator-email",
-    "title": "Weekly collaborator email Apr 24 — 3 new properties, MailerLite draft created",
-    "summary": "Found 3 new qualifying properties since April 10: Javéa resale villa €625k, Benissa contemporary Mediterranean villa €2.25M, Javéa building plot with sea views €500k. Fetched Background Properties feed via browser (old XML URL is 404; correct API URL is in codebase). Generated branded HTML email and created MailerLite campaign draft (ID: 185614380183848476). Two manual steps remain: add HTML content via Growing Business plan workaround, and set up HH Collaborators MailerLite groups.",
+    "title": "Weekly collaborator email Apr 24 \u2014 3 new properties, MailerLite draft created",
+    "summary": "Found 3 new qualifying properties since April 10: Jav\u00e9a resale villa \u20ac625k, Benissa contemporary Mediterranean villa \u20ac2.25M, Jav\u00e9a building plot with sea views \u20ac500k. Fetched Background Properties feed via browser (old XML URL is 404; correct API URL is in codebase). Generated branded HTML email and created MailerLite campaign draft (ID: 185614380183848476). Two manual steps remain: add HTML content via Growing Business plan workaround, and set up HH Collaborators MailerLite groups.",
     "decisions": [
-      "Background Properties correct API URL found in codebase — old XML URL is 404",
+      "Background Properties correct API URL found in codebase \u2014 old XML URL is 404",
       "Two manual steps before send: HTML injection + create collaborator groups in MailerLite"
     ],
     "ideas": [
@@ -1141,11 +1141,11 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "blog-pipeline",
-    "title": "NBHCB blog pipeline Apr 24 — 4 new content ideas, no approved articles",
-    "summary": "Content scout run for Friday April 24. Loaded 200 Blog Article slugs and 53 existing Content Ideas. Ran 7 searches across all 5 topic areas. Added 4 new records: Why 2026 is great for CB investment (Lisa Frain, score 13), Buy-to-let Spain 2026 NRU Registry angle (Portfolio Deluxe, score 9), Taylor Wimpey Murcia La Manga €26M expansion (Idealista, score 11), Coastal property prices rising 2026 (Portfolio Deluxe, score 7). Content Ideas now: ~42 New, 0 Approved, 11 Published, 5 Rejected.",
+    "title": "NBHCB blog pipeline Apr 24 \u2014 4 new content ideas, no approved articles",
+    "summary": "Content scout run for Friday April 24. Loaded 200 Blog Article slugs and 53 existing Content Ideas. Ran 7 searches across all 5 topic areas. Added 4 new records: Why 2026 is great for CB investment (Lisa Frain, score 13), Buy-to-let Spain 2026 NRU Registry angle (Portfolio Deluxe, score 9), Taylor Wimpey Murcia La Manga \u20ac26M expansion (Idealista, score 11), Coastal property prices rising 2026 (Portfolio Deluxe, score 7). Content Ideas now: ~42 New, 0 Approved, 11 Published, 5 Rejected.",
     "decisions": [
       "Rental property guide passes because 2026 NRU Registry is genuinely new angle despite existing slug",
-      "Phase 2 skipped — no Approved articles to write"
+      "Phase 2 skipped \u2014 no Approved articles to write"
     ],
     "ideas": [],
     "chips": [
@@ -1166,8 +1166,8 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "social-pipeline",
-    "title": "NBHCB social pipeline Apr 24 — 5 posts scheduled, N9261 Villa Ciudad Quesada",
-    "summary": "Friday social pipeline run. Selected N9261 luxury 3-bed villa Ciudad Quesada (€1,050,000) — villa rotation, CBSouth. Rendered 2 stills. Scheduled 5 posts for April 25 across Instagram, Facebook, TikTok, YouTube, Pinterest. Logged to Airtable. PROGRESS.md updated. Next run: Sunday April 26.",
+    "title": "NBHCB social pipeline Apr 24 \u2014 5 posts scheduled, N9261 Villa Ciudad Quesada",
+    "summary": "Friday social pipeline run. Selected N9261 luxury 3-bed villa Ciudad Quesada (\u20ac1,050,000) \u2014 villa rotation, CBSouth. Rendered 2 stills. Scheduled 5 posts for April 25 across Instagram, Facebook, TikTok, YouTube, Pinterest. Logged to Airtable. PROGRESS.md updated. Next run: Sunday April 26.",
     "decisions": [
       "Villa type selected per content rotation schedule"
     ],
@@ -1190,8 +1190,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB evening post Run 39 — complete, no new posts (Apr 23)",
-    "summary": "Evening run succeeded with unlocked screen. H&H page profile confirmed. Timeline most recent post still the April 7 bungalow in Lomas de Cabo Roig, Orihuela Costa (€159,000) — same as Run 19. No new posts to share, no group distribution needed. LOG.md updated.",
+    "title": "H&H FB evening post Run 39 \u2014 complete, no new posts (Apr 23)",
+    "summary": "Evening run succeeded with unlocked screen. H&H page profile confirmed. Timeline most recent post still the April 7 bungalow in Lomas de Cabo Roig, Orihuela Costa (\u20ac159,000) \u2014 same as Run 19. No new posts to share, no group distribution needed. LOG.md updated.",
     "decisions": [],
     "ideas": [],
     "chips": [
@@ -1212,16 +1212,16 @@
     "type": "session",
     "project": "Opero Agency",
     "task": "ideas-research",
-    "title": "Charles Brain — administradores space researched, idea parked",
-    "summary": "Ideas session covering: byggbodar research completed, AI agent talent gap validated with real GitHub data, and deep dive into Spanish property administradores space. Ciudadela and Aldara are going direct to communities (cutting out administradores entirely). B2B SaaS angle already being built by Inmatic (AI bank reconciliation), Comunicasa (CRM+AI chatbot, 82% resolution rate €95/month), and Fynkus (Lanzadera). Idea parked — space not wide open, but services marketplace angle noted.",
+    "title": "Charles Brain \u2014 administradores space researched, idea parked",
+    "summary": "Ideas session covering: byggbodar research completed, AI agent talent gap validated with real GitHub data, and deep dive into Spanish property administradores space. Ciudadela and Aldara are going direct to communities (cutting out administradores entirely). B2B SaaS angle already being built by Inmatic (AI bank reconciliation), Comunicasa (CRM+AI chatbot, 82% resolution rate \u20ac95/month), and Fynkus (Lanzadera). Idea parked \u2014 space not wide open, but services marketplace angle noted.",
     "decisions": [
-      "Administradores idea parked — Inmatic, Comunicasa, Fynkus already competing",
+      "Administradores idea parked \u2014 Inmatic, Comunicasa, Fynkus already competing",
       "Multilingual foreign-owner angle is a feature, not a standalone business",
-      "PropertyOS and Opero have real head start — focus stays there",
+      "PropertyOS and Opero have real head start \u2014 focus stays there",
       "Services marketplace angle captured in IDEAS.md for future reference"
     ],
     "ideas": [
-      "Administradores services marketplace — capture revenue from all connected services if administration is commoditized"
+      "Administradores services marketplace \u2014 capture revenue from all connected services if administration is commoditized"
     ],
     "chips": [
       "Charles",
@@ -1241,8 +1241,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB morning post Run 38 — blocked (screen locked, Apr 23)",
-    "summary": "April 23 morning run blocked. Chrome extension not reachable — screen locked. Same recurring failure as prior runs. LOG.md updated. Last confirmed shared post remains Lomas de Cabo Roig bungalow from Run 19.",
+    "title": "H&H FB morning post Run 38 \u2014 blocked (screen locked, Apr 23)",
+    "summary": "April 23 morning run blocked. Chrome extension not reachable \u2014 screen locked. Same recurring failure as prior runs. LOG.md updated. Last confirmed shared post remains Lomas de Cabo Roig bungalow from Run 19.",
     "decisions": [],
     "ideas": [],
     "chips": [
@@ -1262,10 +1262,10 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "blog-pipeline",
-    "title": "NBHCB blog pipeline Apr 23 — 3 new content ideas (Villajoyosa, USA buyers)",
-    "summary": "Content scout run for April 23. Evaluated ~35 unique URLs. Added 3 new records: Villajoyosa & Altea Hills hidden growth areas (score 8), Retire to Spain from USA 2026 (score 5 — no US buyer content exists on site), US-Spain pension combination guide April 22 (score 6 — new 2026 legislation angle). Phase 2 skipped — no Approved articles.",
+    "title": "NBHCB blog pipeline Apr 23 \u2014 3 new content ideas (Villajoyosa, USA buyers)",
+    "summary": "Content scout run for April 23. Evaluated ~35 unique URLs. Added 3 new records: Villajoyosa & Altea Hills hidden growth areas (score 8), Retire to Spain from USA 2026 (score 5 \u2014 no US buyer content exists on site), US-Spain pension combination guide April 22 (score 6 \u2014 new 2026 legislation angle). Phase 2 skipped \u2014 no Approved articles.",
     "decisions": [
-      "US buyer content is a genuine gap — no existing slugs target American market",
+      "US buyer content is a genuine gap \u2014 no existing slugs target American market",
       "US-Spain pension guide passes as fresh angle due to new 2026 laws"
     ],
     "ideas": [],
@@ -1287,7 +1287,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "daily-outreach",
-    "title": "Daily client outreach — 10 Swedish client Gmail drafts",
+    "title": "Daily client outreach \u2014 10 Swedish client Gmail drafts",
     "summary": "Automated outreach run creating 10 personalised Gmail drafts for Swedish-language clients with general Costa Blanca interest. All 10 are Swedish segment. Drafts created in batches of 5.",
     "decisions": [
       "Swedish-language drafts for all 10 Swedish-segment clients"
@@ -1311,8 +1311,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "social-pipeline",
-    "title": "H&H social pipeline — Week 17 content plan Apr 24–30 generated",
-    "summary": "Checked H&H Airtable CRM and previous content plans (Weeks 11, 12, April 7–13). Generated Week 17 content plan with 6 posts: spring timing hook + mid-range Edificio Vento units (€182K–€265K) not featured recently + rental yield education post. Same automation blockers: Postiz H&H channel setup and Social Posts table not yet created.",
+    "title": "H&H social pipeline \u2014 Week 17 content plan Apr 24\u201330 generated",
+    "summary": "Checked H&H Airtable CRM and previous content plans (Weeks 11, 12, April 7\u201313). Generated Week 17 content plan with 6 posts: spring timing hook + mid-range Edificio Vento units (\u20ac182K\u2013\u20ac265K) not featured recently + rental yield education post. Same automation blockers: Postiz H&H channel setup and Social Posts table not yet created.",
     "decisions": [
       "6 posts planned for week starting April 24"
     ],
@@ -1334,14 +1334,14 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "crm-outreach",
-    "title": "H&H CRM outreach report Apr 23 — 4 uncontacted NBHCB leads, 10-day gap",
-    "summary": "CRM & Outreach report for April 23. Key finding: last logged Daily Outreach batch was April 13 — 10-day gap suggesting task stopped running or stopped logging. Four uncontacted NBHCB inbound leads: Hakan Seicamet (1-bed flat, max 2yr payment), Spielmann Wolfgang (N8097, under €150k, Algorfa), Małgorzata Kobus (agency partnership), Mats Kvilhaug (Benidorm newsletter). H&H outreach pipeline: 160 total records all at Drafted status. Top leads: patriciaprh €689k, thara94 €595k, Richard MVSD €595k.",
+    "title": "H&H CRM outreach report Apr 23 \u2014 4 uncontacted NBHCB leads, 10-day gap",
+    "summary": "CRM & Outreach report for April 23. Key finding: last logged Daily Outreach batch was April 13 \u2014 10-day gap suggesting task stopped running or stopped logging. Four uncontacted NBHCB inbound leads: Hakan Seicamet (1-bed flat, max 2yr payment), Spielmann Wolfgang (N8097, under \u20ac150k, Algorfa), Ma\u0142gorzata Kobus (agency partnership), Mats Kvilhaug (Benidorm newsletter). H&H outreach pipeline: 160 total records all at Drafted status. Top leads: patriciaprh \u20ac689k, thara94 \u20ac595k, Richard MVSD \u20ac595k.",
     "decisions": [
       "Investigate why Daily Outreach table has no entries after April 13",
       "Add Mats Kvilhaug to MailerLite Benidorm developments list"
     ],
     "ideas": [
-      "Action 4 uncontacted NBHCB leads urgently — oldest 25+ days old",
+      "Action 4 uncontacted NBHCB leads urgently \u2014 oldest 25+ days old",
       "Check if nightly outreach task is still scheduled and running"
     ],
     "chips": [
@@ -1362,8 +1362,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-post",
-    "title": "H&H FB evening post Run 37 — blocked (screen locked, Apr 22)",
-    "summary": "April 22 evening run blocked. Chrome extension not reachable — screen locked. LOG.md updated. Last confirmed shared post remains Lomas de Cabo Roig bungalow from Run 19 (April 7).",
+    "title": "H&H FB evening post Run 37 \u2014 blocked (screen locked, Apr 22)",
+    "summary": "April 22 evening run blocked. Chrome extension not reachable \u2014 screen locked. LOG.md updated. Last confirmed shared post remains Lomas de Cabo Roig bungalow from Run 19 (April 7).",
     "decisions": [],
     "ideas": [],
     "chips": [
@@ -1410,9 +1410,9 @@
     "project": "Storyboard",
     "task": "storyboard-session-sync",
     "title": "Session sync: backfilled 20 missing blocks, LaunchAgent auto-push setup",
-    "summary": "Ran the storyboard session sync task which identified and logged 1 new session. Backfilled 20 missing Storyboard blocks covering Apr 21–29 (a 9-day data gap). Set up an OS-level LaunchAgent for auto-push every 15 minutes. User was frustrated about the historical data gap that had gone unnoticed.",
+    "summary": "Ran the storyboard session sync task which identified and logged 1 new session. Backfilled 20 missing Storyboard blocks covering Apr 21\u201329 (a 9-day data gap). Set up an OS-level LaunchAgent for auto-push every 15 minutes. User was frustrated about the historical data gap that had gone unnoticed.",
     "decisions": [
-      "Backfilled 20 missing session blocks for Apr 21–29 rather than leaving gap",
+      "Backfilled 20 missing session blocks for Apr 21\u201329 rather than leaving gap",
       "Configured LaunchAgent for auto-push every 15 min (survives restarts)"
     ],
     "ideas": [
@@ -1530,7 +1530,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "session-sync",
-    "title": "Storyboard session sync — 0 new sessions logged",
+    "title": "Storyboard session sync \u2014 0 new sessions logged",
     "summary": "Automated session sync run checked new idle sessions against the existing log. All new sessions found either had no messages or were previous sync meta-sessions. No new entries were written to session-log.json and no git push was performed.",
     "decisions": [
       "Skip sessions with no messages",
@@ -1553,7 +1553,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "session-sync",
-    "title": "Storyboard session sync — 0 new sessions logged",
+    "title": "Storyboard session sync \u2014 0 new sessions logged",
     "summary": "Automated session sync run checked new idle sessions against the existing log. All discovered sessions had no messages or were prior automated sync runs. No new entries were written and no git push was triggered.",
     "decisions": [
       "Skip empty sessions",
@@ -1576,7 +1576,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "session-sync",
-    "title": "Storyboard session sync — 0 new sessions logged",
+    "title": "Storyboard session sync \u2014 0 new sessions logged",
     "summary": "Automated session sync run reviewed 5 new idle sessions. Four had no messages and one was a prior automated sync run. Nothing was written to the log and no git push was made.",
     "decisions": [
       "Skip sessions with no messages",
@@ -1599,7 +1599,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "session-sync",
-    "title": "Storyboard session sync — 1 new session logged, git pushed",
+    "title": "Storyboard session sync \u2014 1 new session logged, git pushed",
     "summary": "Automated session sync run identified and logged 1 new session from the idle session list. Four other new sessions had no messages and were skipped. The updated session-log.json was committed and pushed to GitHub Pages.",
     "decisions": [
       "Log only sessions with meaningful content",
@@ -1623,7 +1623,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — API connection refused",
+    "title": "Storyboard session sync \u2014 API connection refused",
     "summary": "Scheduled sync task fired but failed immediately with ConnectionRefused error. No sessions were read or logged. The Cowork API was not reachable at the time of the run.",
     "decisions": [
       "Skip run on API connection failure"
@@ -1645,7 +1645,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — API connection refused",
+    "title": "Storyboard session sync \u2014 API connection refused",
     "summary": "Scheduled sync task fired but failed immediately with ConnectionRefused error. No sessions were read or logged. The Cowork API was not reachable at the time of the run.",
     "decisions": [
       "Skip run on API connection failure"
@@ -1667,7 +1667,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — FailedToOpenSocket",
+    "title": "Storyboard session sync \u2014 FailedToOpenSocket",
     "summary": "Scheduled sync task failed with FailedToOpenSocket on first API call. No sessions were read or logged.",
     "decisions": [],
     "ideas": [],
@@ -1687,7 +1687,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — FailedToOpenSocket",
+    "title": "Storyboard session sync \u2014 FailedToOpenSocket",
     "summary": "Scheduled sync task failed with FailedToOpenSocket on first API call. No sessions were read or logged.",
     "decisions": [],
     "ideas": [],
@@ -1707,7 +1707,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — FailedToOpenSocket",
+    "title": "Storyboard session sync \u2014 FailedToOpenSocket",
     "summary": "Scheduled sync task failed with FailedToOpenSocket on first API call. No sessions were read or logged.",
     "decisions": [],
     "ideas": [],
@@ -1727,7 +1727,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — 0 new, git lock blocked push",
+    "title": "Storyboard session sync \u2014 0 new, git lock blocked push",
     "summary": "Sync ran successfully but found no new sessions with messages to add. Git push was blocked by stale index.lock and HEAD.lock files from a concurrent sync run. Local file unchanged; no data lost.",
     "decisions": [
       "Git lock files must be cleared manually or by macOS"
@@ -1749,7 +1749,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — 4 entries added, git push failed",
+    "title": "Storyboard session sync \u2014 4 entries added, git push failed",
     "summary": "Sync ran and added 4 new session entries to session-log.json (bringing total to 62). Git push failed due to stale lock files from a concurrent sync run. Local file was written successfully; dashboard update pending lock resolution.",
     "decisions": [
       "Continue if local write succeeds even when git fails"
@@ -1774,7 +1774,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting-evening",
-    "title": "H&H FB Group Posting Evening — Run 44 blocked (screen locked)",
+    "title": "H&H FB Group Posting Evening \u2014 Run 44 blocked (screen locked)",
     "summary": "Scheduled evening run to share H&H Facebook posts to 88 target groups was blocked. Chrome extension connected and navigated to facebook.com/hanssonhertzell successfully but all page interaction returned 'Permission denied by user' due to the screen being locked. No posts were shared; LOG.md updated with Run 44 entry.",
     "decisions": [
       "Log blocked runs and continue without posting"
@@ -1799,7 +1799,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — 0 new sessions, git lock conflict",
+    "title": "Storyboard session sync \u2014 0 new sessions, git lock conflict",
     "summary": "Automated sync run found no new sessions to add (one candidate had no messages and was skipped). A git index.lock held by a concurrent process blocked the push; since no new entries were needed, the local file remained current.",
     "decisions": [
       "Skipped sessions with no messages",
@@ -1822,11 +1822,11 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — 8 new sessions added, git push failed",
-    "summary": "Automated sync read 40 sessions and identified 8 new ones to add to session-log.json (total 62→70). Entries captured include H&H Facebook group posting (blocked by screen lock) and multiple prior sync failure records. Git push failed due to stale .git/index.lock; Terminal access request timed out with no user present.",
+    "title": "Storyboard session sync \u2014 8 new sessions added, git push failed",
+    "summary": "Automated sync read 40 sessions and identified 8 new ones to add to session-log.json (total 62\u219270). Entries captured include H&H Facebook group posting (blocked by screen lock) and multiple prior sync failure records. Git push failed due to stale .git/index.lock; Terminal access request timed out with no user present.",
     "decisions": [
       "Added 8 new session entries locally",
-      "Git push skipped due to stale index.lock — local file correct"
+      "Git push skipped due to stale index.lock \u2014 local file correct"
     ],
     "ideas": [
       "Consider a lock-clearing mechanism for automated git pushes"
@@ -1848,7 +1848,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard session sync — resolved stale lock files, synced 2 new sessions",
+    "title": "Storyboard session sync \u2014 resolved stale lock files, synced 2 new sessions",
     "summary": "The automated session sync job encountered stale lock files from a prior concurrent run in the mounted filesystem. It resolved this by cloning the repo to /tmp and applying updates from a clean location. Successfully synced 2 new sessions and pushed to GitHub.",
     "decisions": [
       "Clone to /tmp to work around stale lock files instead of attempting to clear them in-place",
@@ -1874,7 +1874,7 @@
     "type": "session",
     "project": "Storyboard",
     "task": "storyboard-session-sync",
-    "title": "Storyboard Session Sync — 1 new session added, GitHub pushed",
+    "title": "Storyboard Session Sync \u2014 1 new session added, GitHub pushed",
     "summary": "Ran the automated storyboard session sync. Discovered 1 new idle session not yet in the log and added it to session-log.json. Checked the running 'Storyboard brain' session (2 messages at time of run), which was below the 15-message threshold for a carry-forward brief. Successfully pushed the updated log to GitHub Pages.",
     "decisions": [
       "Skip carry-forward brief for Storyboard brain (only 2 messages, below 15-message threshold)",
@@ -1925,7 +1925,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "daily-client-outreach-drafts",
-    "title": "Daily outreach drafts failed — all MCP tools returned Stream closed errors",
+    "title": "Daily outreach drafts failed \u2014 all MCP tools returned Stream closed errors",
     "summary": "Scheduled run on April 22 attempted to pull CRM clients from Airtable and create Gmail drafts. All MCP connections (Airtable, Gmail, bash) failed with 'Stream closed' errors from the first call. No drafts were created and no Airtable records were modified.",
     "decisions": [
       "Task aborted cleanly with a full failure report",
@@ -1953,7 +1953,7 @@
     "project": "New Build Homes",
     "task": "newbuild-blog-pipeline",
     "title": "Blog pipeline Apr 22: 4 content ideas scouted and pushed to Airtable",
-    "summary": "Phase 1 ran successfully on April 22, identifying 4 high-scoring articles: Spain's new €7bn housing Plan Estatal 2026-2030, micro flat investment returns, expat renovation grants, and British buyers shifting to working vs retiring. All 4 pushed to Airtable Content Ideas. Phase 2 skipped as no items were marked Approved.",
+    "summary": "Phase 1 ran successfully on April 22, identifying 4 high-scoring articles: Spain's new \u20ac7bn housing Plan Estatal 2026-2030, micro flat investment returns, expat renovation grants, and British buyers shifting to working vs retiring. All 4 pushed to Airtable Content Ideas. Phase 2 skipped as no items were marked Approved.",
     "decisions": [
       "Skipped topics already covered by existing blog slugs (Beckham Law, digital nomad visa)",
       "All 4 source URLs confirmed as new before pushing"
@@ -1978,10 +1978,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "H&H FB group morning check Run 36 — no new post since April 7",
-    "summary": "Run 36 confirmed the H&H Facebook page still shows the April 7 bungalow at Lomas de Cabo Roig (€159K) as the most recent timeline post. All 3 Featured posts remain known and are skipped per brief rules. No groups were shared.",
+    "title": "H&H FB group morning check Run 36 \u2014 no new post since April 7",
+    "summary": "Run 36 confirmed the H&H Facebook page still shows the April 7 bungalow at Lomas de Cabo Roig (\u20ac159K) as the most recent timeline post. All 3 Featured posts remain known and are skipped per brief rules. No groups were shared.",
     "decisions": [
-      "No new post to share — automated skip",
+      "No new post to share \u2014 automated skip",
       "LOG.md updated with Run 36 result"
     ],
     "ideas": [],
@@ -2002,10 +2002,10 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "newbuild-social-pipeline",
-    "title": "Newbuild social pipeline Apr 22: Denia–Ibiza ferry post scheduled across 5 channels",
+    "title": "Newbuild social pipeline Apr 22: Denia\u2013Ibiza ferry post scheduled across 5 channels",
     "summary": "Travel category article 'Denia to Ibiza Ferry: Your Weekend Escape from Costa Blanca' was selected (Travel had never been used on a Wednesday). Two Remotion stills rendered and 5 posts scheduled for April 23 on Instagram, Facebook, TikTok, YouTube, and Pinterest. Digital asset and social post records logged in Airtable. A stray test post was created during debugging and may need manual deletion in Postiz.",
     "decisions": [
-      "Travel category chosen as it hadn't been used on Wednesday — variety optimization",
+      "Travel category chosen as it hadn't been used on Wednesday \u2014 variety optimization",
       "Used torrevieja-harbour-sunset and benitachell-cliff-cove images for harbour/Ibiza theme"
     ],
     "ideas": [
@@ -2029,10 +2029,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "H&H FB group evening check Run 35 — no new post, LOG.md updated",
-    "summary": "Run 35 on April 20 (evening) confirmed the H&H Facebook page still shows the April 7 bungalow as the most recent post. DOM inspection confirmed 3 posts — all Featured posts. LOG.md updated.",
+    "title": "H&H FB group evening check Run 35 \u2014 no new post, LOG.md updated",
+    "summary": "Run 35 on April 20 (evening) confirmed the H&H Facebook page still shows the April 7 bungalow as the most recent post. DOM inspection confirmed 3 posts \u2014 all Featured posts. LOG.md updated.",
     "decisions": [
-      "No new post → no groups shared"
+      "No new post \u2192 no groups shared"
     ],
     "ideas": [],
     "chips": [
@@ -2052,8 +2052,8 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "newbuild-blog-pipeline",
-    "title": "Blog pipeline Apr 21: 3 content ideas pushed — housing shortage, investment growth, prices",
-    "summary": "Phase 1 on April 21 identified 3 high-scoring articles: Spain housing shortage heading toward 800K homes (score 9), Spain real estate investment set to grow 10% in 2026 (score 6), and record property prices at €2,709/m² (score 6). All 3 pushed to Airtable. Phase 2 skipped — no Approved records in Content Ideas. Oskar was flagged that 14 New items await review.",
+    "title": "Blog pipeline Apr 21: 3 content ideas pushed \u2014 housing shortage, investment growth, prices",
+    "summary": "Phase 1 on April 21 identified 3 high-scoring articles: Spain housing shortage heading toward 800K homes (score 9), Spain real estate investment set to grow 10% in 2026 (score 6), and record property prices at \u20ac2,709/m\u00b2 (score 6). All 3 pushed to Airtable. Phase 2 skipped \u2014 no Approved records in Content Ideas. Oskar was flagged that 14 New items await review.",
     "decisions": [
       "Skipped 9 candidates already covered by existing slugs or Content Ideas",
       "Score threshold of 5 applied"
@@ -2078,10 +2078,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "H&H FB group morning check Run 34 — no new post, LOG.md updated",
+    "title": "H&H FB group morning check Run 34 \u2014 no new post, LOG.md updated",
     "summary": "Run 34 confirmed no new Facebook timeline post since the April 7 bungalow (Run 19). Facebook lazy-loading showed skeleton placeholders only. LOG.md updated.",
     "decisions": [
-      "No new post → no groups shared"
+      "No new post \u2192 no groups shared"
     ],
     "ideas": [],
     "chips": [
@@ -2102,7 +2102,7 @@
     "project": "Hansson Hertzell",
     "task": "hh-social-pipeline",
     "title": "H&H social pipeline setup: 6-post content plan created for Edificio Vento",
-    "summary": "Pipeline audited 11 H&H CRM properties (all from Edificio Vento, Torrevieja) and identified 5 flagged for social posting from €158K to €488K. Generated a full 2-week 6-post plan with Facebook/Instagram captions, alt text, and hashtags in H&H brand voice. No posts were scheduled — initial Postiz setup and Remotion templates needed before live automation can run.",
+    "summary": "Pipeline audited 11 H&H CRM properties (all from Edificio Vento, Torrevieja) and identified 5 flagged for social posting from \u20ac158K to \u20ac488K. Generated a full 2-week 6-post plan with Facebook/Instagram captions, alt text, and hashtags in H&H brand voice. No posts were scheduled \u2014 initial Postiz setup and Remotion templates needed before live automation can run.",
     "decisions": [
       "Content captions ready to use manually in the meantime",
       "Identified 3 setup blockers: H&H Postiz channels, Navy/Gold/Cream Remotion templates, Social Posts table in H&H CRM"
@@ -2130,11 +2130,11 @@
     "type": "session",
     "project": "Opero Agency",
     "task": "agency-brain-brainstorm",
-    "title": "PropertyOS brainstorm session crashed — prompt too long, SaaS roadmap ideas captured",
+    "title": "PropertyOS brainstorm session crashed \u2014 prompt too long, SaaS roadmap ideas captured",
     "summary": "Oskar shared an extensive brainstorm on PropertyOS SaaS product ideas targeting Spanish real estate agencies. Session crashed with 'Prompt is too long' errors. Key ideas covered: valuation tool + sales presentation deck, buyer-facing property comparison portal, website widget for lead capture, interactive buyer journey presentations, agent XML feed aggregation, Docusign contract signing, visual brand audit AI agent, and a full-stack marketing plan bundled with each valuation.",
     "decisions": [
-      "Oskar wants to offer first 100 agents the tool for free, then charge ~€29/month",
-      "Goal: 100 paying agencies = €3K/month within first sales push"
+      "Oskar wants to offer first 100 agents the tool for free, then charge ~\u20ac29/month",
+      "Goal: 100 paying agencies = \u20ac3K/month within first sales push"
     ],
     "ideas": [
       "Buyer valuation app that profiles clients against data points and suggests best matching properties",
@@ -2162,10 +2162,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "H&H FB group evening check Run 33 — no new post since April 7",
+    "title": "H&H FB group evening check Run 33 \u2014 no new post since April 7",
     "summary": "Run 33 on April 20 (evening) confirmed H&H page still shows the April 7 bungalow as the most recent post. DOM inspection showed only 3 Featured posts. LOG.md updated.",
     "decisions": [
-      "No new post → no groups shared"
+      "No new post \u2192 no groups shared"
     ],
     "ideas": [],
     "chips": [
@@ -2185,10 +2185,10 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "H&H FB group morning check Run 32 — no new post, page height stable",
-    "summary": "Run 32 on April 20 (morning) confirmed H&H page still shows the April 7 bungalow as most recent post. Page height stable at 2961 (vs 2976 in Run 31), confirming no new content loaded. DOM confirmed 3 links — all Featured posts. LOG.md updated.",
+    "title": "H&H FB group morning check Run 32 \u2014 no new post, page height stable",
+    "summary": "Run 32 on April 20 (morning) confirmed H&H page still shows the April 7 bungalow as most recent post. Page height stable at 2961 (vs 2976 in Run 31), confirming no new content loaded. DOM confirmed 3 links \u2014 all Featured posts. LOG.md updated.",
     "decisions": [
-      "No new post → no groups shared",
+      "No new post \u2192 no groups shared",
       "Page height metric used as secondary confirmation of no new content"
     ],
     "ideas": [],
@@ -2212,8 +2212,8 @@
     "title": "10 Swedish client outreach Gmail drafts created and Airtable records tagged",
     "summary": "Pulled 10 uncontacted Swedish-language clients from H&H Airtable CRM and created personalized Gmail drafts for each with language-appropriate greetings, market context, region-specific property mentions, and relevant blog links. Clients tagged in Airtable with 'Outreach: Queued'. All drafts used casual Swedish tone with 'Hej [First Name]' greeting.",
     "decisions": [
-      "All 10 clients were Swedish-language — used Swedish blog links and casual 'du' tone",
-      "Gmail sign-off kept to 'Oskar' only — no phone/title appended per instructions"
+      "All 10 clients were Swedish-language \u2014 used Swedish blog links and casual 'du' tone",
+      "Gmail sign-off kept to 'Oskar' only \u2014 no phone/title appended per instructions"
     ],
     "ideas": [],
     "chips": [
@@ -2235,8 +2235,8 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "newbuild-blog-pipeline",
-    "title": "Blog pipeline Apr 20: 3 content ideas pushed — market defiance, apartment demand, expat guide",
-    "summary": "Phase 1 on April 20 evaluated ~25 candidates from 7 search queries. 3 qualified articles pushed to Airtable: Spain property market defying regulation (Olive Press, score 8), apartment demand surging as investment purchases drop (RussSpain, score 10), and expat living on the Costa Blanca 2026 guide (Investropa, score 7). Phase 2 skipped — no Approved records found.",
+    "title": "Blog pipeline Apr 20: 3 content ideas pushed \u2014 market defiance, apartment demand, expat guide",
+    "summary": "Phase 1 on April 20 evaluated ~25 candidates from 7 search queries. 3 qualified articles pushed to Airtable: Spain property market defying regulation (Olive Press, score 8), apartment demand surging as investment purchases drop (RussSpain, score 10), and expat living on the Costa Blanca 2026 guide (Investropa, score 7). Phase 2 skipped \u2014 no Approved records found.",
     "decisions": [
       "10 existing topics skipped (slugs already exist for Golden Visa, Beckham Law, Digital Nomad, etc.)",
       "14 Content Ideas already in 'New' queue waiting review before writing can begin"
@@ -2287,8 +2287,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-social-pipeline",
-    "title": "H&H social content plan: 10 Edificio Vento units Torrevieja €158k–€488k",
-    "summary": "Fetched the full Edificio Vento property inventory from Airtable — 10 active units in Torrevieja ranging from €158k entry apartments to a €488k flagship penthouse. Since H&H Postiz channels and social posts table aren't set up yet, generated a ready-to-use content plan with full captions for review. Logged the campaign run in the H&H Campaigns table.",
+    "title": "H&H social content plan: 10 Edificio Vento units Torrevieja \u20ac158k\u2013\u20ac488k",
+    "summary": "Fetched the full Edificio Vento property inventory from Airtable \u2014 10 active units in Torrevieja ranging from \u20ac158k entry apartments to a \u20ac488k flagship penthouse. Since H&H Postiz channels and social posts table aren't set up yet, generated a ready-to-use content plan with full captions for review. Logged the campaign run in the H&H Campaigns table.",
     "decisions": [
       "Write full captions for manual review rather than auto-schedule since Postiz not yet configured for H&H",
       "Log campaign run in Airtable for tracking"
@@ -2318,7 +2318,7 @@
     "summary": "Ran the daily CRM outreach pipeline against the H&H client database. Found that S. Barissa had already purchased (per March email thread) so substituted Sylwia Rudakowska; wrote a light-touch note for Roy Peper who indicated he is waiting until next year. Drafted all 20 personalized outreach emails directly as Gmail drafts.",
     "decisions": [
       "Replace already-closed clients (S. Barissa bought) with next in queue",
-      "Write light-touch follow-up for clients who gave a timeline (Roy Peper — next year)"
+      "Write light-touch follow-up for clients who gave a timeline (Roy Peper \u2014 next year)"
     ],
     "ideas": [
       "Add 'status: purchased' field to CRM to avoid rechecking email threads each run"
@@ -2341,14 +2341,14 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-posting-morning",
-    "title": "H&H Facebook morning posting blocked (Run 47) — Chrome extension domain permission",
-    "summary": "Run 47 of the scheduled H&H Facebook group morning post automation was blocked by 'Permission denied by user' on the facebook.com domain in the Chrome extension — the same recurring issue across Runs 3–46. The extension connected and navigated to the H&H page successfully, but all scroll, find, javascript, and screenshot actions were denied. The fix requires adding facebook.com to the Chrome extension's allowed sites in Settings → Site Access.",
+    "title": "H&H Facebook morning posting blocked (Run 47) \u2014 Chrome extension domain permission",
+    "summary": "Run 47 of the scheduled H&H Facebook group morning post automation was blocked by 'Permission denied by user' on the facebook.com domain in the Chrome extension \u2014 the same recurring issue across Runs 3\u201346. The extension connected and navigated to the H&H page successfully, but all scroll, find, javascript, and screenshot actions were denied. The fix requires adding facebook.com to the Chrome extension's allowed sites in Settings \u2192 Site Access.",
     "decisions": [
       "LOG.md updated with Run 47 blocked status",
       "Confirmed root cause: facebook.com not in Chrome extension allowed sites list"
     ],
     "ideas": [
-      "Add facebook.com to Claude in Chrome extension → Settings → Site Access to permanently fix unattended posting"
+      "Add facebook.com to Claude in Chrome extension \u2192 Settings \u2192 Site Access to permanently fix unattended posting"
     ],
     "chips": [
       "facebook",
@@ -2369,7 +2369,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "fb-group-posting",
-    "title": "H&H Facebook evening posting blocked — usage limit hit before run started",
+    "title": "H&H Facebook evening posting blocked \u2014 usage limit hit before run started",
     "summary": "Scheduled evening Facebook group share task triggered but immediately hit the Claude usage limit (resets 9:20pm Europe/Madrid). No groups were posted to. Same blocker as the morning Run 47 issue earlier today.",
     "decisions": [
       "Defer evening FB group posting until usage resets",
@@ -2400,11 +2400,11 @@
     "decisions": [
       "Treat capture as a multi-path problem, not a single-architecture choice",
       "Recommend stack: Native Messaging Host for always-on, official exports for bulk, MCP server flip for explicit intent",
-      "Question the multi-platform premise — Cowork users likely 80%+ Claude, ship Claude-first via desktop agent + manual export import covers ~95%"
+      "Question the multi-platform premise \u2014 Cowork users likely 80%+ Claude, ship Claude-first via desktop agent + manual export import covers ~95%"
     ],
     "ideas": [
       "Native Messaging Host: tiny auditable extension forwards to localhost helper that does structuring",
-      "Storyboard as an MCP server — user invokes 'save this as a decision' inside Claude rather than passive capture",
+      "Storyboard as an MCP server \u2014 user invokes 'save this as a decision' inside Claude rather than passive capture",
       "IndexedDB read path for ChatGPT/Gemini sits closer to 'read your own browser storage' than 'MITM network'",
       "Combine all paths: 15-min sync agent + local launch agent + extension + ReadMe-style folder ingestion"
     ],
@@ -2427,7 +2427,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "client-outreach",
-    "title": "Daily outreach drafts — 10 Swedish client Gmail drafts created from Airtable CRM",
+    "title": "Daily outreach drafts \u2014 10 Swedish client Gmail drafts created from Airtable CRM",
     "summary": "Pulled 10 Swedish-language clients from Airtable CRM and generated personalised Gmail outreach drafts in parallel. Drafts queued for manual review and send.",
     "decisions": [
       "Segment by Swedish language only for this batch",
@@ -2451,11 +2451,11 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-blog-multilingual-expansion",
-    "title": "H&H blog expanded: 27 posts (EN+SV) passing audit — FR/NL/ES still missing",
-    "summary": "Expanded all 16 EN and 11 SV blog posts to 1800–1985 words with price tables, FAQ sections, checklists, and E-E-A-T signals. All 27/27 posts now passing the audit script at avg 84.2% (up from 51.4%), committed to GitHub (SHA 1cb6b433). Session ended with user requesting FR, NL, and ES expansions — zero posts exist for those languages and they need to be created from scratch.",
+    "title": "H&H blog expanded: 27 posts (EN+SV) passing audit \u2014 FR/NL/ES still missing",
+    "summary": "Expanded all 16 EN and 11 SV blog posts to 1800\u20131985 words with price tables, FAQ sections, checklists, and E-E-A-T signals. All 27/27 posts now passing the audit script at avg 84.2% (up from 51.4%), committed to GitHub (SHA 1cb6b433). Session ended with user requesting FR, NL, and ES expansions \u2014 zero posts exist for those languages and they need to be created from scratch.",
     "decisions": [
-      "Full rewrites for all 11 SV posts from 400–730 words to 1807–1889 words each",
-      "6 EN posts that were 1200–1770 words got substantial additions (checklists, market data, seasonal strategy)",
+      "Full rewrites for all 11 SV posts from 400\u2013730 words to 1807\u20131889 words each",
+      "6 EN posts that were 1200\u20131770 words got substantial additions (checklists, market data, seasonal strategy)",
       "Spanish, Dutch, and French blogs need to be created from scratch"
     ],
     "ideas": [
@@ -2555,7 +2555,7 @@
     "project": "Hansson Hertzell",
     "task": "hh-crm-outreach-drafts",
     "title": "10 personalized Swedish Gmail drafts created from CRM (automated)",
-    "summary": "Automated CRM outreach run. Pulled 10 uncontacted Swedish-speaking clients from Airtable CRM (budgets €300K–€500K+, several LUXURY-tagged). Created 10 personalized Gmail drafts in Swedish with region-relevant messaging. All clients had no preferred locations set, so general Costa Blanca messaging was used.",
+    "summary": "Automated CRM outreach run. Pulled 10 uncontacted Swedish-speaking clients from Airtable CRM (budgets \u20ac300K\u2013\u20ac500K+, several LUXURY-tagged). Created 10 personalized Gmail drafts in Swedish with region-relevant messaging. All clients had no preferred locations set, so general Costa Blanca messaging was used.",
     "decisions": [
       "Used general Costa Blanca messaging since preferred locations not set for these clients"
     ],
@@ -2579,7 +2579,7 @@
     "project": "Hansson Hertzell",
     "task": "hh-email-marketing-audit",
     "title": "Email marketing audit: W19 overdue, 8 stale drafts, elevated unsubscribes",
-    "summary": "Comprehensive MailerLite and Airtable email marketing audit. Campaign performance is strong (33–44% open rates, UK Agent Referral standout at 44% open/31% CTR), but weekly newsletters have elevated unsubscribes (up to 3.7% Swedish). W19 newsletter overdue since W18 sent April 28–30. Found 8 unsent campaigns in draft, 6 of which are stale W15/W18 content to delete.",
+    "summary": "Comprehensive MailerLite and Airtable email marketing audit. Campaign performance is strong (33\u201344% open rates, UK Agent Referral standout at 44% open/31% CTR), but weekly newsletters have elevated unsubscribes (up to 3.7% Swedish). W19 newsletter overdue since W18 sent April 28\u201330. Found 8 unsent campaigns in draft, 6 of which are stale W15/W18 content to delete.",
     "decisions": [
       "Flagged 6 stale draft campaigns for deletion",
       "UK Agent Referral identified as standout performer"
@@ -2606,7 +2606,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-next-build-blueprint",
-    "title": "H&H Next.js build blueprint created — 500-line markdown reference doc",
+    "title": "H&H Next.js build blueprint created \u2014 500-line markdown reference doc",
     "summary": "Created HH-WEBSITE-BUILD-BLUEPRINT.md, a ~500-line self-contained reference document covering the full tech stack, Tailwind brand config, Swedish-root URL structure (the most critical gotcha), all 14 JSON-LD schema types, SEO/AEO playbook, nationality-specific content angles, REDSP data pipeline, phased build order, and quality gates. Designed so a new Claude session can build the site from scratch without additional context.",
     "decisions": [
       "Chose markdown over docx so future Claude sessions can read it directly",
@@ -2633,8 +2633,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-crm-outreach",
-    "title": "20 CRM Gmail drafts created — 2 bought-property clients removed from pipeline",
-    "summary": "CRM outreach run with Gmail history cross-check. Found S. Barissa and bmespinel both replied that they had bought properties — removed from pipeline. Identified 20 eligible clients and created personalized Gmail drafts. Checking Gmail reply history before drafting prevents wasted outreach to closed leads.",
+    "title": "20 CRM Gmail drafts created \u2014 2 bought-property clients removed from pipeline",
+    "summary": "CRM outreach run with Gmail history cross-check. Found S. Barissa and bmespinel both replied that they had bought properties \u2014 removed from pipeline. Identified 20 eligible clients and created personalized Gmail drafts. Checking Gmail reply history before drafting prevents wasted outreach to closed leads.",
     "decisions": [
       "Cross-referenced Gmail reply history to detect bought-property clients",
       "S. Barissa and bmespinel removed from active pipeline"
@@ -2657,10 +2657,10 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "newbuild-blog-content-scouting",
-    "title": "Blog content scouting via web search — new ideas deduped and pushed to Airtable",
+    "title": "Blog content scouting via web search \u2014 new ideas deduped and pushed to Airtable",
     "summary": "Automated blog scouting with multiple web searches. Cross-referenced 200 existing slugs and 57 Content Ideas to find genuinely new topics. Pushed qualifying candidates to Airtable Content Ideas table. Writing phase skipped since no Approved records found.",
     "decisions": [
-      "Skipped writing phase — no Approved records in Content Ideas"
+      "Skipped writing phase \u2014 no Approved records in Content Ideas"
     ],
     "ideas": [],
     "chips": [
@@ -2705,7 +2705,7 @@
     "project": "New Build Homes",
     "task": "nbhcb-seo-health-check",
     "title": "SEO health check: multilingual dev pages 404, hreflang missing, social gap",
-    "summary": "Automated SEO health check found critical issues. Multilingual development pages (/sv/, /de/, /nl/) all returning 404 while English works — routing bug blocking thousands of multilingual pages from indexing. No hreflang tags on any page, likely causing GSC 'Duplicate, Google chose different canonical' errors. Social calendar expired April 25 (10-day gap). Two old buyer leads (29 and 40 days) still uncontacted.",
+    "summary": "Automated SEO health check found critical issues. Multilingual development pages (/sv/, /de/, /nl/) all returning 404 while English works \u2014 routing bug blocking thousands of multilingual pages from indexing. No hreflang tags on any page, likely causing GSC 'Duplicate, Google chose different canonical' errors. Social calendar expired April 25 (10-day gap). Two old buyer leads (29 and 40 days) still uncontacted.",
     "decisions": [
       "Identified hreflang absence as likely root cause of GSC duplicate canonicals",
       "Multilingual routing bug flagged as highest priority fix"
@@ -2734,7 +2734,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-social-content-plan",
-    "title": "H&H social content plan drafted for 5 Vento properties — Postiz setup pending",
+    "title": "H&H social content plan drafted for 5 Vento properties \u2014 Postiz setup pending",
     "summary": "Automated social pipeline run found 5 Edificio Vento properties queued for distribution. Produced ready-to-use Facebook/Instagram captions, story copy, and FB group teaser for all 5. Posts could not be scheduled because H&H Postiz channels are not connected and Remotion templates have not been built for H&H branding. Content saved as markdown for manual use.",
     "decisions": [
       "Content plan saved as markdown for manual posting until infrastructure is set up"
@@ -2760,7 +2760,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "FB group posting blocked — run 49, Chrome extension domain permission denied",
+    "title": "FB group posting blocked \u2014 run 49, Chrome extension domain permission denied",
     "summary": "Run 49 of the H&H Facebook group posting automation. Chrome extension navigated to Facebook but all page interactions were blocked with permission denied. Screen is locked during automated runs. LOG.md updated with permanent fix: Chrome Extensions, Claude in Chrome, Site Access, Allow on all sites, plus caffeinate -d before triggering.",
     "decisions": [
       "Documented permanent fix instructions in LOG.md"
@@ -2784,9 +2784,9 @@
     "project": "New Build Homes",
     "task": "newbuild-social-pipeline",
     "title": "Social pipeline: no action (Tuesday not a posting day per weekly schedule)",
-    "summary": "Automated social pipeline run on Tuesday May 5. Per the weekly content calendar, Tuesday is not a scheduled posting day. PROGRESS.md updated. Next run is Wednesday May 6 for Lifestyle/Culture content — Living in Spain, Sports, or Golf categories, none of which have been featured on a Wednesday yet.",
+    "summary": "Automated social pipeline run on Tuesday May 5. Per the weekly content calendar, Tuesday is not a scheduled posting day. PROGRESS.md updated. Next run is Wednesday May 6 for Lifestyle/Culture content \u2014 Living in Spain, Sports, or Golf categories, none of which have been featured on a Wednesday yet.",
     "decisions": [
-      "No action per schedule — Tuesday is off-day"
+      "No action per schedule \u2014 Tuesday is off-day"
     ],
     "ideas": [],
     "chips": [
@@ -2805,7 +2805,7 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "nbhcb-github-push-fix",
-    "title": "GitHub PAT expired blocking pushes — last 4 Netlify builds failing",
+    "title": "GitHub PAT expired blocking pushes \u2014 last 4 Netlify builds failing",
     "summary": "Debugging session revealed expired GitHub personal access token stored in git remote URL, blocking all pushes. Also found last 4 commits on GitHub main are failing Netlify builds. Last successful deploy was the translations commit. Awaiting new PAT from user to resolve both issues and investigate cookie consent banner build errors.",
     "decisions": [
       "Identified exact expired token in git remote URL",
@@ -2856,8 +2856,8 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-collaborator-email",
-    "title": "Weekly collaborator email blocked — MailerLite plan limit and groups missing",
-    "summary": "Weekly collaborator email could not be sent: MailerLite subscriber plan limit exceeded, recipient collaborator groups do not exist in MailerLite (~300 agent list not imported), and Custom HTML editor gated behind Premium plan. Found 3 new collaboration properties in CB North (€575K–€1.175M). HTML generated and saved for manual injection via legacy campaign workaround.",
+    "title": "Weekly collaborator email blocked \u2014 MailerLite plan limit and groups missing",
+    "summary": "Weekly collaborator email could not be sent: MailerLite subscriber plan limit exceeded, recipient collaborator groups do not exist in MailerLite (~300 agent list not imported), and Custom HTML editor gated behind Premium plan. Found 3 new collaboration properties in CB North (\u20ac575K\u2013\u20ac1.175M). HTML generated and saved for manual injection via legacy campaign workaround.",
     "decisions": [
       "Used legacy campaign (ID 179677429450671955) that retains Custom HTML access",
       "Saved HTML for manual injection pending plan upgrade or group setup"
@@ -2884,7 +2884,7 @@
     "type": "session",
     "project": "New Build Homes",
     "task": "newbuild-blog-content-scouting",
-    "title": "Blog scouting pipeline run — new ideas pushed to Airtable after web search",
+    "title": "Blog scouting pipeline run \u2014 new ideas pushed to Airtable after web search",
     "summary": "Blog pipeline scouting with multiple web searches. Scored new candidates against existing 200 slugs and 57 Content Ideas, pushed qualifying topics to Airtable for future writing.",
     "decisions": [],
     "ideas": [],
@@ -2928,7 +2928,7 @@
     "type": "session",
     "project": "Hansson Hertzell",
     "task": "hh-fb-group-posting",
-    "title": "FB group posting blocked — run 48, screen locked, computer-use also denied",
+    "title": "FB group posting blocked \u2014 run 48, screen locked, computer-use also denied",
     "summary": "Run 48 of the H&H Facebook group posting task on May 3. Same recurring issue as 30+ previous runs: Chrome extension navigated to Facebook but page interactions denied. Computer-use access for Chrome also denied. LOG.md updated with run 48 results and fix instructions.",
     "decisions": [],
     "ideas": [],
@@ -2971,11 +2971,11 @@
     "project": "New Build Homes",
     "task": "paid-ads-strategy",
     "title": "GA4 Custom Dimensions Live + Paid Ads Playbook for Algorfa",
-    "summary": "Set up GA4 custom dimensions and metrics (property_price, property_type, property_town, property_reference) so retargeting audiences by price range are now possible. Built a full paid ads strategy covering Google Search vs Meta structure, dynamic product ads for 1400 properties, and a €900/month Algorfa test split across three campaign types. Produced a Paid Ads Playbook document and discussed PropertyOS seller lead magnet campaign concept.",
+    "summary": "Set up GA4 custom dimensions and metrics (property_price, property_type, property_town, property_reference) so retargeting audiences by price range are now possible. Built a full paid ads strategy covering Google Search vs Meta structure, dynamic product ads for 1400 properties, and a \u20ac900/month Algorfa test split across three campaign types. Produced a Paid Ads Playbook document and discussed PropertyOS seller lead magnet campaign concept.",
     "decisions": [
-      "Use one Google Ads account (712-457-0611) for both NBHCB and H&H — no need for separate accounts",
+      "Use one Google Ads account (712-457-0611) for both NBHCB and H&H \u2014 no need for separate accounts",
       "Run dynamic product ads (DPA) with catalog feed instead of one campaign per property",
-      "Start with Algorfa test: €300 Google Search / €400 Meta prospecting / €200 Meta retargeting",
+      "Start with Algorfa test: \u20ac300 Google Search / \u20ac400 Meta prospecting / \u20ac200 Meta retargeting",
       "PropertyOS 'marketing suite' PDF as a Meta lead magnet for seller acquisition"
     ],
     "ideas": [
@@ -2996,5 +2996,32 @@
     "_source": "session-sync",
     "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
     "_logged": "2026-05-06T16:51:08.980105"
+  },
+  {
+    "id": "sync-newbuild-social-fab8aa38",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Scheduled 5 social posts via Postiz API and logged to Airtable",
+    "summary": "Automated social media pipeline run that scheduled 5 posts across channels using direct Postiz API calls via a Python script. Task statuses were updated and all posts were logged as new records in Airtable for tracking. The pipeline ran end-to-end without manual intervention.",
+    "decisions": [
+      "Used Python script for Postiz API scheduling for clarity and reliability",
+      "Created Airtable records immediately after scheduling to keep CRM in sync"
+    ],
+    "ideas": [
+      "Consider adding a confirmation check after scheduling to verify post status"
+    ],
+    "chips": [
+      "social-media",
+      "postiz",
+      "airtable",
+      "automation",
+      "scheduled-task"
+    ],
+    "date": "6 May",
+    "ts": 20260506,
+    "_source": "session-sync",
+    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
+    "_logged": "2026-05-06T17:36:10.000000"
   }
 ]
