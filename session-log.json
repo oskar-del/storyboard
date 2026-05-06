@@ -2964,5 +2964,37 @@
     "_source": "session-sync",
     "_session_id": "local_a44d0687-9685-402e-987c-8fde65b5e96b",
     "_logged": "2026-05-06T16:35:50.775903"
+  },
+  {
+    "id": "sync-nbhcb-hh-brain-7139c127",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "paid-ads-strategy",
+    "title": "GA4 Custom Dimensions Live + Paid Ads Playbook for Algorfa",
+    "summary": "Set up GA4 custom dimensions and metrics (property_price, property_type, property_town, property_reference) so retargeting audiences by price range are now possible. Built a full paid ads strategy covering Google Search vs Meta structure, dynamic product ads for 1400 properties, and a €900/month Algorfa test split across three campaign types. Produced a Paid Ads Playbook document and discussed PropertyOS seller lead magnet campaign concept.",
+    "decisions": [
+      "Use one Google Ads account (712-457-0611) for both NBHCB and H&H — no need for separate accounts",
+      "Run dynamic product ads (DPA) with catalog feed instead of one campaign per property",
+      "Start with Algorfa test: €300 Google Search / €400 Meta prospecting / €200 Meta retargeting",
+      "PropertyOS 'marketing suite' PDF as a Meta lead magnet for seller acquisition"
+    ],
+    "ideas": [
+      "Meta lead gen campaign targeting homeowners in Costa Blanca with a PropertyOS 'how we sell your home' download",
+      "Push property_price to Meta Pixel too for price-based retargeting on Meta"
+    ],
+    "chips": [
+      "GA4",
+      "paid-ads",
+      "google-ads",
+      "meta",
+      "retargeting",
+      "DPA",
+      "algorfa"
+    ],
+    "date": "6 May",
+    "ts": 20260506,
+    "_source": "session-sync",
+    "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
+    "_logged": "2026-05-06T16:51:08.980105"
   }
 ]
