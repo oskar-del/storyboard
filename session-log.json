@@ -3023,5 +3023,57 @@
     "_source": "session-sync",
     "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
     "_logged": "2026-05-06T17:36:10.000000"
+  },
+  {
+    "id": "sync-newbuild-social-48c599ea",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Scheduled 5 social posts via Postiz API and logged to Airtable",
+    "summary": "The automated Newbuild social pipeline ran successfully, scheduling 5 social media posts via direct Postiz API calls using a Python script. Task statuses were updated on completion, and all post records were logged to the Airtable social posts table for tracking.",
+    "decisions": [
+      "Used a Python script with direct API calls to schedule all 5 posts in one batch",
+      "Logged scheduled posts to Airtable immediately after Postiz confirmation"
+    ],
+    "ideas": [],
+    "chips": [
+      "social",
+      "postiz",
+      "airtable",
+      "automation",
+      "pipeline"
+    ],
+    "date": "7 May",
+    "ts": 20260507,
+    "_source": "session-sync",
+    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
+    "_logged": "2026-05-06T22:05:59.943590"
+  },
+  {
+    "id": "sync-newbuild-social-c458ce6b",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Automated Social Pipeline: 5 Posts Scheduled via Postiz + Airtable Logged",
+    "summary": "Scheduled automated social media pipeline ran and successfully posted 5 pieces of content across channels using direct Postiz API calls via a Python script. Posts were then logged to Airtable for tracking and content calendar management.",
+    "decisions": [
+      "Used direct Python script approach for Postiz API scheduling rather than shell one-liners",
+      "Logged all scheduled posts to Airtable immediately after scheduling for audit trail"
+    ],
+    "ideas": [
+      "Consider batching Airtable creates for performance on larger content runs"
+    ],
+    "chips": [
+      "social-media",
+      "postiz",
+      "airtable",
+      "automation",
+      "scheduled-task"
+    ],
+    "date": "6 May",
+    "ts": 20260506,
+    "_source": "session-sync",
+    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
+    "_logged": "2026-05-06T22:36:32.883423"
   }
 ]
