@@ -2391,36 +2391,33 @@
     "_logged": "2026-04-30T19:36:15.410750"
   },
   {
-    "id": "sync-storyboard-architecture-56cc43df",
+    "id": "sync-storyboard-deck-collab-a3f1b2c4",
     "type": "session",
     "project": "Storyboard",
-    "task": "architecture-deep-dive",
-    "title": "Storyboard capture architecture: 6 angles beyond DOM scrape vs local file read",
-    "summary": "Deep-dive with Sonnet 4.7 reframing the Storyboard capture problem. Previous Sonnet 4.6 analysis presented only DOM scraping vs local file reading; 4.7 surfaced six additional paths including official platform exports, Native Messaging Host split-trust, IndexedDB reads (not the same as DOM scraping), authenticated backend API access, and flipping Storyboard into an MCP server so users mark intent explicitly rather than passively capturing.",
+    "task": "storyboard-deck-and-collab-planning",
+    "title": "Built 15-slide working session deck and planned Dropbox collaboration architecture",
+    "summary": "Created a 15-slide working session deck (PDF + PPTX) covering what Storyboard is, the competitor landscape, capture paths, folder-substrate architecture, and collaboration design. Session pivoted to planning real collaboration mode after discovering Storyboard is already a shipped product with app.html, an MCP server, and blocks-data.json. Designed a two-file attribution architecture (blocks-oskar.json + blocks-colleague.json) for Dropbox-based shared sync, with a collab mode toggle to be added to app.html.",
     "decisions": [
-      "Treat capture as a multi-path problem, not a single-architecture choice",
-      "Recommend stack: Native Messaging Host for always-on, official exports for bulk, MCP server flip for explicit intent",
-      "Question the multi-platform premise \u2014 Cowork users likely 80%+ Claude, ship Claude-first via desktop agent + manual export import covers ~95%"
+      "Use separate per-author JSON files (blocks-oskar.json + blocks-colleague.json) rather than one shared file to avoid merge conflicts",
+      "Dropbox shared folder ('Storyboard-Vault') as the data substrate for collaboration",
+      "Collab mode Solo/Collab toggle to be wired into existing app.html rendering loop"
     ],
     "ideas": [
-      "Native Messaging Host: tiny auditable extension forwards to localhost helper that does structuring",
-      "Storyboard as an MCP server \u2014 user invokes 'save this as a decision' inside Claude rather than passive capture",
-      "IndexedDB read path for ChatGPT/Gemini sits closer to 'read your own browser storage' than 'MITM network'",
-      "Combine all paths: 15-min sync agent + local launch agent + extension + ReadMe-style folder ingestion"
+      "Three-voice representation: user / colleague / Claude as synthesis layer",
+      "Folder-substrate architecture where each author's blocks file is merged at render time"
     ],
     "chips": [
       "storyboard",
+      "collaboration",
+      "presentation",
       "architecture",
-      "mcp",
-      "chrome-extension",
-      "capture-strategy",
-      "research"
+      "pptx"
     ],
-    "date": "30 Apr",
-    "ts": 20260430,
+    "date": "3 May",
+    "ts": 20260503,
     "_source": "session-sync",
     "_session_id": "local_56cc43df-4add-4723-b185-1a7dd87738e9",
-    "_logged": "2026-04-30T19:36:15.410750"
+    "_logged": "2026-05-07T02:20:39.886125"
   },
   {
     "id": "sync-daily-outreach-drafts-0530fc07",
@@ -2901,27 +2898,31 @@
     "_logged": "2026-05-06T16:35:50.775903"
   },
   {
-    "id": "sync-nbhcb-social-pipe-b-154364c4",
+    "id": "sync-newbuild-social-354d24b0",
     "type": "session",
     "project": "New Build Homes",
     "task": "newbuild-social-pipeline",
-    "title": "5 Newbuild social posts scheduled via Postiz API using Python batch script",
-    "summary": "Social pipeline run using a Python batch script for Postiz API scheduling. Rendered 5 posts, scheduled all successfully, and logged results to Airtable Social Posts table.",
+    "title": "Scheduled 5 social posts via Postiz API with Airtable logging",
+    "summary": "Automated social media pipeline ran successfully, uploading images and scheduling 5 posts across channels via the Postiz API. Task statuses were updated on completion. All post records were logged into Airtable for tracking.",
     "decisions": [
-      "Used Python batch script for direct Postiz API calls"
+      "Used direct Python script to call Postiz API for scheduling instead of a higher-level wrapper",
+      "Logged all scheduled posts to Airtable for content calendar visibility"
     ],
-    "ideas": [],
+    "ideas": [
+      "Consider batching image uploads before scheduling to reduce API round-trips"
+    ],
     "chips": [
-      "newbuild",
-      "social",
+      "social-media",
       "postiz",
-      "automation"
+      "airtable",
+      "automation",
+      "pipeline"
     ],
-    "date": "6 May",
-    "ts": 20260506,
+    "date": "7 May",
+    "ts": 20260507,
     "_source": "session-sync",
     "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
-    "_logged": "2026-05-06T16:35:50.775903"
+    "_logged": "2026-05-07T01:35:54.453401"
   },
   {
     "id": "sync-hh-fb-blocked-48-4c7c58a6",
@@ -2996,140 +2997,5 @@
     "_source": "session-sync",
     "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
     "_logged": "2026-05-06T16:51:08.980105"
-  },
-  {
-    "id": "sync-newbuild-social-fab8aa38",
-    "type": "session",
-    "project": "New Build Homes",
-    "task": "newbuild-social-pipeline",
-    "title": "Scheduled 5 social posts via Postiz API and logged to Airtable",
-    "summary": "Automated social media pipeline run that scheduled 5 posts across channels using direct Postiz API calls via a Python script. Task statuses were updated and all posts were logged as new records in Airtable for tracking. The pipeline ran end-to-end without manual intervention.",
-    "decisions": [
-      "Used Python script for Postiz API scheduling for clarity and reliability",
-      "Created Airtable records immediately after scheduling to keep CRM in sync"
-    ],
-    "ideas": [
-      "Consider adding a confirmation check after scheduling to verify post status"
-    ],
-    "chips": [
-      "social-media",
-      "postiz",
-      "airtable",
-      "automation",
-      "scheduled-task"
-    ],
-    "date": "6 May",
-    "ts": 20260506,
-    "_source": "session-sync",
-    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
-    "_logged": "2026-05-06T17:36:10.000000"
-  },
-  {
-    "id": "sync-newbuild-social-48c599ea",
-    "type": "session",
-    "project": "New Build Homes",
-    "task": "newbuild-social-pipeline",
-    "title": "Scheduled 5 social posts via Postiz API and logged to Airtable",
-    "summary": "The automated Newbuild social pipeline ran successfully, scheduling 5 social media posts via direct Postiz API calls using a Python script. Task statuses were updated on completion, and all post records were logged to the Airtable social posts table for tracking.",
-    "decisions": [
-      "Used a Python script with direct API calls to schedule all 5 posts in one batch",
-      "Logged scheduled posts to Airtable immediately after Postiz confirmation"
-    ],
-    "ideas": [],
-    "chips": [
-      "social",
-      "postiz",
-      "airtable",
-      "automation",
-      "pipeline"
-    ],
-    "date": "7 May",
-    "ts": 20260507,
-    "_source": "session-sync",
-    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
-    "_logged": "2026-05-06T22:05:59.943590"
-  },
-  {
-    "id": "sync-newbuild-social-c458ce6b",
-    "type": "session",
-    "project": "New Build Homes",
-    "task": "newbuild-social-pipeline",
-    "title": "Automated Social Pipeline: 5 Posts Scheduled via Postiz + Airtable Logged",
-    "summary": "Scheduled automated social media pipeline ran and successfully posted 5 pieces of content across channels using direct Postiz API calls via a Python script. Posts were then logged to Airtable for tracking and content calendar management.",
-    "decisions": [
-      "Used direct Python script approach for Postiz API scheduling rather than shell one-liners",
-      "Logged all scheduled posts to Airtable immediately after scheduling for audit trail"
-    ],
-    "ideas": [
-      "Consider batching Airtable creates for performance on larger content runs"
-    ],
-    "chips": [
-      "social-media",
-      "postiz",
-      "airtable",
-      "automation",
-      "scheduled-task"
-    ],
-    "date": "6 May",
-    "ts": 20260506,
-    "_source": "session-sync",
-    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
-    "_logged": "2026-05-06T22:36:32.883423"
-  },
-  {
-    "id": "sync-newbuild-social-354d24b0",
-    "type": "session",
-    "project": "New Build Homes",
-    "task": "newbuild-social-pipeline",
-    "title": "Scheduled 5 social posts via Postiz API with Airtable logging",
-    "summary": "Automated social media pipeline ran successfully, uploading images and scheduling 5 posts across channels via the Postiz API. Task statuses were updated on completion. All post records were logged into Airtable for tracking.",
-    "decisions": [
-      "Used direct Python script to call Postiz API for scheduling instead of a higher-level wrapper",
-      "Logged all scheduled posts to Airtable for content calendar visibility"
-    ],
-    "ideas": [
-      "Consider batching image uploads before scheduling to reduce API round-trips"
-    ],
-    "chips": [
-      "social-media",
-      "postiz",
-      "airtable",
-      "automation",
-      "pipeline"
-    ],
-    "date": "7 May",
-    "ts": 20260507,
-    "_source": "session-sync",
-    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
-    "_logged": "2026-05-07T01:35:54.453401"
-  },
-  {
-    "id": "sync-storyboard-deck-collab-a3f1b2c4",
-    "type": "session",
-    "project": "Storyboard",
-    "task": "storyboard-deck-and-collab-planning",
-    "title": "Built 15-slide working session deck and planned Dropbox collaboration architecture",
-    "summary": "Created a 15-slide working session deck (PDF + PPTX) covering what Storyboard is, the competitor landscape, capture paths, folder-substrate architecture, and collaboration design. Session pivoted to planning real collaboration mode after discovering Storyboard is already a shipped product with app.html, an MCP server, and blocks-data.json. Designed a two-file attribution architecture (blocks-oskar.json + blocks-colleague.json) for Dropbox-based shared sync, with a collab mode toggle to be added to app.html.",
-    "decisions": [
-      "Use separate per-author JSON files (blocks-oskar.json + blocks-colleague.json) rather than one shared file to avoid merge conflicts",
-      "Dropbox shared folder ('Storyboard-Vault') as the data substrate for collaboration",
-      "Collab mode Solo/Collab toggle to be wired into existing app.html rendering loop"
-    ],
-    "ideas": [
-      "Three-voice representation: user / colleague / Claude as synthesis layer",
-      "Folder-substrate architecture where each author's blocks file is merged at render time"
-    ],
-    "chips": [
-      "storyboard",
-      "collaboration",
-      "presentation",
-      "architecture",
-      "pptx"
-    ],
-    "date": "3 May",
-    "ts": 20260503,
-    "_source": "session-sync",
-    "_session_id": "local_56cc43df-4add-4723-b185-1a7dd87738e9",
-    "_logged": "2026-05-07T02:20:39.886125"
   }
 ]
