@@ -3024,5 +3024,36 @@
     "_source": "session-sync",
     "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
     "_logged": "2026-05-07T04:35:32.393559"
+  },
+  {
+    "id": "sync-storyboard-deck-collab-f1c414ef",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-deck-and-collab-planning",
+    "title": "Built 15-slide Storyboard deck & planned Dropbox collaboration architecture",
+    "summary": "A 15-slide working session deck (PDF + PPTX) was created covering Storyboard's vision, competitor landscape, folder-substrate architecture, and four-phase plan. The session then moved to planning real collaboration mode: Claude analyzed the existing live app (app.html, blocks-data.json, MCP server on :3848) and proposed splitting blocks-data.json into per-user files stored in a shared Dropbox folder. The architectural decision favors per-user JSON files (blocks-oskar.json, blocks-colleague.json) to avoid conflicts and enable block-level attribution.",
+    "decisions": [
+      "Use per-user JSON files (blocks-oskar.json, blocks-colleague.json) instead of a shared file to avoid write conflicts and enable attribution",
+      "Dropbox Storyboard-Vault folder as the shared data substrate for collaboration",
+      "Storyboard is already a shipped product (not v0) \u2014 existing app.html is 14k lines with MCP server and auto-sync launchd"
+    ],
+    "ideas": [
+      "Three-voice representation: user, colleague, and Claude as synthesis layer",
+      "Collab mode toggle in dashboard between Solo and Collab views",
+      "Per-user files can be toggled on/off in collab mode to compare contributions"
+    ],
+    "chips": [
+      "storyboard",
+      "deck",
+      "collaboration",
+      "dropbox",
+      "architecture",
+      "pptx"
+    ],
+    "date": "3 May",
+    "ts": 20260503,
+    "_source": "session-sync",
+    "_session_id": "local_56cc43df-4add-4723-b185-1a7dd87738e9",
+    "_logged": "2026-05-07T05:05:46.186934"
   }
 ]
