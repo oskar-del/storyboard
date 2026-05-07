@@ -2997,5 +2997,32 @@
     "_source": "session-sync",
     "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
     "_logged": "2026-05-06T16:51:08.980105"
+  },
+  {
+    "id": "sync-newbuild-social-5c4816e1",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "social-pipeline",
+    "title": "Scheduled 5 social posts via Postiz API and logged to Airtable",
+    "summary": "Automated social pipeline run that scheduled 5 social media posts using direct Postiz API calls via a Python script. Task statuses were updated and all post records were created in Airtable for tracking and content calendar management.",
+    "decisions": [
+      "Used direct Python script for batch API scheduling rather than individual calls",
+      "Logged completed posts to Airtable immediately after scheduling"
+    ],
+    "ideas": [
+      "Consider pre-validating media URLs before scheduling to catch broken assets early"
+    ],
+    "chips": [
+      "social",
+      "postiz",
+      "airtable",
+      "automation",
+      "pipeline"
+    ],
+    "date": "7 May",
+    "ts": 20260507,
+    "_source": "session-sync",
+    "_session_id": "local_fab8aa38-4a46-4fcb-88a1-13206cd8fa77",
+    "_logged": "2026-05-07T04:35:32.393559"
   }
 ]
