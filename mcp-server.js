@@ -26,12 +26,68 @@ import {
 import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync, readdirSync, statSync } from "fs";
 import { execSync } from "child_process";
 import { join, dirname, extname } from "path";
+import { homedir } from "os";
 import { fileURLToPath } from "url";
 import { createServer } from "http";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const STORYBOARD_DIR   = __dirname;
-const BLOCKS_FILE      = join(STORYBOARD_DIR, "blocks-data.json");
+
+// ─── Collab gating ────────────────────────────────────────────────────
+// Captures from collab projects go to the Dropbox vault (visible to colleague).
+// Captures from non-collab projects go to the LOCAL file only (private).
+const AUTHOR           = process.env.STORYBOARD_AUTHOR || "oskar";
+const COLLAB_PROJECTS  = (process.env.STORYBOARD_COLLAB_PROJECTS || "Storyboard")
+                         .split(",").map(s => s.trim()).filter(Boolean);
+const VAULT_DIR        = join(homedir(), "Dropbox", "Storyboard-Vault");
+const VAULT_BLOCKS     = join(VAULT_DIR, `blocks-${AUTHOR}.json`);
+const LOCAL_BLOCKS     = join(STORYBOARD_DIR, "blocks-data.json");
+// Backwards-compat alias — many existing references read BLOCKS_FILE for the
+// "all blocks" view; we redefine it as a function-driven helper below.
+function isCollabProject(p) { return COLLAB_PROJECTS.includes(p); }
+function fileFor(block)     { return isCollabProject(block && block.project) ? VAULT_BLOCKS : LOCAL_BLOCKS; }
+function readAllBlocks() {
+  const seen = new Set(); const out = [];
+  for (const path of [VAULT_BLOCKS, LOCAL_BLOCKS]) {
+    let arr = []; try { arr = JSON.parse(readFileSync(path, "utf8")); } catch {}
+    for (const b of (Array.isArray(arr) ? arr : [])) {
+      if (b && b.id && !seen.has(b.id)) { seen.add(b.id); out.push(b); }
+    }
+  }
+  return out;
+}
+function findBlockHome(id) {
+  for (const path of [VAULT_BLOCKS, LOCAL_BLOCKS]) {
+    let arr = []; try { arr = JSON.parse(readFileSync(path, "utf8")); } catch {}
+    const idx = (Array.isArray(arr) ? arr : []).findIndex(b => b && b.id === id);
+    if (idx >= 0) return { path, blocks: arr, idx };
+  }
+  return null;
+}
+function upsertBlock(block) {
+  // Move block to its correct file (collab vs local) based on project. Removes from old file if it moved.
+  const target = fileFor(block);
+  // Remove from any other file first (project may have changed)
+  for (const path of [VAULT_BLOCKS, LOCAL_BLOCKS]) {
+    if (path === target) continue;
+    let arr = []; try { arr = JSON.parse(readFileSync(path, "utf8")); } catch {}
+    const before = arr.length;
+    arr = arr.filter(b => b && b.id !== block.id);
+    if (arr.length !== before) writeFileSync(path, JSON.stringify(arr, null, 2), "utf8");
+  }
+  // Upsert into target
+  let arr = []; try { arr = JSON.parse(readFileSync(target, "utf8")); } catch {}
+  if (!Array.isArray(arr)) arr = [];
+  const idx = arr.findIndex(b => b && b.id === block.id);
+  if (idx >= 0) arr[idx] = { ...arr[idx], ...block };
+  else arr.unshift(block);
+  writeFileSync(target, JSON.stringify(arr, null, 2), "utf8");
+  return target;
+}
+// BLOCKS_FILE retained for backward-compat where reads expect a single path.
+// New reads should use readAllBlocks(). New writes should use upsertBlock(block).
+const BLOCKS_FILE      = VAULT_BLOCKS;
+const LEGACY_BLOCKS    = LOCAL_BLOCKS;
 const SESSION_LOG_FILE = join(STORYBOARD_DIR, "session-log.json");
 const DATA_FILE        = join(STORYBOARD_DIR, "storyboard-data.json");
 const IDEAS_FILE       = join(STORYBOARD_DIR, "ideas.jsonl");
@@ -186,7 +242,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   // ── session_start ─────────────────────────────────────────────────────────
   if (name === "session_start") {
-    const blocks = readJSON(BLOCKS_FILE, []);
+    const blocks = readAllBlocks();
     const now    = new Date();
     const todayInt = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
     const yesterdayInt = todayInt - 1;
@@ -279,16 +335,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       chips:   ["💡 Idea", args.project, "Not started"],
       status:  "not_started",
       _live:   true,
+      _author: AUTHOR,
       _captured: new Date().toISOString(),
     };
 
-    // Append to ideas.jsonl
+    // Append to ideas.jsonl (always local — never shared)
     appendFileSync(IDEAS_FILE, JSON.stringify(idea) + "\n", "utf8");
 
-    // Also add to blocks-data.json
-    const blocks = readJSON(BLOCKS_FILE, []);
-    blocks.unshift(idea); // newest first
-    writeJSON(BLOCKS_FILE, blocks);
+    // Route the idea to vault or local based on collab project membership
+    upsertBlock(idea);
 
     return {
       content: [{
@@ -314,17 +369,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       seed:      args.seed      || "",
       status:    args.status    || "done",
       _live:     true,
+      _author:   AUTHOR,
       _captured: new Date().toISOString(),
     };
 
-    const blocks = readJSON(BLOCKS_FILE, []);
-    const existing = blocks.findIndex(b => b.id === block.id);
-    if (existing >= 0) {
-      blocks[existing] = { ...blocks[existing], ...block };
-    } else {
-      blocks.unshift(block);
-    }
-    writeJSON(BLOCKS_FILE, blocks);
+    upsertBlock(block);
 
     return {
       content: [{
@@ -336,15 +385,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   // ── update_block ──────────────────────────────────────────────────────────
   if (name === "update_block") {
-    const blocks = readJSON(BLOCKS_FILE, []);
-    const idx = blocks.findIndex(b => b.id === args.id);
-    if (idx < 0) {
+    const home = findBlockHome(args.id);
+    if (!home) {
       return { content: [{ type: "text", text: `Block "${args.id}" not found.` }] };
     }
+    const blocks = home.blocks;
+    const idx = home.idx;
     if (args.status) blocks[idx].status = args.status;
     if (args.note)   blocks[idx].summary = (blocks[idx].summary || "") + `\n\n[${today()}] ${args.note}`;
     blocks[idx]._updated = new Date().toISOString();
-    writeJSON(BLOCKS_FILE, blocks);
+    writeJSON(home.path, blocks);
     return {
       content: [{ type: "text", text: `Updated block "${args.id}": status=${blocks[idx].status}` }],
     };
@@ -352,7 +402,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   // ── list_projects ─────────────────────────────────────────────────────────
   if (name === "list_projects") {
-    const blocks = readJSON(BLOCKS_FILE, []);
+    const blocks = readAllBlocks();
     const counts = {};
     blocks.forEach(b => { counts[b.project] = (counts[b.project] || 0) + 1; });
     const data   = readJSON(DATA_FILE, {});
@@ -364,7 +414,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   // ── get_context_seed ──────────────────────────────────────────────────────
   if (name === "get_context_seed") {
-    const blocks  = readJSON(BLOCKS_FILE, []);
+    const blocks  = readAllBlocks();
     const data    = readJSON(DATA_FILE, {});
     const project = args.project;
     const format  = args.format || "full";
@@ -520,18 +570,18 @@ Model guidance: Sonnet for sprint work, Opus for architecture decisions only.`;
       ts,
       _captured: now.toISOString(),
       _source:   "live-session",
+      _author:   AUTHOR,
       _live:     true,
     };
     Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
-    const blocks = readJSON(BLOCKS_FILE, []);
+    const blocks = readAllBlocks();
     // Deduplicate — don't log same title twice in same session
     const dup = blocks.find(b => b._live && b.title === title && b.project === (project||"Storyboard") &&
       Math.abs((b.ts||0) - ts) < 1);
     if (dup) {
       return { content: [{ type: "text", text: `Already logged: ${dup.id}` }] };
     }
-    blocks.unshift(newBlock);
-    writeJSON(BLOCKS_FILE, blocks);
+    upsertBlock(newBlock);
     process.stderr.write(`⚡ Live block: [${type}] "${title}" → ${project||"Storyboard"}\n`);
     return { content: [{ type: "text", text: `⚡ Logged live block: "${title}" (id: ${id})` }] };
   }
@@ -673,7 +723,7 @@ const httpServer = createServer((req, res) => {
   // /session-start — GET endpoint for auto session brief (used by dashboard + Chrome extension)
   if (req.method === "GET" && req.url === "/session-start") {
     try {
-      const blocks = readJSON(BLOCKS_FILE, []);
+      const blocks = readAllBlocks();
       const now = new Date();
       const todayInt = parseInt(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);
       const sevenDaysAgo = todayInt - 7;
@@ -753,6 +803,7 @@ const httpServer = createServer((req, res) => {
           date:      block.date || now.toLocaleDateString("en-GB", { day:"numeric", month:"short" }),
           ts,
           _source:   block._source || "session-log",
+          _author:   AUTHOR,
           _logged:   now.toISOString(),
         };
         const existing = existsSync(SESSION_LOG_FILE) ? JSON.parse(readFileSync(SESSION_LOG_FILE, "utf8")) : [];
@@ -760,6 +811,17 @@ const httpServer = createServer((req, res) => {
         const deduped = existing.filter(b => b.id !== newBlock.id);
         deduped.push(newBlock);
         writeFileSync(SESSION_LOG_FILE, JSON.stringify(deduped, null, 2), "utf8");
+
+        // Mirror into the vault ONLY if this block belongs to a collab project.
+        // Non-collab projects stay in session-log.json on the local Mac and never enter the vault.
+        if (isCollabProject(newBlock.project)) {
+          try {
+            upsertBlock(newBlock);
+          } catch (e) {
+            process.stderr.write("vault upsert failed: " + e.message + "\n");
+          }
+        }
+
         res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
         res.end(JSON.stringify({ ok: true, id: newBlock.id }));
       } catch(e) {
@@ -797,7 +859,7 @@ const httpServer = createServer((req, res) => {
         }
         // Infer project from active blocks if not provided
         const inferredProject = block.project || (() => {
-          const activeBlocks = readJSON(BLOCKS_FILE, []);
+          const activeBlocks = readAllBlocks();
           const recent = activeBlocks.find(b => b.project && b._live);
           return recent?.project || "Storyboard";
         })();
@@ -841,7 +903,7 @@ const httpServer = createServer((req, res) => {
         Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
 
         // Prepend to blocks-data.json
-        const blocks = readJSON(BLOCKS_FILE, []);
+        const blocks = readAllBlocks();
         blocks.unshift(newBlock);
         writeJSON(BLOCKS_FILE, blocks);
 
@@ -891,7 +953,7 @@ const httpServer = createServer((req, res) => {
         };
         // Remove undefined keys
         Object.keys(newBlock).forEach(k => newBlock[k] === undefined && delete newBlock[k]);
-        const blocks = readJSON(BLOCKS_FILE, []);
+        const blocks = readAllBlocks();
         // Avoid duplicate titles logged in same session
         const alreadyExists = blocks.find(b => b._live && b.title === newBlock.title && b.project === newBlock.project);
         if (alreadyExists) {
@@ -941,7 +1003,7 @@ const httpServer = createServer((req, res) => {
           _url: url || `http://localhost:3848/${label}`,
           chips: ["Preview", "Design snapshot", label],
         };
-        const blocks = readJSON(BLOCKS_FILE, []);
+        const blocks = readAllBlocks();
         blocks.unshift(newBlock);
         writeJSON(BLOCKS_FILE, blocks);
         res.writeHead(200, { "Content-Type": "application/json" });
@@ -1175,7 +1237,7 @@ const httpServer = createServer((req, res) => {
         }
 
         // Load blocks
-        const blocks = readJSON(BLOCKS_FILE, []);
+        const blocks = readAllBlocks();
 
         // Filter by category and optional project
         const filtered = blocks.filter(b => {
@@ -1453,7 +1515,7 @@ Rules:
           return;
         }
         const now = new Date();
-        const blocks = readJSON(BLOCKS_FILE, []);
+        const blocks = readAllBlocks();
         const newBlocks = approved.map(b => ({
           ...b,
           id: `confirmed-${b.type}-${Date.now()}-${Math.random().toString(36).slice(2,6)}`,
@@ -1581,6 +1643,50 @@ Rules:
 
   res.writeHead(404); res.end();
 });
+
+httpServer.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    process.stderr.write("⚠️  Port 3847 in use — screenshot server skipped, dashboard still running\n");
+  } else {
+    process.stderr.write("HTTP server error: " + err.message + "\n");
+  }
+});
+
+// ═══════ Step 4: session-log → vault mirror (every 60s) ═══════
+// Anything log-session.py writes to session-log.json (its fallback path) gets
+// auto-propagated to the Dropbox vault so the colleague's machine sees it too.
+function mirrorSessionLogToVault() {
+  try {
+    if (!existsSync(SESSION_LOG_FILE)) return;
+    const session = JSON.parse(readFileSync(SESSION_LOG_FILE, "utf8"));
+    if (!Array.isArray(session) || !session.length) return;
+
+    const vault = existsSync(BLOCKS_FILE) ? JSON.parse(readFileSync(BLOCKS_FILE, "utf8")) : [];
+    const vaultIds = new Set(vault.map(b => b && b.id).filter(Boolean));
+
+    let added = 0;
+    for (const sb of session) {
+      if (!sb || !sb.id) continue;
+      if (vaultIds.has(sb.id)) continue;
+      // PROJECT GATE — only collab projects propagate to the vault
+      if (!isCollabProject(sb.project)) continue;
+      // Stamp author if missing — anything from this Mac without explicit author is AUTHOR
+      const stamped = sb._author ? sb : { ...sb, _author: AUTHOR };
+      vault.unshift(stamped); // newest first
+      vaultIds.add(stamped.id);
+      added++;
+    }
+    if (added > 0) {
+      writeFileSync(BLOCKS_FILE, JSON.stringify(vault, null, 2), "utf8");
+      process.stderr.write(`[mirror] ${added} block(s) session-log → ${BLOCKS_FILE}\n`);
+    }
+  } catch (e) {
+    process.stderr.write(`[mirror] failed: ${e.message}\n`);
+  }
+}
+setInterval(mirrorSessionLogToVault, 60000);
+setTimeout(mirrorSessionLogToVault, 2000); // also run shortly after startup
+process.stderr.write(`[mirror] active — every 60s, session-log → ${BLOCKS_FILE}\n`);
 
 httpServer.listen(3847, "127.0.0.1", () => {
   process.stderr.write("📸 Screenshot server on http://127.0.0.1:3847\n");

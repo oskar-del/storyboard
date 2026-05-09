@@ -3320,7 +3320,174 @@ body.light-mode .stg-action-btn { background: #f0f2f8; border-color: #e2e6f0; co
 .td-kickoff-proj-btn.selected { background: rgba(108,99,255,.15) !important; border-color: var(--accent) !important; color: var(--accent) !important; }
 body.light-mode .td-kickoff-card { background: rgba(108,99,255,.04); }
 body.light-mode .td-kickoff-input { background: #f7f8fa; }
-</style>
+
+/* ═════════ COLLAB MODE — Step 3 ═════════
+ * Author attribution shown only when body has .collab-mode.
+ * Solo mode = invisible (default styling preserved).
+ */
+.author-toggle {
+  display: flex; gap: 0; padding: 2px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 10px; font-weight: 700;
+  cursor: pointer; user-select: none;
+}
+body.light-mode .author-toggle { background: rgba(0,0,0,.03); }
+.author-toggle-opt {
+  padding: 4px 10px; border-radius: 6px;
+  color: var(--text-3); transition: all .15s;
+}
+.author-toggle-opt.active {
+  background: rgba(99,102,241,.18);
+  color: #a5b4fc;
+  box-shadow: 0 1px 2px rgba(0,0,0,.08) inset;
+}
+body.light-mode .author-toggle-opt.active {
+  background: rgba(99,102,241,.12);
+  color: #4338ca;
+}
+
+/* Author dot — only renders in collab mode */
+.block .block-author-dot {
+  display: none;
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 6px;
+  box-shadow: 0 0 0 2px var(--card);
+}
+body.collab-mode .block .block-author-dot { display: inline-block; }
+
+/* Author colors */
+.block[data-author="oskar"]      .block-author-dot { background: #3B82F6; }
+.block[data-author="colleague"]  .block-author-dot { background: #F97316; }
+.block[data-author="claude"]     .block-author-dot { background: #F59E0B; }
+
+/* Top accent stripe (3px) on each block in collab mode — matches author */
+body.collab-mode .block { position: relative; }
+body.collab-mode .block::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0;
+  height: 3px; border-radius: 3px 3px 0 0;
+  pointer-events: none; z-index: 2;
+}
+body.collab-mode .block[data-author="oskar"]::before     { background: linear-gradient(90deg, #3B82F6, transparent); }
+body.collab-mode .block[data-author="colleague"]::before { background: linear-gradient(90deg, #F97316, transparent); }
+body.collab-mode .block[data-author="claude"]::before    { background: linear-gradient(90deg, #F59E0B, transparent); }
+
+/* Author counts pill — visible in collab mode, in topbar */
+.author-counts {
+  display: none;
+  align-items: center; gap: 8px;
+  padding: 4px 10px; font-size: 10px; font-weight: 700;
+  border-radius: 20px;
+  background: rgba(99,102,241,.06);
+  border: 1px solid rgba(99,102,241,.2);
+}
+body.collab-mode .author-counts { display: flex; }
+.author-counts-row { display: flex; align-items: center; gap: 4px; color: var(--text-3); }
+.author-counts-dot { width: 7px; height: 7px; border-radius: 50%; }
+/* COLLAB MODE — author indicators on project cards (canvas/boards) */
+.canvas-card-authors {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  margin: 4px 16px 0;
+  width: fit-content;
+  border-radius: 20px;
+  background: rgba(245,158,11,.10);
+  border: 1px solid rgba(245,158,11,.30);
+}
+.canvas-card-authors-collab {
+  background: linear-gradient(90deg, rgba(59,130,246,.10), rgba(249,115,22,.10));
+  border-color: rgba(245,158,11,.4);
+}
+body.collab-mode .canvas-card-authors { display: inline-flex; }
+.ccd {
+  width: 8px; height: 8px; border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 1.5px var(--card);
+}
+.ccd-o { background: #3B82F6; }
+.ccd-c { background: #F97316; }
+.canvas-card-authors-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #b45309; /* amber-700 — high-contrast on amber tint */
+  margin-left: 3px;
+}
+body:not(.light-mode) .canvas-card-authors-label { color: #fbbf24; }
+.ccd {
+  width: 9px; height: 9px;
+}
+
+/* COLLAB SPLIT FEED — Step 3.5 (Option A) */
+body.collab-mode #feed.collab-split-active {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+/* Non-column children (headers, dividers) span full width */
+body.collab-mode #feed.collab-split-active > :not(.collab-col) {
+  grid-column: 1 / -1;
+}
+.collab-col {
+  background: rgba(99,102,241,.025);
+  border: 1px solid rgba(99,102,241,.12);
+  border-radius: 14px;
+  padding: 14px 12px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+}
+.collab-col[data-author="oskar"] {
+  border-color: rgba(59,130,246,.22);
+  background: rgba(59,130,246,.025);
+}
+.collab-col[data-author="colleague"] {
+  border-color: rgba(249,115,22,.22);
+  background: rgba(249,115,22,.025);
+}
+.collab-col-header {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 12px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.collab-col-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.collab-col-count {
+  margin-left: auto;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2px 9px;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.5px;
+}
+body.light-mode .collab-col-count { background: rgba(0,0,0,.04); }
+.collab-col-body {
+  display: flex; flex-direction: column; gap: 10px;
+  flex: 1;
+}
+.collab-col-body .block { width: 100%; }
+.collab-col-empty {
+  padding: 36px 10px; text-align: center;
+  font-size: 11.5px; line-height: 1.6; color: var(--text-3); font-style: italic;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  margin-top: 4px;
+}
+
+/* In split mode, suppress the per-block top gradient stripe — column already says it */
+body.collab-mode #feed.collab-split-active .block::before { display: none; }
+
+
+  </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -3573,6 +3740,16 @@ body.light-mode .td-kickoff-input { background: #f7f8fa; }
           <line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
+      <!-- Solo / Collab toggle -->
+      <div class="author-toggle" onclick="toggleAuthorMode()" title="Solo: just your blocks. Collab: all authors color-coded">
+        <div class="author-toggle-opt active" id="authSolo">Solo</div>
+        <div class="author-toggle-opt" id="authCollab">Collab</div>
+      </div>
+      <!-- Author counts (collab mode only) -->
+      <div class="author-counts" id="authorCounts" title="Block counts by author">
+        <div class="author-counts-row"><span class="author-counts-dot" style="background:#3B82F6"></span><span id="countOskar">0</span></div>
+        <div class="author-counts-row"><span class="author-counts-dot" style="background:#F97316"></span><span id="countColleague">0</span></div>
+      </div>
       <!-- OS / AI mode toggle -->
       <div class="mode-toggle" onclick="toggleMode()" title="Switch between Light and Dark mode">
         <div class="mode-toggle-opt" id="modeOS">Light</div>
@@ -5471,6 +5648,129 @@ let skillsData = {};  // keyed by skill name → { score, grade, dimensions, wor
 let activeFilter = 'All';
 let activePeriod = 'today'; // open on Today feed by default
 let activeView = 'grid';
+
+// ═══════════ COLLAB MODE — Step 3 ═══════════
+const CURRENT_AUTHOR = (typeof window !== 'undefined' && window.STORYBOARD_AUTHOR) || 'oskar';
+const AUTHOR_COLORS  = { oskar: '#3B82F6', colleague: '#F97316', claude: '#F59E0B' };
+// Collab projects — kept in sync with mcp-server.js. Only these projects appear in Collab mode.
+const COLLAB_PROJECTS = ['Storyboard'];
+let authorMode = 'solo'; // 'solo' | 'collab'
+
+function toggleAuthorMode() {
+  authorMode = authorMode === 'solo' ? 'collab' : 'solo';
+  applyAuthorMode();
+  try { localStorage.setItem('storyboard-author-mode', authorMode); } catch(e) {}
+  if (typeof renderFeed === 'function') renderFeed();
+}
+
+function applyAuthorMode() {
+  document.body.classList.toggle('collab-mode', authorMode === 'collab');
+  const solo  = document.getElementById('authSolo');
+  const coll  = document.getElementById('authCollab');
+  if (solo) solo.classList.toggle('active', authorMode === 'solo');
+  if (coll) coll.classList.toggle('active', authorMode === 'collab');
+  updateAuthorCounts();
+}
+
+function updateAuthorCounts() {
+  if (typeof liveBlocks === 'undefined') return;
+  const all = (typeof mergedBlocksRaw === 'function' ? mergedBlocksRaw() : (liveBlocks || []));
+  let o = 0, c = 0;
+  for (const b of all) {
+    const a = b._author || 'oskar';
+    if (a === 'oskar') o++;
+    else if (a === 'colleague') c++;
+  }
+  const oEl = document.getElementById('countOskar');
+  const cEl = document.getElementById('countColleague');
+  if (oEl) oEl.textContent = o;
+  if (cEl) cEl.textContent = c;
+}
+
+// Restore preference on load
+try {
+  const saved = localStorage.getItem('storyboard-author-mode');
+  if (saved === 'collab') authorMode = 'collab';
+} catch(e) {}
+document.addEventListener('DOMContentLoaded', applyAuthorMode);
+// Also re-apply once liveBlocks have come in (poll-based)
+setInterval(updateAuthorCounts, 4000);
+
+// ═══════ COLLAB SPLIT FEED — Step 3.5 (Option A) ═══════
+function applyCollabSplit() {
+  const feed = document.getElementById('feed');
+  if (!feed) return;
+
+  const inGrid    = (typeof activeView === 'undefined') || activeView === 'grid';
+  const shouldSplit = (typeof authorMode !== 'undefined') && authorMode === 'collab' && inGrid;
+  const alreadySplit = !!feed.querySelector('.collab-col');
+
+  if (!shouldSplit) {
+    if (alreadySplit) {
+      // Re-render flat — let renderFeed redraw without the split
+      feed.classList.remove('collab-split-active');
+      if (typeof renderFeed === 'function') renderFeed();
+    }
+    return;
+  }
+
+  if (alreadySplit) return; // nothing to do — already split
+
+  // Pick out flat .block children. Leave non-block siblings (headers, dividers) in place.
+  const flatBlocks = Array.from(feed.children).filter(c => c.classList && c.classList.contains('block'));
+  if (!flatBlocks.length) return;
+
+  const oskarBlocks = [];
+  const collBlocks  = [];
+  flatBlocks.forEach(b => {
+    const a = b.dataset.author === 'colleague' ? 'colleague' : 'oskar';
+    (a === 'colleague' ? collBlocks : oskarBlocks).push(b);
+  });
+
+  function makeCol(author, label, dotColor, blocks) {
+    const col = document.createElement('div');
+    col.className = 'collab-col';
+    col.dataset.author = author;
+    col.innerHTML = `
+      <div class="collab-col-header">
+        <span class="collab-col-dot" style="background:${dotColor}"></span>
+        <span>${label}</span>
+        <span class="collab-col-count">${blocks.length}</span>
+      </div>
+      <div class="collab-col-body"></div>
+    `;
+    const body = col.querySelector('.collab-col-body');
+    blocks.forEach(b => body.appendChild(b));
+    if (!blocks.length) {
+      body.innerHTML = `<div class="collab-col-empty">Nothing here yet.<br>New blocks from this author will appear in this column.</div>`;
+    }
+    return col;
+  }
+
+  const oskarCol = makeCol('oskar',     'Oskar',     '#3B82F6', oskarBlocks);
+  const collCol  = makeCol('colleague', 'Colleague', '#F97316', collBlocks);
+
+  feed.classList.add('collab-split-active');
+  // Remove flat blocks from feed and append columns at the end
+  flatBlocks.forEach(b => { /* already moved into cols above */ });
+  feed.appendChild(oskarCol);
+  feed.appendChild(collCol);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const feed = document.getElementById('feed');
+  if (!feed) return;
+  const obs = new MutationObserver((muts) => {
+    // Re-split only when fresh flat blocks land in the feed
+    const hasFlat = muts.some(m =>
+      Array.from(m.addedNodes).some(n => n.nodeType === 1 && n.classList && n.classList.contains('block'))
+    );
+    if (hasFlat) applyCollabSplit();
+  });
+  obs.observe(feed, { childList: true });
+  // Also try once after load in case content was already there
+  setTimeout(applyCollabSplit, 50);
+});
 let activeTask = null; // task window filter — null = all tasks
 let navCollapsed = false;
 let rightOpen = false;
@@ -6261,7 +6561,7 @@ function blockHTML(b, i, featured = false) {
     // ── Rejection block — path not taken ──
     if (b.type === 'rejection') {
       const replacedBy = b.replacedBy || b.chips?.[0] || '';
-      return `<div class="block block-rejection" style="${style}" onclick="openDetail('${b.id}')">
+      return `<div class="block block-rejection" data-author="${b._author||'oskar'}" style="${style}" onclick="openDetail('${b.id}')">
         <div class="block-stripe"></div>
         <div class="block-body">
           <div class="block-rejection-label">✕ Rejected · <span style="color:var(--text-3);font-weight:500">${b.project||''} · ${displayDate}</span></div>
@@ -6274,7 +6574,7 @@ function blockHTML(b, i, featured = false) {
 
     // ── Intent block — project north star ──
     if (b.type === 'intent') {
-      return `<div class="block block-intent" style="${style}" onclick="openDetail('${b.id}')">
+      return `<div class="block block-intent" data-author="${b._author||'oskar'}" style="${style}" onclick="openDetail('${b.id}')">
         <div class="block-intent-body">
           <span class="block-intent-icon">🎯</span>
           <div class="block-intent-main">
@@ -6310,7 +6610,7 @@ function blockHTML(b, i, featured = false) {
 
     // ── Discussion block — async thinking, debate, open question ──
     if (b.type === 'discussion') {
-      return `<div class="block${featuredClass}" style="--block-color:#60a5fa;--block-bg:rgba(96,165,250,.06)" onclick="openDetail('${b.id}')">
+      return `<div class="block${featuredClass}" data-author="${b._author||'oskar'}" style="--block-color:#60a5fa;--block-bg:rgba(96,165,250,.06)" onclick="openDetail('${b.id}')">
         <div class="block-stripe" style="background:#60a5fa"></div>
         <div class="block-body">
           <div class="block-meta">
@@ -6326,7 +6626,7 @@ function blockHTML(b, i, featured = false) {
     }
 
     if (b.type === 'idea') {
-      return `<div class="block${featuredClass}" style="--block-color:#f59e0b;--block-bg:rgba(245,158,11,.06)" onclick="openDetail('${b.id}')">
+      return `<div class="block${featuredClass}" data-author="${b._author||'oskar'}" style="--block-color:#f59e0b;--block-bg:rgba(245,158,11,.06)" onclick="openDetail('${b.id}')">
         <div class="block-stripe" style="background:#f59e0b"></div>
         <div class="block-body">
           <div class="block-meta">
@@ -6341,7 +6641,7 @@ function blockHTML(b, i, featured = false) {
       </div>`;
     }
 
-    return `<div class="block ${b.big?'block-lg':''}${featuredClass}" style="${style}" onclick="openDetail('${b.id}')">
+    return `<div class="block ${b.big?'block-lg':''}${featuredClass}" data-author="${b._author||'oskar'}" style="${style}" onclick="openDetail('${b.id}')">
       <div class="block-stripe"></div>
       ${b.thumb
         ? `<img class="block-thumb" src="${b.thumb}" alt="${b.title||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
@@ -6589,7 +6889,7 @@ function setTlZoom(z) {
 // ═══════════════════════════════════
 // RENDER FEED
 // ═══════════════════════════════════
-function mergedBlocks() {
+function mergedBlocksRaw() {
   // liveBlocks (from MCP) take precedence — deduplicate by id
   const seen = new Set();
   const merged = [];
@@ -6597,6 +6897,17 @@ function mergedBlocks() {
     if (!seen.has(b.id)) { seen.add(b.id); merged.push(b); }
   }
   return merged;
+}
+
+function mergedBlocks() {
+  const all = mergedBlocksRaw();
+  // Solo mode: your view of all your work (filter colleague's blocks out)
+  if (typeof authorMode !== 'undefined' && authorMode === 'solo') {
+    return all.filter(b => !b._author || b._author === CURRENT_AUTHOR);
+  }
+  // Collab mode: ONLY blocks from collab projects (both authors).
+  // This previews exactly what your colleague sees via the shared vault.
+  return all.filter(b => COLLAB_PROJECTS.includes(b.project));
 }
 
 // ═══════════════════════════════════
@@ -7955,9 +8266,35 @@ function renderCanvasView() {
     const liveCount    = projBlocks.filter(b => b._live).length;
     const autoCount    = AUTOMATIONS.filter(a => a.project === name && a.enabled).length;
 
+    // Latest block — sort with _logged secondary for intraday precision
     const latestBlock  = projBlocks
       .filter(b => b.type !== 'idea')
-      .sort((a, b) => (b.ts||0) - (a.ts||0))[0];
+      .sort((a, b) => {
+        const td = (b.ts||0) - (a.ts||0);
+        if (td !== 0) return td;
+        return (new Date(b._logged||0)) - (new Date(a._logged||0));
+      })[0];
+
+    // Author breakdown for collab indicator
+    const _oskCount  = projBlocks.filter(b => !b._author || b._author === 'oskar').length;
+    const _collCount = projBlocks.filter(b => b._author === 'colleague').length;
+    // Only show the collab indicator when meaningful — either both authors, or
+    // colleague-only contribution. Solo-oskar (the default state) renders nothing.
+    const _authorDots = (() => {
+      if (_collCount === 0) return ''; // solo oskar — nothing to indicate
+      if (_oskCount > 0 && _collCount > 0) {
+        return `<div class="canvas-card-authors canvas-card-authors-collab">
+          <span class="ccd ccd-o" title="Oskar (${_oskCount})"></span>
+          <span class="ccd ccd-c" title="Colleague (${_collCount})"></span>
+          <span class="canvas-card-authors-label">collab</span>
+        </div>`;
+      }
+      // colleague only
+      return `<div class="canvas-card-authors">
+        <span class="ccd ccd-c" title="Colleague (${_collCount})"></span>
+        <span class="canvas-card-authors-label">colleague</span>
+      </div>`;
+    })();
 
     const isLive = m.deploy && m.deploy.toLowerCase().includes('live');
     const deployLabel = isLive ? '🟢 Live' : '⚫ Not deployed';
@@ -7975,7 +8312,7 @@ function renderCanvasView() {
           </div>
           <div class="${deployClass}">${deployLabel}</div>
         </div>
-
+        ${_authorDots}
         <div class="canvas-card-stats">
           <div class="canvas-stat">
             <span class="canvas-stat-v">${blockCount}</span>
@@ -8033,6 +8370,8 @@ function renderTodayDigest(todayBlocks, allBaseBlocks) {
 
   // Gather all today's decisions from both block arrays and session block arrays
   const _recency = (a,b) => { const td=(b.ts||0)-(a.ts||0); return td!==0?td:(new Date(b._logged||0))-(new Date(a._logged||0)); };
+  // Sort once up front so decisions extracted from todayBlocks come out newest-first too
+  todayBlocks = [...todayBlocks].sort(_recency);
   const sessions   = todayBlocks.filter(b => b.type === 'session').sort(_recency);
   const ideas      = todayBlocks.filter(b => b.type === 'idea').sort(_recency);
   const decisions  = []; // flat list: { text, blockId, blockTitle, project }
@@ -13727,7 +14066,7 @@ function setSyncIndicator(state) {
   }
 }
 
-const SB_MCP = 'http://127.0.0.1:3847'; // declared here so pollData() can reference it at call time
+const SB_MCP = 'http://127.0.0.1:3849'; // serve.js — merged sessions + blocks
 const IS_DEMO = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') && window.location.hostname !== '';
 // Hide push button and MCP-only controls on GitHub Pages / demo mode
 if (IS_DEMO) {
