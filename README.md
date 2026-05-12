@@ -2,7 +2,7 @@
 
 > Your AI work, finally visible.
 
-Storyboard is a visual memory layer for AI work. Every session, decision, and idea you build with AI gets captured, connected, and stored — then injected back into any new chat as instant full context.
+Storyboard is a visual memory layer for AI work. Every session, decision, and idea you build with AI gets captured, connected, and stored — then injected back into any new chat as full context.
 
 **No more re-explaining. No more lost decisions. No more amnesia.**
 
