@@ -3845,5 +3845,60 @@
     "_source": "session-sync",
     "_session_id": "local_191e6685-0074-408b-a730-1497b9f4ad17",
     "_logged": "2026-05-14T08:36:58.473275"
+  },
+  {
+    "id": "sync-newbuild-blog-pipeline-ed816432",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog pipeline ran: 3 new articles pushed to Airtable Content Ideas",
+    "summary": "The automated newbuild blog pipeline ran and identified 3 new blog articles to create (a 4th was already in Content Ideas and skipped). The session was still in progress creating Airtable records for the new articles when captured.",
+    "decisions": [
+      "Skip duplicate articles already present in Content Ideas",
+      "Push 3 net-new articles to Airtable for review"
+    ],
+    "ideas": [
+      "Add deduplication check at start of each pipeline run"
+    ],
+    "chips": [
+      "blog",
+      "airtable",
+      "pipeline",
+      "new-build-homes",
+      "automated"
+    ],
+    "date": "14 May",
+    "ts": 20260514,
+    "_source": "session-sync",
+    "_session_id": "local_ed816432-23b2-405e-a5a0-07559d896ac4",
+    "_logged": "2026-05-14T09:21:17.814233"
+  },
+  {
+    "id": "sync-daily-outreach-drafts-6a30ea39",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "Daily outreach: 10 personalized Gmail drafts created for Swedish clients",
+    "summary": "The daily client outreach automation pulled 10 Swedish-language clients from the Airtable CRM and was in the process of creating personalized Gmail draft emails for each. The session had 16 assistant turns and was actively firing parallel Gmail draft creation calls.",
+    "decisions": [
+      "Prioritize Swedish-language clients for this batch",
+      "Create all 10 drafts in parallel"
+    ],
+    "ideas": [
+      "Tag clients in Airtable after drafts confirmed to avoid re-queuing"
+    ],
+    "chips": [
+      "outreach",
+      "gmail",
+      "crm",
+      "swedish",
+      "airtable",
+      "automated"
+    ],
+    "date": "14 May",
+    "ts": 20260514,
+    "_source": "session-sync",
+    "_session_id": "local_6a30ea39-e858-4902-8406-d536595d6feb",
+    "_logged": "2026-05-14T09:21:17.814233"
   }
 ]
