@@ -741,3 +741,68 @@
 2026-05-14T09:21:17 - Git push failed: stale .git/index.lock from another sync session (created 08:51). session-log.json updated locally.
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-14 11:37] sync-run: Git push blocked — multiple stale lock files (index.lock, HEAD.lock, refs/heads/main.lock, refs/remotes/origin/main.lock). Local carry-forward briefs written successfully. Local commit 595f1a8 is 1 ahead of origin. Lock files need manual cleanup.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+2026-05-14T12:06:20 [storyboard-session-sync] Git push blocked by stale index.lock (from 08:51). Carry-forward briefs written locally. No new sessions logged (all 7 new sessions had <3 messages / timed out).
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+2026-05-14T12:52:41 [storyboard-session-sync] 0 new sessions (7 candidates all had <3 msgs / API timeouts). Git push: up-to-date (stale index.lock present). Updated 2 carry-forward briefs (ed816432, 6a30ea39).
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+2026-05-14T13:37:48 — Git push failed: index.lock held by concurrent sync session. Carry-forward briefs written locally for 3 sessions.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+Auto-sync 2026-05-14T15:07:47 — 0 new sessions synced, 0 new carry-forward briefs written (2 running sessions updated)
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-14T20:07:05] Sync run: 0 new sessions logged (4 new sessions had <3 messages — all timed out), 70+ sync sessions skipped, 2 running briefs updated (local_6a30ea39, local_ed816432)
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-14T20:22:05] Sync run: 0 new sessions logged (4 new sessions had <3 messages — all timed out: weekly-backlink-agent, hh-crm-outreach x2, daily-client-outreach-drafts), 70+ sync sessions skipped, 2 running briefs refreshed (local_6a30ea39, local_ed816432). Git push FAILED: stale index.lock file in storyboard repo — local files updated successfully.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-14T22:06:49] Sync: 0 new sessions logged, 2 running briefs updated (local_ed816432, local_6a30ea39). Git push blocked by index.lock from concurrent sync session — files written to disk.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+2026-05-14T22:38:24Z storyboard-session-sync: 0 new sessions (all 15 non-sync sessions already logged). Updated carry-forward brief for local_ed816432 (Newbuild blog pipeline, 37 turns, running). Git push FAILED: index.lock held by another process.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
