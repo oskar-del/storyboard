@@ -884,3 +884,215 @@ Sat May 16 09:38:02 UTC 2026: Auto-sync completed — 0 new sessions (all non-sy
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
 [2026-05-16T11:37:06Z] Sync run: 0 new sessions, 3 briefs refreshed (all idle). Remote already at 9ef7544. index.lock blocked new commit — stale lock from 07:11 run.
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-16 18:35:59] Auto-sync triggered
+[2026-05-16 18:35:59] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 18:36:00] Push complete
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-16 18:43:32] Auto-sync triggered
+[2026-05-16 18:43:32] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 18:43:33] Push complete
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-16 19:54:33] Auto-sync triggered
+[2026-05-16 19:54:33] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 19:54:34] Push complete
+[2026-05-16 19:56:30] Auto-sync triggered
+[2026-05-16 19:56:30] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 19:56:30] Push complete
+[2026-05-16 20:02:18] Auto-sync triggered
+[2026-05-16 20:02:18] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:02:18] Push complete
+[2026-05-16 20:09:34] Auto-sync triggered
+[2026-05-16 20:09:34] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:09:35] Push complete
+[2026-05-16 20:17:18] Auto-sync triggered
+[2026-05-16 20:17:19] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:17:19] Push complete
+[2026-05-16 20:24:35] Auto-sync triggered
+[2026-05-16 20:24:35] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:24:35] Push complete
+[2026-05-16 20:32:19] Auto-sync triggered
+[2026-05-16 20:32:19] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:32:20] Push complete
+[2026-05-16 20:39:36] Auto-sync triggered
+[2026-05-16 20:39:36] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:39:36] Push complete
+[2026-05-16 20:47:20] Auto-sync triggered
+[2026-05-16 20:47:20] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:47:21] Push complete
+[2026-05-16 20:54:36] Auto-sync triggered
+[2026-05-16 20:54:36] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 20:54:37] Push complete
+[2026-05-16 21:02:21] Auto-sync triggered
+[2026-05-16 21:02:21] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 21:02:22] Push complete
+[2026-05-16 21:09:37] Auto-sync triggered
+[2026-05-16 21:09:37] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 21:09:38] Push complete
+[2026-05-16 21:17:22] Auto-sync triggered
+[2026-05-16 21:17:22] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 21:17:23] Push complete
+[2026-05-16 21:24:38] Auto-sync triggered
+[2026-05-16 21:24:38] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 21:24:39] Push complete
+[2026-05-16 21:32:23] Auto-sync triggered
+[2026-05-16 21:32:23] Changes detected — pushing...
+error: update_ref failed for ref 'refs/remotes/origin/main': cannot lock ref 'refs/remotes/origin/main': Unable to create '/Users/oskarpeterson/Documents/AI/AGENCY /storyboard/.git/refs/remotes/origin/main.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+Everything up-to-date
+[2026-05-16 21:32:24] Push complete
