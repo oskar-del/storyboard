@@ -838,3 +838,49 @@ Auto-sync 2026-05-14T15:07:47 — 0 new sessions synced, 0 new carry-forward bri
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
 /bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+2026-05-15T21:06:11 — Synced 0 new sessions (skipped 72 sync-task sessions, 4 automated-task-failure sessions with <3 msgs). All 7 non-sync sessions in window already logged.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+2026-05-16T07:06:38 — Pushed via /tmp/storyboard-clone (bypassed stale lock files: index.lock, HEAD.lock, refs/remotes/origin/main.lock, objects/maintenance.lock from 2026-05-15 18:36)
+
+[2026-05-16T07:10:27] Sync run: 0 new sessions (all non-sync sessions already logged). Briefed 1 running session (Brain/H&H brand migration). Git push SKIPPED — concurrent lock from Brain session doing git ops in same repo.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+Sat May 16 09:38:02 UTC 2026: Auto-sync completed — 0 new sessions (all non-sync sessions already in log), 1 carry-forward brief updated (local_b6dd1f84 Brain session), pushed via GitHub API due to stale git lock files
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
+[2026-05-16T11:37:06Z] Sync run: 0 new sessions, 3 briefs refreshed (all idle). Remote already at 9ef7544. index.lock blocked new commit — stale lock from 07:11 run.
+/bin/bash: /Users/oskarpeterson/Documents/AI/AGENCY /storyboard/auto-sync.sh: Operation not permitted
