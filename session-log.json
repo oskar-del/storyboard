@@ -4275,5 +4275,35 @@
     "_source": "session-sync",
     "_session_id": "local_816af0d2-0d12-48df-bff4-1440a2e5c931",
     "_logged": "2026-05-16T20:05:21.117766"
+  },
+  {
+    "id": "log-storyboard-95ecee60",
+    "type": "decision",
+    "project": "Storyboard",
+    "task": "chatgpt-integration",
+    "title": "ChatGPT \u2192 Storyboard MVP shipped via Dropbox inbox",
+    "summary": "End-to-end flow live. sStoryboard Custom GPT in ChatGPT generates structured JSON blocks at end of each session. JSON saved as a file in ~/Dropbox/Storyboard-Vault/inbox/. serve.js extended to merge inbox files into /blocks endpoint. Dashboard renders ChatGPT-sourced blocks alongside Claude/Cowork blocks. Dropbox connector for ChatGPT is read-only (confirmed via test), so write path is via clipboard \u2192 Terminal pbpaste to inbox. Net: two AI clients (Claude, ChatGPT), one shared Storyboard.",
+    "decisions": [
+      "ChatGPT writes via inbox pattern (Dropbox connector is read-only)",
+      "Each session = one JSON file in inbox/",
+      "serve.js merges inbox/ as another vault source",
+      "Custom GPT system prompt teaches block schema + suggests save path"
+    ],
+    "ideas": [
+      "Clipboard watcher / Shortcut to auto-save inbox JSON",
+      "Bulk ingest historical ChatGPT conversations via export ZIP",
+      "ChatGPT reads prior blocks for context (read access already works)"
+    ],
+    "chips": [
+      "Storyboard",
+      "chatgpt",
+      "mvp",
+      "inbox",
+      "collab"
+    ],
+    "date": "16 May",
+    "ts": 20260516,
+    "_source": "session-log",
+    "_logged": "2026-05-16T21:33:40.843038"
   }
 ]
