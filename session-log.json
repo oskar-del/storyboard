@@ -4305,5 +4305,33 @@
     "ts": 20260516,
     "_source": "session-log",
     "_logged": "2026-05-16T21:33:40.843038"
+  },
+  {
+    "id": "sync-hh-legacy-migration-ff97442d",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "ai-content-deployment-fix",
+    "title": "Fixed AI property descriptions & FAQs not rendering on H&H site (Netlify ISR bundle path bug)",
+    "summary": "Debugged and fixed a silent failure where AI-generated property descriptions and FAQs were not rendering on hanssonhertzell.se. The root cause was that property-content.json lived in data/ at the project root, which Netlify's output file tracing (@vercel/nft) doesn't reliably bundle into serverless functions. Moving the file to src/data/ fixed the issue. All 9 live CRM properties now correctly show AI descriptions and FAQs, verified in production.",
+    "decisions": [
+      "Moved property-content.json from data/ to src/data/ so Netlify's nft traces it into the ISR bundle",
+      "Updated the import path across affected files to point to the new src/data/ location"
+    ],
+    "ideas": [
+      "Consider adding a startup check that validates property-content.json is accessible at runtime to catch similar bundle path issues early"
+    ],
+    "chips": [
+      "bug-fix",
+      "netlify",
+      "ISR",
+      "AI-content",
+      "FAQ",
+      "deployment"
+    ],
+    "date": "16 May",
+    "ts": 20260516,
+    "_source": "session-sync",
+    "_session_id": "local_15623c9a-947f-4b17-a823-aa189940f553",
+    "_logged": "2026-05-16T23:05:14.573911"
   }
 ]
