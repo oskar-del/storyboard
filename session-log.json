@@ -4122,5 +4122,105 @@
     "_source": "session-sync",
     "_session_id": "local_f32c38fe-95af-4295-a79d-5daa78c2add2",
     "_logged": "2026-05-14T20:50:41.052637"
+  },
+  {
+    "id": "sync-daily-outreach-f76f6756",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "Daily client outreach drafts \u2014 API connection failure",
+    "summary": "Automated task attempted to pull 10 uncontacted clients from Airtable CRM and create personalized Gmail drafts. Failed immediately with FailedToOpenSocket API error \u2014 no drafts were created and no Airtable tags were applied.",
+    "decisions": [
+      "Task skipped due to API unavailability",
+      "Clients remain untagged in Airtable for next run"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "gmail",
+      "airtable",
+      "outreach",
+      "failed"
+    ],
+    "date": "16 May",
+    "ts": 20260516,
+    "_source": "session-sync",
+    "_session_id": "local_dd6edaf2-48f4-4343-aad4-4b653f131c48",
+    "_logged": "2026-05-16T01:47:09.863953"
+  },
+  {
+    "id": "sync-weekly-collab-email-2f58ce7e",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "weekly-collaborator-email",
+    "title": "Weekly collaborator email \u2014 API connection failure",
+    "summary": "Automated task to parse Background Properties XML feed, build branded H&H HTML email, and send to ~300 collaborating agents via MailerLite. Failed immediately with ConnectionRefused API error \u2014 no email was sent this week.",
+    "decisions": [
+      "Task skipped due to API unavailability",
+      "No collaborator email sent this cycle"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "mailerlite",
+      "email",
+      "collaborators",
+      "failed"
+    ],
+    "date": "16 May",
+    "ts": 20260516,
+    "_source": "session-sync",
+    "_session_id": "local_f14082e6-5814-4ed6-9697-0287b2cf06c2",
+    "_logged": "2026-05-16T01:47:09.863953"
+  },
+  {
+    "id": "sync-newbuild-social-222ab8b0",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Newbuild social pipeline \u2014 API connection failure",
+    "summary": "Automated social media pipeline for New Build Homes Costa Blanca covering content selection from Airtable, Remotion rendering, and Postiz scheduling. Failed immediately with ConnectionRefused API error \u2014 no content was rendered or scheduled.",
+    "decisions": [
+      "Task skipped due to API unavailability",
+      "Content rotation state unchanged"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "social-media",
+      "remotion",
+      "postiz",
+      "failed"
+    ],
+    "date": "16 May",
+    "ts": 20260516,
+    "_source": "session-sync",
+    "_session_id": "local_a8f80872-be92-4290-8226-bc3b1973786f",
+    "_logged": "2026-05-16T01:47:09.863953"
+  },
+  {
+    "id": "sync-newbuild-blog-e7741e4b",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Newbuild blog pipeline \u2014 API connection failure",
+    "summary": "Daily blog pipeline covering content scouting from Google News and writing approved articles for newbuildhomescostablanca.com. Failed immediately with FailedToOpenSocket API error \u2014 no content was scouted or written.",
+    "decisions": [
+      "Task skipped due to API unavailability",
+      "Content Ideas table unchanged, approved articles remain unwritten"
+    ],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "blog",
+      "seo",
+      "content-scout",
+      "failed"
+    ],
+    "date": "16 May",
+    "ts": 20260516,
+    "_source": "session-sync",
+    "_session_id": "local_9093c6e6-aa48-4eeb-b3d2-a3dc5f6da16f",
+    "_logged": "2026-05-16T01:47:09.863953"
   }
 ]
