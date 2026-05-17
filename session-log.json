@@ -4333,5 +4333,33 @@
     "_source": "session-sync",
     "_session_id": "local_15623c9a-947f-4b17-a823-aa189940f553",
     "_logged": "2026-05-16T23:05:14.573911"
+  },
+  {
+    "id": "sync-hh-ai-content-fix-9d6a3255",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "ai-content-deploy-fix",
+    "title": "Fixed AI descriptions & FAQs not rendering on H&H property pages (Netlify bundle issue)",
+    "summary": "Debugged why AI-generated property descriptions and FAQs were silently falling back to raw feed content on hanssonhertzell.se. Root cause: property-content.json was in the project root's data/ directory, which Netlify's @vercel/nft file tracer does not reliably bundle into serverless functions at ISR runtime. Fixed by copying the file to src/data/ and updating the import path. All 9 live CRM properties now show correct AI descriptions and FAQs.",
+    "decisions": [
+      "Move JSON content files to src/ directory for reliable Netlify serverless bundle tracing",
+      "Verified fix on all 9 live CRM properties including the Moraira \u20ac4.5M villa (HH-JC-RS-IB)"
+    ],
+    "ideas": [
+      "Consider adding a runtime check that throws clearly if content file is missing rather than silently returning undefined"
+    ],
+    "chips": [
+      "H&H",
+      "Netlify",
+      "ISR",
+      "AI-content",
+      "bug-fix",
+      "serverless"
+    ],
+    "date": "17 May",
+    "ts": 20260517,
+    "_source": "session-sync",
+    "_session_id": "local_15623c9a-947f-4b17-a823-aa189940f553",
+    "_logged": "2026-05-17T07:21:33.658317"
   }
 ]
