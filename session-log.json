@@ -4469,5 +4469,137 @@
     "_source": "session-sync",
     "_session_id": "local_cc2ff860-78a3-4da8-89ca-941e25e4acc7",
     "_logged": "2026-05-17T13:50:05.234567"
+  },
+  {
+    "id": "sync-hh-fb-group-posting-84b1629c",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group evening post automation blocked by Chrome permission (Run 50)",
+    "summary": "Automated nightly Facebook group posting task (22:00) hit the same Chrome extension permission block for the ~30th consecutive run. The Claude in Chrome extension is denied access to facebook.com when the screen is locked/unattended. Run 50 logged and blocked as usual.",
+    "decisions": [
+      "Recommended fix: change Claude in Chrome site access from 'On click' to 'On all sites'",
+      "Recommended fix: run 'caffeinate -d' in Terminal before leaving Mac to keep screen awake"
+    ],
+    "ideas": [
+      "Keep screen awake with caffeinate to allow unattended Chrome automation"
+    ],
+    "chips": [
+      "automation",
+      "facebook",
+      "H&H",
+      "blocked",
+      "chrome-permissions"
+    ],
+    "date": "17 May",
+    "ts": 20260517,
+    "_source": "session-sync",
+    "_session_id": "local_b913d2b1-fb39-4168-9e6f-6171fe564506",
+    "_logged": "2026-05-17T15:35:10.215771"
+  },
+  {
+    "id": "sync-storyboard-collab-view-ee1ec7a1",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "collab-timeline-view",
+    "title": "Fixed Collab Timeline CSS column-count bug, shipped 2-column per-day layout",
+    "summary": "Debugged a CSS column-count:3 issue on the #feed element that was causing the Collab Timeline view to render newspaper-style instead of a proper 2-column per-day layout. Fixed with a one-line CSS change. The final view shows color-coded cards per participant (dark blue = user on Claude, lighter blue = user on ChatGPT, orange = colleague) with day-separator headers and empty-day placeholders.",
+    "decisions": [
+      "Two-column layout per day with user on left, colleague on right",
+      "Color-coding by tool: dark blue=Claude, lighter blue=ChatGPT, orange=colleague"
+    ],
+    "ideas": [
+      "Collab view is now readable \u2014 next step could be adding click-to-expand cards"
+    ],
+    "chips": [
+      "storyboard",
+      "css-fix",
+      "collab-view",
+      "timeline"
+    ],
+    "date": "17 May",
+    "ts": 20260517,
+    "_source": "session-sync",
+    "_session_id": "local_56cc43df-4add-4723-b185-1a7dd87738e9",
+    "_logged": "2026-05-17T17:20:11.576962"
+  },
+  {
+    "id": "sync-hh-logo-removal-video-e681520d",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "collaborator-video-logo-removal",
+    "title": "Rendered clean collaborator vertical video with logo stripped from frames",
+    "summary": "The H&H ICONIC collaborator vertical video had the company logo baked into rendered frames. Temporarily removed the logo from the Remotion component, re-rendered 30 seconds at 1080\u00d71920, then restored the logo for normal use. Delivered a clean unbranded collaborator cut.",
+    "decisions": [
+      "Temporarily remove logo from component to re-render rather than trying to overlay/mask frames",
+      "30-second clip at 1080x1920 for vertical social use"
+    ],
+    "ideas": [],
+    "chips": [
+      "hansson-hertzell",
+      "remotion",
+      "video",
+      "branding",
+      "collaborator"
+    ],
+    "date": "17 May",
+    "ts": 20260517,
+    "_source": "session-sync",
+    "_session_id": "local_b6dd1f84-710b-4045-b1f0-a3a27ef1577a",
+    "_logged": "2026-05-17T17:20:11.576962"
+  },
+  {
+    "id": "sync-hh-netlify-ai-content-fix-11390f63",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "netlify-ai-content-deployment-fix",
+    "title": "Fixed Netlify ISR bug: moved property-content.json to src/data/ so AI descriptions and FAQs load in production",
+    "summary": "AI property descriptions and FAQs were silently failing at ISR runtime on Netlify because property-content.json lived in data/ at the project root \u2014 outside the src/ directory that Netlify's output file tracing (@vercel/nft) reliably bundles. Moved the file to src/data/ and updated the import path. All 9 live CRM properties now show AI descriptions and FAQs including the Moraira \u20ac4.5M villa that was the original problem case.",
+    "decisions": [
+      "Move property-content.json to src/data/ so Netlify's @vercel/nft traces it into the serverless bundle",
+      "Files outside src/ are not reliably included in Netlify ISR function bundles"
+    ],
+    "ideas": [
+      "Document this src/ bundling constraint in CLAUDE.md to avoid regression"
+    ],
+    "chips": [
+      "hansson-hertzell",
+      "netlify",
+      "isr",
+      "ai-content",
+      "bug-fix",
+      "deployment"
+    ],
+    "date": "17 May",
+    "ts": 20260517,
+    "_source": "session-sync",
+    "_session_id": "local_15623c9a-947f-4b17-a823-aa189940f553",
+    "_logged": "2026-05-17T17:20:11.576962"
+  },
+  {
+    "id": "sync-hh-fb-group-49c6bee1",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H Facebook group evening posting via Claude in Chrome",
+    "summary": "Attempted to post to the H&H Facebook group using Claude in Chrome browser automation. The session involved navigating to Facebook and encountered a Chrome extension permissions issue requiring user to click 'Allow' on the Claude in Chrome tab. Session was a continuation of a previous workflow.",
+    "decisions": [
+      "Used Claude in Chrome MCP for Facebook posting automation",
+      "Required user action to grant Chrome extension permissions on Facebook tab"
+    ],
+    "ideas": [
+      "Pre-grant Claude in Chrome permissions on Facebook before starting automation"
+    ],
+    "chips": [
+      "facebook",
+      "social-media",
+      "chrome-automation",
+      "H&H"
+    ],
+    "date": "17 May",
+    "ts": 20260517,
+    "_source": "session-sync",
+    "_session_id": "local_b913d2b1-fb39-4168-9e6f-6171fe564506",
+    "_logged": "2026-05-17T18:35:04.945523"
   }
 ]
