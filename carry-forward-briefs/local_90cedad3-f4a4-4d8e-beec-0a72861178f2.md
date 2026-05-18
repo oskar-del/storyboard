@@ -1,21 +1,17 @@
 # Carry-Forward Brief: Daily client outreach drafts
-**Session ID:** local_90cedad3-f4a4-4d8e-beec-0a72861178f2  
-**Status:** Running (21 assistant turns)  
-**Generated:** 2026-05-18T11:50:59
+**Session:** local_90cedad3-f4a4-4d8e-beec-0a72861178f2  
+**Status:** Running  
+**Briefed:** 2026-05-18T15:50:38.381841
 
 ## What's happening
-Automated daily outreach session pulling client records from Airtable CRM and creating Gmail draft emails for H&H client follow-ups. The session is actively calling `create_draft` in batches — 4+ drafts being created in parallel in the most recent turns.
+Automated daily outreach — pulling client data from Airtable CRM and creating personalised Gmail draft emails for each lead.
 
-## Current state
-- Reading client records from Airtable
-- Creating personalized Gmail drafts for each client
-- Batch-creating multiple drafts simultaneously
+## Last known state
+- Fetched client records from Airtable CRM table
+- Currently batch-creating Gmail drafts via the Gmail MCP (create_draft calls in progress)
+- At least 5 drafts created so far in this batch
 
-## Next expected steps
-- Complete remaining draft creation
-- Mark tasks completed
-- Report total drafts created
-
-## Key context
-- This is an automated scheduled task for Hansson & Hertzell CRM outreach
-- Drafts are created in Gmail (not sent) for Oskar to review before sending
+## Next steps when resuming
+- Confirm all drafts were created successfully
+- Check if any clients were skipped (errors, missing email addresses)
+- Log completion status back to Airtable if that's part of the workflow
