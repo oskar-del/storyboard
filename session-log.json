@@ -5229,5 +5229,63 @@
     "_source": "session-sync",
     "_session_id": "local_ef4c1170-16df-4ac2-9316-630bebf9f9ed",
     "_logged": "2026-05-19T12:20:37.689586"
+  },
+  {
+    "id": "sync-hh-social-pipeline-f1fda254",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H Social Pipeline audit — no post today, 4 captions drafted for May 20–24",
+    "summary": "The automated H&H social pipeline ran on May 19 and found no new Facebook page post (last post was a Gran Alacant apartment from ~May 17). Per the B4 rules, no group distribution was triggered. The pipeline scanned 1,213 active Airtable listings, shortlisted luxury villas in Marbella and Ibiza plus mid-range picks, and drafted 4 social captions ready for May 20–24 posts.",
+    "decisions": [
+      "No group distribution triggered when no new Facebook page post exists (B4 rule)",
+      "Captions drafted proactively even without a live post to share"
+    ],
+    "ideas": [
+      "Connect H&H Facebook/Instagram accounts to Postiz",
+      "Adapt Remotion card templates to H&H Navy/Gold/Cream branding",
+      "Configure nightly Facebook group posting Chrome automation",
+      "Add Social Posts table to H&H Airtable CRM"
+    ],
+    "chips": [
+      "social-media",
+      "h&h",
+      "airtable",
+      "automation",
+      "content-planning"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_ef4c1170-16df-4ac2-9316-630bebf9f9ed",
+    "_logged": "2026-05-19T13:36:10.421500"
+  },
+  {
+    "id": "sync-hh-fb-evening-c9e71827",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "Fixed Facebook group post button selector with 6 fallback strategies",
+    "summary": "Debugged H&H Facebook group posting script that was failing with \"Post button not found\" errors. Identified that the anchored regex /^post$/i was too strict for Facebook's varying button labels. Added 6 fallback selectors plus Ctrl+Enter keyboard shortcut as last resort. Script was successfully posting to joined groups (Property in Spain for sale, Spanish Homes In The Sun, Property for sale in Spain) while correctly skipping groups H&H is not a member of.",
+    "decisions": [
+      "Replace anchored /^post$/i selector with 6 fallback selectors + Ctrl+Enter keyboard shortcut",
+      "Skip groups not in Facebook share dialog (H&H not a member) rather than treating as errors",
+      "Let running session finish with old code; fix applies to next run"
+    ],
+    "ideas": [
+      "Bump share dialog wait from 3s to 4-5s to reduce \"Share to a group not found in dropdown\" failures"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "browser",
+      "H&H",
+      "social-media"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-19T13:49:53.650903"
   }
 ]
