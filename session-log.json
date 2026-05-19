@@ -5287,5 +5287,59 @@
     "_source": "session-sync",
     "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
     "_logged": "2026-05-19T13:49:53.650903"
+  },
+  {
+    "id": "sync-hh-fb-evening-c9e71827",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "fb-group-posting-debug",
+    "title": "Fixed Facebook group post button selectors with fallback strategy",
+    "summary": "Debugged H&H Facebook group posting script failing on 'Post button not found' errors. Root cause was a strict /^post$/i regex that didn't match Facebook's button in all dialog variants. Fixed by adding 6 fallback selectors plus Ctrl+Enter keyboard shortcut as last resort. Script was confirmed to be successfully posting to groups H&H is a member of during live run.",
+    "decisions": [
+      "Replace single /^post$/i regex with 6 fallback selectors + Ctrl+Enter keyboard shortcut",
+      "Accept 'Group not found' failures for groups H&H hasn't yet joined — they're skipped intentionally"
+    ],
+    "ideas": [
+      "Bump wait before share-to-group dropdown check from 3s to 4-5s to reduce intermittent 'not found' failures"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "debug",
+      "social-media",
+      "h&h"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-19T15:37:41.837566"
+  },
+  {
+    "id": "sync-hh-fb-headless-fix-c234382b",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "Fixed headless mode bug in Facebook group poster MCP server",
+    "summary": "Diagnosed why Facebook group names weren't rendering properly (showing as 'Facebook' instead of group names) and the search input had width 0. Root cause was the MCP server running with headless:true. Fixed server.js to use headless:false, and also improved aria-label lookup for groups and search input detection. Session ended due to usage limit mid-fix.",
+    "decisions": [
+      "Switch fb-poster MCP server from headless:true to headless:false for proper group rendering",
+      "Fix needs server restart to take effect (in-memory config doesn't update from file changes)"
+    ],
+    "ideas": [
+      "Consider adding a server restart/reload endpoint to apply config changes without manual restart"
+    ],
+    "chips": [
+      "fb-poster",
+      "mcp-server",
+      "headless",
+      "debug",
+      "H&H"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-19T17:51:12.575105"
   }
 ]
