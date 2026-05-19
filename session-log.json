@@ -5341,5 +5341,31 @@
     "_source": "session-sync",
     "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
     "_logged": "2026-05-19T17:51:12.575105"
+  },
+  {
+    "id": "sync-hh-fb-evening-6529322e",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting-evening",
+    "title": "Fixed FB group post share flow — detect comment modal after share and submit teaser",
+    "summary": "Debugged the H&H Facebook group posting script where clicking a group row immediately shared the post and then opened a comment modal instead of a post dialog. Fixed by detecting this comment modal state, entering the teaser text into the comment box, and submitting it with Enter. Applied the same fix to the search-result code path.",
+    "decisions": [
+      "Detect post-share comment modal instead of expecting a post dialog",
+      "Submit teaser as a comment via Enter key after the auto-share"
+    ],
+    "ideas": [
+      "Could add retry logic if comment submission fails"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "bug-fix",
+      "fb-poster"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-19T20:50:56.048472"
   }
 ]
