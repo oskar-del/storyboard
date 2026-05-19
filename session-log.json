@@ -4931,5 +4931,61 @@
     "ts": 20260518,
     "_source": "session-log",
     "_logged": "2026-05-18T10:56:01.814301"
+  },
+  {
+    "id": "sync-hh-social-pipeline-ef4c1170",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H Social Pipeline: drafted 4 captions, identified Postiz/Airtable setup gaps",
+    "summary": "Automated H&H social pipeline run on May 19 checked for recent Facebook posts and found none from today, so no group distribution was triggered. Scanned 1,213 active listings and drafted 4 premium social captions for Facebook/Instagram covering May 20\u201324. Identified four remaining setup tasks: connecting H&H Facebook/Instagram to Postiz, creating a Social Posts table in H&H Airtable CRM, building H&H-branded Remotion templates, and configuring the nightly Facebook group posting automation.",
+    "decisions": [
+      "No Facebook group distribution triggered \u2014 no post from today on hanssonhertzell",
+      "4 premium property captions drafted (Marbella villas, Ibiza, Central sea-view apartment)",
+      "Full automation blocked until H&H Postiz channels and Airtable Social Posts table are set up"
+    ],
+    "ideas": [
+      "Connect H&H Facebook/Instagram to Postiz as dedicated channels separate from NBHCB",
+      "Add Social Posts table to H&H Airtable CRM to mirror the NBHCB content calendar"
+    ],
+    "chips": [
+      "social",
+      "automation",
+      "facebook",
+      "captions",
+      "postiz"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_ef4c1170-16df-4ac2-9316-630bebf9f9ed",
+    "_logged": "2026-05-19T07:21:11.573749"
+  },
+  {
+    "id": "sync-hh-fb-group-posting-f0df62d2",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "FB Group Posting Run 51 \u2014 Blocked by Chrome Permissions & Missing Playwright MCP",
+    "summary": "Run 51 of the automated H&H Facebook group posting task completed logging. The session was blocked by the same recurring issue as Runs 3\u201350: Playwright MCP not available and Chrome extension domain permissions denied for facebook.com when screen is locked. No groups were posted; last confirmed shared post remains from Run 19.",
+    "decisions": [
+      "Log run as blocked rather than skip \u2014 tracks recurring failure pattern",
+      "Identified resolution: run manually with caffeinate -d to prevent screen sleep"
+    ],
+    "ideas": [
+      "Run task manually while screen is unlocked with caffeinate -d active in Terminal"
+    ],
+    "chips": [
+      "H&H",
+      "facebook",
+      "automation",
+      "blocked",
+      "playwright"
+    ],
+    "date": "19 May",
+    "ts": 20260519,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-19T07:35:19.941733"
   }
 ]
