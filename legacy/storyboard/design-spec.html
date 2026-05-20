@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storyboard — Toggle View Spec v5 (Stories + Boards)</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#0d1117; color:#e8eaf6; min-height:100vh; }
+
+:root {
+  --proj:#6c63ff; --r:12px;
+  --border:rgba(255,255,255,.08);
+  --white:#161b27; --bg:#0d1117;
+  --text:#e8eaf6; --text-2:#94a3b8; --text-3:#475569;
+  --shadow:0 1px 4px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.2);
+}
+
+/* ── Nav ── */
+.spec-nav {
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;
+  background:#161b27;border-bottom:1.5px solid var(--border);
+  padding:0 28px;
+}
+.spec-logo { font-weight:900;font-size:16px;color:#6c63ff;padding:13px 18px 13px 0;border-right:1px solid var(--border);margin-right:18px; }
+.spec-tab {
+  display:flex;align-items:center;gap:6px;
+  padding:13px 16px;font-size:12.5px;font-weight:700;
+  color:#475569;cursor:pointer;border-bottom:2.5px solid transparent;
+  transition:color .15s,border-color .15s;white-space:nowrap;
+}
+.spec-tab:hover { color:#94a3b8; }
+.spec-tab.active { color:#e8eaf6;border-bottom-color:#6c63ff; }
+.spec-tab-num { font-size:9px;font-weight:900;padding:2px 5px;border-radius:7px;background:rgba(108,99,255,.15);color:#6c63ff; }
+.spec-right { margin-left:auto;font-size:10px;font-weight:700;letter-spacing:.5px;color:#475569;text-transform:uppercase; }
+
+/* ── Frame ── */
+.frame { display:none;padding:28px 36px 80px;max-width:1200px;margin:0 auto; }
+.frame.active { display:block; }
+.frame-eyebrow { font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#6c63ff;margin-bottom:4px; }
+.frame-desc { font-size:13px;color:#475569;margin-bottom:24px;line-height:1.7;max-width:640px; }
+
+/* ═══════ SHARED: Overview strip ═══════ */
+.ov-strip { display:grid;grid-template-columns:1fr 170px 1fr 1fr;gap:10px;margin-bottom:10px; }
+.ov-card { background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow); }
+.ov-eyebrow { font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--proj);margin-bottom:5px; }
+
+/* Left card — clear labels instead of mystery "56" */
+.ov-stats-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px; }
+.ov-stat { display:flex;flex-direction:column;align-items:flex-start;gap:1px; }
+.ov-stat-v { font-size:22px;font-weight:900;letter-spacing:-.8px;line-height:1; }
+.ov-stat-l { font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3); }
+
+/* Velocity small card */
+.vel-card { background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02));border:1.5px solid rgba(34,197,94,.18);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow); }
+.vel-num { font-size:28px;font-weight:900;color:#22c55e;letter-spacing:-1px;line-height:1;margin-bottom:2px; }
+.vel-label { font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:rgba(34,197,94,.55); }
+.vel-sub { font-size:10px;color:var(--text-3);margin-top:3px; }
+
+.sprint-dots { display:flex;gap:4px;margin:8px 0 5px; }
+.dot { width:8px;height:8px;border-radius:50%; }
+.dot.on { background:var(--proj); }
+.dot.off { background:var(--border); }
+
+.sess-row { display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border); }
+.sess-row:last-child { border-bottom:none; }
+.sess-dot { width:5px;height:5px;border-radius:50%;background:var(--proj);flex-shrink:0; }
+.sess-title { font-size:11px;color:var(--text-2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.sess-date { font-size:10px;color:var(--text-3); }
+
+/* ═══════ SHARED: Ticker ═══════ */
+.ticker { background:linear-gradient(105deg,rgba(108,99,255,.09) 0%,rgba(108,99,255,.03) 60%,transparent 100%);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow); }
+.ticker-tape { height:6px;display:flex;width:100%; }
+.ticker-body { display:flex;align-items:center;padding:8px 16px;gap:0;min-height:48px; }
+.t-live { display:flex;flex-direction:column;align-items:center;gap:3px;padding-right:12px;border-right:1px solid rgba(255,255,255,.08);flex-shrink:0; }
+.t-dot { width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 1.8s ease-in-out infinite; }
+.t-live-l { font-size:7px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#22c55e; }
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.6);}50%{opacity:.5;box-shadow:0 0 0 5px rgba(34,197,94,0);} }
+.t-metrics { display:flex;gap:0; }
+.t-metric { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 11px;border-right:1px solid rgba(255,255,255,.07);gap:1px; }
+.t-metric-v { font-size:16px;font-weight:900;line-height:1;letter-spacing:-.5px; }
+.t-metric-l { font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3); }
+.t-chips { display:flex;align-items:center;gap:5px;margin-left:auto;padding-left:10px; }
+.t-chip { display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-size:10.5px;font-weight:700;cursor:pointer;color:var(--text-3); }
+.t-chip.active { border-color:var(--proj);background:rgba(108,99,255,.1);color:var(--proj); }
+.t-chip.red { border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.07);color:#ef4444; }
+.t-chip-bar { display:flex;height:3px;width:20px;border-radius:2px;overflow:hidden; }
+
+/* ═══════ T1: Profile Header ═══════ */
+.ph { background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow); }
+/* Context tape — WIDER, IS the visual */
+.ph-tape { height:14px;display:flex;width:100%;position:relative; }
+.ph-tape-info { position:absolute;right:12px;top:0;bottom:0;display:flex;align-items:center;font-size:9px;font-weight:900;color:rgba(255,255,255,.45);letter-spacing:.4px; }
+.ph-body { padding:16px 20px 16px;display:flex;align-items:flex-start;gap:14px; }
+.ph-icon { font-size:26px;flex-shrink:0;margin-top:1px; }
+.ph-name { font-size:19px;font-weight:900;letter-spacing:-.4px;color:var(--proj);margin-bottom:2px; }
+.ph-goal { font-size:12px;color:var(--text-2);line-height:1.5; }
+.ph-right { margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0; }
+.ph-deploy { font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.05);color:var(--text-3);border:1px solid var(--border); }
+.ph-intent { display:flex;align-items:flex-start;gap:10px;padding:10px 20px;background:rgba(108,99,255,.06);border-top:1px solid rgba(108,99,255,.12); }
+.ph-intent-text { font-size:12px;font-weight:600;font-style:italic;color:var(--text);line-height:1.5;flex:1; }
+.ph-intent-edit { font-size:11px;color:var(--text-3);cursor:pointer;flex-shrink:0;margin-top:1px; }
+
+/* ═══════ T1: Ideas + Roadmap ═══════ */
+.two-col { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px; }
+.section-head { font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:12px;display:flex;align-items:center;gap:8px; }
+.section-head::after { content:'';flex:1;height:1px;background:var(--border); }
+
+/* Idea cards */
+.idea-stack { display:flex;flex-direction:column;gap:6px; }
+.idea-card {
+  padding:10px 12px;border-radius:10px;
+  background:rgba(245,158,11,.06);border:1.5px solid rgba(245,158,11,.18);
+  cursor:pointer;transition:border-color .12s,background .12s;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.idea-card:hover { border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.1); }
+.idea-icon { font-size:13px;flex-shrink:0;margin-top:1px; }
+.idea-text { font-size:12px;font-weight:600;color:#d97706;line-height:1.4;flex:1; }
+.idea-promote { font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(245,158,11,.12);color:#d97706;border:1px solid rgba(245,158,11,.2);cursor:pointer;flex-shrink:0;margin-top:1px;opacity:0;transition:opacity .15s; }
+.idea-card:hover .idea-promote { opacity:1; }
+.idea-add { padding:9px 12px;border-radius:10px;border:1.5px dashed rgba(245,158,11,.2);font-size:11px;color:var(--text-3);cursor:pointer;text-align:center;transition:border-color .12s; }
+.idea-add:hover { border-color:rgba(245,158,11,.4);color:#d97706; }
+
+/* Roadmap items */
+.roadmap-stack { display:flex;flex-direction:column;gap:6px; }
+.rm-item {
+  display:flex;align-items:center;gap:10px;
+  padding:10px 13px;border-radius:10px;
+  background:var(--white);border:1.5px solid var(--border);
+  cursor:pointer;transition:border-color .12s;
+}
+.rm-item:hover { border-color:rgba(108,99,255,.3); }
+.rm-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+.rm-text { font-size:12px;font-weight:600;color:var(--text-2);flex:1;line-height:1.4; }
+.rm-status {
+  font-size:9px;font-weight:800;padding:2px 8px;border-radius:8px;
+  text-transform:uppercase;letter-spacing:.4px;flex-shrink:0;
+}
+.rm-next { background:rgba(108,99,255,.12);color:#6c63ff; }
+.rm-soon { background:rgba(245,158,11,.1);color:#d97706; }
+.rm-later { background:rgba(255,255,255,.05);color:var(--text-3); }
+.rm-done { background:rgba(34,197,94,.1);color:#22c55e; }
+.rm-add { padding:9px 13px;border-radius:10px;border:1.5px dashed var(--border);font-size:11px;color:var(--text-3);cursor:pointer;text-align:center;transition:border-color .12s; }
+.rm-add:hover { border-color:rgba(108,99,255,.3);color:var(--proj); }
+
+/* promote arrow between the two columns */
+.promote-hint { display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-3);opacity:.4; }
+
+/* ═══════ T2: Grid ═══════ */
+.masonry { columns:3 200px;column-gap:12px; }
+.block-card { background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;break-inside:avoid;margin-bottom:12px;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s; }
+.block-card:hover { border-color:rgba(108,99,255,.35); }
+.b-stripe { height:4px;width:100%; }
+.b-thumb { width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.25));display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.2); }
+.b-body { padding:12px 14px 10px; }
+.b-type { font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:5px; }
+.b-title { font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px; }
+.b-chips { display:flex;flex-wrap:wrap;gap:4px;margin-top:6px; }
+.chip { font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(108,99,255,.1);color:#6c63ff; }
+.chip-g { background:rgba(34,197,94,.1);color:#22c55e; }
+.chip-r { background:rgba(239,68,68,.1);color:#ef4444; }
+.grid-note { background:rgba(108,99,255,.05);border:1px dashed rgba(108,99,255,.2);border-radius:var(--r);padding:11px 15px;margin-bottom:14px;font-size:12px;color:#475569;line-height:1.6; }
+
+/* ═══════ T3: Board ═══════ */
+.board { display:flex;gap:12px;overflow-x:auto;padding-bottom:8px; }
+.bc { flex:0 0 230px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow); }
+.bc-tape { height:4px;display:flex; }
+.bc-top { padding:11px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px; }
+.bc-icon { font-size:13px; }
+.bc-name { font-size:12px;font-weight:800;flex:1; }
+.bc-pct { font-size:11px;font-weight:800; }
+.bc-body { padding:9px;display:flex;flex-direction:column;gap:6px; }
+.bc-mini { background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:11px;font-weight:600;color:var(--text-2);cursor:pointer;line-height:1.4; }
+.bc-mini-t { font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:3px; }
+.bc-add { font-size:11px;color:var(--text-3);padding:7px 9px;border:1px dashed rgba(255,255,255,.08);border-radius:8px;cursor:pointer;text-align:center; }
+
+/* ═══════ T4: Journey Board ═══════ */
+.jb { position:relative;padding-left:28px; }
+.jb::before { content:'';position:absolute;left:7px;top:6px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--proj),rgba(108,99,255,.08)); }
+
+.jb-compact {
+  position:relative;margin:0 0 0 -28px;padding:11px 18px;margin-bottom:20px;
+  background:linear-gradient(90deg,rgba(239,68,68,.1) 0%,rgba(239,68,68,.03) 70%,transparent 100%);
+  border-top:1.5px solid rgba(239,68,68,.3);border-bottom:1.5px solid rgba(239,68,68,.3);
+  display:flex;align-items:center;gap:12px;
+}
+.jb-compact-bar { width:4px;align-self:stretch;background:#ef4444;border-radius:2px;flex-shrink:0; }
+.jb-compact-icon { font-size:15px;flex-shrink:0; }
+.jb-compact-title { font-size:12px;font-weight:800;color:#ef4444;margin-bottom:2px; }
+.jb-compact-sub { font-size:11px;color:var(--text-3); }
+.jb-compact-date { margin-left:auto;font-size:10px;color:var(--text-3);flex-shrink:0; }
+
+.jb-sess { position:relative;margin-bottom:16px;display:flex;gap:12px; }
+.jb-sess::before { content:'';position:absolute;left:-23px;top:13px;width:10px;height:10px;border-radius:50%;background:var(--proj);border:2px solid var(--bg);z-index:1; }
+.jb-sess-card { flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s; }
+.jb-sess-card:hover { border-color:rgba(108,99,255,.35); }
+.jb-sess-top { display:flex;align-items:center;gap:8px;padding:11px 13px 6px; }
+.jb-sess-type { font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text-3); }
+.jb-sess-title { font-size:13px;font-weight:700;color:var(--text);line-height:1.35;padding:0 13px 9px; }
+.jb-sess-fill { display:flex;height:3px;margin:0 13px 9px;border-radius:2px;overflow:hidden;gap:1px; }
+.jb-sess-foot { display:flex;align-items:center;gap:6px;padding:7px 13px;border-top:1px solid var(--border);background:rgba(0,0,0,.15); }
+.jb-sess-date { font-size:10px;color:var(--text-3);margin-left:auto; }
+
+.jb-decs { width:170px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;padding-top:4px; }
+.jb-dec { display:flex;align-items:flex-start;gap:5px;font-size:11px;color:var(--text-2);line-height:1.4;padding:5px 7px;border-radius:6px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.13); }
+.jb-dec-chk { color:#22c55e;font-size:10px;flex-shrink:0;margin-top:1px; }
+
+.jb-ideas { display:flex;flex-wrap:wrap;gap:5px;margin:-4px 0 14px; }
+.jb-idea-pill { font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(245,158,11,.07);border:1.5px solid rgba(245,158,11,.18);color:#d97706;cursor:pointer; }
+
+.jb-design { display:flex;gap:8px;margin-bottom:16px;position:relative; }
+.jb-design::before { content:'📸';position:absolute;left:-26px;top:4px;font-size:12px; }
+.jb-thumb { width:110px;aspect-ratio:16/9;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.28));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,.25);cursor:pointer; }
+.jb-design-info { display:flex;flex-direction:column;justify-content:center;gap:3px; }
+.jb-design-name { font-size:12px;font-weight:700;color:var(--text-2); }
+.jb-design-date { font-size:10px;color:var(--text-3); }
+
+/* ═══════ T5: List ═══════ */
+.list-row { display:flex;align-items:center;gap:10px;padding:9px 13px;background:var(--white);border:1.5px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .12s;box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.list-row:hover { border-color:rgba(108,99,255,.28); }
+.list-stripe { width:3px;height:26px;border-radius:2px;flex-shrink:0; }
+.list-icon { font-size:13px;flex-shrink:0; }
+.list-title { font-size:12px;font-weight:700;color:var(--text);flex:1; }
+.list-date { font-size:10px;color:var(--text-3);flex-shrink:0; }
+.list-badge { font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px; }
+.list-compact-row { display:flex;align-items:center;gap:10px;padding:8px 13px;border-radius:8px;margin-bottom:6px;background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.18); }
+</style>
+</head>
+<body>
+
+<div class="spec-nav">
+  <div class="spec-logo">⬡ Storyboard</div>
+  <div class="spec-tab active" onclick="show(0,this)"><span class="spec-tab-num">T1</span> Profile</div>
+  <div class="spec-tab" onclick="show(1,this)"><span class="spec-tab-num">T2</span> Grid</div>
+  <div class="spec-tab" onclick="show(2,this)"><span class="spec-tab-num">T3</span> Board</div>
+  <div class="spec-tab" onclick="show(3,this)"><span class="spec-tab-num">T4</span> Journey</div>
+  <div class="spec-tab" onclick="show(4,this)"><span class="spec-tab-num">T5</span> List</div>
+  <div class="spec-tab" onclick="show(5,this)"><span class="spec-tab-num">T6</span> Sidebar</div>
+  <div class="spec-tab" onclick="show(6,this)"><span class="spec-tab-num">T7</span> Story</div>
+  <div class="spec-tab" onclick="show(7,this)"><span class="spec-tab-num">T8</span> Agents</div>
+  <div style="margin-left:12px;font-size:9px;font-weight:900;letter-spacing:.5px;padding:3px 9px;border-radius:8px;background:rgba(245,158,11,.12);color:#d97706;white-space:nowrap">Stories = chats · Boards = projects</div>
+  <div class="spec-right">Spec v5 · not built yet</div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     T1 — PROJECT PROFILE
+══════════════════════════════════ -->
+<div class="frame active" id="f0">
+  <div class="frame-eyebrow">Toggle 1 — Project Profile</div>
+  <div class="frame-desc">Landing view when clicking a project. Identity + context status (read-only, no action needed) + ideas backlog + roadmap. The Carry forward button stays in the top nav — it's a conscious choice, not an alert.</div>
+
+  <!-- Overview strip -->
+  <div class="ov-strip">
+
+    <!-- Left: clear named stats, no mystery "56" -->
+    <div class="ov-card">
+      <div class="ov-eyebrow">Storyboard</div>
+      <div class="ov-stats-grid">
+        <div class="ov-stat">
+          <div class="ov-stat-v" style="color:#6c63ff">22</div>
+          <div class="ov-stat-l">Sessions</div>
+        </div>
+        <div class="ov-stat">
+          <div class="ov-stat-v" style="color:#22c55e">137</div>
+          <div class="ov-stat-l">Decisions</div>
+        </div>
+        <div class="ov-stat">
+          <div class="ov-stat-v" style="color:#f59e0b">15</div>
+          <div class="ov-stat-l">Ideas</div>
+        </div>
+        <div class="ov-stat">
+          <div class="ov-stat-v" style="color:#ef4444">2</div>
+          <div class="ov-stat-l">Compactions</div>
+        </div>
+        <div class="ov-stat">
+          <div class="ov-stat-v" style="color:#06b6d4">6</div>
+          <div class="ov-stat-l">Discuss.</div>
+        </div>
+        <div class="ov-stat">
+          <div class="ov-stat-v" style="color:var(--text-3)">24</div>
+          <div class="ov-stat-l">Designs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Velocity — small, next to stats -->
+    <div class="vel-card">
+      <div class="vel-label">Velocity</div>
+      <div class="vel-num">↑59×</div>
+      <div class="vel-sub">vs last week</div>
+      <div style="margin-top:8px;font-size:9px;color:rgba(34,197,94,.5);font-weight:700">+39 sessions this month</div>
+    </div>
+
+    <!-- Sprint -->
+    <div class="ov-card">
+      <div class="ov-eyebrow" style="color:var(--text-3)">Sprint</div>
+      <div style="font-size:13px;font-weight:800;margin-bottom:3px">Storyboard 10-day</div>
+      <div class="sprint-dots">
+        <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+        <div class="dot on"></div><div class="dot on"></div>
+        <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+        <div class="dot off"></div><div class="dot off"></div>
+      </div>
+      <div style="font-size:11px;color:var(--proj);font-weight:700;margin-bottom:6px">Day 5 · 5 remaining · on track</div>
+      <div style="font-size:34px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1">99</div>
+      <div style="font-size:9px;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">sprint score</div>
+    </div>
+
+    <!-- Recent sessions -->
+    <div class="ov-card">
+      <div class="ov-eyebrow" style="color:var(--text-3)">Recent Sessions</div>
+      <div class="sess-row"><div class="sess-dot"></div><div class="sess-title">Day 7 — Auto session startup, Tetris live</div><div class="sess-date">Apr 20</div></div>
+      <div class="sess-row"><div class="sess-dot"></div><div class="sess-title">Day 6 wrap — Task windows, autonomous polish</div><div class="sess-date">Apr 19</div></div>
+      <div class="sess-row"><div class="sess-dot"></div><div class="sess-title">Day 6 — Today digest, Settings rebuild</div><div class="sess-date">Apr 19</div></div>
+    </div>
+  </div>
+
+  <!-- Ticker — compaction is INFO only, no CTA -->
+  <div class="ticker">
+    <div class="ticker-tape">
+      <div style="flex:1;background:#6c63ff;opacity:.6"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.78"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.52"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.88"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.7"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.85"></div>
+      <div style="width:4px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.9"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.74"></div>
+      <div style="width:4px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.88"></div>
+      <div style="flex:2;background:rgba(255,255,255,.05)"></div>
+    </div>
+    <div class="ticker-body">
+      <div class="t-live"><div class="t-dot"></div><div class="t-live-l">Live</div></div>
+      <div class="t-metrics">
+        <div class="t-metric"><div class="t-metric-v" style="color:#6c63ff">22</div><div class="t-metric-l">Sessions</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#ef4444">2</div><div class="t-metric-l">Compactions</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#22c55e">137</div><div class="t-metric-l">Decisions</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#f59e0b">15</div><div class="t-metric-l">Ideas</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#06b6d4">6</div><div class="t-metric-l">Discuss.</div></div>
+      </div>
+      <!-- task chips — one per active task window, compaction = red badge -->
+      <div class="t-chips">
+        <div class="t-chip active">All</div>
+        <div class="t-chip red">
+          🖥
+          <div class="t-chip-bar"><div style="flex:.96;background:#ef4444;opacity:.8"></div><div style="flex:.04;background:rgba(255,255,255,.1)"></div></div>
+          dashboard <span style="font-size:9px">96%</span>
+        </div>
+        <div class="t-chip">🔌 chrome ext <span style="font-size:9px;opacity:.6">12%</span></div>
+        <div class="t-chip">🌐 landing <span style="font-size:9px;opacity:.6">0%</span></div>
+        <div class="t-chip">⚡ mcp</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile header — top band = context tape -->
+  <div class="ph">
+    <div class="ph-tape">
+      <div style="flex:1;background:#6c63ff;opacity:.58"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.75"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.5"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.86"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.68"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.82"></div>
+      <div style="width:5px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.9"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.72"></div>
+      <div style="width:5px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.85"></div>
+      <div style="flex:3;background:rgba(255,255,255,.04)"></div>
+      <div class="ph-tape-info">96% · 2 compactions</div>
+    </div>
+    <div class="ph-body">
+      <div class="ph-icon">⬡</div>
+      <div style="flex:1">
+        <div class="ph-name">Storyboard</div>
+        <div class="ph-goal">Zero-loss AI memory layer. Every session, decision and idea captured and instantly reusable.</div>
+      </div>
+      <div class="ph-right">
+        <div class="ph-deploy">⚫ Not deployed</div>
+      </div>
+    </div>
+    <div class="ph-intent">
+      <span style="font-size:14px">🎯</span>
+      <div class="ph-intent-text">Day 7 intentions — live blocks, auto session startup, categories integration</div>
+      <div class="ph-intent-edit">✏</div>
+    </div>
+  </div>
+
+  <!-- Latest Blocks — 3 most recent, any type -->
+  <div class="section-head" style="margin-top:20px">🕐 Latest Activity</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px">
+
+    <!-- Block 1: most recent session -->
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s" onmouseover="this.style.borderColor='rgba(108,99,255,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+      <div style="height:3px;background:#6c63ff"></div>
+      <div style="padding:11px 13px">
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#475569;margin-bottom:5px">🧠 Session · Apr 20</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:7px">Day 7 — Auto session startup, brief card, Tetris mode live</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(34,197,94,.1);color:#22c55e">✓ 5 decisions</span>
+          <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(108,99,255,.1);color:#6c63ff">auto-session</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block 2: idea -->
+    <div style="background:var(--white);border:1.5px solid rgba(245,158,11,.18);border-radius:var(--r);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s" onmouseover="this.style.borderColor='rgba(245,158,11,.4)'" onmouseout="this.style.borderColor='rgba(245,158,11,.18)'">
+      <div style="height:3px;background:#f59e0b"></div>
+      <div style="padding:11px 13px">
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#d97706;margin-bottom:5px">💡 Idea · Apr 20</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35">Full AI workspace backup — not just blocks, everything in /AI</div>
+      </div>
+    </div>
+
+    <!-- Block 3: discussion -->
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s" onmouseover="this.style.borderColor='rgba(6,182,212,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+      <div style="height:3px;background:#06b6d4"></div>
+      <div style="padding:11px 13px">
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#0891b2;margin-bottom:5px">💬 Discussion · Apr 19</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35">Plain-English tagline — technical framing loses normal users</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Latest Designs -->
+  <div class="section-head">🖼 Latest Designs</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:8px">
+
+    <div style="cursor:pointer;transition:opacity .12s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="width:190px;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.3));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:5px">screenshot</div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-2)">Context Window Task Cards</div>
+      <div style="font-size:10px;color:var(--text-3)">Apr 20 · dashboard</div>
+    </div>
+
+    <div style="cursor:pointer;transition:opacity .12s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="width:190px;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.28));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:5px">screenshot</div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-2)">Live Ticker + Progression Band</div>
+      <div style="font-size:10px;color:var(--text-3)">Apr 19 · dashboard</div>
+    </div>
+
+    <div style="cursor:pointer;transition:opacity .12s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="width:190px;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.22));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:5px">screenshot</div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-2)">Sidebar Project Nav v2</div>
+      <div style="font-size:10px;color:var(--text-3)">Apr 18 · dashboard</div>
+    </div>
+
+    <div style="cursor:pointer;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.08);border-radius:10px;width:60px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-3);align-self:flex-start;margin-top:0">
+      <span style="font-size:22px;color:#475569;line-height:1">+</span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     T2 — GRID FEED
+══════════════════════════════════ -->
+<div class="frame" id="f1">
+  <div class="frame-eyebrow">Toggle 2 — Grid / Block Feed</div>
+  <div class="frame-desc">Pure masonry block feed — all captured blocks for the project. No header in the feed. Overview strip + ticker above give full context.</div>
+  <div class="grid-note">📌 Overview strip + ticker shared above. Only block cards here.</div>
+  <div class="masonry">
+    <div class="block-card"><div class="b-stripe" style="background:#6c63ff"></div><div class="b-thumb">screenshot</div><div class="b-body"><div class="b-type">🧠 Session</div><div class="b-title">Day 7 — Auto session startup, brief card, Tetris mode live</div><div class="b-chips"><div class="chip chip-g">✓ 5 decisions</div><div class="chip">auto-session</div></div></div></div>
+    <div class="block-card"><div class="b-stripe" style="background:#6c63ff"></div><div class="b-body" style="padding-top:13px"><div class="b-type">◈ Intentions</div><div class="b-title">Day 7 intentions — live blocks, auto session startup, categories</div></div></div>
+    <div class="block-card"><div class="b-stripe" style="background:#f59e0b"></div><div class="b-body" style="padding-top:13px"><div class="b-type">💡 Idea</div><div class="b-title">Full AI workspace backup — not just blocks, everything in /AI</div></div></div>
+    <div class="block-card"><div class="b-stripe" style="background:#ef4444"></div><div class="b-body" style="padding-top:13px"><div class="b-type" style="color:#ef4444">⚡ Compaction</div><div class="b-title">Context window full — new context started automatically</div><div class="b-chips"><div class="chip chip-r">22 sessions carried</div></div></div></div>
+    <div class="block-card"><div class="b-stripe" style="background:#6c63ff"></div><div class="b-thumb">screenshot</div><div class="b-body"><div class="b-type">🧠 Session</div><div class="b-title">Day 6 wrap — Task windows, instruction manual, autonomous polish</div><div class="b-chips"><div class="chip chip-g">✓ 7 decisions</div><div class="chip">task-windows</div></div></div></div>
+    <div class="block-card"><div class="b-stripe" style="background:#f59e0b"></div><div class="b-body" style="padding-top:13px"><div class="b-type">💡 Idea</div><div class="b-title">Cloud storage / backup — laptop stolen, everything is gone</div></div></div>
+    <div class="block-card"><div class="b-stripe" style="background:#6c63ff"></div><div class="b-body" style="padding-top:13px"><div class="b-type">💬 Discussion</div><div class="b-title">Plain-English tagline — the technical framing loses normal users</div></div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     T3 — BOARD BY TASK
+══════════════════════════════════ -->
+<div class="frame" id="f2">
+  <div class="frame-eyebrow">Toggle 3 — Board by Task Window</div>
+  <div class="frame-desc">One column per task window (= one Claude chat). Context fill tape at top of each column. Red = needs compaction soon. Future: ChatGPT + Gemini tasks appear here too with their AI badge.</div>
+  <div class="board">
+    <div class="bc" style="border-color:rgba(239,68,68,.25)">
+      <div class="bc-tape"><div style="flex:.96;background:#ef4444;opacity:.75"></div><div style="flex:.04;background:rgba(255,255,255,.06)"></div></div>
+      <div class="bc-top"><div class="bc-icon">🖥</div><div class="bc-name">dashboard</div><div class="bc-pct" style="color:#ef4444">96%</div></div>
+      <div class="bc-body">
+        <div class="bc-mini"><div class="bc-mini-t">🧠 Session</div>Day 7 — Auto session, Tetris live</div>
+        <div class="bc-mini"><div class="bc-mini-t">🧠 Session</div>Day 6 wrap — Task windows polish</div>
+        <div class="bc-mini"><div class="bc-mini-t">🧠 Session</div>Day 6 — Settings panel rebuild</div>
+        <div class="bc-add">+ add block</div>
+      </div>
+    </div>
+    <div class="bc">
+      <div class="bc-tape"><div style="flex:.12;background:#6c63ff;opacity:.7"></div><div style="flex:.88;background:rgba(255,255,255,.06)"></div></div>
+      <div class="bc-top"><div class="bc-icon">🔌</div><div class="bc-name">chrome ext</div><div class="bc-pct" style="color:#6c63ff">12%</div></div>
+      <div class="bc-body">
+        <div class="bc-mini"><div class="bc-mini-t">🧠 Session</div>v0.4 — auto-capture route</div>
+        <div class="bc-add">+ add block</div>
+      </div>
+    </div>
+    <div class="bc">
+      <div class="bc-tape"><div style="flex:1;background:rgba(255,255,255,.06)"></div></div>
+      <div class="bc-top"><div class="bc-icon">🌐</div><div class="bc-name">landing page</div><div class="bc-pct" style="color:#6c63ff">0%</div></div>
+      <div class="bc-body">
+        <div class="bc-mini"><div class="bc-mini-t">◈ Intentions</div>Sprint landing + waitlist</div>
+        <div class="bc-add">+ add block</div>
+      </div>
+    </div>
+    <div class="bc">
+      <div class="bc-tape"><div style="flex:1;background:rgba(255,255,255,.06)"></div></div>
+      <div class="bc-top"><div class="bc-icon">⚡</div><div class="bc-name">mcp server</div><div class="bc-pct" style="color:#6c63ff">0%</div></div>
+      <div class="bc-body">
+        <div class="bc-mini"><div class="bc-mini-t">🧠 Session</div>Waitlist + /thumbnails route</div>
+        <div class="bc-add">+ add block</div>
+      </div>
+    </div>
+    <div class="bc">
+      <div class="bc-tape"><div style="flex:1;background:rgba(255,255,255,.06)"></div></div>
+      <div class="bc-top"><div class="bc-icon">🧠</div><div class="bc-name">strategy</div><div class="bc-pct" style="color:#6c63ff">0%</div></div>
+      <div class="bc-body">
+        <div class="bc-mini"><div class="bc-mini-t">💬 Discussion</div>Product positioning — tagline</div>
+        <div class="bc-mini"><div class="bc-mini-t">💡 Idea</div>Storyboard as open API</div>
+        <div class="bc-add">+ add block</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:18px;padding:13px 16px;border:1px dashed rgba(255,255,255,.08);border-radius:10px;font-size:12px;color:#475569;line-height:1.7">🔮 <strong style="color:#94a3b8">Multi-AI future:</strong> When ChatGPT / Gemini connect, their task windows appear here with their own AI badge. One board, all your active contexts.</div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     T4 — JOURNEY BOARD
+══════════════════════════════════ -->
+<div class="frame" id="f3">
+  <div class="frame-eyebrow">Toggle 4 — Journey Board</div>
+  <div class="frame-desc">The project's visual history — scrolling timeline of sessions, ideas, designs and compactions. Compactions appear as chapter breaks (automatic events, not actions). Read-only narrative of how the project evolved.</div>
+
+  <div class="jb">
+
+    <div class="jb-sess">
+      <div class="jb-sess-card">
+        <div class="jb-sess-top"><span style="font-size:13px">🧠</span><span class="jb-sess-type">Session · Apr 20</span></div>
+        <div class="jb-sess-title">Day 7 — Auto session startup, session brief card, Tetris mode live</div>
+        <div class="jb-sess-fill">
+          <div style="flex:1;background:#6c63ff;opacity:.85"></div><div style="flex:1;background:#6c63ff;opacity:.9"></div><div style="flex:1;background:#6c63ff;opacity:.7"></div><div style="flex:5;background:rgba(255,255,255,.06)"></div>
+        </div>
+        <div class="jb-sess-foot"><div class="chip chip-g">✓ 5 decisions</div><div class="chip">auto-session</div><div class="chip">tetris</div><div class="jb-sess-date">Apr 20</div></div>
+      </div>
+      <div class="jb-decs">
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Auto session startup on load</div>
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Tetris mode uses CSS transform</div>
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Brief card shows last intent</div>
+      </div>
+    </div>
+
+    <div class="jb-ideas">
+      <div class="jb-idea-pill">💡 Full AI workspace backup</div>
+      <div class="jb-idea-pill">💡 Cloud storage if laptop stolen</div>
+      <div class="jb-idea-pill">💡 Plain-English tagline</div>
+    </div>
+
+    <div class="jb-design">
+      <div class="jb-thumb">screenshot</div>
+      <div class="jb-design-info">
+        <div class="jb-design-name">Context Window Task Cards</div>
+        <div class="jb-design-date">Apr 20 · 21:53</div>
+        <div style="font-size:10px;color:var(--text-3);margin-top:3px">Auto-captured on design decision</div>
+      </div>
+    </div>
+
+    <div class="jb-sess">
+      <div class="jb-sess-card">
+        <div class="jb-sess-top"><span style="font-size:13px">🧠</span><span class="jb-sess-type">Session · Apr 19</span></div>
+        <div class="jb-sess-title">Day 6 wrap — Task windows, instruction manual, autonomous polish</div>
+        <div class="jb-sess-fill">
+          <div style="flex:1;background:#6c63ff;opacity:.9"></div><div style="flex:1;background:#6c63ff;opacity:.75"></div><div style="flex:1;background:#6c63ff;opacity:.85"></div><div style="flex:1;background:#6c63ff;opacity:.65"></div><div style="flex:4;background:rgba(255,255,255,.06)"></div>
+        </div>
+        <div class="jb-sess-foot"><div class="chip chip-g">✓ 7 decisions</div><div class="chip">task-windows</div><div class="chip">manual</div><div class="jb-sess-date">Apr 19</div></div>
+      </div>
+      <div class="jb-decs">
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Task strip renders context fill tapes</div>
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Manual lives at /MANUAL</div>
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Nav ··· visible at 18% opacity</div>
+      </div>
+    </div>
+
+    <!-- COMPACTION — automatic event, chapter break, no action -->
+    <div class="jb-compact">
+      <div class="jb-compact-bar"></div>
+      <div class="jb-compact-icon">⚡</div>
+      <div>
+        <div class="jb-compact-title">Compaction — Context Window Full</div>
+        <div class="jb-compact-sub">Automatic · Claude compacted and continued · 22 sessions · 137 decisions carried forward</div>
+      </div>
+      <div class="jb-compact-date">Apr 18</div>
+    </div>
+
+    <div class="jb-sess" style="opacity:.72">
+      <div class="jb-sess-card">
+        <div class="jb-sess-top"><span style="font-size:13px">🧠</span><span class="jb-sess-type">Session · Apr 18 · pre-compaction</span></div>
+        <div class="jb-sess-title">Day 5 — Context Windows: fault lines, fill meter, dedicated view</div>
+        <div class="jb-sess-fill">
+          <div style="flex:1;background:#ef4444;opacity:.9"></div><div style="flex:1;background:#ef4444;opacity:.85"></div><div style="flex:1;background:#ef4444;opacity:.95"></div><div style="flex:1;background:#ef4444;opacity:.75"></div><div style="flex:1;background:#ef4444;opacity:.7"></div><div style="flex:3;background:rgba(255,255,255,.06)"></div>
+        </div>
+        <div class="jb-sess-foot"><div class="chip chip-g">✓ 6 decisions</div><div class="chip chip-r">context at 96%</div><div class="jb-sess-date">Apr 18</div></div>
+      </div>
+      <div class="jb-decs" style="opacity:.8">
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Session blocks = context fault lines</div>
+        <div class="jb-dec"><div class="jb-dec-chk">✓</div>Fill meter shows % in task strip</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 8px;font-size:11px;color:var(--text-3)">↓ Scroll for full project history</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     T5 — LIST
+══════════════════════════════════ -->
+<div class="frame" id="f4">
+  <div class="frame-eyebrow">Toggle 5 — List</div>
+  <div class="frame-desc">Dense scannable list. Compactions appear as red divider rows — automatic events in the timeline, not actions.</div>
+
+  <div class="list-compact-row">
+    <div style="width:3px;height:24px;border-radius:2px;background:#ef4444;flex-shrink:0"></div>
+    <span style="font-size:11px;font-weight:800;color:#ef4444">⚡ Compaction · Apr 18</span>
+    <span style="font-size:11px;color:var(--text-3)">Context reset · automatic · 22 sessions carried forward</span>
+  </div>
+  <div class="list-row"><div class="list-stripe" style="background:#6c63ff"></div><div class="list-icon">🧠</div><div class="list-title">Day 7 — Auto session startup, brief card, Tetris mode live</div><div class="list-badge" style="background:rgba(34,197,94,.12);color:#22c55e">5 ✓</div><div class="list-date">Apr 20</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#6c63ff"></div><div class="list-icon">◈</div><div class="list-title">Day 7 intentions — live blocks, auto session startup, categories</div><div class="list-date">Apr 20</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#6c63ff"></div><div class="list-icon">🧠</div><div class="list-title">Day 6 wrap — Task windows, instruction manual, autonomous polish</div><div class="list-badge" style="background:rgba(34,197,94,.12);color:#22c55e">7 ✓</div><div class="list-date">Apr 19</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#f59e0b"></div><div class="list-icon">💡</div><div class="list-title">Full AI workspace backup — not just blocks, everything in /AI</div><div class="list-date">Apr 19</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#f59e0b"></div><div class="list-icon">💡</div><div class="list-title">Cloud storage / backup — laptop stolen, everything is gone</div><div class="list-date">Apr 19</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#6c63ff"></div><div class="list-icon">💬</div><div class="list-title">Plain-English tagline — the technical framing loses normal users</div><div class="list-date">Apr 19</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#6c63ff"></div><div class="list-icon">🧠</div><div class="list-title">Day 6 — Today digest, morning kickoff card, Settings panel rebuild</div><div class="list-badge" style="background:rgba(34,197,94,.12);color:#22c55e">5 ✓</div><div class="list-date">Apr 19</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#f59e0b"></div><div class="list-icon">💡</div><div class="list-title">Storyboard as open API — universal AI memory layer</div><div class="list-date">Apr 18</div></div>
+  <div class="list-row"><div class="list-stripe" style="background:#6c63ff"></div><div class="list-icon">🧠</div><div class="list-title">Day 5 — Context Windows: fault lines, fill meter, dedicated view</div><div class="list-badge" style="background:rgba(34,197,94,.12);color:#22c55e">6 ✓</div><div class="list-date">Apr 18</div></div>
+</div>
+
+<!-- ══════════════════════════════════
+     T6 — SIDEBAR ARCHITECTURE (real data)
+══════════════════════════════════ -->
+<div class="frame" id="f5">
+  <div class="frame-eyebrow">T6 — Sidebar Architecture · Real Data</div>
+  <div class="frame-desc">Story-first model. Stories = individual chat windows (Claude, Cursor, ChatGPT…). Boards = grouping labels (Storyboard, New Build Homes, H&H…). A Story can belong to 0, 1, or many Boards. Right panel: Notes · Pinned · Automations · Calendar · Local folder — persistent regardless of what's open in main area.</div>
+
+  <div style="display:grid;grid-template-columns:220px 1fr 270px;gap:0;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);background:var(--white);min-height:600px">
+
+    <!-- ── LEFT SIDEBAR ── -->
+    <div style="background:#0a0d14;border-right:1.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto">
+
+      <div style="padding:13px 14px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;position:sticky;top:0;background:#0a0d14;z-index:2">
+        <span style="font-size:14px;font-weight:900;color:#6c63ff">⬡ Storyboard</span>
+        <span style="margin-left:auto;font-size:16px;cursor:pointer;color:#334155">⌕</span>
+      </div>
+
+      <!-- All Stories (flat, recency order — the default) -->
+      <div style="padding:8px 8px 2px">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:#334155;padding:4px 8px 3px">Stories</div>
+
+        <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;background:rgba(108,99,255,.12);cursor:pointer;margin-bottom:2px">
+          <span style="font-size:11px">📋</span>
+          <span style="font-size:12px;font-weight:700;color:#6c63ff;flex:1">All Stories</span>
+          <span style="font-size:10px;color:#6c63ff;font-weight:800">14</span>
+        </div>
+
+        <!-- Real Claude task windows, recency ordered -->
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px">⬡</span>
+            <span style="font-size:11.5px;font-weight:600;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Storyboard · dashboard</span>
+            <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0" title="96% context"></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px">⬡</span>
+            <span style="font-size:11.5px;font-weight:600;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Storyboard · chrome ext</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px">🏗️</span>
+            <span style="font-size:11.5px;font-weight:600;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NBC · content &amp; social</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px">🏠</span>
+            <span style="font-size:11.5px;font-weight:600;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">H&amp;H · marketing</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px">◈</span>
+            <span style="font-size:11.5px;font-weight:600;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Opero · audit tool</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px">📊</span>
+            <span style="font-size:11.5px;font-weight:600;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PropertyOS · valuation</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer;opacity:.6" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:10px;filter:grayscale(1)">🖱</span>
+            <span style="font-size:11px;font-weight:600;color:#475569;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">cursor · Storyboard MCP</span>
+            <span style="font-size:8px;font-weight:800;padding:1px 5px;border-radius:5px;background:rgba(34,197,94,.12);color:#22c55e;flex-shrink:0">NEW</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin:6px 0"></div>
+
+      <!-- Boards — collapsible label groups -->
+      <div style="padding:4px 8px">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:#334155;padding:4px 8px 3px;display:flex;align-items:center">
+          Boards
+          <span style="margin-left:auto;font-size:13px;cursor:pointer;color:#334155">+</span>
+        </div>
+
+        <!-- Storyboard board — expanded -->
+        <div style="border-radius:8px;overflow:hidden;margin-bottom:2px">
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;background:rgba(108,99,255,.08);cursor:pointer">
+            <span style="width:8px;height:8px;border-radius:50%;background:#6c63ff;flex-shrink:0"></span>
+            <span style="font-size:12px;font-weight:700;color:#e8eaf6;flex:1">Storyboard</span>
+            <span style="font-size:10px;color:#475569">5</span>
+            <span style="font-size:10px;color:#475569">▾</span>
+          </div>
+          <div style="padding:3px 8px 5px;background:rgba(108,99,255,.04)">
+            <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:#64748b" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">⬡ dashboard</div>
+            <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:#64748b" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">⬡ chrome ext</div>
+            <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:#64748b" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">⬡ landing page</div>
+            <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:#64748b" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">⬡ mcp server</div>
+            <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:#64748b" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">🖱 cursor · Storyboard MCP</div>
+          </div>
+        </div>
+
+        <!-- Other boards collapsed -->
+        <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+          <span style="width:8px;height:8px;border-radius:50%;background:#10b981;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#94a3b8;flex:1">New Build Homes</span>
+          <span style="font-size:10px;color:#475569">2</span><span style="font-size:10px;color:#475569">▸</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+          <span style="width:8px;height:8px;border-radius:50%;background:#B39960;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#94a3b8;flex:1">Hansson Hertzell</span>
+          <span style="font-size:10px;color:#475569">1</span><span style="font-size:10px;color:#475569">▸</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+          <span style="width:8px;height:8px;border-radius:50%;background:#6366f1;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#94a3b8;flex:1">Opero Agency</span>
+          <span style="font-size:10px;color:#475569">1</span><span style="font-size:10px;color:#475569">▸</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+          <span style="width:8px;height:8px;border-radius:50%;background:#ec4899;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#94a3b8;flex:1">PropertyOS</span>
+          <span style="font-size:10px;color:#475569">1</span><span style="font-size:10px;color:#475569">▸</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+          <span style="width:8px;height:8px;border-radius:50%;background:#0ea5e9;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#94a3b8;flex:1">Curated Estate</span>
+          <span style="font-size:10px;color:#475569">1</span><span style="font-size:10px;color:#475569">▸</span>
+        </div>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin:6px 0"></div>
+
+      <!-- Unassigned stories -->
+      <div style="padding:4px 8px 8px">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:#334155;padding:4px 8px 3px">Unassigned</div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;cursor:pointer;opacity:.65" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+          <span style="font-size:10px">🧪</span>
+          <span style="font-size:11.5px;font-weight:600;color:#64748b;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">scratch experiments</span>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;padding:9px 12px;border-top:1px solid var(--border)">
+        <div style="font-size:10px;color:#334155;font-weight:700">⚙ Settings</div>
+      </div>
+    </div>
+
+    <!-- ── MAIN AREA ── -->
+    <div style="padding:18px 20px;background:#0d1117;overflow-y:auto">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span style="font-size:18px">⬡</span>
+        <span style="font-size:13px;font-weight:800;color:#6c63ff">Storyboard</span>
+        <span style="font-size:11px;color:#334155">Board</span>
+        <!-- Story filter chips -->
+        <div style="margin-left:auto;display:flex;gap:5px">
+          <div style="padding:3px 9px;border-radius:20px;border:1.5px solid rgba(108,99,255,.35);background:rgba(108,99,255,.1);font-size:10.5px;font-weight:700;color:#6c63ff;cursor:pointer">All</div>
+          <div style="padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);font-size:10.5px;font-weight:700;color:#ef4444;cursor:pointer">⬡ dashboard</div>
+          <div style="padding:3px 9px;border-radius:20px;border:1.5px solid var(--border);font-size:10.5px;font-weight:700;color:#475569;cursor:pointer">⬡ chrome ext</div>
+          <div style="padding:3px 9px;border-radius:20px;border:1.5px solid rgba(34,197,94,.25);font-size:10.5px;font-weight:700;color:#22c55e;cursor:pointer">🖱 cursor</div>
+        </div>
+      </div>
+
+      <!-- Toggle bar (T1–T5) inside main area -->
+      <div style="display:flex;gap:2px;background:rgba(255,255,255,.04);border-radius:10px;padding:3px;margin-bottom:16px;width:fit-content">
+        <div style="padding:5px 14px;border-radius:8px;background:#6c63ff;font-size:11px;font-weight:700;color:#fff;cursor:pointer">Profile</div>
+        <div style="padding:5px 14px;border-radius:8px;font-size:11px;font-weight:700;color:#475569;cursor:pointer">Grid</div>
+        <div style="padding:5px 14px;border-radius:8px;font-size:11px;font-weight:700;color:#475569;cursor:pointer">Board</div>
+        <div style="padding:5px 14px;border-radius:8px;font-size:11px;font-weight:700;color:#475569;cursor:pointer">Journey</div>
+        <div style="padding:5px 14px;border-radius:8px;font-size:11px;font-weight:700;color:#475569;cursor:pointer">List</div>
+      </div>
+
+      <!-- T1 content preview (abbreviated) -->
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:10px;font-weight:900;color:#475569;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Overview</div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+          <div><div style="font-size:20px;font-weight:900;color:#6c63ff;line-height:1">22</div><div style="font-size:8.5px;color:#475569;font-weight:700;text-transform:uppercase">Sessions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#22c55e;line-height:1">137</div><div style="font-size:8.5px;color:#475569;font-weight:700;text-transform:uppercase">Decisions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#f59e0b;line-height:1">15</div><div style="font-size:8.5px;color:#475569;font-weight:700;text-transform:uppercase">Ideas</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#ef4444;line-height:1">2</div><div style="font-size:8.5px;color:#475569;font-weight:700;text-transform:uppercase">Compactions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#06b6d4;line-height:1">6</div><div style="font-size:8.5px;color:#475569;font-weight:700;text-transform:uppercase">Discuss.</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#94a3b8;line-height:1">24</div><div style="font-size:8.5px;color:#475569;font-weight:700;text-transform:uppercase">Designs</div></div>
+        </div>
+      </div>
+
+      <!-- Automation snapshot block (new concept) -->
+      <div style="background:rgba(108,99,255,.06);border:1.5px solid rgba(108,99,255,.18);border-radius:var(--r);padding:12px 14px;margin-bottom:10px">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#475569;margin-bottom:6px">⚡ Automation Block · Auto-captured</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px">Content Scout ran · 3 articles drafted → Airtable</div>
+        <div style="font-size:11px;color:#64748b">Apr 20 09:06 AM · Blog Pipeline · New Build Homes</div>
+      </div>
+
+      <div style="font-size:11px;color:#334155;padding:8px 0;line-height:1.7">↓ Continues with full Profile view (ticker, project header, latest blocks, latest designs)</div>
+    </div>
+
+    <!-- ── RIGHT PANEL ── -->
+    <div style="background:#0a0d14;border-left:1.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto">
+      <div style="padding:11px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;position:sticky;top:0;background:#0a0d14;z-index:2">
+        <span style="font-size:10px;font-weight:900;color:#475569;text-transform:uppercase;letter-spacing:.5px">Context</span>
+        <span style="margin-left:auto;font-size:10px;color:#334155;cursor:pointer">✕</span>
+      </div>
+
+      <!-- Notes — quick capture, label to board/story after -->
+      <div style="padding:11px 13px;border-bottom:1px solid var(--border)">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#334155;margin-bottom:6px">📝 Notes</div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:9px;font-size:11.5px;color:#94a3b8;line-height:1.5;min-height:55px;cursor:text">Scratchpad. Write fast, label to a Board or Story after. On mobile: voice → transcribe → label.</div>
+        <div style="display:flex;gap:4px;margin-top:6px">
+          <div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(108,99,255,.1);color:#6c63ff;cursor:pointer">+ label to board</div>
+          <div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.05);color:#475569;cursor:pointer">→ make block</div>
+        </div>
+      </div>
+
+      <!-- Pinned blocks -->
+      <div style="padding:11px 13px;border-bottom:1px solid var(--border)">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#334155;margin-bottom:6px">📌 Pinned</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="background:rgba(108,99,255,.06);border:1px solid rgba(108,99,255,.14);border-radius:7px;padding:7px 9px;font-size:11px;font-weight:600;color:#94a3b8;cursor:pointer">🎯 Day 7 intentions</div>
+          <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.12);border-radius:7px;padding:7px 9px;font-size:11px;font-weight:600;color:#94a3b8;cursor:pointer">✓ session blocks = fault lines</div>
+        </div>
+      </div>
+
+      <!-- Live automations for this board -->
+      <div style="padding:11px 13px;border-bottom:1px solid var(--border)">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#334155;margin-bottom:6px">⚡ Automations</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:7px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.1)">
+            <span style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
+            <span style="font-size:10.5px;font-weight:700;color:#94a3b8;flex:1">Blog Pipeline</span>
+            <span style="font-size:9px;color:#334155">Mon–Fri 9:06</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:7px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.1)">
+            <span style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
+            <span style="font-size:10.5px;font-weight:700;color:#94a3b8;flex:1">Social Pipeline</span>
+            <span style="font-size:9px;color:#334155">M/W/F/S 9:01</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:7px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.1);opacity:.6">
+            <span style="width:5px;height:5px;border-radius:50%;background:#475569;flex-shrink:0"></span>
+            <span style="font-size:10.5px;font-weight:700;color:#64748b;flex:1">GSC Monitor (old)</span>
+            <span style="font-size:9px;color:#334155">disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini calendar — activity heatmap style -->
+      <div style="padding:11px 13px;border-bottom:1px solid var(--border)">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#334155;margin-bottom:8px">📅 Calendar · April 2026</div>
+        <!-- Day labels -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:3px">
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">M</div>
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">T</div>
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">W</div>
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">T</div>
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">F</div>
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">S</div>
+          <div style="font-size:8px;font-weight:700;color:#334155;text-align:center">S</div>
+        </div>
+        <!-- Calendar grid — Apr 2026. Apr 1 = Wednesday -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+          <!-- week 1: blanks for Mon/Tue, then Apr 1-5 -->
+          <div></div><div></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#475569">1</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#475569">2</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#94a3b8">3</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#334155">4</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#334155">5</div>
+          <!-- week 2: Apr 6-12 -->
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#94a3b8">6</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#a5b4fc">7</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#94a3b8">8</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#a5b4fc">9</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.55);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#a5b4fc">10</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#334155">11</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#334155">12</div>
+          <!-- week 3: Apr 13-19 -->
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#94a3b8">13</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.6);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#a5b4fc">14</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.7);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#c4b5fd">15</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#e0d9ff">16</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#c4b5fd">17</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#334155">18</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(108,99,255,.9);border:1.5px solid #6c63ff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:800">19</div>
+          <!-- week 4: Apr 20+ (future) -->
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.06);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:#1e2836">20</div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.02);cursor:pointer"></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.02);cursor:pointer"></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.02);cursor:pointer"></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.02);cursor:pointer"></div>
+          <div style="aspect-ratio:1;border-radius:4px;cursor:pointer"></div>
+          <div style="aspect-ratio:1;border-radius:4px;cursor:pointer"></div>
+        </div>
+        <div style="font-size:9px;color:#334155;margin-top:7px;line-height:1.6">Darker = more Stories that day. Click day → filter to that date.</div>
+      </div>
+
+      <!-- Local folder -->
+      <div style="padding:11px 13px;flex:1">
+        <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#334155;margin-bottom:6px">📁 Local Folder</div>
+        <div style="font-size:9.5px;color:#475569;margin-bottom:5px">~/AI/AGENCY /storyboard/</div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:10.5px;color:#64748b;padding:3px 6px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:5px" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">📄 app.html</div>
+          <div style="font-size:10.5px;color:#64748b;padding:3px 6px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:5px" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">📄 design-spec.html</div>
+          <div style="font-size:10.5px;color:#64748b;padding:3px 6px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:5px" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">📁 screenshots/ <span style="font-size:9px;margin-left:auto;color:#334155">24</span></div>
+          <div style="font-size:10.5px;color:#64748b;padding:3px 6px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:5px" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">📄 blocks.json</div>
+        </div>
+        <div style="font-size:9px;color:#334155;margin-top:6px;line-height:1.6">Auto-matched: Story name → folder name. No linking needed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture notes -->
+  <div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px">
+      <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6c63ff;margin-bottom:5px">Story-First</div>
+      <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">No projects = flat story list. Boards layer on top as labels. Degrades gracefully.</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px">
+      <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#22c55e;margin-bottom:5px">Boards = Labels</div>
+      <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">One Story can belong to multiple Boards. Cursor story tagged to Storyboard board. ChatGPT thread tagged to H&H board.</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px">
+      <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#f59e0b;margin-bottom:5px">Automations → Blocks</div>
+      <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">Every automation run auto-creates a block. Output captured (if any). Visible in Timeline and Board. Zero manual effort.</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px">
+      <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#06b6d4;margin-bottom:5px">Cross-Platform</div>
+      <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">Cursor + Windsurf = MCP ready now. ChatGPT/Gemini = Chrome ext capture. One sidebar, all AI contexts.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     T7 — STORY VIEW (profile top + journey below)
+══════════════════════════════════ -->
+<div class="frame" id="f6">
+  <div class="frame-eyebrow">T7 — Story View · Profile header + Journey scroll</div>
+  <div class="frame-desc">Clicking a Story gives you the same profile header as a Board (compressed), then immediately the film-strip journey scrolls below — split into two columns. Left: the chronological story. Right: quick-access blocks (ideas, designs). The Board profile will evolve separately to focus on collection/aggregate.</div>
+
+  <!-- ── COMPRESSED PROFILE TOP (same T1 components, tighter) ── -->
+  <!-- Overview strip — 4 cards, slightly smaller padding -->
+  <div style="display:grid;grid-template-columns:1fr 140px 1fr 1fr;gap:8px;margin-bottom:8px">
+
+    <div class="ov-card" style="padding:12px 14px">
+      <div class="ov-eyebrow" style="font-size:9px">Storyboard · dashboard</div>
+      <div class="ov-stats-grid" style="margin-top:6px">
+        <div class="ov-stat"><div class="ov-stat-v" style="color:#6c63ff;font-size:18px">22</div><div class="ov-stat-l">Sessions</div></div>
+        <div class="ov-stat"><div class="ov-stat-v" style="color:#22c55e;font-size:18px">137</div><div class="ov-stat-l">Decisions</div></div>
+        <div class="ov-stat"><div class="ov-stat-v" style="color:#f59e0b;font-size:18px">15</div><div class="ov-stat-l">Ideas</div></div>
+        <div class="ov-stat"><div class="ov-stat-v" style="color:#ef4444;font-size:18px">2</div><div class="ov-stat-l">Compactions</div></div>
+        <div class="ov-stat"><div class="ov-stat-v" style="color:#06b6d4;font-size:18px">6</div><div class="ov-stat-l">Discuss.</div></div>
+        <div class="ov-stat"><div class="ov-stat-v" style="color:var(--text-3);font-size:18px">24</div><div class="ov-stat-l">Designs</div></div>
+      </div>
+    </div>
+
+    <div class="vel-card" style="padding:11px 13px">
+      <div class="vel-label">Velocity</div>
+      <div class="vel-num" style="font-size:22px">↑59×</div>
+      <div class="vel-sub">vs last week</div>
+    </div>
+
+    <div class="ov-card" style="padding:12px 14px">
+      <div class="ov-eyebrow" style="color:var(--text-3);font-size:9px">Sprint</div>
+      <div style="font-size:12px;font-weight:800;margin-bottom:2px">Storyboard 10-day</div>
+      <div class="sprint-dots" style="margin:5px 0 3px">
+        <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+        <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+      </div>
+      <div style="font-size:10px;color:var(--proj);font-weight:700;margin-bottom:4px">Day 5 · 5 remaining</div>
+      <div style="font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1">99</div>
+      <div style="font-size:8px;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">sprint score</div>
+    </div>
+
+    <div class="ov-card" style="padding:12px 14px">
+      <div class="ov-eyebrow" style="color:var(--text-3);font-size:9px">Recent Sessions</div>
+      <div class="sess-row"><div class="sess-dot"></div><div class="sess-title">Day 7 — Auto session startup, Tetris live</div><div class="sess-date">Apr 20</div></div>
+      <div class="sess-row"><div class="sess-dot"></div><div class="sess-title">Day 6 wrap — Task windows, autonomous</div><div class="sess-date">Apr 19</div></div>
+      <div class="sess-row"><div class="sess-dot"></div><div class="sess-title">Day 6 — Settings rebuild</div><div class="sess-date">Apr 19</div></div>
+    </div>
+  </div>
+
+  <!-- Ticker — same as T1, same height -->
+  <div class="ticker" style="margin-bottom:10px">
+    <div class="ticker-tape">
+      <div style="flex:1;background:#6c63ff;opacity:.6"></div><div style="flex:1;background:#6c63ff;opacity:.78"></div><div style="flex:1;background:#6c63ff;opacity:.52"></div><div style="flex:1;background:#6c63ff;opacity:.88"></div><div style="flex:1;background:#6c63ff;opacity:.7"></div><div style="flex:1;background:#6c63ff;opacity:.85"></div>
+      <div style="width:4px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.9"></div><div style="flex:1;background:#6c63ff;opacity:.74"></div>
+      <div style="width:4px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.88"></div><div style="flex:2;background:rgba(255,255,255,.05)"></div>
+    </div>
+    <div class="ticker-body">
+      <div class="t-live"><div class="t-dot"></div><div class="t-live-l">Live</div></div>
+      <div class="t-metrics">
+        <div class="t-metric"><div class="t-metric-v" style="color:#6c63ff">22</div><div class="t-metric-l">Sessions</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#ef4444">2</div><div class="t-metric-l">Compactions</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#22c55e">137</div><div class="t-metric-l">Decisions</div></div>
+        <div class="t-metric"><div class="t-metric-v" style="color:#f59e0b">15</div><div class="t-metric-l">Ideas</div></div>
+      </div>
+      <div class="t-chips">
+        <div class="t-chip red">⬡ dashboard <span style="font-size:9px">96%</span></div>
+        <div style="padding:5px 12px;border-radius:20px;background:rgba(108,99,255,.08);border:1.5px solid rgba(108,99,255,.2);font-size:11px;font-weight:700;color:#6c63ff;cursor:pointer;margin-left:6px">🔄 Carry forward</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile header — compressed slightly -->
+  <div class="ph" style="margin-bottom:16px">
+    <div class="ph-tape" style="height:10px">
+      <div style="flex:1;background:#6c63ff;opacity:.58"></div><div style="flex:1;background:#6c63ff;opacity:.75"></div><div style="flex:1;background:#6c63ff;opacity:.5"></div><div style="flex:1;background:#6c63ff;opacity:.86"></div><div style="flex:1;background:#6c63ff;opacity:.68"></div><div style="flex:1;background:#6c63ff;opacity:.82"></div>
+      <div style="width:5px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.9"></div><div style="flex:1;background:#6c63ff;opacity:.72"></div>
+      <div style="width:5px;background:#ef4444;flex-shrink:0"></div>
+      <div style="flex:1;background:#6c63ff;opacity:.85"></div><div style="flex:3;background:rgba(255,255,255,.04)"></div>
+      <div class="ph-tape-info">96% · 2 compactions</div>
+    </div>
+    <div class="ph-body" style="padding:12px 16px">
+      <div class="ph-icon" style="font-size:20px">⬡</div>
+      <div style="flex:1">
+        <div class="ph-name" style="font-size:16px">Storyboard · dashboard</div>
+        <div class="ph-goal" style="font-size:11px">Zero-loss AI memory layer — dashboard task window</div>
+      </div>
+      <div class="ph-right"><div class="ph-deploy">⚫ Not deployed</div></div>
+    </div>
+    <div class="ph-intent" style="padding:8px 16px">
+      <span style="font-size:13px">🎯</span>
+      <div class="ph-intent-text" style="font-size:11px">Day 7 intentions — live blocks, auto session startup, categories integration</div>
+      <div class="ph-intent-edit">✏</div>
+    </div>
+  </div>
+
+  <!-- ══ TWO-COLUMN: Journey (left) + Quick blocks (right) ══ -->
+  <div style="display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start">
+
+    <!-- LEFT: Film strip journey -->
+    <div>
+      <div class="section-head">📽 Story · chronological</div>
+
+      <!-- Frame: latest session -->
+      <div style="display:flex;gap:12px;margin-bottom:16px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+          <div style="width:10px;height:10px;border-radius:50%;background:#6c63ff;border:2px solid var(--bg);margin-top:13px"></div>
+          <div style="width:2px;flex:1;background:linear-gradient(to bottom,rgba(108,99,255,.4),rgba(108,99,255,.08));min-height:50px"></div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#475569;margin-bottom:4px">🧠 Session · Apr 20, 21:40</div>
+          <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+            <div style="height:3px;background:#6c63ff"></div>
+            <div style="padding:11px 13px 9px">
+              <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:7px">Day 7 — Auto session startup, brief card, Tetris mode live</div>
+              <div style="display:flex;gap:7px;margin-bottom:7px">
+                <div style="width:120px;aspect-ratio:16/9;border-radius:7px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.3));border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,.18);cursor:pointer">screenshot</div>
+                <div style="padding-top:2px">
+                  <div style="font-size:10.5px;font-weight:700;color:#94a3b8">Context Window Task Cards</div>
+                  <div style="font-size:9.5px;color:#475569;margin-top:2px">Design · 21:53</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--border);padding-top:7px">
+                <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8"><span style="color:#22c55e">✓</span>Auto session startup on load</div>
+                <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8"><span style="color:#22c55e">✓</span>Tetris mode uses CSS transform</div>
+                <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8"><span style="color:#22c55e">✓</span>Brief card shows last intent</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
+            <div class="jb-idea-pill" style="font-size:10px;padding:3px 8px">💡 Full AI workspace backup</div>
+            <div class="jb-idea-pill" style="font-size:10px;padding:3px 8px">💡 Voice notes on mobile</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design-only frame -->
+      <div style="display:flex;gap:12px;margin-bottom:16px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+          <div style="width:8px;height:8px;border-radius:2px;background:#94a3b8;margin-top:5px;transform:rotate(45deg)"></div>
+          <div style="width:2px;flex:1;background:rgba(255,255,255,.04);min-height:30px"></div>
+        </div>
+        <div style="flex:1;display:flex;gap:7px;align-items:flex-start;padding-top:1px">
+          <div style="width:130px;aspect-ratio:16/9;border-radius:7px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.25));border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,.18);cursor:pointer">screenshot</div>
+          <div>
+            <div style="font-size:10.5px;font-weight:700;color:#94a3b8">Live Ticker + Progression Band</div>
+            <div style="font-size:9.5px;color:#475569;margin-top:2px">Design · Apr 19, 19:22</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session frame -->
+      <div style="display:flex;gap:12px;margin-bottom:16px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+          <div style="width:10px;height:10px;border-radius:50%;background:#6c63ff;border:2px solid var(--bg);margin-top:13px"></div>
+          <div style="width:2px;flex:1;background:linear-gradient(to bottom,rgba(108,99,255,.3),rgba(108,99,255,.05));min-height:50px"></div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#475569;margin-bottom:4px">🧠 Session · Apr 19, 18:10</div>
+          <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+            <div style="height:3px;background:#6c63ff"></div>
+            <div style="padding:11px 13px 9px">
+              <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:7px">Day 6 wrap — Task windows, autonomous polish</div>
+              <div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--border);padding-top:7px">
+                <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8"><span style="color:#22c55e">✓</span>Task strip renders context fill tapes</div>
+                <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8"><span style="color:#22c55e">✓</span>Manual lives at /MANUAL</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compaction chapter break -->
+      <div style="margin:0 0 16px -12px;padding:10px 16px;background:linear-gradient(90deg,rgba(239,68,68,.1),rgba(239,68,68,.02) 70%,transparent);border-top:1.5px solid rgba(239,68,68,.3);border-bottom:1.5px solid rgba(239,68,68,.3);display:flex;align-items:center;gap:10px">
+        <div style="width:4px;align-self:stretch;background:#ef4444;border-radius:2px;flex-shrink:0"></div>
+        <span style="font-size:13px">⚡</span>
+        <div>
+          <div style="font-size:11.5px;font-weight:800;color:#ef4444;margin-bottom:1px">Compaction — Context Window Full</div>
+          <div style="font-size:10.5px;color:#64748b">Automatic · 14 sessions · 89 decisions carried forward</div>
+        </div>
+        <div style="margin-left:auto;font-size:9.5px;color:#475569;flex-shrink:0">Apr 18</div>
+      </div>
+
+      <!-- Pre-compaction session (faded) -->
+      <div style="display:flex;gap:12px;margin-bottom:14px;opacity:.72">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+          <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid var(--bg);margin-top:13px"></div>
+          <div style="width:2px;flex:1;background:rgba(239,68,68,.15);min-height:30px"></div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#475569;margin-bottom:4px">🧠 Session · Apr 18 · pre-compaction</div>
+          <div style="background:var(--white);border:1.5px solid rgba(239,68,68,.15);border-radius:var(--r);overflow:hidden">
+            <div style="height:3px;background:#ef4444;opacity:.6"></div>
+            <div style="padding:11px 13px 9px">
+              <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.35">Day 5 — Context Windows: fault lines, fill meter</div>
+              <div style="display:flex;gap:4px;margin-top:6px">
+                <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;background:rgba(34,197,94,.1);color:#22c55e">✓ 6 decisions</span>
+                <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;background:rgba(239,68,68,.1);color:#ef4444">context 96%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:10px 0 4px;font-size:10.5px;color:#334155;padding-left:22px">↓ 14 more · scroll for full story</div>
+    </div>
+
+    <!-- RIGHT: Quick-access blocks column -->
+    <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:20px">
+
+      <!-- Latest ideas -->
+      <div>
+        <div class="section-head" style="font-size:9px">💡 Ideas</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="padding:8px 10px;border-radius:9px;background:rgba(245,158,11,.06);border:1.5px solid rgba(245,158,11,.18);cursor:pointer">
+            <div style="font-size:11px;font-weight:600;color:#d97706;line-height:1.4">Full AI workspace backup</div>
+            <div style="font-size:9.5px;color:#475569;margin-top:2px">Apr 20</div>
+          </div>
+          <div style="padding:8px 10px;border-radius:9px;background:rgba(245,158,11,.06);border:1.5px solid rgba(245,158,11,.18);cursor:pointer">
+            <div style="font-size:11px;font-weight:600;color:#d97706;line-height:1.4">Voice notes on mobile</div>
+            <div style="font-size:9.5px;color:#475569;margin-top:2px">Apr 20</div>
+          </div>
+          <div style="padding:8px 10px;border-radius:9px;background:rgba(245,158,11,.06);border:1.5px solid rgba(245,158,11,.18);cursor:pointer;opacity:.7">
+            <div style="font-size:11px;font-weight:600;color:#d97706;line-height:1.4">Storyboard as open API</div>
+            <div style="font-size:9.5px;color:#475569;margin-top:2px">Apr 16</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Latest designs -->
+      <div>
+        <div class="section-head" style="font-size:9px">🖼 Designs</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="cursor:pointer" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div style="width:100%;aspect-ratio:16/9;border-radius:8px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.3));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,.18);margin-bottom:3px">screenshot</div>
+            <div style="font-size:10.5px;font-weight:700;color:#94a3b8">Context Window Task Cards</div>
+            <div style="font-size:9.5px;color:#475569">Apr 20</div>
+          </div>
+          <div style="cursor:pointer" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div style="width:100%;aspect-ratio:16/9;border-radius:8px;background:linear-gradient(135deg,#1e2030,rgba(108,99,255,.22));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,.18);margin-bottom:3px">screenshot</div>
+            <div style="font-size:10.5px;font-weight:700;color:#94a3b8">Live Ticker + Progression Band</div>
+            <div style="font-size:9.5px;color:#475569">Apr 19</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent decisions (compact) -->
+      <div>
+        <div class="section-head" style="font-size:9px">✓ Decisions</div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8;line-height:1.4;padding:4px 0"><span style="color:#22c55e;flex-shrink:0">✓</span>Auto session startup on load</div>
+          <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8;line-height:1.4;padding:4px 0;border-top:1px solid rgba(255,255,255,.04)"><span style="color:#22c55e;flex-shrink:0">✓</span>Tetris mode uses CSS transform</div>
+          <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8;line-height:1.4;padding:4px 0;border-top:1px solid rgba(255,255,255,.04)"><span style="color:#22c55e;flex-shrink:0">✓</span>Session blocks = context fault lines</div>
+          <div style="display:flex;gap:5px;font-size:10.5px;color:#94a3b8;line-height:1.4;padding:4px 0;border-top:1px solid rgba(255,255,255,.04)"><span style="color:#22c55e;flex-shrink:0">✓</span>Dark mode is the default</div>
+          <div style="font-size:10px;color:#475569;padding:4px 0;border-top:1px solid rgba(255,255,255,.04);cursor:pointer">+ 133 more decisions →</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     T8 — AGENTS
+══════════════════════════════════ -->
+<div class="frame" id="f7">
+  <div class="frame-eyebrow">T8 — Agents Panel</div>
+  <div class="frame-desc">All your built agents — runnable from here, no terminal needed. Each agent belongs to a Board. Click Run → input form appears → agent executes → output saved as a block in the Board. Most-run agents float to the top. Status: ✓ finished · 🚧 in progress · ⚠ needs setup.</div>
+
+  <!-- Agent status bar -->
+  <div style="display:flex;gap:8px;margin-bottom:18px">
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;flex:1">
+      <div style="font-size:20px;font-weight:900;color:#22c55e;line-height:1">4</div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#475569;margin-top:2px">Ready</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;flex:1">
+      <div style="font-size:20px;font-weight:900;color:#f59e0b;line-height:1">2</div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#475569;margin-top:2px">In Progress</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;flex:1">
+      <div style="font-size:20px;font-weight:900;color:#ef4444;line-height:1">1</div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#475569;margin-top:2px">Needs Setup</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;flex:1">
+      <div style="font-size:20px;font-weight:900;color:#94a3b8;line-height:1">47</div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#475569;margin-top:2px">Total Runs</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+
+    <!-- Agent 1: Opero Audit (most-run, ✓ ready) — EXPANDED with input form -->
+    <div style="background:var(--white);border:1.5px solid rgba(99,102,241,.25);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);grid-column:1/-1">
+      <div style="height:3px;background:#6366f1"></div>
+      <div style="padding:14px 16px">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(99,102,241,.12);border:1.5px solid rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">◈</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+              <div style="font-size:14px;font-weight:800;color:var(--text)">Agency Audit Agent</div>
+              <div style="font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(34,197,94,.12);color:#22c55e;text-transform:uppercase;letter-spacing:.4px">✓ Ready</div>
+              <div style="font-size:9px;font-weight:700;color:#475569;margin-left:auto">12 runs · last: Apr 14</div>
+            </div>
+            <div style="font-size:11.5px;color:#475569;line-height:1.5">Audits any real estate agency website → competitive analysis → branded PDF pitch deck. Steps: crawl site → check SEO + tech → competitor scan → generate PDF → save to /Opero.</div>
+          </div>
+        </div>
+
+        <!-- Board tag + steps -->
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:rgba(99,102,241,.1);color:#6366f1;border:1px solid rgba(99,102,241,.2)">◈ Opero Agency</span>
+          <span style="font-size:10px;color:#475569">→ crawl → SEO check → competitors → PDF →</span>
+          <span style="font-size:10px;font-weight:700;color:#22c55e">save to board</span>
+        </div>
+
+        <!-- INPUT FORM — this is the key feature -->
+        <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#475569;margin-bottom:8px">▶ Run Agent</div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:#475569;margin-bottom:4px">Agency website URL</div>
+              <div style="background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:#475569;font-family:monospace">https://foxtons.co.uk</div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:#475569;margin-bottom:4px">Agency name (optional)</div>
+              <div style="background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:#475569">Foxtons</div>
+            </div>
+            <div style="background:#6366f1;color:#fff;font-size:12px;font-weight:800;padding:9px 18px;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0">▶ Run now</div>
+          </div>
+          <div style="font-size:10px;color:#334155;margin-top:6px">Output → PDF saved to /AI/AGENCY/Opero-Agency/ + block created in Opero board</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent 2: PropertyOS Valuation -->
+    <div style="background:var(--white);border:1.5px solid rgba(236,72,153,.18);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+      <div style="height:3px;background:#ec4899"></div>
+      <div style="padding:13px 15px">
+        <div style="display:flex;align-items:flex-start;gap:9px;margin-bottom:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:rgba(236,72,153,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">📊</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:800;color:var(--text)">Property Valuation</div>
+              <div style="font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;background:rgba(34,197,94,.12);color:#22c55e;text-transform:uppercase">✓ Ready</div>
+            </div>
+            <div style="font-size:11px;color:#475569;line-height:1.5">Catastro reference → Pisos.com scrape → valuation estimate → PDF report.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(236,72,153,.1);color:#ec4899;border:1px solid rgba(236,72,153,.2)">📊 PropertyOS</span>
+          <span style="font-size:9.5px;color:#475569">8 runs · last: Apr 10</span>
+        </div>
+        <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:10px 12px">
+          <div style="font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#475569;margin-bottom:6px">▶ Run</div>
+          <div style="display:flex;gap:6px;align-items:flex-end">
+            <div style="flex:1">
+              <div style="font-size:9.5px;font-weight:700;color:#475569;margin-bottom:3px">Catastro reference</div>
+              <div style="background:var(--white);border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:11.5px;color:#475569;font-family:monospace">3456789AB0123</div>
+            </div>
+            <div style="background:#ec4899;color:#fff;font-size:11px;font-weight:800;padding:8px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;flex-shrink:0">▶ Run</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent 3: Content Scout (automated but also manually runnable) -->
+    <div style="background:var(--white);border:1.5px solid rgba(16,185,129,.18);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+      <div style="height:3px;background:#10b981"></div>
+      <div style="padding:13px 15px">
+        <div style="display:flex;align-items:flex-start;gap:9px;margin-bottom:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🏗️</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:800;color:var(--text)">Content Scout + Writer</div>
+              <div style="font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;background:rgba(245,158,11,.12);color:#f59e0b;text-transform:uppercase">🚧 Running</div>
+            </div>
+            <div style="font-size:11px;color:#475569;line-height:1.5">RSS + news → trending topics → approved → blog article drafted → Airtable. Runs Mon–Fri 9:06.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.2)">🏗️ New Build Homes</span>
+          <span style="font-size:9.5px;color:#475569">19 runs · next: Apr 21</span>
+        </div>
+        <div style="background:rgba(245,158,11,.05);border:1.5px solid rgba(245,158,11,.15);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:8px">
+          <div style="width:7px;height:7px;border-radius:50%;background:#f59e0b;animation:pulse 1.8s ease-in-out infinite;flex-shrink:0"></div>
+          <div style="font-size:11px;color:#d97706">Running now · scouting 14 sources</div>
+          <div style="margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;background:rgba(245,158,11,.1);color:#d97706;cursor:pointer;border:1px solid rgba(245,158,11,.2)">▶ Run now too</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent 4: Needs setup -->
+    <div style="background:var(--white);border:1.5px solid rgba(239,68,68,.15);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);opacity:.8">
+      <div style="height:3px;background:rgba(239,68,68,.4)"></div>
+      <div style="padding:13px 15px">
+        <div style="display:flex;align-items:flex-start;gap:9px;margin-bottom:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:rgba(239,68,68,.08);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🌐</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:800;color:var(--text)">Storyboard Waitlist Agent</div>
+              <div style="font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;background:rgba(239,68,68,.1);color:#ef4444;text-transform:uppercase">⚠ Needs setup</div>
+            </div>
+            <div style="font-size:11px;color:#475569;line-height:1.5">Website form → capture email → Anthropic API → run full onboarding flow → welcome email. Needs Anthropic API key in config.</div>
+          </div>
+        </div>
+        <div style="background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.15);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:8px">
+          <span style="font-size:12px">⚠</span>
+          <div style="font-size:11px;color:#ef4444">Missing: ANTHROPIC_API_KEY in /storyboard/config.json</div>
+          <div style="margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;background:rgba(239,68,68,.1);color:#ef4444;cursor:pointer;border:1px solid rgba(239,68,68,.2)">Fix →</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:18px;padding:13px 16px;border:1px dashed rgba(255,255,255,.07);border-radius:10px;font-size:12px;color:#475569;line-height:1.7">
+    <strong style="color:#94a3b8">Agent = named multi-step workflow with inputs.</strong> You built these — they live in your /AI folder as scripts. Storyboard surfaces them with input forms so you don't need to say "Claude run the valuation agent" — you just type the Catastro number and press Run. Every run auto-creates a block in the relevant Board.
+  </div>
+</div>
+
+<script>
+function show(i,tab){
+  document.querySelectorAll('.frame').forEach((f,j)=>f.classList.toggle('active',j===i));
+  document.querySelectorAll('.spec-tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,3130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Storyboard</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6c63ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Storyboard">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #f0f2f8;
+  --white: #ffffff;
+  --border: #e2e6f0;
+  --text: #0f1120;
+  --text-2: #505575;
+  --text-3: #9fa8c4;
+  --r: 14px;
+  --shadow: 0 1px 4px rgba(20,40,100,0.06), 0 4px 14px rgba(20,40,100,0.04);
+  --shadow-lg: 0 8px 32px rgba(20,40,100,0.13), 0 2px 8px rgba(20,40,100,0.06);
+  --nav-w: 210px;
+  --nav-w-sm: 52px;
+  --top-h: 48px;
+  --right-w: 268px;
+}
+
+/* ── AI MODE — dark theme ── */
+body.ai-mode {
+  --bg:       #0d1117;
+  --white:    #161b27;
+  --border:   rgba(255,255,255,.08);
+  --text:     #e8eaf6;
+  --text-2:   #94a3b8;
+  --text-3:   #475569;
+  --shadow:    0 1px 4px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.25);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3);
+}
+body.ai-mode .header          { background: #0d1117; border-color: rgba(255,255,255,.06); }
+body.ai-mode .left-nav        { background: #0d1117; border-color: rgba(255,255,255,.06); }
+body.ai-mode .right-panel     { background: #0d1117; border-color: rgba(255,255,255,.06); }
+body.ai-mode .inspect-panel   { background: #0d1117; }
+body.ai-mode .block           { background: var(--white); border-color: rgba(255,255,255,.08); }
+body.ai-mode .block:hover     { border-color: var(--block-color, #6c63ff); }
+body.ai-mode .block-featured  { border-color: var(--block-color, #6c63ff) !important; }
+body.ai-mode .nav-focus       { background: linear-gradient(135deg,rgba(108,99,255,.15),rgba(108,99,255,.08)); }
+body.ai-mode .proj-header     { background: var(--white); }
+body.ai-mode .rp-today-block  { background: rgba(255,255,255,.04); }
+body.ai-mode .period-tabs     { background: rgba(255,255,255,.05); }
+body.ai-mode .period-tab      { color: var(--text-2); }
+body.ai-mode .period-tab.on   { background: rgba(255,255,255,.1); color: var(--text); }
+body.ai-mode .detail-overlay  { background: #0d1117; }
+
+/* Mode toggle button */
+.mode-toggle {
+  display: flex; align-items: center; gap: 3px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 3px; cursor: pointer;
+  transition: all .2s; flex-shrink: 0;
+}
+.mode-toggle-opt {
+  padding: 3px 10px; border-radius: 14px;
+  font-size: 11px; font-weight: 700; letter-spacing: .3px;
+  color: var(--text-3); transition: all .15s; white-space: nowrap;
+}
+.mode-toggle-opt.active {
+  background: var(--white);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+body.ai-mode .mode-toggle-opt.active {
+  background: #6c63ff;
+  color: #fff;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════
+   APP SHELL  — grid: [left-nav] [main]
+   Right panel is a fixed overlay drawer.
+══════════════════════════════════════════ */
+.app {
+  display: grid;
+  grid-template-rows: var(--top-h) 1fr;
+  grid-template-columns: var(--nav-w) 1fr;
+  height: 100vh;
+  transition: grid-template-columns .22s cubic-bezier(.4,0,.2,1);
+}
+.app.nav-collapsed {
+  grid-template-columns: var(--nav-w-sm) 1fr;
+}
+
+/* On tablet/mobile the nav leaves the grid and becomes an overlay */
+@media (max-width: 768px) {
+  .app, .app.nav-collapsed {
+    grid-template-columns: 0 1fr;
+  }
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  grid-column: 1 / -1;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  position: sticky; top: 0; z-index: 60;
+  height: var(--top-h);
+}
+
+.top-logo-area {
+  width: var(--nav-w);
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 9px;
+  padding: 0 14px;
+  transition: width .22s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+.nav-collapsed .top-logo-area { width: var(--nav-w-sm); }
+@media (max-width: 768px) {
+  .top-logo-area { width: auto; }
+}
+
+.hamburger {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--text-2);
+  transition: background .12s, color .12s;
+}
+.hamburger:hover { background: var(--bg); color: var(--text); }
+
+.logo-text {
+  font-size: 14px; font-weight: 800; letter-spacing: -.3px;
+  white-space: nowrap; overflow: hidden;
+  opacity: 1; transition: opacity .15s;
+}
+.nav-collapsed .logo-text { opacity: 0; width: 0; }
+@media (max-width: 768px) {
+  .logo-text { opacity: 1 !important; width: auto !important; }
+}
+.logo-mark { color: #6c63ff; }
+
+.top-center {
+  flex: 1;
+  padding: 0 16px;
+  font-size: 12px; font-weight: 500; color: var(--text-3);
+  display: flex; align-items: center;
+  overflow: hidden;
+}
+.breadcrumb { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.breadcrumb span { cursor: pointer; }
+.breadcrumb span:hover { color: var(--text); }
+.breadcrumb .sep { opacity: .4; }
+
+.topbar-right {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 14px;
+  flex-shrink: 0;
+}
+.seed-btn {
+  padding: 7px 13px; background: #6c63ff; color: #fff;
+  font-size: 11px; font-weight: 700; border-radius: 9px; border: none;
+  cursor: pointer; transition: opacity .15s; white-space: nowrap;
+}
+.seed-btn:hover { opacity: .85; }
+@media (max-width: 480px) {
+  .seed-btn { display: none; }
+}
+.panel-btn {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: background .12s, color .12s;
+  flex-shrink: 0;
+}
+.panel-btn:hover { background: var(--bg); color: var(--text); }
+.panel-btn.active { background: #6c63ff18; border-color: #6c63ff66; color: #6c63ff; }
+
+/* ── LEFT NAV ── */
+.left-nav {
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  position: relative; z-index: 40;
+}
+
+/* On mobile: left-nav leaves grid flow, becomes fixed overlay */
+@media (max-width: 768px) {
+  .left-nav {
+    position: fixed;
+    left: 0; top: var(--top-h); bottom: 0;
+    width: var(--nav-w);
+    transform: translateX(-100%);
+    transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
+    z-index: 200;
+  }
+  .left-nav.mobile-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  }
+}
+
+.nav-section { padding: 8px; }
+.nav-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+  color: var(--text-3); padding: 6px 8px 4px;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+.nav-collapsed .nav-label { opacity: 0; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 8px; border-radius: 9px;
+  cursor: pointer; color: var(--text-2); font-size: 12px; font-weight: 500;
+  transition: background .1s, color .1s; white-space: nowrap;
+  min-height: 34px;
+}
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--bg); color: var(--text); font-weight: 700; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-item-text {
+  overflow: hidden; white-space: nowrap;
+  transition: opacity .15s, max-width .22s;
+  max-width: 140px;
+}
+.nav-collapsed .nav-item-text { opacity: 0; max-width: 0; }
+.nav-count {
+  margin-left: auto; font-size: 9px; font-weight: 600; color: var(--text-3);
+  background: var(--bg); border-radius: 10px; padding: 1px 6px;
+  transition: opacity .15s; flex-shrink: 0;
+}
+.nav-collapsed .nav-count { opacity: 0; width: 0; overflow: hidden; }
+.nav-divider { height: 1px; background: var(--border); margin: 4px 8px; }
+
+/* Inspect button */
+.inspect-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; margin: 0 8px 8px;
+  border-radius: 10px; border: 1.5px solid var(--border);
+  background: transparent; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  transition: all .15s; white-space: nowrap; width: calc(100% - 16px);
+}
+.inspect-btn:hover { background: #6c63ff12; border-color: #6c63ff66; color: #6c63ff; }
+.inspect-btn.active { background: #6c63ff; border-color: #6c63ff; color: #fff; }
+.inspect-icon { font-size: 14px; flex-shrink: 0; }
+.inspect-score {
+  margin-left: auto; font-size: 10px; font-weight: 800;
+  padding: 2px 7px; border-radius: 20px;
+  transition: opacity .15s;
+}
+.nav-collapsed .inspect-btn span:not(.inspect-icon) { opacity: 0; width: 0; overflow: hidden; }
+
+/* ── FOCUS card ──────────────────────────────────────── */
+.nav-focus {
+  display: flex; align-items: center; gap: 10px;
+  margin: 8px 8px 4px; padding: 10px 10px 10px 12px;
+  background: linear-gradient(135deg, var(--focus-bg, #f5f3ff), var(--focus-bg2, #ede9fe));
+  border: 1.5px solid var(--focus-color, #6c63ff44);
+  border-radius: 11px; cursor: pointer;
+  transition: box-shadow .15s, border-color .15s;
+}
+.nav-focus:hover { box-shadow: 0 2px 12px var(--focus-color, #6c63ff)33; border-color: var(--focus-color, #6c63ff88); }
+.nav-focus-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  background: var(--focus-color, #6c63ff);
+  box-shadow: 0 0 0 0 var(--focus-color, #6c63ff);
+  animation: pulse-focus 2.2s infinite;
+}
+@keyframes pulse-focus {
+  0%   { box-shadow: 0 0 0 0 var(--focus-color, #6c63ff)66; }
+  60%  { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.nav-focus-text { flex: 1; min-width: 0; }
+.nav-focus-label { font-size: 8px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--focus-color, #6c63ff); margin-bottom: 1px; }
+.nav-focus-proj { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-focus-count { font-size: 10px; font-weight: 700; color: var(--focus-color, #6c63ff); background: var(--focus-color, #6c63ff)18; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+.nav-collapsed .nav-focus-text, .nav-collapsed .nav-focus-count { opacity: 0; width: 0; overflow: hidden; }
+
+/* ── Time lane labels ─────────────────────────────────── */
+.time-lane {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--text-3); padding: 18px 2px 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.time-lane::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ── Prompts nav button ───────────────────────────────── */
+.prompts-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; margin: 0 8px 4px;
+  border-radius: 10px; border: 1.5px solid #0ea5e944;
+  background: transparent; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  transition: all .15s; white-space: nowrap; width: calc(100% - 16px);
+}
+.prompts-btn:hover { background: #0ea5e912; border-color: #0ea5e988; color: #0284c7; }
+.prompts-btn.active { background: #0ea5e9; border-color: #0ea5e9; color: #fff; }
+.prompts-icon { font-size: 14px; flex-shrink: 0; }
+.nav-collapsed .prompts-btn span:not(.prompts-icon) { opacity: 0; width: 0; overflow: hidden; }
+
+/* Ideas nav item */
+.ideas-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; margin: 0 8px 4px;
+  border-radius: 10px; border: 1.5px solid #f59e0b44;
+  background: transparent; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  transition: all .15s; white-space: nowrap; width: calc(100% - 16px);
+}
+.ideas-btn:hover { background: #f59e0b12; border-color: #f59e0b88; color: #d97706; }
+.ideas-btn.active { background: #f59e0b; border-color: #f59e0b; color: #fff; }
+.ideas-icon { font-size: 14px; flex-shrink: 0; }
+.ideas-count {
+  margin-left: auto; font-size: 10px; font-weight: 800;
+  background: #f59e0b22; color: #d97706;
+  padding: 2px 7px; border-radius: 20px;
+}
+.ideas-btn.active .ideas-count { background: rgba(255,255,255,.25); color: #fff; }
+.nav-collapsed .ideas-btn span:not(.ideas-icon) { opacity: 0; width: 0; overflow: hidden; }
+
+/* Decisions nav item */
+.decisions-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; margin: 0 8px 4px;
+  border-radius: 10px; border: 1.5px solid #22c55e44;
+  background: transparent; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  transition: all .15s; white-space: nowrap; width: calc(100% - 16px);
+}
+.decisions-btn:hover { background: #22c55e12; border-color: #22c55e88; color: #15803d; }
+.decisions-btn.active { background: #22c55e; border-color: #22c55e; color: #fff; }
+.decisions-count {
+  margin-left: auto; font-size: 10px; font-weight: 800;
+  background: #22c55e22; color: #15803d;
+  padding: 2px 7px; border-radius: 20px;
+}
+.decisions-btn.active .decisions-count { background: rgba(255,255,255,.25); color: #fff; }
+.nav-collapsed .decisions-btn span:not(:first-child) { opacity: 0; width: 0; overflow: hidden; }
+
+/* Files nav item */
+.files-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; margin: 0 8px 4px;
+  border-radius: 10px; border: 1.5px solid #64748b44;
+  background: transparent; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  transition: all .15s; white-space: nowrap; width: calc(100% - 16px);
+}
+.files-btn:hover { background: #64748b12; border-color: #64748b88; color: #475569; }
+.files-count {
+  margin-left: auto; font-size: 10px; font-weight: 800;
+  background: #64748b22; color: #475569;
+  padding: 2px 7px; border-radius: 20px;
+}
+.nav-collapsed .files-btn span:not(:first-child) { opacity: 0; width: 0; overflow: hidden; }
+
+/* Flag This Moment button */
+.rp-flag-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 11px; margin: 0 0 10px;
+  background: transparent; color: #ef4444;
+  border: 1.5px solid #ef444444; border-radius: 12px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.rp-flag-btn:hover { background: #fef2f2; border-color: #ef4444; }
+.rp-flag-btn.flagged { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+/* Recent decisions in right panel */
+.rp-decision-item {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+}
+.rp-decision-item:last-child { border-bottom: none; }
+.rp-decision-check { color: #22c55e; font-size: 11px; padding-top: 1px; flex-shrink: 0; }
+.rp-decision-text { font-size: 11px; color: var(--text-2); line-height: 1.45; flex: 1; }
+.rp-decision-proj {
+  font-size: 9px; color: var(--text-3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .4px; margin-top: 2px;
+}
+
+/* FAB — floating add idea button */
+.fab-idea {
+  position: fixed; bottom: 20px; right: 20px; z-index: 200;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(217,119,6,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; transition: transform .15s, box-shadow .15s;
+}
+.fab-idea:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(217,119,6,.5); }
+
+/* Idea capture modal */
+.idea-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(15,17,32,.5); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+.idea-modal-overlay.open { display: flex; }
+.idea-modal {
+  background: var(--white); border-radius: 18px; padding: 24px;
+  width: min(440px, 90vw); box-shadow: var(--shadow-lg);
+  animation: popIn .18s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.9) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.idea-modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+.idea-modal label { display: block; font-size: 11px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .4px; }
+.idea-modal input, .idea-modal textarea, .idea-modal select {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 9px 12px; font-size: 13px; font-family: inherit;
+  background: var(--bg); color: var(--text); margin-bottom: 14px;
+  transition: border-color .12s;
+}
+.idea-modal input:focus, .idea-modal textarea:focus, .idea-modal select:focus {
+  outline: none; border-color: #f59e0b;
+}
+.idea-modal textarea { height: 80px; resize: vertical; }
+.idea-modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+.idea-modal-cancel { padding: 8px 16px; border-radius: 9px; border: 1.5px solid var(--border); background: transparent; cursor: pointer; font-size: 13px; color: var(--text-2); font-weight: 600; }
+.idea-modal-cancel:hover { background: var(--bg); }
+.idea-modal-save {
+  padding: 8px 20px; border-radius: 9px; border: none;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white; cursor: pointer; font-size: 13px; font-weight: 700;
+  box-shadow: 0 2px 8px rgba(217,119,6,.3); transition: opacity .12s;
+}
+.idea-modal-save:hover { opacity: .9; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(0);
+  background: #1a1a2e; color: #fff; padding: 10px 20px;
+  border-radius: 40px; font-size: 13px; font-weight: 600;
+  z-index: 400; opacity: 0; transition: opacity .2s, transform .2s;
+  pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+/* Inspect overlay panel */
+.inspect-panel {
+  position: fixed;
+  top: var(--top-h); left: 0; bottom: 0;
+  width: 340px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  z-index: 300;
+  transform: translateX(-100%);
+  transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.inspect-panel.open {
+  transform: translateX(var(--nav-w));
+  box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+}
+.nav-collapsed .inspect-panel.open {
+  transform: translateX(var(--nav-w-sm));
+}
+@media (max-width: 768px) {
+  .inspect-panel.open { transform: translateX(0); left: 0; }
+}
+.inspect-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.inspect-score-ring {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; flex-shrink: 0;
+  background: conic-gradient(var(--score-color) var(--score-pct), #f0f0f8 0);
+  position: relative;
+}
+.inspect-score-ring::after {
+  content: '';
+  position: absolute; inset: 6px;
+  background: white; border-radius: 50%;
+}
+.inspect-score-num {
+  position: relative; z-index: 1;
+  font-size: 14px; font-weight: 900; line-height: 1;
+}
+.inspect-score-label { font-size: 7px; font-weight: 700; color: var(--text-3); position: relative; z-index: 1; }
+.inspect-title { font-size: 13px; font-weight: 800; }
+.inspect-subtitle { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.inspect-close {
+  margin-left: auto; width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: var(--bg);
+  cursor: pointer; font-size: 11px; color: var(--text-3);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s; flex-shrink: 0;
+}
+.inspect-close:hover { background: var(--border); }
+.inspect-body { flex: 1; overflow-y: auto; padding: 14px 0; }
+.inspect-body::-webkit-scrollbar { width: 3px; }
+.inspect-body::-webkit-scrollbar-thumb { background: var(--border); }
+.inspect-section-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--text-3); padding: 0 18px 8px;
+}
+.inspect-card {
+  margin: 0 12px 8px;
+  border-radius: 10px; border: 1px solid var(--border);
+  overflow: hidden;
+}
+.inspect-card-head {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 10px 12px 8px;
+}
+.inspect-card-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.inspect-card-title { font-size: 11px; font-weight: 700; color: var(--text); line-height: 1.35; }
+.inspect-card-text { font-size: 10px; color: var(--text-2); line-height: 1.5; margin-top: 3px; }
+.inspect-card-action {
+  padding: 7px 12px;
+  font-size: 10px; font-weight: 600; color: var(--action-color, #6c63ff);
+  background: var(--action-bg, #6c63ff0d);
+  border-top: 1px solid var(--border);
+  cursor: pointer; transition: background .12s;
+}
+.inspect-card-action:hover { background: var(--action-bg2, #6c63ff18); }
+.inspect-run-btn {
+  margin: 8px 12px 16px;
+  width: calc(100% - 24px);
+  padding: 10px; border-radius: 10px;
+  background: #6c63ff; color: white;
+  border: none; font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: opacity .15s;
+}
+.inspect-run-btn:hover { opacity: .85; }
+
+.nav-footer {
+  margin-top: auto;
+  padding: 10px 10px 14px;
+  border-top: 1px solid var(--border);
+}
+.nav-stat { display: flex; align-items: center; gap: 8px; padding: 3px 0; white-space: nowrap; }
+.nav-stat-v { font-size: 13px; font-weight: 800; min-width: 32px; text-align: right; flex-shrink: 0; }
+.nav-stat-l { font-size: 10px; color: var(--text-3); transition: opacity .15s; overflow: hidden; }
+.nav-collapsed .nav-stat-l { opacity: 0; }
+
+/* ── MAIN ── */
+.main {
+  overflow-y: auto;
+  min-width: 0; /* prevent grid blowout */
+}
+.main::-webkit-scrollbar { width: 4px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── TOOLBAR (period + view) ── */
+.feed-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 2px;
+  gap: 12px;
+}
+.period-tabs {
+  display: flex; gap: 2px;
+  background: var(--border);
+  border-radius: 10px; padding: 3px;
+}
+.period-tab {
+  padding: 5px 13px; border-radius: 7px; font-size: 11px; font-weight: 600;
+  color: var(--text-3); cursor: pointer; border: none; background: transparent;
+  transition: background .13s, color .13s;
+  white-space: nowrap;
+}
+.period-tab.on { background: var(--white); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.view-tabs { display: flex; gap: 2px; }
+.view-tab {
+  width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); transition: background .12s, color .12s, border-color .12s;
+}
+.view-tab:hover { background: var(--bg); color: var(--text-2); }
+.view-tab.on { background: var(--white); color: var(--text); border-color: var(--text-3); }
+
+/* ── FEED / GRID ── */
+.feed {
+  padding: 10px 16px 16px;
+  columns: 3 200px;
+  column-gap: 12px;
+}
+@media (max-width: 1100px) { .feed { columns: 2 200px; } }
+@media (max-width: 580px)  { .feed { columns: 1; padding: 10px 12px 12px; } }
+
+/* List view mode */
+.feed.list-view { columns: 1; }
+.feed.list-view .block { display: flex; align-items: stretch; }
+.feed.list-view .block-stripe { width: 4px; height: auto; flex-shrink: 0; }
+.feed.list-view .block-thumb,
+.feed.list-view .block-thumb-ph { width: 120px; aspect-ratio: 16/9; flex-shrink: 0; }
+.feed.list-view .block-body { flex: 1; }
+.feed.list-view .block-stats { flex-direction: column; border-top: none; border-left: 1px solid var(--border); min-width: 80px; }
+.feed.list-view .bstat { border-right: none; border-bottom: 1px solid var(--border); padding: 8px; }
+@media (max-width: 580px) { .feed.list-view .block { flex-direction: column; } }
+
+/* ── Automation blocks ───────────────────────────────────────── */
+.auto-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px; margin-bottom: 24px;
+}
+.auto-card {
+  background: var(--white); border-radius: 12px;
+  border: 1.5px solid var(--border); padding: 12px 14px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
+  transition: box-shadow .14s, transform .14s;
+}
+.auto-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+.auto-card-disabled { opacity: .5; }
+.auto-card-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.auto-status-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 3px;
+}
+.auto-status-dot.ok       { background: #10b981; box-shadow: 0 0 0 3px #10b98120; animation: pulse-green 2s infinite; }
+.auto-status-dot.disabled { background: #94a3b8; }
+.auto-status-dot.manual   { background: #f59e0b; }
+@keyframes pulse-green {
+  0%,100% { box-shadow: 0 0 0 3px #10b98120; }
+  50%      { box-shadow: 0 0 0 5px #10b98130; }
+}
+.auto-card-title { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.auto-card-desc  { font-size: 11px; color: var(--text-2); line-height: 1.5; margin-bottom: 10px; }
+.auto-card-meta  { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-3); font-weight: 600; }
+.auto-card-schedule { color: var(--text-2); }
+.auto-card-last   { font-size: 10px; }
+.auto-section-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--text-3); margin: 20px 0 8px;
+}
+
+/* ── Project header card ─────────────────────────────────────── */
+.proj-header {
+  margin: 0 0 20px 0;
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.proj-header-band {
+  height: 5px;
+  width: 100%;
+}
+.proj-header-body {
+  padding: 18px 20px 16px;
+}
+.proj-header-top {
+  display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px;
+}
+.proj-header-icon {
+  font-size: 26px; flex-shrink: 0; line-height: 1;
+  margin-top: 2px;
+}
+.proj-header-name {
+  font-size: 19px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 2px;
+}
+.proj-header-goal {
+  font-size: 12px; color: var(--text-2); font-weight: 500; line-height: 1.5;
+}
+.proj-header-deploy {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; padding: 4px 10px; border-radius: 20px;
+  background: var(--bg); color: var(--text-3); border: 1px solid var(--border);
+}
+.proj-header-deploy.live {
+  background: #f0fdf4; color: #059669; border-color: #bbf7d0;
+}
+.proj-header-desc {
+  font-size: 12.5px; color: var(--text-2); line-height: 1.6;
+  margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.proj-header-stats {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.proj-stat-item { display: flex; flex-direction: column; align-items: flex-start; }
+.proj-stat-v { font-size: 16px; font-weight: 800; letter-spacing: -.3px; }
+.proj-stat-l { font-size: 10px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.proj-header-latest {
+  font-size: 11.5px; color: var(--text-2); line-height: 1.5;
+  margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.proj-header-latest strong { color: var(--text); }
+/* Live latest block card in project header */
+.proj-latest {
+  display: flex; flex-direction: column; gap: 2px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 10px 13px;
+  margin-bottom: 14px; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.proj-latest:hover { border-color: var(--block-color, #6c63ff); box-shadow: var(--shadow); }
+.proj-latest-label { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.proj-latest-title { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.proj-latest-ts { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+.proj-header-seeds {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.proj-seed-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 11.5px; color: var(--text-2);
+  padding: 8px 10px; background: var(--bg); border-radius: 8px;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.proj-seed-item:hover { background: #f5f3ff; border-color: #c4b5fd; }
+.proj-seed-copy { font-size: 11px; margin-left: auto; flex-shrink: 0; opacity: .5; }
+.proj-ideas-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.proj-idea-pill {
+  font-size: 11px; padding: 4px 10px; border-radius: 20px;
+  background: #fef9c3; color: #92400e; border: 1px solid #fde68a;
+  cursor: pointer; transition: opacity .12s;
+}
+.proj-idea-pill:hover { opacity: .8; }
+@media (max-width: 600px) {
+  .proj-header-top { flex-wrap: wrap; }
+  .proj-header-deploy { margin-left: 0; }
+}
+
+/* ── No-thumb block: small icon band instead of big empty box ── */
+.block-icon-band {
+  width: 100%;
+  height: 44px;
+  background: var(--block-bg, #f5f3ff);
+  display: flex; align-items: center; padding: 0 14px; gap: 8px;
+}
+.block-icon-band-icon { font-size: 18px; line-height: 1; }
+.block-icon-band-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--block-color); opacity: .7;
+}
+
+/* ── BOARD VIEW ── */
+.feed.board-view {
+  columns: unset;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px 24px;
+  overflow-x: auto;
+  min-height: calc(100vh - var(--top-h) - 60px);
+}
+.feed.board-view::-webkit-scrollbar { height: 5px; }
+.feed.board-view::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.board-col {
+  flex-shrink: 0;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.board-col-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 10px;
+  border-radius: var(--r) var(--r) 0 0;
+  border: 1.5px solid var(--col-color, var(--border));
+  border-bottom: none;
+  background: var(--col-bg, #f5f3ff);
+  margin-bottom: 0;
+  position: sticky; top: 0;
+}
+.board-col-icon { font-size: 16px; line-height: 1; }
+.board-col-name { font-size: 12px; font-weight: 700; color: var(--col-color); flex: 1; }
+.board-col-count {
+  font-size: 10px; font-weight: 600; color: var(--col-color);
+  background: rgba(255,255,255,.7); border-radius: 20px; padding: 1px 7px;
+}
+.board-col-blocks {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 0 4px;
+  border: 1.5px solid var(--col-color, var(--border));
+  border-top: none;
+  border-radius: 0 0 var(--r) var(--r);
+  padding: 10px 10px 10px;
+  background: var(--bg);
+  min-height: 60px;
+}
+/* Blocks inside board col are smaller */
+.board-col-blocks .block { margin-bottom: 0; }
+.board-col-blocks .block-thumb-ph { aspect-ratio: 2/1; font-size: 18px; }
+.board-col-blocks .block-thumb { aspect-ratio: 2/1; }
+.board-col-blocks .block-title { font-size: 11px; }
+.board-col-blocks .block-summary { -webkit-line-clamp: 2; font-size: 10px; }
+.board-col-blocks .block-proj { display: none; } /* hidden — redundant in board */
+.board-col-blocks .block-dot { display: none; }
+
+/* ── WORK BLOCK ── */
+.block {
+  break-inside: avoid;
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1.5px solid var(--border);
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.block:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--block-color, #6c63ff);
+}
+.block-stripe { height: 3px; background: var(--block-color, #6c63ff); }
+
+.block-thumb {
+  width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+  background: var(--block-bg, #f5f3ff);
+}
+.block-thumb-ph {
+  width: 100%; aspect-ratio: 16/9;
+  background: var(--block-bg, #f5f3ff);
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.block-lg .block-thumb, .block-lg .block-thumb-ph { aspect-ratio: 4/3; }
+
+/* Featured block — most active project's lead card */
+.block-featured { border-width: 2px; border-color: var(--block-color, #6c63ff); }
+.block-featured .block-stripe { height: 4px; }
+.block-featured .block-title { font-size: 14px; line-height: 1.3; }
+.block-featured .block-body { padding: 14px 15px 15px; }
+.block-featured .block-proj { font-size: 11px; }
+.block-featured .block-summary { font-size: 12px; -webkit-line-clamp: 4; }
+.block-featured::before {
+  content: 'LATEST';
+  display: block;
+  background: var(--block-color, #6c63ff);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 2px 10px;
+  text-align: right;
+}
+
+.block-body { padding: 11px 13px 12px; }
+.block-meta { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+.block-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.block-proj { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; }
+.block-date { margin-left: auto; font-size: 10px; color: var(--text-3); }
+.block-title { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 5px; }
+.block-summary { font-size: 11px; color: var(--text-2); line-height: 1.5; margin-bottom: 9px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.block-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.bchip {
+  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
+  background: var(--block-bg); color: var(--block-color);
+  border: 1px solid var(--block-color); opacity: .75;
+}
+/* Continue button */
+.block-continue {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 13px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s;
+}
+.block-continue:hover { background: var(--block-bg, #f5f3ff); }
+.block-continue-label {
+  font-size: 10px; font-weight: 700; color: var(--block-color, #6c63ff);
+  letter-spacing: .2px;
+}
+.block-continue-arrow {
+  font-size: 11px; color: var(--block-color, #6c63ff); opacity: .7;
+}
+
+.block-stats { display: flex; border-top: 1px solid var(--border); }
+.bstat { flex: 1; text-align: center; padding: 8px 4px; border-right: 1px solid var(--border); }
+.bstat:last-child { border-right: none; }
+.bstat-v { font-size: 14px; font-weight: 800; display: block; }
+.bstat-l { font-size: 9px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-top: 1px; display: block; }
+
+/* ── RIGHT PANEL (fixed drawer overlay) ── */
+.right-panel {
+  position: fixed;
+  top: var(--top-h); right: 0; bottom: 0;
+  width: var(--right-w);
+  background: var(--white);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 150;
+  transform: translateX(100%);
+  transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
+  overflow: hidden;
+}
+.right-panel.open {
+  transform: translateX(0);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.10);
+}
+.right-panel-inner {
+  flex: 1; overflow-y: auto; padding: 14px 0;
+}
+.right-panel-inner::-webkit-scrollbar { width: 3px; }
+.right-panel-inner::-webkit-scrollbar-thumb { background: var(--border); }
+
+.rp-section { padding: 0 14px 16px; }
+.rp-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+  color: var(--text-3); margin-bottom: 9px;
+}
+.rp-idea {
+  padding: 8px 10px; border-radius: 9px; margin-bottom: 6px;
+  font-size: 11px; line-height: 1.45; font-weight: 500; cursor: pointer;
+  border: 1px solid; transition: opacity .12s;
+}
+.rp-idea:hover { opacity: .8; }
+.rp-divider { height: 1px; background: var(--border); margin: 0 14px 14px; }
+
+.rp-model { padding: 9px 11px; border-radius: 9px; border: 1px solid var(--border); margin-bottom: 6px; }
+.rp-model-task { font-size: 10px; color: var(--text-2); margin-bottom: 4px; line-height: 1.4; }
+.rp-model-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+}
+.rp-file {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+}
+.rp-file-ext {
+  font-size: 9px; font-weight: 700; border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
+}
+.rp-file-name {
+  font-size: 11px; color: var(--text-2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── Session summary in right panel ── */
+.rp-seed-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 13px; margin: 0 0 14px;
+  background: #6c63ff; color: #fff; border: none; border-radius: 12px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 14px #6c63ff44;
+  transition: transform .12s, box-shadow .12s;
+}
+.rp-seed-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px #6c63ff55; }
+.rp-seed-btn:active { transform: translateY(0); }
+.rp-today-block {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 9px 10px; border-radius: 9px; margin-bottom: 6px;
+  background: var(--bg); border: 1px solid var(--border);
+  cursor: pointer; transition: border-color .12s;
+}
+.rp-today-block:hover { border-color: var(--block-color, #6c63ff); }
+.rp-today-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.rp-today-title { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.35; }
+.rp-today-proj { font-size: 9.5px; color: var(--text-3); margin-top: 2px; }
+.rp-session-stat {
+  display: flex; align-items: baseline; gap: 5px; margin-bottom: 3px;
+}
+.rp-session-stat-v { font-size: 22px; font-weight: 800; color: #6c63ff; line-height: 1; }
+.rp-session-stat-l { font-size: 11px; color: var(--text-2); }
+.rp-session-row { display: flex; gap: 18px; margin-bottom: 14px; }
+
+/* ── Roadmap overlay ────────────────────────────────────── */
+.roadmap-overlay {
+  display: none; position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(3px);
+}
+.roadmap-overlay.open { display: flex; align-items: stretch; }
+.roadmap-panel {
+  position: absolute; inset: 20px; background: #fff; border-radius: 16px;
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+}
+.roadmap-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid #e5e7eb;
+  background: #fff; flex-shrink: 0;
+}
+.roadmap-bar-title { font-size: 13px; font-weight: 700; color: #1e293b; flex: 1; }
+.roadmap-close {
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  background: #f1f5f9; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s;
+}
+.roadmap-close:hover { background: #e2e8f0; }
+.roadmap-iframe { flex: 1; border: none; width: 100%; }
+
+/* ── MOBILE BACKDROP (closes nav/panel when clicking outside) ── */
+.backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 130;
+  background: rgba(0,0,0,0.3);
+}
+.backdrop.show { display: block; }
+
+/* ── DETAIL OVERLAY ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,10,20,.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .18s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.detail {
+  background: var(--white);
+  border-radius: 18px;
+  width: calc(100% - 32px); max-width: 740px;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.22);
+  transform: translateY(12px); transition: transform .18s;
+}
+.overlay.open .detail { transform: translateY(0); }
+.detail-stripe { height: 4px; border-radius: 18px 18px 0 0; }
+.detail-header {
+  padding: 18px 20px 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.detail-close {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: var(--bg);
+  cursor: pointer; font-size: 13px; color: var(--text-2);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s; flex-shrink: 0;
+}
+.detail-close:hover { background: var(--border); }
+.detail-proj { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; }
+.detail-title { font-size: 18px; font-weight: 800; letter-spacing: -.3px; line-height: 1.25; margin-bottom: 4px; }
+.detail-date { font-size: 11px; color: var(--text-3); }
+.detail-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; margin: 14px 0 0; }
+.detail-body { padding: 18px 20px 26px; }
+.detail-section { margin-bottom: 18px; }
+.detail-section-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--text-3); margin-bottom: 9px;
+}
+.filmstrip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.filmstrip::-webkit-scrollbar { height: 3px; }
+.filmstrip::-webkit-scrollbar-thumb { background: var(--border); }
+.film-tile {
+  flex-shrink: 0; width: 130px; border-radius: 8px; overflow: hidden;
+  border: 2px solid var(--border); cursor: pointer;
+  transition: border-color .13s, transform .13s;
+}
+.film-tile:hover { border-color: var(--text-3); transform: scale(1.03); }
+.film-tile img { width: 100%; height: 74px; object-fit: cover; display: block; background: var(--bg); }
+.film-tile-label { padding: 5px 7px; }
+.film-tile-v { font-size: 10px; font-weight: 700; color: var(--text); display: block; }
+.film-tile-sub { font-size: 9px; color: var(--text-3); display: block; margin-top: 1px; }
+.decisions { display: flex; flex-direction: column; gap: 5px; }
+.decision {
+  display: flex; gap: 8px; align-items: flex-start;
+  padding: 7px 9px; background: #f0fdf4; border-radius: 8px;
+  border: 1px solid #bbf7d0; font-size: 12px; line-height: 1.45;
+}
+.decision-check { color: #22c55e; flex-shrink: 0; font-size: 10px; padding-top: 2px; }
+.ideas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+@media (max-width: 480px) { .ideas-grid { grid-template-columns: 1fr; } }
+.idea-card { padding: 9px 11px; border-radius: 8px; font-size: 11px; line-height: 1.45; font-weight: 500; }
+
+/* ── CANVAS VIEW — project card grid ────────────────────────── */
+.canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  padding: 14px 16px 24px;
+}
+@media (max-width: 640px) { .canvas-grid { grid-template-columns: 1fr; padding: 10px 12px 20px; } }
+
+.canvas-card {
+  background: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+  position: relative;
+}
+.canvas-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--card-color, #6c63ff);
+}
+.canvas-card-band { height: 4px; background: var(--card-color, #6c63ff); }
+.canvas-card-body { padding: 16px 16px 14px; }
+.canvas-card-top {
+  display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;
+}
+.canvas-card-icon { font-size: 26px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.canvas-card-name {
+  font-size: 14px; font-weight: 800; letter-spacing: -.2px;
+  color: var(--card-color, #6c63ff); line-height: 1.2; margin-bottom: 2px;
+}
+.canvas-card-goal {
+  font-size: 10.5px; color: var(--text-2); line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.canvas-card-deploy {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+  padding: 3px 8px; border-radius: 20px;
+  background: var(--bg); color: var(--text-3); border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.canvas-card-deploy.live { background: #f0fdf4; color: #059669; border-color: #bbf7d0; }
+.canvas-card-stats {
+  display: flex; gap: 0; border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border); margin: 0 -16px 12px; padding: 0 16px;
+}
+.canvas-stat {
+  flex: 1; text-align: center; padding: 9px 4px;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+}
+.canvas-stat:last-child { border-right: none; }
+.canvas-stat-v {
+  font-size: 17px; font-weight: 900; letter-spacing: -.4px;
+  color: var(--card-color, #6c63ff); line-height: 1;
+}
+.canvas-stat-l {
+  font-size: 8.5px; color: var(--text-3); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.canvas-card-latest {
+  font-size: 11px; color: var(--text-2); line-height: 1.4;
+  padding: 8px 10px; background: var(--bg); border-radius: 8px;
+  border: 1px solid var(--border); margin-bottom: 10px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.canvas-card-latest strong { color: var(--text); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; display: block; margin-bottom: 3px; }
+.canvas-card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+.canvas-card-autos {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 600; color: var(--text-3);
+}
+.canvas-auto-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #10b981;
+  animation: pulse-green 2s infinite; flex-shrink: 0;
+}
+.canvas-live-badge {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 700; color: var(--card-color, #6c63ff);
+  background: var(--card-color, #6c63ff)14; padding: 2px 8px; border-radius: 20px;
+}
+.canvas-live-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--card-color, #6c63ff);
+  animation: pulse-focus 2.2s infinite;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<!-- DETAIL OVERLAY -->
+<div class="overlay" id="overlay" onclick="maybeCloseDetail(event)">
+  <div class="detail" id="detail-panel">
+    <div class="detail-stripe" id="d-stripe"></div>
+    <div class="detail-header">
+      <div>
+        <div class="detail-proj" id="d-proj"></div>
+        <div class="detail-title" id="d-title"></div>
+        <div class="detail-date" id="d-date"></div>
+      </div>
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+    </div>
+    <img class="detail-thumb" id="d-thumb" src="" alt="" style="display:none"/>
+    <div class="detail-body" id="d-body"></div>
+  </div>
+</div>
+
+<!-- MOBILE BACKDROP -->
+<div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+
+<!-- ROADMAP OVERLAY -->
+<div class="roadmap-overlay" id="roadmapOverlay" onclick="if(event.target===this)closeRoadmap()">
+  <div class="roadmap-panel">
+    <div class="roadmap-bar">
+      <span id="roadmapTitle" class="roadmap-bar-title">Roadmap</span>
+      <button class="roadmap-close" onclick="closeRoadmap()">✕</button>
+    </div>
+    <iframe class="roadmap-iframe" id="roadmapIframe" src="" title="Roadmap"></iframe>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="top-logo-area">
+      <button class="hamburger" onclick="toggleNav()" aria-label="Toggle menu">
+        <svg width="14" height="11" viewBox="0 0 14 11" fill="none">
+          <rect y="0"   width="14" height="1.5" rx=".75" fill="currentColor"/>
+          <rect y="4.7" width="10" height="1.5" rx=".75" fill="currentColor"/>
+          <rect y="9.5" width="14" height="1.5" rx=".75" fill="currentColor"/>
+        </svg>
+      </button>
+      <span class="logo-text"><span class="logo-mark">S</span>toryboard</span>
+    </div>
+
+    <div class="top-center">
+      <div class="breadcrumb" id="breadcrumb">
+        <span onclick="setFilter('All')">All work</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- OS / AI mode toggle -->
+      <div class="mode-toggle" onclick="toggleMode()" title="Switch between OS mode and AI mode">
+        <div class="mode-toggle-opt active" id="modeOS">OS</div>
+        <div class="mode-toggle-opt" id="modeAI">AI</div>
+      </div>
+      <button class="seed-btn" onclick="seedNewChat()">⚡ Seed new chat</button>
+      <button class="panel-btn" id="panelBtn" onclick="toggleRight()" title="Activity panel">
+        <svg width="13" height="12" viewBox="0 0 13 12" fill="none">
+          <rect x="0" y="0" width="5" height="12" rx="2" fill="currentColor" opacity=".3"/>
+          <rect x="7" y="0" width="6" height="12" rx="2" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- LEFT NAV -->
+  <nav class="left-nav" id="leftNav">
+    <!-- FOCUS — most active project, pulsing live dot -->
+    <div class="nav-focus" id="navFocus" onclick="navFocusClick()">
+      <div class="nav-focus-dot" id="navFocusDot"></div>
+      <div class="nav-focus-text">
+        <div class="nav-focus-label">Focus</div>
+        <div class="nav-focus-proj" id="navFocusProj">—</div>
+      </div>
+      <span class="nav-focus-count" id="navFocusCount">—</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-item active" id="nav-All" onclick="navClick('All')">
+        <div class="nav-dot" style="background:var(--text-3)"></div>
+        <span class="nav-item-text">All work</span>
+        <span class="nav-count" id="cnt-All">—</span>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="nav-label">Projects</div>
+      <div id="nav-projects"></div>
+    </div>
+    <!-- Ideas filter button -->
+    <button class="ideas-btn" id="ideasBtn" onclick="toggleIdeasView()">
+      <span class="ideas-icon">💡</span>
+      <span>Ideas</span>
+      <span class="ideas-count" id="ideasCount">0</span>
+    </button>
+    <!-- Prompts nav button -->
+    <button class="prompts-btn" id="promptsBtn" onclick="togglePromptsView()">
+      <span class="prompts-icon">✍️</span>
+      <span>Prompts</span>
+      <span class="ideas-count" style="background:#0ea5e922;color:#0284c7">Soon</span>
+    </button>
+    <!-- Decisions -->
+    <button class="decisions-btn" id="decisionsBtn" onclick="toggleDecisionsView()">
+      <span style="font-size:13px;flex-shrink:0">✓</span>
+      <span>Decisions</span>
+      <span class="decisions-count" id="decisionsCount">0</span>
+    </button>
+    <!-- Files -->
+    <button class="files-btn" id="filesBtn">
+      <span style="font-size:13px;flex-shrink:0">📁</span>
+      <span>Files</span>
+      <span class="files-count" id="filesCount">0</span>
+    </button>
+    <!-- Inspect button -->
+    <button class="inspect-btn" id="inspectBtn" onclick="toggleInspect()">
+      <span class="inspect-icon">🔍</span>
+      <span>Inspect</span>
+      <span class="inspect-score" id="inspectScorePill" style="display:none"></span>
+    </button>
+
+    <div class="nav-footer">
+      <div class="nav-stat">
+        <span class="nav-stat-v" style="color:#10b981">1124</span>
+        <span class="nav-stat-l">commits</span>
+      </div>
+      <div class="nav-stat">
+        <span class="nav-stat-v" style="color:#6366f1">18</span>
+        <span class="nav-stat-l">files built</span>
+      </div>
+      <div class="nav-stat">
+        <span class="nav-stat-v" style="color:#6c63ff">10</span>
+        <span class="nav-stat-l">ideas</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN / FEED -->
+  <main class="main" id="main">
+
+    <!-- TOOLBAR -->
+    <div class="feed-toolbar">
+      <!-- Time period toggle -->
+      <div class="period-tabs" id="periodTabs">
+        <button class="period-tab on" onclick="setPeriod('all',this)">All time</button>
+        <button class="period-tab" onclick="setPeriod('month',this)">This month</button>
+        <button class="period-tab" onclick="setPeriod('week',this)">This week</button>
+        <button class="period-tab" onclick="setPeriod('today',this)">Today</button>
+      </div>
+      <!-- View mode toggle -->
+      <div class="view-tabs">
+        <button class="view-tab on" id="gridBtn" onclick="setView('grid')" title="Grid">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <rect x="0" y="0" width="5" height="5" rx="1.5" fill="currentColor"/>
+            <rect x="7" y="0" width="5" height="5" rx="1.5" fill="currentColor"/>
+            <rect x="0" y="7" width="5" height="5" rx="1.5" fill="currentColor"/>
+            <rect x="7" y="7" width="5" height="5" rx="1.5" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="view-tab" id="boardBtn" onclick="setView('board')" title="Board — by project">
+          <svg width="13" height="11" viewBox="0 0 13 11" fill="none">
+            <rect x="0"   y="0" width="3.5" height="11" rx="1.5" fill="currentColor"/>
+            <rect x="4.7" y="0" width="3.5" height="8"  rx="1.5" fill="currentColor"/>
+            <rect x="9.5" y="0" width="3.5" height="5"  rx="1.5" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="view-tab" id="canvasBtn" onclick="setView('canvas')" title="Canvas — project overview">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <rect x="0" y="0" width="12" height="5" rx="1.5" fill="currentColor" opacity=".5"/>
+            <rect x="0" y="7" width="5.5" height="5" rx="1.5" fill="currentColor"/>
+            <rect x="6.5" y="7" width="5.5" height="5" rx="1.5" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="view-tab" id="listBtn" onclick="setView('list')" title="List">
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+            <rect x="0" y="0" width="3" height="3" rx="1" fill="currentColor"/>
+            <rect x="5" y=".75" width="7" height="1.5" rx=".75" fill="currentColor"/>
+            <rect x="0" y="3.5" width="3" height="3" rx="1" fill="currentColor"/>
+            <rect x="5" y="4.25" width="7" height="1.5" rx=".75" fill="currentColor"/>
+            <rect x="0" y="7" width="3" height="3" rx="1" fill="currentColor"/>
+            <rect x="5" y="7.75" width="7" height="1.5" rx=".75" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="feed" id="feed"></div>
+  </main>
+
+</div><!-- /app -->
+
+<!-- FLOATING ADD IDEA BUTTON -->
+<button class="fab-idea" onclick="openIdeaModal()" title="Capture idea">💡</button>
+
+<!-- IDEA CAPTURE MODAL -->
+<div class="idea-modal-overlay" id="ideaModalOverlay" onclick="if(event.target===this)closeIdeaModal()">
+  <div class="idea-modal">
+    <h3>💡 Capture Idea</h3>
+    <label>Project</label>
+    <select id="ideaProject"></select>
+    <label>Title</label>
+    <input type="text" id="ideaTitle" placeholder="What's the idea in one line?">
+    <label>Details</label>
+    <textarea id="ideaDetails" placeholder="What problem does it solve? Any specifics?"></textarea>
+    <div class="idea-modal-actions">
+      <button class="idea-modal-cancel" onclick="closeIdeaModal()">Cancel</button>
+      <button class="idea-modal-save" onclick="saveIdea()">Capture →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- INSPECT PANEL -->
+<div class="inspect-panel" id="inspectPanel">
+  <div class="inspect-header">
+    <div class="inspect-score-ring" id="inspectRing" style="--score-color:#6c63ff;--score-pct:17%">
+      <span class="inspect-score-num" id="inspectScoreNum">—</span>
+      <span class="inspect-score-label">/100</span>
+    </div>
+    <div>
+      <div class="inspect-title">AI Utilization</div>
+      <div class="inspect-subtitle" id="inspectSub">Run populate_storyboard.py to scan</div>
+    </div>
+    <button class="inspect-close" onclick="toggleInspect()">✕</button>
+  </div>
+  <div class="inspect-body" id="inspectBody">
+    <div style="padding:40px 18px;text-align:center;color:var(--text-3)">
+      <div style="font-size:32px;margin-bottom:12px">🔍</div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px">No scan data yet</div>
+      <div style="font-size:11px;line-height:1.6">Run <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:10px">python3 populate_storyboard.py --inspect</code> to analyse your AI utilization across all projects.</div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL — Session summary -->
+<aside class="right-panel" id="rightPanel">
+  <div class="right-panel-inner">
+
+    <!-- Seed CTA — most important action -->
+    <div class="rp-section" style="padding-top:14px">
+      <button class="rp-seed-btn" onclick="seedSession()">⚡ Seed next chat</button>
+      <button class="rp-flag-btn" id="flagBtn" onclick="flagMoment()">🚩 Flag This Moment</button>
+    </div>
+
+    <!-- Session stats -->
+    <div class="rp-section">
+      <div class="rp-title">This session</div>
+      <div class="rp-session-row">
+        <div class="rp-session-stat">
+          <span class="rp-session-stat-v" id="rp-blocks-today">0</span>
+          <span class="rp-session-stat-l">today</span>
+        </div>
+        <div class="rp-session-stat">
+          <span class="rp-session-stat-v" id="rp-ideas-count">0</span>
+          <span class="rp-session-stat-l">ideas</span>
+        </div>
+        <div class="rp-session-stat">
+          <span class="rp-session-stat-v" id="rp-live-count">0</span>
+          <span class="rp-session-stat-l">live</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-divider"></div>
+
+    <!-- Today's blocks -->
+    <div class="rp-section">
+      <div class="rp-title">Today's work</div>
+      <div id="rp-today"></div>
+    </div>
+
+    <div class="rp-divider"></div>
+
+    <!-- Recent decisions -->
+    <div class="rp-section">
+      <div class="rp-title">Recent decisions</div>
+      <div id="rp-decisions"></div>
+    </div>
+
+    <div class="rp-divider"></div>
+
+    <!-- Ideas captured -->
+    <div class="rp-section">
+      <div class="rp-title">Ideas captured</div>
+      <div id="rp-ideas"></div>
+    </div>
+
+    <div class="rp-divider"></div>
+
+    <!-- Model advisor (compact) -->
+    <div class="rp-section">
+      <div class="rp-title">Model</div>
+      <div class="rp-model">
+        <div class="rp-model-badge" style="background:#ede9fe;color:#6c63ff">✦ Sonnet 4.6</div>
+        <div class="rp-model-task" style="margin-top:4px;margin-bottom:0">Arch decisions → <strong style="color:#15803d">Opus</strong> &nbsp;|&nbsp; Batch → <strong style="color:#475569">Haiku</strong></div>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+// ═══════════════════════════════════
+// COLORS
+// ═══════════════════════════════════
+const PROJ = {
+  "New Build Homes":  { color:"#10b981", bg:"#f0fdf4", icon:"🏗️" },
+  "Hansson Hertzell": { color:"#B39960", bg:"#faf8f0", icon:"🏠" },
+  "Storyboard":       { color:"#6c63ff", bg:"#f5f3ff", icon:"🎬" },
+  "Opero Agency":     { color:"#6366f1", bg:"#eef2ff", icon:"🏢" },
+  "Curated Estate":   { color:"#0ea5e9", bg:"#f0f9ff", icon:"🏡" },
+  "PropertyOS":       { color:"#ec4899", bg:"#fdf2f8", icon:"📊" },
+  "Skills & Memory":  { color:"#8b5cf6", bg:"#f5f3ff", icon:"🧠" },
+};
+
+const IDEA_BG = ["#fef9c3","#dbeafe","#dcfce7","#fce7f3","#ede9fe","#ffedd5"];
+
+// ─── Scheduled automations (from live MCP — last synced Apr 17 2026) ──────────
+// lastRun = most recent execution. status: "ok" | "disabled" | "manual"
+const AUTOMATIONS = [
+  // ── New Build Homes
+  { id:"auto-nb-blog",     project:"New Build Homes",  enabled:true,  status:"ok",
+    title:"Blog Pipeline",             schedule:"Mon–Fri 9:06 AM",    lastRun:"Apr 16",  nextRun:"Apr 17",
+    desc:"Content scout + approval-based writer. Scouts trending articles → Airtable, writes any marked Approved.",
+    chips:["Daily","Blog","Airtable","Content scout"] },
+  { id:"auto-nb-social",   project:"New Build Homes",  enabled:true,  status:"ok",
+    title:"Social Pipeline",           schedule:"Mon/Wed/Fri/Sun 9:01 AM", lastRun:"Apr 15", nextRun:"Apr 17",
+    desc:"Picks content from Airtable, generates captions, renders via Remotion, schedules to Postiz across 5 platforms.",
+    chips:["Mon/Wed/Fri","Social","Remotion","Postiz"] },
+  { id:"auto-nb-seo",      project:"New Build Homes",  enabled:true,  status:"ok",
+    title:"SEO Audit + Search Console Fix", schedule:"Mon 8:01 AM",  lastRun:"Apr 13",  nextRun:"Apr 20",
+    desc:"Weekly website audit, SEO fixes, and Search Console issue resolution.",
+    chips:["Weekly","SEO","Search Console"] },
+  { id:"auto-nb-gsc",      project:"New Build Homes",  enabled:true,  status:"ok",
+    title:"GSC Health Monitor",        schedule:"Mon 9:06 AM",        lastRun:"Apr 13",  nextRun:"Apr 20",
+    desc:"Monitors 5xx errors, 404s, indexing issues, and sitemap status on newbuildhomescostablanca.com.",
+    chips:["Weekly","GSC","Monitoring"] },
+  { id:"auto-nb-collab",   project:"New Build Homes",  enabled:true,  status:"ok",
+    title:"Collaborator Email",        schedule:"Friday 9:07 AM",     lastRun:"Apr 10",  nextRun:"Apr 17",
+    desc:"Parses Background Properties feed, filters villas >€400K, generates branded HTML, sends to 300 collaborators via MailerLite.",
+    chips:["Weekly","Email","300 contacts","MailerLite"] },
+  { id:"auto-nb-gsc2",     project:"New Build Homes",  enabled:false, status:"disabled",
+    title:"GSC Monitor (old)",         schedule:"Mon 9:03 AM",        lastRun:"—",       nextRun:"—",
+    desc:"Legacy Search Console check — disabled, replaced by weekly-gsc-monitoring.",
+    chips:["Disabled","GSC"] },
+  { id:"auto-nb-schema",   project:"New Build Homes",  enabled:false, status:"disabled",
+    title:"Monthly Schema Validation", schedule:"1st of month 10:00 AM", lastRun:"—",   nextRun:"—",
+    desc:"JSON-LD schema validation audit for NBHCB — checks all page types against Google Rich Results requirements.",
+    chips:["Disabled","Monthly","Schema"] },
+
+  // ── Hansson Hertzell
+  { id:"auto-hh-fb-am",    project:"Hansson Hertzell", enabled:true,  status:"ok",
+    title:"Facebook Group Sharing — Morning", schedule:"Daily 10:08 AM", lastRun:"Apr 16", nextRun:"Apr 17",
+    desc:"Shares latest H&H Facebook page post to 88 groups across 11 languages. Reads BRIEF.md, groups.json, LOG.md.",
+    chips:["Daily","Facebook","88 groups","11 languages"] },
+  { id:"auto-hh-fb-pm",    project:"Hansson Hertzell", enabled:true,  status:"ok",
+    title:"Facebook Group Sharing — Evening", schedule:"Daily 7:01 PM", lastRun:"Apr 16", nextRun:"Apr 17",
+    desc:"Evening run of H&H Facebook group sharing pipeline.",
+    chips:["Daily","Facebook","Evening run"] },
+  { id:"auto-hh-social",   project:"Hansson Hertzell", enabled:true,  status:"ok",
+    title:"H&H Social Pipeline",       schedule:"Tue/Thu 9:02 AM",    lastRun:"Apr 16",  nextRun:"Apr 21",
+    desc:"Social media content pipeline — content creation, scheduling, and posting across platforms.",
+    chips:["Tue/Thu","Social","Multi-platform"] },
+  { id:"auto-hh-crm",      project:"Hansson Hertzell", enabled:true,  status:"ok",
+    title:"CRM + Client Outreach",     schedule:"Mon/Thu 8:10 AM",    lastRun:"Apr 16",  nextRun:"Apr 20",
+    desc:"H&H client database management, lead segmentation, and client outreach via Gmail and MailerLite.",
+    chips:["Mon/Thu","CRM","Gmail","MailerLite"] },
+  { id:"auto-hh-drafts",   project:"Hansson Hertzell", enabled:true,  status:"ok",
+    title:"Daily Client Outreach Drafts", schedule:"Mon–Fri 9:03 AM", lastRun:"Apr 16", nextRun:"Apr 17",
+    desc:"Creates 10 personalised Gmail drafts per day from Airtable CRM — language-matched with blog links.",
+    chips:["Daily","Gmail","10 drafts/day","Airtable"] },
+  { id:"auto-email-mkt",   project:"Hansson Hertzell", enabled:true,  status:"ok",
+    title:"Email Marketing Campaigns", schedule:"Wed 10:04 AM",       lastRun:"Apr 15",  nextRun:"Apr 22",
+    desc:"MailerLite campaigns for NBHCB and H&H — campaign creation, subscriber segmentation, newsletter sends.",
+    chips:["Weekly","Email","MailerLite","NBHCB+H&H"] },
+
+  // ── Opero Agency (manual)
+  { id:"auto-op-sales",    project:"Opero Agency",     enabled:true,  status:"manual",
+    title:"Sales Presentation Generator", schedule:"Manual only",    lastRun:"—",       nextRun:"On demand",
+    desc:"Generates branded PDF property presentations for clients — cover page, property cards (3 photos each), buying guide.",
+    chips:["Manual","PDF","Branded","Client presentations"] },
+];
+
+// ─── Project metadata ─────────────────────────────────────────────────────────
+const PROJECT_META = {
+  "Opero Agency": {
+    goal: "7–10 anchor clients at €1,200–2,500/month recurring retainer. Spain first, then Scandinavia.",
+    desc: "AI consultancy for real estate agencies. We become the client's AI department — embedded, ongoing partner. opero.agency LIVE with audit tool, 7 articles, MailerLite lead nurture sequence. opero.ai acquired as second domain.",
+    deploy: "opero.agency (LIVE — Netlify CI/CD, GSC verified, audit tool live at /audit/)",
+    latest: "opero.agency live. Audit tool running. 3-email MailerLite lead sequence active (ID 184539575158310784). 12 client audits, 3 BD pitch decks, Airtable CRM. MailerLite automation ID live.",
+    seeds: ["opero.agency is LIVE. Audit tool at /audit/ is live and has been tested on Foxtons, Eklöf, Bronsfastigheter. MailerLite 3-email sequence fires on every audit email submission. Next: announce audit tool on LinkedIn (not done yet), build shareable audit URL (?domain= param), start The Luxury Portfolio (Søvilla deal confirmed)."],
+    stats: [{ v:"opero.agency", l:"LIVE" },{ v:"12", l:"client audits" },{ v:"3", l:"BD pitches" },{ v:"7", l:"articles" }],
+    roadmapFile: "../Opero-Agency-Map.html",
+  },
+  "New Build Homes": {
+    goal: "Rank in AI search across 9 languages. Become the reference for Costa Blanca new builds.",
+    desc: "Next.js 14 real estate site for Costa Blanca properties. 9 languages, ISR, dual XML feed parser, SmartSearch, full measurement stack.",
+    deploy: "newbuildhomescostablanca.com (LIVE — always on)",
+    latest: "1,124 commits. 9-language i18n. SmartSearch + Airtable + GTM + Consent Mode v2 live. 296 content pieces in one session.",
+    seeds: ["Continue from: 9-language content push done. SmartSearch live. Next: H&H cross-link strategy, video reels for social."],
+    stats: [{ v:"1124", l:"commits" },{ v:"9", l:"languages" },{ v:"296", l:"content pieces" },{ v:"Live", l:"deployed" }],
+  },
+  "Storyboard": {
+    goal: "Zero-loss AI memory layer. Every session, decision and idea captured and instantly reusable.",
+    desc: "Visual memory dashboard for AI work sessions. App shell + masonry grid + context seeding + inspect panel. Built in Cowork mode, no Chrome extension needed.",
+    deploy: "Local — storyboard/index.html (open from AGENCY folder)",
+    latest: "App shell, masonry grid, board view, inspect panel, populate_storyboard.py, ideas capture system.",
+    seeds: ["Continue storyboard sprint: add PWA manifest for mobile home screen install, wire blocks-data.json auto-load, GitHub portfolio push."],
+    stats: [{ v:"25", l:"blocks" },{ v:"10-day", l:"sprint" },{ v:"Sonnet", l:"model" },{ v:"Local", l:"deployed" }],
+  },
+  "Curated Estate": {
+    goal: "AEO-first content platform. Every article 100/100 before deploy.",
+    desc: "Content-first real estate platform. audit.py is the live gate — 46 checks, 7 categories, AEO + SEO foundations. All 20 journal articles 100/100.",
+    deploy: "aeonederland.nl external tool verified 98–100/100",
+    latest: "audit.py live with 46 checks. All 20 articles at 100/100. Content gate runs before every deploy.",
+    seeds: ["Continue from: audit.py complete. Next: PageSpeed API integration (Core Web Vitals), automated deploy gate, new article batch."],
+    stats: [{ v:"46", l:"audit checks" },{ v:"20", l:"articles" },{ v:"100/100", l:"score" },{ v:"7", l:"categories" }],
+  },
+  "PropertyOS": {
+    goal: "SaaS valuation tool for Spanish real estate. Flask web form → Railway deploy → iframe in Meta ads.",
+    desc: "Valuation engine + interactive map. Catastro API + pisos.com scraping confirmed. Static market averages accurate enough for v1.",
+    deploy: "Not yet — next step is Railway deploy for public HTTPS URL",
+    latest: "Valuation engine live. Map live. Catastro API confirmed. pisos.com scraping confirmed. Flask web form is next.",
+    seeds: ["Continue PropertyOS: build Flask web form, push code to GitHub (oskar-del), deploy to Railway for public URL, iframe into Meta ad landing pages."],
+    stats: [{ v:"Live", l:"engine" },{ v:"Railway", l:"next deploy" },{ v:"Catastro", l:"API" },{ v:"pisos.com", l:"data source" }],
+    roadmapFile: "../../SAAS/ROADMAP.html",
+  },
+  "Hansson Hertzell": {
+    goal: "Grow mandates and leads from AI-first marketing on hanssonhertzell.se.",
+    desc: "Established Swedish real estate agency with live site on custom PHP CMS. 9-language support, beige/navy/gold brand. MailerLite email pipeline, Gmail client intelligence, Facebook group posting (2×/day, 88 groups, 11 languages).",
+    deploy: "hanssonhertzell.se (LIVE — legacy PHP CMS platform)",
+    latest: "Facebook group automation live (morning + evening). Daily client outreach drafts (10/day from Airtable CRM). H&H email pipeline with domain-authenticated MailerLite. Gmail archive segmented (2017+) into scored Excel database.",
+    seeds: ["H&H is live. Key automations: Facebook group posting (2x daily, 88 groups), daily Gmail drafts (10/day), CRM outreach (Mon/Thu). Next: run client segmentation on updated Gmail archive, send next newsletter batch, check GSC for hanssonhertzell.se."],
+    stats: [{ v:"hanssonhertzell.se", l:"LIVE" },{ v:"88", l:"FB groups" },{ v:"10/day", l:"email drafts" },{ v:"9", l:"languages" }],
+  },
+  "Skills & Memory": {
+    goal: "Persistent context — Claude starts every session knowing exactly where to continue.",
+    desc: "Auto-memory system, skills library, MEMORY.md index. Session workflow skill for start-of-session loading. Critical thinker skill.",
+    deploy: "/mnt/.auto-memory/MEMORY.md — always loaded",
+    latest: "MEMORY.md index live. Session workflow + critical thinker + content audit gate skills built.",
+    seeds: ["Review MEMORY.md at start of session. Run session-workflow skill if context feels stale."],
+    stats: [{ v:"MEMORY.md", l:"live" },{ v:"30+", l:"skills" },{ v:"Auto", l:"loads" }],
+  },
+};
+const IDEA_BD = ["#fde68a","#bfdbfe","#bbf7d0","#fbcfe8","#ddd6fe","#fed7aa"];
+
+// ═══════════════════════════════════
+// DATA
+// ═══════════════════════════════════
+// liveBlocks: injected in real-time by MCP server via blocks-data.json
+// Merged with BLOCKS at render time — live blocks win on duplicate id
+let liveBlocks = [];
+
+const BLOCKS = [
+  // ── STORYBOARD
+  { id:"sb-1", type:"session", project:"Storyboard", date:"Apr 17", ts:20260417,
+    title:"Dashboard v1 — App shell + grid",
+    summary:"Product ideation → architecture locked → visual dashboard from real session data. Context stitcher live. Masonry grid + collapsible nav + right panel.",
+    chips:["Architecture","Dashboard","Sprint"],
+    thumb:"thumbnails/storyboard-dashboard-sm.png",
+    decisions:["Cowork-native first — no Chrome extension v1","MVP = visual board + context stitcher","Sonnet 4.6 for sprint, Opus for architecture","10 days full focus"],
+    ideas:["Bidirectional context bridge — feed context BACK into AI","Context stitcher — flag moment, seed next chat"],
+    seed:"Storyboard — 10-day MVP sprint\n\nBuilt: App shell (left nav + 3-col grid + right panel drawer), board view, time toggle, per-block seed buttons, consolidated blocks\nDecisions: Cowork-native v1, Sonnet for sprint, Opus for architecture, newest-first sort\nFiles: storyboard/index.html, generate_seed.py, capture_idea.py, screenshot.sh, SKILL.md\nNext: real Chrome headless screenshots, multi-slide PPTX extraction, PWA manifest for mobile install, GitHub portfolio push",
+    big: true },
+  { id:"sb-2", type:"idea", project:"Storyboard", date:"Apr 17", ts:20260417,
+    title:"💡 Visual version filmstrip",
+    summary:"v1→v12 of a pitch deck as visual frames, not filenames. Spot the lost design element from slide 2 in v3 without opening files.",
+    chips:["Version history","Visual memory"], decisions:[], ideas:[] },
+  { id:"sb-3", type:"idea", project:"Storyboard", date:"Apr 17", ts:20260417,
+    title:"💡 Auto-screenshot to storyboard server",
+    summary:"When a design is built, auto-screenshot it. Session blocks show the actual visual frame on hover — you SEE your work, not just words.",
+    chips:["Thumbnails","Screenshots"], decisions:[], ideas:[] },
+  { id:"sb-4", type:"idea", project:"Storyboard", date:"Apr 17", ts:20260417,
+    title:"💡 Context stitcher — zero-loss handoff",
+    summary:"Seed New Chat copies the full session digest. Next Claude starts with complete memory. Context windows become irrelevant.",
+    chips:["Context stitcher","MVP"], decisions:[], ideas:[] },
+  { id:"sb-5", type:"idea", project:"Storyboard", date:"Apr 17", ts:20260417,
+    title:"💡 Mobile — thumb-scroll block grid",
+    summary:"Open your app in the gym at 7am. Block grid, thumb scroll. Each box = one task, automation, or project. A nicer way to look at your work.",
+    chips:["Mobile","App vision"], decisions:[], ideas:[] },
+
+  // ── NEW BUILD HOMES
+  { id:"nb-1", type:"session", project:"New Build Homes", date:"Mar 17–19", ts:20260317,
+    title:"9 Languages · Bespoke Build · Land Plots",
+    summary:"All pages unified across 9 languages in one push. Bespoke Build, Build Your Own, Land Plots — new buyer persona. 8 articles × 8 languages = 64 files.",
+    chips:["9 languages","64 files","New section"],
+    thumb:"thumbnails/newbuild-homepage-sm.png",
+    decisions:["Ship complete translation batches — no partial rollouts","Unify across all languages in single commits"],
+    ideas:["Bespoke buyer — someone who wants to build on a plot"],
+    stats:{ commits:189, files:64 } },
+  { id:"nb-2", type:"session", project:"New Build Homes", date:"Mar 11–13", ts:20260311,
+    title:"SmartSearch · Blog Redesign · GTM Analytics",
+    summary:"SmartSearch live. Blog with 8 category sections. GTM + Consent Mode v2 + conversion tracking — full measurement stack.",
+    chips:["SmartSearch","8 categories","GTM"],
+    decisions:["Blog with 8 category sections — not a dump","Full measurement: GTM + Consent Mode v2"],
+    ideas:["SmartSearch as primary discovery tool on homepage"],
+    stats:{ commits:186 } },
+  { id:"nb-3", type:"session", project:"New Build Homes", date:"Feb 20–21", ts:20260220,
+    title:"Airtable Hub · 37 Articles · 8 Languages",
+    summary:"Airtable becomes the single content brain. 37 articles × 8 languages in one push — 296 pieces of content in one session.",
+    chips:["Airtable","296 pieces","8 languages"],
+    decisions:["Airtable as single truth — developments, builders, areas, blog, social, email"],
+    ideas:["37 × 8 = 296 content pieces in one session"],
+    stats:{ commits:52, files:296 } },
+  { id:"nb-4", type:"session", project:"New Build Homes", date:"Feb 4–9", ts:20260204,
+    title:"Legal Layer + UI Redesign",
+    summary:"After Sales, Tourist Rental License, GDPR built. Property card redesign, town normalization, dual XML feed merger.",
+    chips:["Legal pages","Feed merge","UI"],
+    decisions:["Town normalization to merge feed duplicates","Ship legal pages before launch"],
+    ideas:[], stats:{ commits:116 } },
+  { id:"nb-5", type:"session", project:"New Build Homes", date:"Dec 28 – Jan 4", ts:20251228,
+    title:"Initial Build — Next.js 14 · XML Feed · Lead Forms",
+    summary:"Full site from zero. REDSP XML feed parser, first listings, lead capture at every conversion point from day one.",
+    chips:["Next.js 14","XML feed","Launch"],
+    decisions:["9-language i18n from day one — biggest content bet","ISR: properties revalidate at source"],
+    ideas:["Lead forms at conversion points from first deploy"],
+    stats:{ commits:56 }, big: true },
+
+  // ── OPERO AGENCY — built from actual files on disk
+  { id:"op-brand", type:"session", project:"Opero Agency", date:"Apr 2026", ts:20260408,
+    title:"Brand Identity — opero.ai · Logos · Brand Kit",
+    summary:"opero.ai domain acquired. Full brand identity: navy #080D1A, gold #C4973A, cyan accent. Logo dark/light/lockup/SVG. LinkedIn banner. Brand kit documented. Tagline: 'AI that works. Partners that stay.'",
+    chips:["opero.ai","Brand kit","Logos","LinkedIn banner"],
+    decisions:[
+      "opero.ai — clean, memorable, Latin for 'I work'",
+      "Standalone brand — not under H&H or NBHCB",
+      "Navy + gold = premium, not tech-startup blue",
+    ],
+    ideas:["Stop sounding like an SEO agency that learned AI vocabulary"],
+    seed:"Opero Agency — Brand\n\nDomain: opero.ai\nColors: Navy #080D1A, Gold #C4973A, Cyan accent\nFiles: opero-logo-dark.png, opero-logo-light.png, opero-logo-lockup.png, opero-logo.svg, opero-linkedin-banner.png\nBrand kit: /audit-protocol/opero-brand-kit/BRAND.md\nNext: apply brand to website, email templates, all decks" },
+
+  { id:"op-arch", type:"session", project:"Opero Agency", date:"Apr 2026", ts:20260407,
+    title:"Agency Architecture — Concept · Playbook · Three Core Decks",
+    summary:"Full concept doc written. Client playbook. Build plan with 8 numbered progression tracks. Three core decks: Pitch Deck (12 slides), Client Intro (10 slides), Showcase (13 slides). Hub & Spoke flow + Flywheel strategy mapped.",
+    chips:["Concept","Playbook","Pitch Deck","Client Intro","Showcase","Flow strategy"],
+    decisions:[
+      "7–10 anchor clients at €1,200–2,500/month — not 30 small ones",
+      "Spain first, Scandinavia as growth market (language advantage + high willingness to pay)",
+      "Recurring retainer model — become the client's AI department, not a one-off build",
+      "Reference projects: NBHCB + H&H — everything we sell we've already built ourselves",
+    ],
+    ideas:[
+      "The agency launches once NBHCB and H&H are complete — those are the proof of concept",
+      "Cold outreach → Client Intro deck. First serious meeting → Showcase. Investment → Pitch Deck",
+    ],
+    filmstrip:[
+      { label:"Pitch Deck",    sub:"12 slides · Stakeholder/investor", thumb:"thumbnails/storyboard-dashboard-sm.png" },
+      { label:"Client Intro",  sub:"10 slides · Cold outreach",        thumb:"thumbnails/storyboard-dashboard-sm.png" },
+      { label:"Showcase",      sub:"13 slides · Portfolio proof",      thumb:"thumbnails/storyboard-dashboard-sm.png" },
+      { label:"Hub & Spoke",   sub:"Flow strategy v2",                 thumb:"thumbnails/storyboard-dashboard-sm.png" },
+      { label:"Flywheel",      sub:"Revenue model",                    thumb:"thumbnails/storyboard-dashboard-sm.png" },
+    ],
+    filmstripTitle:"Core deck suite",
+    seed:"Opero Agency — Architecture\n\nConcept: opero-concept.md\nPlaybook: opero-client-playbook.md\nBuild plan: OPERO-BUILD-PLAN.md (8 progression tracks)\nThree decks: Pitch Deck, Client Intro, Showcase — all in /AGENCY/Presentations/\nFlow: Hub & Spoke v2, Flywheel\nNext: Tasks 3-8 (AEO Checker, XML Analyser, MailerLite, Valuation Reports, Website)" },
+
+  { id:"op-audit", type:"session", project:"Opero Agency", date:"Apr 10–13", ts:20260413,
+    title:"Audit Pipeline — 12 clients · Template · Generator",
+    summary:"Universal audit protocol built: TEMPLATE deck, agency-audit-template.js, universal-audit-generator.js. 12 client audits produced: Foxtons, Savills, Winkworth, Hamptons, KnightFrank, Chestertons, Bronsfastigheter, Eklöf, EquityUnion, SevenGables, SuccessBusinessAdvisors + one more. Score on the cover.",
+    chips:["12 clients","Template","Generator","Audit protocol"],
+    thumb:"thumbnails/foxtons-v13-sm.png",
+    decisions:[
+      "Audit score on the cover — makes the problem undeniable before the meeting starts",
+      "Same template, same scoring, every client — repeatable and scalable",
+      "Audit is the wedge — give it away to earn the retainer",
+    ],
+    ideas:[
+      "1,300 rental properties should ALL have schema — that's the hook for large agencies",
+      "Universal audit: any website, any industry — not just real estate",
+    ],
+    filmstrip:[
+      { label:"Foxtons",      sub:"Audit deck",  thumb:"thumbnails/foxtons-v13-sm.png"    },
+      { label:"Savills",      sub:"Audit deck",  thumb:"thumbnails/savills-v9-sm.png"     },
+      { label:"Winkworth",    sub:"Audit deck",  thumb:"thumbnails/winkworth-v11-sm.png"  },
+      { label:"Brons v2",     sub:"Fastighetsaudit", thumb:"thumbnails/brons-v2-sm.png"  },
+      { label:"Eklöf v2",     sub:"Fastighetsaudit", thumb:"thumbnails/eklof-v2-sm.png"  },
+    ],
+    filmstripTitle:"Client audits — all 12",
+    seed:"Opero Agency — Audit Pipeline\n\nTemplate: /audit-protocol/Opero-AgencyAudit-TEMPLATE.pptx\nGenerator: /audit-protocol/scripts/universal-audit-generator.js\nSkill: /audit-protocol/skills/opero-audit-pipeline/SKILL.md\n12 clients audited: Foxtons, Savills, Winkworth, Hamptons, KnightFrank, Chestertons, Brons, Eklöf, EquityUnion, SevenGables, SuccessBusinessAdvisors\nNext: add new clients to pipeline, deploy as web tool on opero.ai, connect score to Airtable lead record",
+    big: true },
+
+  { id:"op-pitch", type:"session", project:"Opero Agency", date:"Apr 10–13", ts:20260412,
+    title:"BD Pitch Decks — 3 UK clients · Foxtons v12+v13",
+    summary:"BD pitch decks for Foxtons (v12, v13), Savills (v9), Winkworth (v11). Audit-as-wedge format. Score on cover. Findings as the pitch. First Meeting deck v1 for cold intro. Stakeholder Pitch v1+v2.",
+    chips:["Foxtons v13","Savills v9","Winkworth v11","BD pitch"],
+    thumb:"thumbnails/foxtons-v13-sm.png",
+    decisions:[
+      "Lead with the score — undeniable before anyone speaks",
+      "Audit report as the pitch deck — no fluff, just findings + what Opero fixes",
+    ],
+    ideas:[],
+    filmstrip:[
+      { label:"Foxtons v13",   sub:"12 slides · final",   thumb:"thumbnails/foxtons-v13-sm.png"   },
+      { label:"Foxtons v12",   sub:"Previous version",    thumb:"thumbnails/foxtons-v13-sm.png"   },
+      { label:"Savills v9",    sub:"10 slides",           thumb:"thumbnails/savills-v9-sm.png"    },
+      { label:"Winkworth v11", sub:"12 slides",           thumb:"thumbnails/winkworth-v11-sm.png" },
+    ],
+    filmstripTitle:"BD pitch decks — all versions",
+    seed:"Opero Agency — BD Pitches\n\nFoxtons v13: /AGENCY/Opero-BD-Pitch-Foxtons-v13.pptx\nSavills v9: /AGENCY/Opero-BD-Pitch-Savills-v9.pptx\nWinkworth v11: /AGENCY/Opero-BD-Pitch-Winkworth-v11.pptx\nNext: follow up on pitches, add new UK agencies to pipeline, US outreach using same format" },
+
+  { id:"op-case", type:"session", project:"Opero Agency", date:"Apr 10–12", ts:20260411,
+    title:"Case Studies + US Outreach",
+    summary:"NBHCB case study v1→v3: from methodology-first to results-first (real traffic, leads, XML data). US outreach list built. opero-us-outreach-list.md. US Agency Deck adapted.",
+    chips:["Case study","NBHCB v3","US outreach","Results-first"],
+    thumb:"thumbnails/nbhcb-v3-sm.png",
+    decisions:[
+      "Show actual results — traffic numbers, lead counts — not methodology",
+      "US market: same audit format, different market context",
+    ],
+    ideas:["Case study becomes the most credible piece of outreach"],
+    filmstrip:[
+      { label:"NBHCB v1", sub:"Draft — methodology first", thumb:"thumbnails/nbhcb-v1-sm.png" },
+      { label:"NBHCB v2", sub:"Revised",                   thumb:"thumbnails/nbhcb-v2-sm.png" },
+      { label:"NBHCB v3", sub:"Final — results first",     thumb:"thumbnails/nbhcb-v3-sm.png" },
+    ],
+    filmstripTitle:"Case study iterations",
+    seed:"Opero Agency — Case Studies + US Outreach\n\nNBHCB case study v3: /AGENCY/Opero-Case-Study-NBHCB-v3.pptx (results-first)\nUS outreach: /AGENCY/opero-us-outreach-list.md\nUS Agency Deck: /AGENCY/Opero-US-Agency-Deck.pptx\nNext: H&H case study (second reference), add Curated Estate once launched" },
+
+  { id:"op-website", type:"session", project:"Opero Agency", date:"Apr 10–11", ts:20260410,
+    title:"opero.agency — Full Website Live 🟢",
+    summary:"Complete opero.agency website built and deployed: 1,346-line homepage, audit tool at /audit/ (584 lines), Foxtons interactive demo, 7 SEO articles, Google Search Console verified (8DoJodqM...). Airtable lead capture wired. opero-deploy.zip + opero-audit-tool.zip built.",
+    chips:["opero.agency","LIVE","Audit tool","7 articles","GSC verified","Foxtons demo"],
+    decisions:[
+      "Domain: opero.agency (not opero.ai — different acquisition)",
+      "Audit tool as the top-of-funnel: score + competitor comparison, no email required for Tier 1",
+      "Foxtons interactive demo — proof of concept for any cold outreach",
+      "Google Search Console verified — indexing monitored",
+    ],
+    ideas:[
+      "Tier 2 gate: email → one-page PDF pillar breakdown → warm lead to Opero",
+      "Articles as standalone outreach assets — send before pitch meetings",
+    ],
+    filmstrip:[
+      { label:"Homepage",       sub:"opero.agency",        thumb:"" },
+      { label:"Audit tool",     sub:"/audit/ — live",      thumb:"" },
+      { label:"Foxtons demo",   sub:"Interactive preview",  thumb:"" },
+    ],
+    filmstripTitle:"opero.agency pages",
+    seed:"Opero Agency — Website (opero.agency)\n\nDomain: opero.agency (LIVE — Google Search Console verified)\nHomepage: /AGENCY/index.html (1346 lines)\nAudit tool: /AGENCY/audit/index.html (584 lines) — opero.agency/audit/\nFoxtons demo: /AGENCY/foxtons-demo.html\n7 articles: /AGENCY/articles/ (geo, schema, aeo-vs-seo, chatgpt, scoreboards, 5-pillar, aio)\nAirtable CRM: appelHcx7WtRwa8pB / table tblfMLyB2DO11WSK3 (18 fields)\nDeploy zips: opero-deploy.zip (250KB, Apr 10), opero-audit-tool.zip (14KB, Apr 11)\nNext: monitor GSC indexing, grow article set, add lead scoring in Airtable" },
+
+  { id:"op-landing", type:"session", project:"Opero Agency", date:"Apr 5–7", ts:20260405,
+    title:"Airtable Lead Schema + Landing MVP — Task 1+2 ✅",
+    summary:"Airtable base built (18 fields, Opero Leads table, base appelHcx7WtRwa8pB). Landing page MVP with live Airtable lead capture confirmed working. Three-tool funnel architecture designed.",
+    chips:["Airtable","Lead capture","Task 1+2 done","CRM"],
+    decisions:[
+      "Airtable as the CRM — base appelHcx7WtRwa8pB, table tblfMLyB2DO11WSK3",
+      "Three-tool funnel: AEO Checker → XML Analyser → Client DB Scan",
+    ],
+    ideas:[
+      "AEO Checker: query Claude with buyer phrases → AI visibility score",
+      "XML Analyser: before/after AI enrichment of their own feed",
+    ],
+    seed:"Opero Agency — Airtable CRM\n\nBase: appelHcx7WtRwa8pB / Table: tblfMLyB2DO11WSK3 (18 fields)\nTest record confirmed. Lead capture wired into opero.agency homepage.\nNext: add lead scoring field, connect audit tool score to Airtable record on submission" },
+
+  { id:"op-5", type:"idea", project:"Opero Agency", date:"Apr 13", ts:20260413,
+    title:"💡 Valuation tool → Meta ad landing page",
+    summary:"Deploy on Railway (public HTTPS URL) → iframe into Facebook ad landing pages. 'Find out what your Costa Blanca property is worth — free instant valuation.' That's the lead gen offer for paid.",
+    chips:["Meta ads","Railway","Lead gen","iframe"],
+    decisions:[], ideas:[] },
+
+  { id:"op-6", type:"idea", project:"Opero Agency", date:"Apr 10", ts:20260410,
+    title:"💡 LinkedIn + opero.ai positioning locked",
+    summary:"Rewrote LinkedIn copy to sound human. 'AI that works. Partners that stay.' Audit-as-wedge positioning. Not an SEO agency that learned AI vocabulary. The score is the demo.",
+    chips:["LinkedIn","Positioning","opero.ai"],
+    decisions:[], ideas:[] },
+
+  { id:"op-bd-gen", type:"session", project:"Opero Agency", date:"Apr 10–13", ts:20260411,
+    title:"Pitch Deck Generator — 3-Version Build Pipeline",
+    summary:"Automated pitch generator built from scratch: audit.py scrapes + scores agency website, generate_report.py formats findings, build-bd-pitch.js (v1 → v2 → v11-master) renders the full 12-slide deck. Foxtons data verified end-to-end. run_audit.sh automates the whole pipeline. Sample Foxtons report confirmed working.",
+    chips:["audit.py","build-bd-pitch.js","Automation","3 versions","PDF output"],
+    decisions:[
+      "Automate the pitch — 1 agency URL in, polished deck out",
+      "v11-master is the canonical version — others archived",
+      "foxtons-verified.json = ground truth for testing the pipeline",
+    ],
+    ideas:[
+      "Same pipeline for any agency, any country — universal audit machine",
+      "Self-serve version: agency enters their URL on opero.ai, gets audit emailed in 30s",
+    ],
+    seed:"Opero Agency — BD Pitch Generator\n\nFiles in /Progression/BD-Audit-System/:\n  audit.py — scrapes agency site, scores across 9 dimensions\n  generate_report.py — formats findings into structured data\n  build-bd-pitch.js / v2 / v11-master — renders 12-slide deck\n  foxtons-verified.json — ground truth test data\n  run_audit.sh — automates full pipeline\n  sample-foxtons-report.pdf — confirmed output sample\nNext: connect to Airtable (auto-log each audit as a lead), deploy self-serve version on opero.ai" },
+
+  { id:"op-articles", type:"session", project:"Opero Agency", date:"Apr 2026", ts:20260409,
+    title:"7 AEO Articles — Blog Content · AI Search · Schema",
+    summary:"7 content marketing articles built: 'Why your agency isn't showing up in ChatGPT', 'AEO vs SEO for real estate', '5-pillar visibility framework', 'GEO for estate agents', 'Schema markup guide', '4 scoreboards (SEO/AEO/GEO/AIO)', 'Being trusted by AI'. Blog lives in /AGENCY/articles/.",
+    chips:["7 articles","AEO","Content marketing","Blog","GEO","Schema"],
+    decisions:[
+      "Content proves expertise before the first sales call",
+      "Each article answers a question a prospect googles the week before they reply to outreach",
+    ],
+    ideas:[
+      "Send 1 article per week as warm nurture email to audit prospects",
+      "Articles become the answer layer when Opero itself gets queried in AI search",
+    ],
+    seed:"Opero Agency — Blog Articles\n\n7 articles in /AGENCY/articles/:\n  why-your-agency-isnt-showing-up-in-chatgpt\n  ai-search-vs-seo-real-estate\n  5-pillar-visibility-framework\n  four-scoreboards-estate-agency-seo-aeo-geo-aio\n  geo-for-estate-agents\n  schema-markup-estate-agents\n  aio-being-trusted-by-ai\nNext: publish to blog on opero.ai, add internal links between articles, repurpose as LinkedIn carousels" },
+
+  { id:"op-agency-map", type:"session", project:"Opero Agency", date:"Apr 2026", ts:20260408,
+    title:"Agency Map — Interactive Client Location Map",
+    summary:"Interactive HTML map built: Opero-Agency-Map.html. Shows client/prospect agencies pinned by location. Used in pitches and on the website to show footprint.",
+    chips:["Map","Interactive","Agency footprint","HTML"],
+    decisions:["Map as social proof — visible agency presence across UK/Spain/Scandinavia"],
+    ideas:["Embed on opero.ai homepage — 'We work with agencies in 3 markets'"] },
+
+  { id:"op-flow", type:"session", project:"Opero Agency", date:"Apr 2026", ts:20260407,
+    title:"Flow Diagrams — Hub & Spoke · Flywheel · First Meeting Deck",
+    summary:"Strategy flow diagrams built: Hub & Spoke v1+v2 (how Opero sits at the centre of all client tools), Flywheel (retainer model compounding value). First Meeting deck v1 for cold intro scenarios.",
+    chips:["Hub & Spoke","Flywheel","First Meeting deck","Strategy"],
+    filmstrip:[
+      { label:"Hub & Spoke v2", sub:"Architecture flow", thumb:"" },
+      { label:"Flywheel",       sub:"Revenue model",     thumb:"" },
+      { label:"First Meeting",  sub:"v1 cold intro",     thumb:"" },
+    ],
+    filmstripTitle:"Strategy decks",
+    decisions:["Hub & Spoke: Opero at the centre, client channels as spokes — we own the AI layer"],
+    ideas:["Flywheel: each case study feeds the next client — show the loop in the pitch"] },
+
+  // ── OPERO — additional blocks
+  { id:"op-mailerlite", type:"session", project:"Opero Agency", date:"Apr 12", ts:20260412,
+    title:"MailerLite Lead Nurture Sequence — 3 Emails Live ✅",
+    summary:"Full 3-email automation live. Trigger: subscriber joins 'Opero Audit Leads' group (fires on audit email submission). Email 1 immediate: score context + what it means. Email 2 day 3: AEO vs SEO vs GEO vs AIO four-scoreboards framing. Email 3 day 7: first-mover close + call link. Automation ID: 184539575158310784.",
+    chips:["MailerLite","3 emails","Automation","Live","Lead nurture"],
+    decisions:[
+      "3-email sequence not 1 — nurture before the ask",
+      "Day 7 close is soft: 'ready to fix it?' + Calendly link, not hard sell",
+    ],
+    ideas:["Segment by score — <40 gets urgency framing, 40–70 gets competitive framing, 70+ gets advanced services"],
+    seed:"Opero — MailerLite Lead Sequence\n\nAutomation ID: 184539575158310784 (LIVE)\nTrigger: joins 'Opero Audit Leads' group\nEmail 1 (immediate): score context\nEmail 2 (day 3): 4 scoreboards article link\nEmail 3 (day 7): first-mover close + Calendly\nNext: score-based segmentation — different email track for <40 vs 40-70 vs 70+" },
+
+  { id:"op-luxury", type:"session", project:"Opero Agency", date:"Apr 12", ts:20260412,
+    title:"💡 The Luxury Portfolio — International High-End Platform",
+    summary:"Confirmed developer partnership in Marbella (€2M–€35M properties, full asset pack ready). Multi-developer international luxury platform: editorial website + agent partner portal (Airtable shared view + PDF generator) + Opero BD tool. We work with multiple builders — platform is builder-agnostic. Phase 1: Marbella inventory. Phase 2: partner access page — agents in Oslo/London/Buenos Aires generate branded PDFs + earn referral commission. V1 MVP = Airtable shared view + existing sales-presentation skill.",
+    chips:["Luxury","Marbella","Multi-developer","Partner portal","Phase 1 ready"],
+    decisions:[
+      "Builder-agnostic platform — never name individual developers publicly",
+      "Agent portal MVP = Airtable shared view + existing PDF skill — no code needed",
+      "Also an Opero BD tool — show in every agency pitch meeting",
+    ],
+    ideas:[
+      "International: add Abu Dhabi, Thailand, Saudi developers in Phase 3",
+      "Commission field in Airtable record = simple referral tracking",
+    ],
+    seed:"The Luxury Portfolio — Phase 1\n\nConfirmed developer partnership: Marbella, €2M–€35M, full asset pack ready (do NOT name the developer publicly — platform is multi-developer and builder-agnostic)\nV1 build (1-2 sessions): Luxury property website using property-website-builder + Remotion still templates\nV2 (1 session): Airtable property base + 'Partner Access' page on opero.agency — shared Airtable view + PDF generation\nExisting tool: sales-presentation skill already generates branded A4 PDFs — just needs property data plugged in\nNext: dedicate one session to Phase 1 build" },
+
+  { id:"op-outreach-1", type:"idea", project:"Opero Agency", date:"Apr 12", ts:20260412,
+    title:"💡 LinkedIn: announce audit tool launch",
+    summary:"opero.agency/audit is live but has NOT been announced. Short post from Oskar: 'Paste your estate agency website. Get your AI visibility score in 60 seconds. Free. No email required.' Attach Foxtons demo screenshot. Could drive 20-30 audits and several warm leads from one post.",
+    chips:["LinkedIn","Audit tool","Launch post","High priority"] },
+
+  { id:"op-outreach-2", type:"idea", project:"Opero Agency", date:"Apr 11", ts:20260411,
+    title:"💡 Shareable audit URL — ?domain= parameter",
+    summary:"Audit results have no unique URL — can't share a score with a colleague. Add ?domain=foxtons.co.uk so each result has its own shareable link. Cache results for 24h to avoid re-running API. Shareable results = organic distribution. Marketing manager gets 38/100 → forwards to CMO = free warm lead.",
+    chips:["Feature","Audit tool","Shareable","Organic growth"] },
+
+  { id:"op-outreach-3", type:"idea", project:"Opero Agency", date:"Apr 11", ts:20260411,
+    title:"💡 Deep audit mode — real-time competitor scoring",
+    summary:"Currently competitor scores are estimated. 'Deep audit' mode: fetch and score 3 competitor sites alongside the main audit. ~90 seconds. This becomes the email-gated Tier 2 — fast free audit, enter email to get real competitor comparison. Real competitor data is the most compelling hook.",
+    chips:["Feature","Audit tool","Competitor data","Email gate"] },
+
+  // ── HANSSON HERTZELL
+  { id:"hh-platform", type:"session", project:"Hansson Hertzell", date:"Apr 2026", ts:20260401,
+    title:"hanssonhertzell.se — Platform + Email + Client Intel",
+    summary:"Full H&H marketing stack: SEO area pages + FAQ sections (15+ per page) on custom PHP CMS. Branded MailerLite email pipeline (table-based HTML, Navy/Gold/Cream, domain authenticated). Gmail archive extracted and segmented (2017+) — clients scored by engagement, language, property interest → Excel database → Airtable → MailerLite import.",
+    chips:["hanssonhertzell.se","MailerLite","Gmail segmentation","SEO","9 languages"],
+    decisions:[
+      "MailerLite Custom HTML workaround — Ace editor injection for Growing Business plan",
+      "Client intel from Gmail 2017+ — scored by recency, language, property interest",
+      "9-language CMS — content built in Swedish, English + 7 more",
+    ],
+    ideas:["Client segmentation Excel → Airtable → automated outreach is the high-leverage play"],
+    seed:"Hansson Hertzell — Platform\n\nURL: hanssonhertzell.se (live, PHP CMS intramedianet)\nMailerLite: domain authenticated, subscriber groups live, HTML template pipeline documented\nClient intel: Gmail 2017+ extracted → scored Excel database → Airtable → MailerLite import\nAutomations: Facebook group posting (2x daily, 88 groups), daily drafts (10/day), CRM outreach (Mon/Thu)\nNext: run updated Gmail segmentation, send newsletter batch, H&H area pages for new regions",
+    big: true },
+
+  { id:"hh-facebook", type:"session", project:"Hansson Hertzell", date:"Apr 2026", ts:20260405,
+    title:"Facebook Group Automation — 88 Groups · 11 Languages · 2×/day",
+    summary:"Fully automated Facebook group sharing pipeline. Morning (10:08 AM) + evening (7:01 PM) runs every day. 88 groups across 11 languages. Reads BRIEF.md for workflow, groups.json for targets, LOG.md for progress tracking. Real estate content distributed to the right language groups automatically.",
+    chips:["Facebook","88 groups","11 languages","Daily automation","2x/day"],
+    decisions:["Two runs per day — morning for Europe morning browsers, evening for different timezone and recheckers"],
+    ideas:["Track which groups drive the most click-throughs — cut low-performers, double down on high-performers"] },
+
+  { id:"hh-captacion", type:"idea", project:"Hansson Hertzell", date:"Apr 13", ts:20260413,
+    title:"💡 Captacion Tool Suite — 5 apps for mandate generation",
+    summary:"Five apps to automate mandate generation: (1) Main Agent Finder — who holds the original mandate on any listing. (2) Valuation Tool — real notary prices vs portal asking prices, generates branded PDF valuation. (3) Idealista Crawler — auto-comparison table for buyer presentations. (4) Multi-listed Property Finder + Photo Scraper. (5) Private Seller Monitor + WhatsApp Outreach Bot. Captacion presentation needed first as the attachment.",
+    chips:["Captacion","5 apps","WhatsApp bot","Valuation","Idealista"],
+    decisions:["Build captacion presentation first — needed before WhatsApp bot","Valuation tool is highest revenue impact (wins mandates)"],
+    ideas:["Automated captacion pipeline could generate 5-10 new mandates/month with no manual effort"] },
+
+  // ── AI OUTREACH IDEAS (from AI-OUTREACH-IDEAS.md)
+  { id:"aoi-1", type:"idea", project:"Opero Agency", date:"Apr 14", ts:20260414,
+    title:"💡 Price Reduction Tracker — Intercepting frustrated sellers",
+    summary:"Monitor Idealista/Fotocasa daily for listings with 3+ price reductions. Message: 'Your property has been reduced 3 times. The problem isn't the price — it's the presentation.' Convert to free audit → PropertyOS. These are the most motivated, frustrated sellers — most receptive audience possible.",
+    chips:["PropertyOS","Lead gen","Idealista","Automation"] },
+
+  { id:"aoi-2", type:"idea", project:"Opero Agency", date:"Apr 14", ts:20260414,
+    title:"💡 Restaurant Google Maps Kit — €19 micro-SaaS",
+    summary:"Find restaurants with 0-3 low-quality photos on Google Maps. AI-generate professional food imagery. Sell 'Google Maps Profile Kit' for €19: 5 AI photos + optimised description + category tags. 500k+ restaurants in Spain alone with bad photos. 1% conversion = €100k+. Mass email from Google Maps listing. Pure digital, zero marginal cost.",
+    chips:["Micro-SaaS","€19","Google Maps","Restaurants","Scale"] },
+
+  { id:"aoi-3", type:"idea", project:"Opero Agency", date:"Apr 14", ts:20260414,
+    title:"💡 Attefallshus Plot Finder — Sweden (Google Maps + AI render)",
+    summary:"Satellite imagery → find residential plots in Sweden large enough for an Attefallshus. AI renders a garden studio on THEIR plot. 'Your garden has space for a tax-free extension that adds X% to your value.' Lead gen to prefab companies at €50-100/lead. Trace owner via Lantmäteriet (public records).",
+    chips:["Sweden","AI render","Lead gen","Prefab","Satellite"] },
+
+  { id:"aoi-4", type:"idea", project:"PropertyOS", date:"Apr 14", ts:20260414,
+    title:"💡 Bad Photo Interceptor — Visual proof before/after",
+    summary:"Find portal listings with phone-taken photos (low res, bad lighting, vertical). AI-enhance one of their worst photos → before/after. 'Here's what professional assets do to buyer interest.' Contact the listing agent. Visual proof beats any pitch. High relevance in Costa Blanca where phone photography is standard.",
+    chips:["PropertyOS","Before/after","AI photo","Costa Blanca"] },
+
+  // ── CURATED ESTATE
+  { id:"ce-1", type:"session", project:"Curated Estate", date:"Apr 16", ts:20260416,
+    title:"audit.py — 46 Checks · 100/100 Articles",
+    summary:"AEO content audit from scratch. 46 checks, 7 categories. All 20 journal articles 100/100 internally, 98–100 on external tool.",
+    chips:["audit.py","46 checks","100/100"],
+    thumb:"thumbnails/curated-audit-sm.png",
+    decisions:["100/100 for all journal articles — non-negotiable","Audit runs before every deploy — it's the gate"],
+    ideas:["PageSpeed API as next layer — Core Web Vitals in same audit"],
+    seed:"Curated Estate — AEO Content Audit\n\naudit.py: 46 checks, 7 categories (AEO + SEO foundations)\nAll 20 journal articles: 100/100 internal, 98-100 on aeonederland.nl real tool\nDecision: audit runs before every deploy — it is the content gate\nNext: PageSpeed API integration (Core Web Vitals layer), deploy gate automation, new article batch",
+    big: true },
+
+  // ── PROPERTYOS
+  { id:"pos-1", type:"session", project:"PropertyOS", date:"Apr 10–11", ts:20260410,
+    title:"Valuation Engine + Interactive Map",
+    summary:"Valuation engine live. Map working. Catastro API confirmed. pisos.com scraping confirmed. Next: Flask web form.",
+    chips:["Valuation","Map","Catastro"],
+    thumb:"thumbnails/propertyos-map-sm.png",
+    decisions:["Push all code to GitHub — professional portfolio","Flask web form = next milestone"],
+    ideas:["SaaS pricing based on valuations per month","Iframe valuation tool into Meta ad landing page"],
+    seed:"PropertyOS — Valuation Engine + Map\n\nValuation engine: live. Map: live. Catastro API: confirmed. pisos.com scraping: confirmed (blocked on Vercel, use averages for prod)\nBuilt: /valuation page for NBHCB (Option A), Railway deploy plan (Option B — shareable URL, iframe-embeddable)\nDecisions: static market averages from pisos.com scraping are accurate enough for v1; live data comes in v2 via Apify\nNext: Flask web form, GitHub portfolio push, Railway deploy for public URL",
+    stats:{ files:5 } },
+
+  // ── SKILLS & MEMORY
+  { id:"sk-1", type:"session", project:"Skills & Memory", date:"Apr 10–13", ts:20260410,
+    title:"Auto-Memory · Skills · MEMORY.md",
+    summary:"Auto-memory built and tuned. Skills for content audit, session workflow, critical thinker. MEMORY.md as persistent index — 200 line limit.",
+    chips:["Auto-memory","Skills","MEMORY.md"],
+    decisions:["MEMORY.md as index — stay lean","Session workflow skill for start-of-session loading"],
+    ideas:["Critical thinker — think before executing, don't be a yes-man"] },
+];
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let activeFilter = 'All';
+let activePeriod = 'all';
+let activeView = 'grid';
+let navCollapsed = false;
+let rightOpen = false;
+let isMobile = () => window.innerWidth <= 768;
+
+// ═══════════════════════════════════
+// PERIOD TOGGLE
+// ═══════════════════════════════════
+function setPeriod(p, btn) {
+  activePeriod = p;
+  document.querySelectorAll('.period-tab').forEach(el => el.classList.remove('on'));
+  btn.classList.add('on');
+  renderFeed();
+}
+
+function periodTs() {
+  // Returns the minimum ts value for the current activePeriod
+  const d = new Date();
+  if (activePeriod === 'today') {
+    return parseInt(d.toISOString().slice(0,10).replace(/-/g,''));
+  }
+  if (activePeriod === 'week') {
+    d.setDate(d.getDate() - 7);
+    return parseInt(d.toISOString().slice(0,10).replace(/-/g,''));
+  }
+  if (activePeriod === 'month') {
+    d.setDate(d.getDate() - 30);
+    return parseInt(d.toISOString().slice(0,10).replace(/-/g,''));
+  }
+  return 0; // 'all' — no lower bound
+}
+
+// ═══════════════════════════════════
+// VIEW TOGGLE
+// ═══════════════════════════════════
+function setView(v) {
+  activeView = v;
+  const feed = document.getElementById('feed');
+  feed.classList.toggle('list-view',   v === 'list');
+  feed.classList.toggle('board-view',  v === 'board');
+  document.getElementById('gridBtn').classList.toggle('on',   v === 'grid');
+  document.getElementById('boardBtn').classList.toggle('on',  v === 'board');
+  document.getElementById('canvasBtn').classList.toggle('on', v === 'canvas');
+  document.getElementById('listBtn').classList.toggle('on',   v === 'list');
+  // Canvas view — hide toolbar period tabs (canvas is always all-projects)
+  document.getElementById('periodTabs').style.visibility = v === 'canvas' ? 'hidden' : '';
+  renderFeed();
+}
+
+// ═══════════════════════════════════
+// INSPECT
+// ═══════════════════════════════════
+let inspectOpen = false;
+
+function toggleInspect() {
+  inspectOpen = !inspectOpen;
+  document.getElementById('inspectPanel').classList.toggle('open', inspectOpen);
+  document.getElementById('inspectBtn').classList.toggle('active', inspectOpen);
+  if (inspectOpen && isMobile()) {
+    document.getElementById('backdrop').classList.add('show');
+  } else if (!inspectOpen && !rightOpen) {
+    document.getElementById('backdrop').classList.remove('show');
+  }
+}
+
+function renderInspect(data) {
+  if (!data || !data.inspect) return;
+  const { score, suggestions } = data.inspect;
+
+  // Score ring
+  const pct = Math.round(score) + '%';
+  const color = score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444';
+  const ring = document.getElementById('inspectRing');
+  ring.style.setProperty('--score-color', color);
+  ring.style.setProperty('--score-pct', pct);
+  document.getElementById('inspectScoreNum').textContent = score;
+  document.getElementById('inspectScoreNum').style.color = color;
+
+  const gapCount  = suggestions.filter(s=>s.type==='gap').length;
+  const oppCount  = suggestions.filter(s=>s.type==='opportunity').length;
+  document.getElementById('inspectSub').textContent =
+    `${gapCount} gaps · ${oppCount} opportunities`;
+
+  // Score pill on button
+  const pill = document.getElementById('inspectScorePill');
+  pill.textContent = score + '/100';
+  pill.style.display = '';
+  pill.style.background = color + '18';
+  pill.style.color = color;
+
+  // Type config
+  const typeConf = {
+    gap:         { icon:'❌', label:'Gap',         color:'#ef4444', bg:'#fef2f2', bg2:'#fee2e2' },
+    warning:     { icon:'⚠️', label:'Warning',     color:'#f59e0b', bg:'#fffbeb', bg2:'#fef3c7' },
+    opportunity: { icon:'💡', label:'Opportunity', color:'#6c63ff', bg:'#f5f3ff', bg2:'#ede9fe' },
+    strength:    { icon:'✅', label:'Strength',    color:'#10b981', bg:'#f0fdf4', bg2:'#dcfce7' },
+  };
+
+  // Group by type
+  const order = ['gap','warning','opportunity','strength'];
+  let html = '';
+  for (const type of order) {
+    const group = suggestions.filter(s=>s.type===type);
+    if (!group.length) continue;
+    const conf = typeConf[type];
+    html += `<div class="inspect-section-title" style="margin-top:10px">${conf.icon} ${conf.label}s (${group.length})</div>`;
+    for (const s of group) {
+      html += `<div class="inspect-card">
+        <div class="inspect-card-head">
+          <span class="inspect-card-icon">${conf.icon}</span>
+          <div>
+            <div class="inspect-card-title">${s.title}</div>
+            <div class="inspect-card-text">${s.text}</div>
+          </div>
+        </div>
+        ${s.action ? `<div class="inspect-card-action" style="--action-color:${conf.color};--action-bg:${conf.bg};--action-bg2:${conf.bg2}">→ ${s.action}</div>` : ''}
+      </div>`;
+    }
+  }
+
+  html += `<button class="inspect-run-btn" onclick="copyInspectCmd()">
+    ⚡ Re-run: populate_storyboard.py --inspect
+  </button>`;
+
+  document.getElementById('inspectBody').innerHTML = html;
+}
+
+function copyInspectCmd() {
+  navigator.clipboard.writeText('python3 "/AI/AGENCY /storyboard/populate_storyboard.py" --inspect').then(() => {
+    const btn = document.querySelector('.inspect-run-btn');
+    btn.textContent = '✓ Copied — run in terminal';
+    setTimeout(() => { btn.textContent = '⚡ Re-run: populate_storyboard.py --inspect'; }, 2200);
+  });
+}
+
+// ═══════════════════════════════════
+// TOGGLE NAV
+// ═══════════════════════════════════
+function toggleNav() {
+  if (isMobile()) {
+    const nav = document.getElementById('leftNav');
+    const backdrop = document.getElementById('backdrop');
+    const opening = !nav.classList.contains('mobile-open');
+    nav.classList.toggle('mobile-open', opening);
+    backdrop.classList.toggle('show', opening || rightOpen);
+    if (rightOpen && opening) { /* both open on mobile — fine */ }
+  } else {
+    navCollapsed = !navCollapsed;
+    document.getElementById('app').classList.toggle('nav-collapsed', navCollapsed);
+  }
+}
+
+// ═══════════════════════════════════
+// TOGGLE RIGHT PANEL
+// ═══════════════════════════════════
+function toggleRight() {
+  rightOpen = !rightOpen;
+  document.getElementById('rightPanel').classList.toggle('open', rightOpen);
+  document.getElementById('panelBtn').classList.toggle('active', rightOpen);
+  // Show backdrop on mobile when panel is open
+  if (isMobile()) {
+    document.getElementById('backdrop').classList.toggle('show', rightOpen);
+  }
+}
+
+function closeAll() {
+  // Close both drawers and backdrop
+  document.getElementById('leftNav').classList.remove('mobile-open');
+  if (rightOpen) { rightOpen = false; document.getElementById('rightPanel').classList.remove('open'); document.getElementById('panelBtn').classList.remove('active'); }
+  document.getElementById('backdrop').classList.remove('show');
+}
+
+// ═══════════════════════════════════
+// FILTER / NAV
+// ═══════════════════════════════════
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.id === `nav-${f.replace(/ /g,'-')}`);
+  });
+  const bc = document.getElementById('breadcrumb');
+  bc.innerHTML = f === 'All'
+    ? `<span onclick="setFilter('All')">All work</span>`
+    : `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+       <span class="sep">/</span>
+       <span style="color:var(--text)">${f}</span>`;
+  renderFeed();
+}
+
+function navClick(f) {
+  // Exit ideas / decisions views when clicking a project
+  if (ideasViewActive) {
+    ideasViewActive = false;
+    document.getElementById('ideasBtn').classList.remove('active');
+  }
+  if (decisionsViewActive) {
+    decisionsViewActive = false;
+    document.getElementById('decisionsBtn').classList.remove('active');
+  }
+  // When filtering to a specific project, board view would show just one column — auto-switch to grid
+  if (f !== 'All' && activeView === 'board') setView('grid');
+  setFilter(f);
+  if (isMobile()) closeAll();
+}
+
+// ═══════════════════════════════════
+// BUILD NAV
+// ═══════════════════════════════════
+function buildNav() {
+  const all = mergedBlocks();
+  const counts = {};
+  all.forEach(b => { counts[b.project] = (counts[b.project]||0) + 1; });
+  document.getElementById('cnt-All').textContent = all.length;
+
+  // Decisions count — total across all blocks
+  const decisionsTotal = all.reduce((n, b) => n + (b.decisions ? b.decisions.length : 0), 0);
+  document.getElementById('decisionsCount').textContent = decisionsTotal;
+
+  // Files count — sum of files stats across blocks
+  const filesTotal = all.reduce((n, b) => n + (b.stats?.files || 0), 0);
+  // If no stats files, use a baseline from commits (meaningful proxy)
+  document.getElementById('filesCount').textContent = filesTotal || '—';
+
+  document.getElementById('nav-projects').innerHTML = Object.entries(PROJ).map(([name, p]) => {
+    const sid = name.replace(/ /g,'-');
+    return `<div class="nav-item" id="nav-${sid}" onclick="navClick('${name}')">
+      <div class="nav-dot" style="background:${p.color}"></div>
+      <span class="nav-item-text">${name}</span>
+      <span class="nav-count">${counts[name]||0}</span>
+    </div>`;
+  }).join('');
+
+  // ── Update FOCUS card: most active project by block count ──
+  const topProj = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
+  if (topProj) {
+    const [name, count] = topProj;
+    const p = PROJ[name] || { color:'#6c63ff' };
+    const focus = document.getElementById('navFocus');
+    const dot   = document.getElementById('navFocusDot');
+    document.getElementById('navFocusProj').textContent  = name;
+    document.getElementById('navFocusCount').textContent = count;
+    focus.style.setProperty('--focus-color', p.color);
+    focus.style.setProperty('--focus-bg',    p.bg || '#f5f3ff');
+    focus.style.setProperty('--focus-bg2',   p.bg || '#ede9fe');
+    dot.style.background = p.color;
+    focus._focusProject = name;
+  }
+}
+
+function navFocusClick() {
+  const focus = document.getElementById('navFocus');
+  if (focus._focusProject) navClick(focus._focusProject);
+}
+
+// ═══════════════════════════════════
+// TIMESTAMP HELPER — shows HH:MM if available
+// ═══════════════════════════════════
+function blockTimestamp(b) {
+  if (b._captured) {
+    const d = new Date(b._captured);
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const dateStr = d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+    return `${dateStr} · ${hh}:${mm}`;
+  }
+  return b.date || '';
+}
+
+// ═══════════════════════════════════
+// BLOCK HTML (shared between views)
+// ═══════════════════════════════════
+function blockHTML(b, i, featured = false) {
+  const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
+  const style = `--block-color:${p.color};--block-bg:${p.bg}`;
+  const idx = i % IDEA_BG.length;
+  const featuredClass = featured ? ' block-featured' : '';
+
+    if (b.type === 'idea') {
+      return `<div class="block" style="${style};background:${IDEA_BG[idx]};border-color:${IDEA_BD[idx]}" onclick="openDetail('${b.id}')">
+        <div class="block-body">
+          <div class="block-meta">
+            <span class="block-dot" style="background:${p.color}"></span>
+            <span class="block-proj">${b.project}</span>
+            <span class="block-date">${blockTimestamp(b)}</span>
+          </div>
+          <div class="block-title">${b.title}</div>
+          <div class="block-summary">${b.summary}</div>
+          <div class="block-chips">${(b.chips||[]).map(c=>`<span class="bchip">${c}</span>`).join('')}</div>
+        </div>
+      </div>`;
+    }
+
+    return `<div class="block ${b.big?'block-lg':''}${featuredClass}" style="${style}" onclick="openDetail('${b.id}')">
+      <div class="block-stripe"></div>
+      ${b.thumb
+        ? `<img class="block-thumb" src="${b.thumb}" alt="${b.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+           <div class="block-thumb-ph" style="display:none">${p.icon}</div>`
+        : `<div class="block-icon-band"><span class="block-icon-band-icon">${p.icon}</span><span class="block-icon-band-label">${b.project}</span></div>`}
+      <div class="block-body">
+        <div class="block-meta">
+          <span class="block-dot" style="background:${p.color}"></span>
+          <span class="block-proj">${b.project}</span>
+          <span class="block-date">${b.date}</span>
+        </div>
+        <div class="block-title">${b.title}</div>
+        <div class="block-summary">${b.summary}</div>
+        <div class="block-chips">${(b.chips||[]).map(c=>`<span class="bchip">${c}</span>`).join('')}</div>
+      </div>
+      ${b.stats ? `<div class="block-stats">
+        ${b.stats.commits ? `<div class="bstat"><span class="bstat-v" style="color:${p.color}">${b.stats.commits}</span><span class="bstat-l">Commits</span></div>` : ''}
+        ${b.stats.files   ? `<div class="bstat"><span class="bstat-v" style="color:${p.color}">${b.stats.files}</span><span class="bstat-l">Files</span></div>` : ''}
+      </div>` : ''}
+      ${b.seed ? `<div class="block-continue" onclick="event.stopPropagation();seedBlock('${b.id}')">
+        <span class="block-continue-label">⚡ Start next session</span>
+        <span class="block-continue-arrow">→</span>
+      </div>` : ''}
+    </div>`;
+}
+
+// ═══════════════════════════════════
+// RENDER FEED
+// ═══════════════════════════════════
+function mergedBlocks() {
+  // liveBlocks (from MCP) take precedence — deduplicate by id
+  const seen = new Set();
+  const merged = [];
+  for (const b of [...liveBlocks, ...BLOCKS]) {
+    if (!seen.has(b.id)) { seen.add(b.id); merged.push(b); }
+  }
+  return merged;
+}
+
+function renderFeed() {
+  const el = document.getElementById('feed');
+  const baseBlocks = mergedBlocks();
+  // Canvas view — workspace overview, managed by renderCanvasView()
+  if (activeView === 'canvas') { renderCanvasView(); return; }
+  // Decisions view — managed by toggleDecisionsView(), don't override
+  if (decisionsViewActive) return;
+  // Ideas view: show all ideas (static + captured), ignore project filter
+  if (ideasViewActive) {
+    const minTs = periodTs();
+    const allIdeas = [...baseBlocks.filter(b => b.type === 'idea'), ...capturedIdeas]
+      .filter(b => (b.ts||0) >= minTs || minTs === 0)
+      .sort((a,b) => (b.ts||0) - (a.ts||0));
+    el.innerHTML = `<div style="columns:3 200px;column-gap:12px">${allIdeas.map((b,i) => blockHTML(b,i)).join('')}</div>`;
+    return;
+  }
+  const minTs = periodTs();
+  const allBlocks = [...baseBlocks, ...capturedIdeas].filter(b => (b.ts||0) >= minTs || minTs === 0);
+  const raw = activeFilter === 'All' ? allBlocks : allBlocks.filter(b => b.project === activeFilter);
+  // Project header when a specific project is selected
+  const headerHtml = (activeFilter !== 'All') ? renderProjectHeader(activeFilter) : '';
+  // Always sort newest first — so new blocks appear at the top of the flow
+  const blocks = [...raw].sort((a,b) => (b.ts||0) - (a.ts||0));
+
+  // Featured block logic (All view only): most recent real block from each of
+  // the top 3 most active projects gets a visual "featured" treatment
+  const featuredIds = new Set();
+  if (activeFilter === 'All') {
+    const projCounts = {};
+    allBlocks.filter(b => b.type !== 'idea').forEach(b => {
+      projCounts[b.project] = (projCounts[b.project] || 0) + 1;
+    });
+    const topProjects = Object.entries(projCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(e => e[0]);
+    topProjects.forEach(proj => {
+      const lead = blocks.find(b => b.project === proj && b.type !== 'idea');
+      if (lead) featuredIds.add(lead.id);
+    });
+  }
+
+  // ── BOARD VIEW ──
+  if (activeView === 'board') {
+    // Group by project, keeping PROJ order
+    const projects = activeFilter === 'All' ? Object.keys(PROJ) : [activeFilter];
+    el.innerHTML = headerHtml + projects.map(projName => {
+      const p = PROJ[projName];
+      const projBlocks = blocks.filter(b => b.project === projName);
+      if (!projBlocks.length) return '';
+      return `<div class="board-col" style="--col-color:${p.color};--col-bg:${p.bg}">
+        <div class="board-col-header">
+          <span class="board-col-icon">${p.icon}</span>
+          <span class="board-col-name">${projName}</span>
+          <span class="board-col-count">${projBlocks.length}</span>
+        </div>
+        <div class="board-col-blocks">
+          ${projBlocks.map((b,i) => blockHTML(b, i)).join('')}
+        </div>
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  // ── GRID / LIST VIEW ──
+  // In All view: group into time lanes (Today / This week / Older)
+  if (activeFilter === 'All') {
+    // Only show time lanes in "All time" mode — period tabs already filtered the data
+    if (activePeriod === 'all') {
+      const nowTs    = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+      const weekAgo  = (() => { const d = new Date(); d.setDate(d.getDate()-7); return parseInt(d.toISOString().slice(0,10).replace(/-/g,'')); })();
+      const toToday  = blocks.filter(b => (b.ts||0) >= nowTs);
+      const toWeek   = blocks.filter(b => (b.ts||0) >= weekAgo && (b.ts||0) < nowTs);
+      const toOlder  = blocks.filter(b => (b.ts||0) < weekAgo);
+      let html = headerHtml;
+      if (toToday.length) html += `<div class="time-lane">Today</div>` + toToday.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
+      if (toWeek.length)  html += `<div class="time-lane">This week</div>` + toWeek.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
+      if (toOlder.length) html += `<div class="time-lane">Older</div>` + toOlder.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
+      el.innerHTML = html;
+    } else {
+      // Period tab active — show flat filtered list with a label
+      const label = activePeriod === 'today' ? 'Today' : activePeriod === 'week' ? 'This week' : 'This month';
+      el.innerHTML = headerHtml +
+        (blocks.length ? `<div class="time-lane">${label}</div>` + blocks.map((b,i) => blockHTML(b, i, featuredIds.has(b.id))).join('')
+          : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">Nothing logged ${label.toLowerCase()}.</div>`);
+    }
+  } else {
+    el.innerHTML = headerHtml + blocks.map((b, i) => blockHTML(b, i, featuredIds.has(b.id))).join('');
+  }
+}
+
+// ═══════════════════════════════════
+// CANVAS VIEW — project card grid
+// ═══════════════════════════════════
+function renderCanvasView() {
+  const el = document.getElementById('feed');
+  const all = mergedBlocks();
+
+  const cards = Object.entries(PROJ).map(([name, p]) => {
+    const m = PROJECT_META[name] || {};
+    const projBlocks   = all.filter(b => b.project === name);
+    const blockCount   = projBlocks.filter(b => b.type !== 'idea').length;
+    const ideasCount   = projBlocks.filter(b => b.type === 'idea').length;
+    const decisionsCount = projBlocks.reduce((n, b) => n + (b.decisions ? b.decisions.length : 0), 0);
+    const liveCount    = projBlocks.filter(b => b._live).length;
+    const autoCount    = AUTOMATIONS.filter(a => a.project === name && a.enabled).length;
+
+    const latestBlock  = projBlocks
+      .filter(b => b.type !== 'idea')
+      .sort((a, b) => (b.ts||0) - (a.ts||0))[0];
+
+    const isLive = m.deploy && m.deploy.toLowerCase().includes('live');
+    const deployLabel = isLive ? '🟢 Live' : '⚫ Not deployed';
+    const deployClass = isLive ? 'canvas-card-deploy live' : 'canvas-card-deploy';
+
+    return `<div class="canvas-card" style="--card-color:${p.color};--card-bg:${p.bg}" onclick="navClick('${name}')">
+      <div class="canvas-card-band"></div>
+      <div class="canvas-card-body">
+        <div class="canvas-card-top">
+          <div class="canvas-card-icon">${p.icon}</div>
+          <div style="flex:1;min-width:0">
+            <div class="canvas-card-name">${name}</div>
+            <div class="canvas-card-goal">${m.goal || ''}</div>
+          </div>
+          <div class="${deployClass}">${deployLabel}</div>
+        </div>
+
+        <div class="canvas-card-stats">
+          <div class="canvas-stat">
+            <span class="canvas-stat-v">${blockCount}</span>
+            <span class="canvas-stat-l">Blocks</span>
+          </div>
+          <div class="canvas-stat">
+            <span class="canvas-stat-v" style="color:#22c55e">${decisionsCount}</span>
+            <span class="canvas-stat-l">Decisions</span>
+          </div>
+          <div class="canvas-stat">
+            <span class="canvas-stat-v" style="color:#f59e0b">${ideasCount}</span>
+            <span class="canvas-stat-l">Ideas</span>
+          </div>
+          <div class="canvas-stat">
+            <span class="canvas-stat-v" style="color:#10b981">${autoCount}</span>
+            <span class="canvas-stat-l">Autos</span>
+          </div>
+        </div>
+
+        ${latestBlock ? `<div class="canvas-card-latest">
+          <strong>Latest</strong>${latestBlock.title}
+        </div>` : ''}
+
+        <div class="canvas-card-footer">
+          ${autoCount > 0 ? `<div class="canvas-card-autos">
+            <div class="canvas-auto-dot"></div>
+            ${autoCount} automation${autoCount > 1 ? 's' : ''} running
+          </div>` : '<div></div>'}
+          ${liveCount > 0 ? `<div class="canvas-live-badge">
+            <div class="canvas-live-dot"></div>
+            ${liveCount} live
+          </div>` : ''}
+          ${m.roadmapFile ? `<button onclick="event.stopPropagation();openRoadmap('${name}')" style="padding:3px 9px;border-radius:20px;border:1.5px solid ${p.color}44;background:transparent;font-size:9px;font-weight:700;color:${p.color};cursor:pointer" onmouseover="this.style.background='${p.bg}'" onmouseout="this.style.background='transparent'">Map →</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML = `<div class="canvas-grid">${cards.join('')}</div>`;
+}
+
+// ═══════════════════════════════════
+// RIGHT PANEL CONTENT
+// ═══════════════════════════════════
+function buildRightPanel() {
+  const all = mergedBlocks();
+  const nowTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+
+  // Today's work blocks
+  const todayBlocks = all.filter(b => (b.ts||0) >= nowTs && b.type !== 'idea').slice(0,6);
+  document.getElementById('rp-today').innerHTML = todayBlocks.length
+    ? todayBlocks.map(b => {
+        const p = PROJ[b.project] || { color:'#6c63ff' };
+        return `<div class="rp-today-block" onclick="openDetail('${b.id}')" style="--block-color:${p.color}">
+          <div class="rp-today-dot" style="background:${p.color}"></div>
+          <div>
+            <div class="rp-today-title">${b.title}</div>
+            <div class="rp-today-proj">${b.project} · ${blockTimestamp(b)}</div>
+          </div>
+        </div>`;
+      }).join('')
+    : `<div style="font-size:11px;color:var(--text-3);padding:8px 0">No blocks logged today yet.</div>`;
+
+  // Session stats
+  const liveCount = all.filter(b => b._live).length;
+  document.getElementById('rp-blocks-today').textContent = todayBlocks.length;
+  document.getElementById('rp-ideas-count').textContent  = all.filter(b => b.type === 'idea').length + capturedIdeas.length;
+  document.getElementById('rp-live-count').textContent   = liveCount;
+
+  // Recent decisions — most recent 5 across all blocks
+  const recentDecisions = [];
+  [...all].sort((a,b)=>(b.ts||0)-(a.ts||0)).forEach(b => {
+    if (recentDecisions.length >= 5) return;
+    (b.decisions||[]).forEach(d => {
+      if (recentDecisions.length < 5) recentDecisions.push({ text: d, project: b.project });
+    });
+  });
+  const decisionsEl = document.getElementById('rp-decisions');
+  if (decisionsEl) {
+    decisionsEl.innerHTML = recentDecisions.length
+      ? recentDecisions.map(d => {
+          const p = PROJ[d.project] || { color:'#6c63ff' };
+          return `<div class="rp-decision-item">
+            <span class="rp-decision-check">✓</span>
+            <div>
+              <div class="rp-decision-text">${d.text}</div>
+              <div class="rp-decision-proj" style="color:${p.color}">${d.project}</div>
+            </div>
+          </div>`;
+        }).join('')
+      : `<div style="font-size:11px;color:var(--text-3);padding:8px 0">No decisions logged yet.</div>`;
+  }
+
+  // Ideas
+  const ideas = all.filter(b => b.type === 'idea').slice(0,5);
+  document.getElementById('rp-ideas').innerHTML = ideas.map((b,i) => `
+    <div class="rp-idea" style="background:${IDEA_BG[i%IDEA_BG.length]};border-color:${IDEA_BD[i%IDEA_BD.length]};color:#333" onclick="openDetail('${b.id}')">
+      ${b.title.replace('💡 ','')}
+    </div>`).join('');
+
+}
+
+// ── seedSession — copy full context seed to clipboard ──
+function seedSession() {
+  const all = mergedBlocks();
+  const nowTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+  const todayBlocks = all.filter(b => (b.ts||0) >= nowTs && b.type !== 'idea');
+  const ideas = all.filter(b => b.type === 'idea').slice(0,5);
+  const topProj = Object.entries(
+    all.reduce((acc, b) => { acc[b.project] = (acc[b.project]||0)+1; return acc; }, {})
+  ).sort((a,b) => b[1]-a[1]).slice(0,3).map(e => `- ${e[0]} (${e[1]} blocks)`).join('\n');
+
+  const seed = `# Session Seed — ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+
+## Active Projects
+${topProj}
+
+## Built Today
+${todayBlocks.map(b => `- [${b.project}] ${b.title}`).join('\n') || '- Nothing logged yet today'}
+
+## Ideas — Not Yet Acted On
+${ideas.map(b => `💡 ${b.project}: ${b.title.replace('💡 ','')}`).join('\n') || 'None pending'}
+
+## Storyboard
+- Dashboard: /AGENCY /storyboard/index.html
+- MCP server: node /AGENCY /storyboard/mcp-server.js
+- Model: Sonnet 4.6 for sprint work · Opus for architecture decisions only
+
+---
+Paste this at the top of your next chat.`;
+
+  navigator.clipboard.writeText(seed).then(() => showToast('⚡ Session seed copied — paste into new chat'));
+}
+
+// ── OS / AI mode toggle ──
+let aiMode = false;
+function toggleMode() {
+  aiMode = !aiMode;
+  document.body.classList.toggle('ai-mode', aiMode);
+  document.getElementById('modeOS').classList.toggle('active', !aiMode);
+  document.getElementById('modeAI').classList.toggle('active',  aiMode);
+  // Persist preference
+  try { localStorage.setItem('sb-mode', aiMode ? 'ai' : 'os'); } catch {}
+  // Auto-screenshot the mode switch as a new version
+  autoScreenshot(aiMode ? 'ai-mode' : 'os-mode');
+}
+// Restore preference on load
+try {
+  if (localStorage.getItem('sb-mode') === 'ai') {
+    aiMode = true;
+    document.body.classList.add('ai-mode');
+    document.getElementById('modeOS').classList.remove('active');
+    document.getElementById('modeAI').classList.add('active');
+  }
+} catch {}
+
+// ── Version tile click — open in roadmap overlay ──
+function openVersion(blockId, filmIdx) {
+  const b = mergedBlocks().find(x => x.id === blockId);
+  if (!b || !b.filmstrip || !b.filmstrip[filmIdx]) return;
+  const f = b.filmstrip[filmIdx];
+  // Version HTMLs are in versions/ folder relative to storyboard root
+  const versionFiles = ['versions/v1-before-ui-redesign-20260417-0245.html',
+                        'versions/v2-ui-redesign-20260417-0248.html',
+                        'versions/v3-canvas-pwa-20260418.html'];
+  const src = versionFiles[filmIdx] || '';
+  document.getElementById('roadmapTitle').textContent = f.label + ' — ' + f.sub;
+  document.getElementById('roadmapIframe').src = src;
+  document.getElementById('roadmapOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// ── Roadmap overlay ──
+function openRoadmap(projName) {
+  const m = PROJECT_META[projName];
+  if (!m || !m.roadmapFile) { showToast('No roadmap file configured for ' + projName); return; }
+  document.getElementById('roadmapTitle').textContent = projName + ' — Roadmap';
+  document.getElementById('roadmapIframe').src = m.roadmapFile;
+  document.getElementById('roadmapOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeRoadmap() {
+  document.getElementById('roadmapOverlay').classList.remove('open');
+  document.getElementById('roadmapIframe').src = '';
+  document.body.style.overflow = '';
+}
+
+// ── togglePromptsView — placeholder ──
+function togglePromptsView() {
+  showToast('✍️ Prompt library — coming soon. Ideas are being captured now.');
+}
+
+// ── toggleDecisionsView — show only blocks that have decisions ──
+function toggleDecisionsView() {
+  decisionsViewActive = !decisionsViewActive;
+  const btn = document.getElementById('decisionsBtn');
+  btn.classList.toggle('active', decisionsViewActive);
+  if (decisionsViewActive) {
+    activeFilter = 'All';
+    ideasViewActive = false;
+    document.getElementById('ideasBtn').classList.remove('active');
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('nav-All').classList.add('active');
+    const bc = document.getElementById('breadcrumb');
+    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+                    <span class="sep">/</span>
+                    <span style="color:#15803d">Decisions</span>`;
+    // Render only blocks that have decisions
+    const feed = document.getElementById('feed');
+    const withDecisions = mergedBlocks()
+      .filter(b => b.decisions && b.decisions.length > 0)
+      .sort((a, b) => (b.ts||0) - (a.ts||0));
+    feed.innerHTML = withDecisions.length
+      ? `<div class="time-lane">Blocks with decisions (${withDecisions.length})</div>` +
+        withDecisions.map((b,i) => blockHTML(b, i)).join('')
+      : `<div style="padding:40px 0;text-align:center;color:var(--text-3);font-size:13px">No decisions logged yet.</div>`;
+  } else {
+    setFilter('All');
+  }
+}
+
+// ── flagMoment — capture current state as a named moment ──
+let _flagMomentActive = false;
+function flagMoment() {
+  const btn = document.getElementById('flagBtn');
+  if (_flagMomentActive) {
+    // Already flagged — un-flag
+    _flagMomentActive = false;
+    btn.classList.remove('flagged');
+    btn.textContent = '🚩 Flag This Moment';
+    showToast('Flag cleared');
+    return;
+  }
+  // Capture a snapshot of what's happening right now
+  const all = mergedBlocks();
+  const nowTs = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''));
+  const todayBlocks = all.filter(b => (b.ts||0) >= nowTs && b.type !== 'idea');
+  const topProj = Object.entries(
+    all.reduce((acc, b) => { acc[b.project] = (acc[b.project]||0)+1; return acc; }, {})
+  ).sort((a,b) => b[1]-a[1])[0];
+
+  const d = new Date();
+  const ts = d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}) +
+    ' · ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+
+  const flagged = `# 🚩 Flagged Moment — ${ts}
+
+## Right Now
+Focus: ${topProj ? topProj[0] : '—'}
+Built today: ${todayBlocks.length} blocks
+${todayBlocks.map(b => `- [${b.project}] ${b.title}`).join('\n') || '- Nothing logged yet'}
+
+## Continue from here
+Paste this into a new chat to resume exactly where you stopped.`;
+
+  navigator.clipboard.writeText(flagged).then(() => {
+    _flagMomentActive = true;
+    btn.classList.add('flagged');
+    btn.textContent = '✓ Moment flagged + copied';
+    showToast('🚩 Moment flagged — paste into next chat');
+    // Reset after 8s
+    setTimeout(() => {
+      if (_flagMomentActive) {
+        _flagMomentActive = false;
+        btn.classList.remove('flagged');
+        btn.textContent = '🚩 Flag This Moment';
+      }
+    }, 8000);
+    autoScreenshot('flagged');
+  });
+}
+
+// ═══════════════════════════════════
+// DETAIL OVERLAY
+// ═══════════════════════════════════
+function openDetail(id) {
+  const b = mergedBlocks().find(x => x.id === id) || capturedIdeas.find(x => x.id === id);
+  if (!b) return;
+  const p = PROJ[b.project] || { color:'#6c63ff', bg:'#f5f3ff', icon:'◈' };
+
+  document.getElementById('d-stripe').style.background = p.color;
+  document.getElementById('d-proj').style.color = p.color;
+  document.getElementById('d-proj').textContent = `${p.icon} ${b.project}`;
+  document.getElementById('d-title').textContent = b.title.replace('💡 ','');
+  document.getElementById('d-date').textContent = blockTimestamp(b);
+
+  const thumb = document.getElementById('d-thumb');
+  if (b.thumb) { thumb.src = b.thumb; thumb.style.display = 'block'; thumb.onerror = () => { thumb.style.display='none'; }; }
+  else { thumb.style.display = 'none'; }
+
+  let body = '';
+  if (b.filmstrip?.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">${b.filmstripTitle||'Version history'}</div>
+      <div class="filmstrip">${b.filmstrip.map((f,fi)=>`
+        <div class="film-tile" onclick="openVersion('${b.id}',${fi})" title="View this version">
+          <img src="${f.thumb}" alt="${f.label}" onerror="this.style.background='${p.bg}';this.style.minHeight='74px'"/>
+          <div class="film-tile-label">
+            <span class="film-tile-v">${f.label}</span>
+            <span class="film-tile-sub">${f.sub}</span>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  if (b.decisions?.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">Decisions made</div>
+      <div class="decisions">${b.decisions.map(d=>`
+        <div class="decision"><span class="decision-check">✓</span><span>${d}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }
+  if (b.ideas?.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">Ideas captured</div>
+      <div class="ideas-grid">${b.ideas.map((idea,i)=>`
+        <div class="idea-card" style="background:${IDEA_BG[i%IDEA_BG.length]};border:1px solid ${IDEA_BD[i%IDEA_BD.length]}">💡 ${idea}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+  if (b.summary) {
+    body += `<div class="detail-section">
+      <div class="detail-section-title">Summary</div>
+      <p style="font-size:13px;line-height:1.65;color:var(--text-2)">${b.summary}</p>
+    </div>`;
+  }
+  document.getElementById('d-body').innerHTML = body || `<p style="color:var(--text-3);font-size:13px">No details yet.</p>`;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function maybeCloseDetail(e) {
+  if (e.target === document.getElementById('overlay')) closeDetail();
+}
+
+// ═══════════════════════════════════
+// SEED — per block
+// ═══════════════════════════════════
+function seedBlock(id) {
+  const b = mergedBlocks().find(x => x.id === id) || capturedIdeas.find(x => x.id === id);
+  if (!b || !b.seed) return;
+  const text = `# Storyboard Seed — ${b.project} — ${b.date}\n\n${b.seed}\n\n---\nSeeded from Storyboard · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}`;
+  navigator.clipboard.writeText(text).then(() => {
+    // Flash the button
+    const btns = document.querySelectorAll('.block-continue');
+    btns.forEach(el => {
+      if (el.getAttribute('onclick')?.includes(id)) {
+        const label = el.querySelector('.block-continue-label');
+        const prev = label.textContent;
+        label.textContent = '✓ Copied — open new chat and paste';
+        el.style.background = '#f0fdf4';
+        setTimeout(() => { label.textContent = prev; el.style.background = ''; }, 2800);
+      }
+    });
+  });
+}
+
+// ═══════════════════════════════════
+// SEED — full session
+// ═══════════════════════════════════
+function seedNewChat() {
+  const seed = `# Storyboard Session Seed — Apr 17\n\n## Active projects\n- New Build Homes (Next.js 14, 9 languages, 1,124 commits)\n- Opero Agency (opero.ai, audit-as-wedge positioning)\n- Curated Estate (audit.py, 46 checks, 100/100)\n- PropertyOS (valuation engine + map live)\n- Storyboard (visual memory layer — this product)\n\n## Decisions\n- Sonnet 4.6 for sprint, Opus only for architecture\n- Storyboard = Cowork-native first, no Chrome extension v1\n- Audit report as the pitch — score on cover\n\n## Files built this session\nstoryboard/index.html, generate_seed.py, capture_idea.py, make_placeholders.py, screenshot.sh, SKILL.md\n\n## Continue from\nApp shell (left nav + 3-col grid + right panel drawer) live. Next: multi-slide PPTX, GitHub portfolio push.`;
+  navigator.clipboard.writeText(seed).then(() => {
+    const btn = document.querySelector('.seed-btn');
+    const prev = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.background = '#10b981';
+    setTimeout(() => { btn.textContent = prev; btn.style.background = '#6c63ff'; }, 2200);
+  });
+}
+
+// ═══════════════════════════════════
+// PROJECT HEADER
+// ═══════════════════════════════════
+function renderAutomations(projName) {
+  const autos = AUTOMATIONS.filter(a => a.project === projName);
+  if (!autos.length) return '';
+  const cards = autos.map(a => `
+    <div class="auto-card${a.enabled ? '' : ' auto-card-disabled'}">
+      <div class="auto-card-header">
+        <div class="auto-status-dot ${a.status}"></div>
+        <div class="auto-card-title">${a.title}</div>
+      </div>
+      <div class="auto-card-desc">${a.desc}</div>
+      <div class="auto-card-meta">
+        <span class="auto-card-schedule">🕐 ${a.schedule}</span>
+        <span class="auto-card-last">Last: ${a.lastRun}</span>
+      </div>
+    </div>`).join('');
+  return `<div class="auto-section-label">⚡ Automations (${autos.length})</div>
+  <div class="auto-grid">${cards}</div>`;
+}
+
+function renderProjectHeader(projName) {
+  const p = PROJ[projName];
+  const m = PROJECT_META[projName];
+  if (!p || !m) return '';
+
+  const isLive = m.deploy && m.deploy.toLowerCase().includes('live');
+  const deployClass = isLive ? 'proj-header-deploy live' : 'proj-header-deploy';
+  const deployShort = isLive ? '🟢 Live' : '⚫ Not deployed';
+
+  // Ideas for this project (include live MCP-captured ideas)
+  const ideas = mergedBlocks().filter(b => b.type === 'idea' && b.project === projName);
+  const ideasHtml = ideas.length ? `
+    <div class="proj-ideas-row">
+      ${ideas.map(b => `<div class="proj-idea-pill" onclick="openBlock('${b.id}')">${b.title.replace('💡 ','')}</div>`).join('')}
+    </div>` : '';
+
+  // Stats
+  const statsHtml = (m.stats || []).map(s => `
+    <div class="proj-stat-item">
+      <span class="proj-stat-v" style="color:${p.color}">${s.v}</span>
+      <span class="proj-stat-l">${s.l}</span>
+    </div>`).join('');
+
+  // Seeds — quick-copy context starters
+  const seedsHtml = (m.seeds || []).map((s, i) => `
+    <div class="proj-seed-item" onclick="copyProjectSeed('${projName}', ${i})">
+      <span>▶ ${s}</span>
+      <span class="proj-seed-copy">📋</span>
+    </div>`).join('');
+
+  // Live latest block for this project (non-idea, most recent)
+  const latestBlock = mergedBlocks()
+    .filter(b => b.project === projName && b.type !== 'idea')
+    .sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];
+  const latestHtml = latestBlock ? `
+    <div class="proj-latest" onclick="openDetail('${latestBlock.id}')">
+      <div class="proj-latest-label" style="color:${p.color}">▶ Latest</div>
+      <div class="proj-latest-title">${latestBlock.title}</div>
+      <div class="proj-latest-ts">${blockTimestamp(latestBlock)}</div>
+    </div>` : `<div class="proj-header-latest"><strong>Latest:</strong> ${m.latest}</div>`;
+
+  return `
+  <div class="proj-header">
+    <div class="proj-header-band" style="background:${p.color}"></div>
+    <div class="proj-header-body">
+      <div class="proj-header-top">
+        <div class="proj-header-icon">${p.icon}</div>
+        <div>
+          <div class="proj-header-name" style="color:${p.color}">${projName}</div>
+          <div class="proj-header-goal">${m.goal}</div>
+        </div>
+        <div class="${deployClass}">${deployShort}</div>
+        ${m.roadmapFile ? `<button onclick="event.stopPropagation();openRoadmap('${projName}')" style="margin-left:8px;padding:4px 10px;border-radius:20px;border:1.5px solid ${p.color}44;background:transparent;font-size:10px;font-weight:700;color:${p.color};cursor:pointer;transition:background .12s;white-space:nowrap" onmouseover="this.style.background='${p.bg}'" onmouseout="this.style.background='transparent'">Map →</button>` : ''}
+      </div>
+      <div class="proj-header-desc">${m.desc}</div>
+      ${statsHtml ? `<div class="proj-header-stats">${statsHtml}</div>` : ''}
+      ${latestHtml}
+      ${ideasHtml}
+      ${seedsHtml ? `<div class="proj-header-seeds">${seedsHtml}</div>` : ''}
+    </div>
+  </div>
+  ${renderAutomations(projName)}`;
+}
+
+function copyProjectSeed(projName, seedIdx) {
+  const m = PROJECT_META[projName];
+  if (!m || !m.seeds) return;
+  const text = m.seeds[seedIdx];
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Seed copied — paste into new chat'));
+}
+
+// ═══════════════════════════════════
+// IDEAS CAPTURE SYSTEM
+// ═══════════════════════════════════
+let capturedIdeas = []; // in-memory idea store
+let ideasViewActive = false;
+let decisionsViewActive = false;
+
+function openIdeaModal() {
+  // Populate project selector
+  const sel = document.getElementById('ideaProject');
+  sel.innerHTML = Object.keys(PROJ).map(p => `<option value="${p}">${p}</option>`).join('');
+  // Pre-select active filter if a project is selected
+  if (activeFilter !== 'All') sel.value = activeFilter;
+  document.getElementById('ideaTitle').value = '';
+  document.getElementById('ideaDetails').value = '';
+  document.getElementById('ideaModalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('ideaTitle').focus(), 100);
+}
+function closeIdeaModal() {
+  document.getElementById('ideaModalOverlay').classList.remove('open');
+}
+function saveIdea() {
+  const project = document.getElementById('ideaProject').value;
+  const title   = document.getElementById('ideaTitle').value.trim();
+  const details = document.getElementById('ideaDetails').value.trim();
+  if (!title) { document.getElementById('ideaTitle').focus(); return; }
+
+  const idea = {
+    id: 'idea-' + Date.now(),
+    type: 'idea',
+    project,
+    date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short' }),
+    ts: parseInt(new Date().toISOString().replace(/-/g,'').slice(0,8)),
+    title: '💡 ' + title,
+    summary: details || 'Captured idea — add details.',
+    chips: ['Idea', project],
+    decisions: [], ideas: [],
+    _captured: true,
+  };
+  capturedIdeas.push(idea);
+  updateIdeasCount();
+  closeIdeaModal();
+
+  // Copy as JSON snippet for pasting to Claude to make it permanent
+  const json = JSON.stringify(idea, null, 2);
+  const msg = `New idea captured: "${title}"\n\nTo make it permanent in the storyboard, paste this to your AI:\n\n${json}`;
+  navigator.clipboard.writeText(msg).catch(() => {});
+
+  showToast('💡 Idea captured + copied to clipboard');
+
+  // If in ideas view, re-render to show it
+  if (ideasViewActive) renderFeed();
+}
+
+function updateIdeasCount() {
+  const ideaBlocks = mergedBlocks().filter(b => b.type === 'idea');
+  const total = ideaBlocks.length + capturedIdeas.length;
+  document.getElementById('ideasCount').textContent = total;
+}
+
+function toggleIdeasView() {
+  ideasViewActive = !ideasViewActive;
+  const btn = document.getElementById('ideasBtn');
+  btn.classList.toggle('active', ideasViewActive);
+  if (ideasViewActive) {
+    // Deactivate project filters, show all ideas
+    activeFilter = 'All';
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('nav-All').classList.add('active');
+    const bc = document.getElementById('breadcrumb');
+    bc.innerHTML = `<span onclick="setFilter('All')" style="color:var(--text-3)">All work</span>
+                    <span class="sep">/</span>
+                    <span style="color:#d97706">Ideas</span>`;
+  } else {
+    setFilter('All');
+  }
+  renderFeed();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDetail(); closeIdeaModal(); closeRoadmap(); }
+  // I = open idea capture (when no input focused)
+  if (e.key === 'i' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    openIdeaModal();
+  }
+});
+
+// ═══════════════════════════════════
+// AUTO-SCREENSHOT — captures dashboard → POSTs to MCP server → saves thumbnail
+// Runs automatically when blocks change. No terminal needed.
+// ═══════════════════════════════════
+let _lastScreenshotIds = '';
+let _screenshotPending = false;
+
+function autoScreenshot(label) {
+  if (_screenshotPending) return; // debounce
+  if (typeof html2canvas === 'undefined') return;
+  _screenshotPending = true;
+  const ts = new Date().toISOString().slice(0,16).replace(/[T:]/g,'-');
+  const filename = `storyboard-${label||'auto'}-${ts}.png`;
+  setTimeout(() => {
+    html2canvas(document.querySelector('.main-area') || document.body, {
+      scale: 1.5, useCORS: true, logging: false,
+      backgroundColor: '#f8f9fb',
+    }).then(canvas => {
+      const dataUrl = canvas.toDataURL('image/png');
+      fetch('http://127.0.0.1:3847/screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataUrl, filename }),
+      }).then(r => r.json()).then(res => {
+        if (res.ok) showToast(`📸 Snapshot saved: ${res.saved}`);
+      }).catch(() => {}); // silently skip if MCP server not running
+    }).catch(() => {}).finally(() => { _screenshotPending = false; });
+  }, 600); // small delay so feed has finished rendering
+}
+
+// ═══════════════════════════════════
+// LIVE DATA — poll blocks-data.json + storyboard-data.json
+// blocks-data.json: written by MCP server in real-time (capture_idea, capture_block)
+// storyboard-data.json: written by populate_storyboard.py at end-of-session
+// ═══════════════════════════════════
+function pollData() {
+  const ts = Date.now();
+
+  // Poll blocks-data.json — MCP real-time writes
+  fetch('blocks-data.json?t=' + ts)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!Array.isArray(data) || !data.length) return;
+      // Only re-render if the live block set has actually changed
+      const newIds = data.map(b => b.id).join(',');
+      const oldIds = liveBlocks.map(b => b.id).join(',');
+      if (newIds !== oldIds) {
+        liveBlocks = data;
+        updateIdeasCount();
+        renderFeed();
+        buildNav();
+        buildRightPanel();
+        autoScreenshot('live'); // snapshot whenever MCP pushes new blocks
+      }
+    }).catch(() => {});
+
+  // Poll storyboard-data.json — end-of-session populate writes
+  fetch('storyboard-data.json?t=' + ts)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) return;
+      if (data.inspect) renderInspect(data);
+    }).catch(() => {});
+}
+// Poll every 10s so MCP-captured ideas appear within ~10 seconds
+setInterval(pollData, 10000);
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+buildNav();
+renderFeed();
+buildRightPanel();
+updateIdeasCount();
+// Load inspect data immediately on open
+pollData();
+</script>
+</body>
+</html>

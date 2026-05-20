@@ -1,0 +1,44 @@
+# Node
+node_modules/
+.npm
+.pnp
+*.tsbuildinfo
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# Go
+apps/api/bin/
+apps/api/*.test
+
+# Env files
+.env
+.env.local
+.env.*.local
+!.env.example
+!infra/.env.example
+
+# Supabase local
+supabase/.temp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+mcp-server.log
+
+# Legacy data files (not committed to this repo)
+legacy/storyboard/blocks-data.json
+legacy/storyboard/session-log.json
+legacy/storyboard/raw-captures.json
+legacy/storyboard/waitlist.json
+legacy/storyboard/ideas.jsonl
+legacy/storyboard/thumbnails/
+legacy/storyboard/discussions/
+
+# Sensitive
+*.pem
+*.key

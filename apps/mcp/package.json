@@ -1,0 +1,17 @@
+{
+  "name": "@storyboard/mcp",
+  "version": "2.0.0",
+  "description": "Storyboard MCP server — thin adapter over the Go API",
+  "type": "module",
+  "main": "mcp-server.js",
+  "scripts": {
+    "start": "node mcp-server.js",
+    "setup": "node mcp-server.js --setup"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  }
+}
