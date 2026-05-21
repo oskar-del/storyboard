@@ -1,17 +1,20 @@
 # Carry-Forward Brief: Newbuild social pipeline
-**Session ID:** local_32e4a6c5-dbf6-4d9b-93a9-c0fbbfab4cb6  
-**Status:** Running (77 assistant turns)  
-**As of:** 2026-05-18T21:36:10+00:00
+**Session ID:** local_32e4a6c5-dbf6-4d9b-93a9-c0fbbfab4cb6
+**Status:** running (77 assistant turns)
+**Updated:** 2026-05-19T07:18:45.000000
 
-## What's happening
-Social media content pipeline for newbuildhomescostablanca.com. Posts have been scheduled (5 posts confirmed), now logging completed posts back to Airtable.
+## Current State
+Running the social media pipeline for New Build Homes Costa Blanca. Near completion of daily post scheduling.
 
-## Last known state
-- "All 5 posts scheduled" — scheduling phase complete
-- Now logging to Airtable via `create_records_for_table` (Social Posts table)
-- Multiple Airtable records being created in sequence
+## Latest Activity
+Successfully scheduled 5 posts across channels. Now logging completed posts to Airtable for content calendar tracking.
 
-## Next steps when resuming
-- Verify Airtable Social Posts table has the 5 new records
-- Check Postiz/scheduling platform to confirm posts are queued for the right times/channels
-- Review channel distribution (Facebook, Instagram, Pinterest, TikTok, YouTube)
+## Context
+- Project: New Build Homes
+- Focus: Daily social media post scheduling via Postiz + Airtable logging
+- 5 posts scheduled (Facebook, Instagram, Pinterest, TikTok, YouTube)
+- Final step: Airtable logging of scheduled posts
+
+## Next Steps
+- Complete Airtable logging for the 5 scheduled posts
+- Pipeline likely near completion for today's run

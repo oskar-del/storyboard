@@ -1,16 +1,19 @@
 # Carry-Forward Brief: Daily client outreach drafts
-**Session ID:** local_90cedad3-f4a4-4d8e-beec-0a72861178f2  
-**Status:** Running (21 assistant turns)  
-**As of:** 2026-05-18T21:36:10+00:00
+**Session ID:** local_90cedad3-f4a4-4d8e-beec-0a72861178f2
+**Status:** running (21 assistant turns)
+**Updated:** 2026-05-19T07:18:45.000000
 
-## What's happening
-Daily automated session creating personalized Gmail draft emails for client outreach. Multiple drafts being created in sequence via the Gmail MCP.
+## Current State
+Active daily outreach task creating personalized Gmail draft emails for H&H clients.
 
-## Last known state
-- Actively calling `create_draft` (5 consecutive calls visible in recent transcript)
-- Likely working through a batch of CRM clients requiring follow-up
+## Latest Activity
+Actively calling Gmail MCP to create a draft email (mcp__8d09c21d create_draft in progress).
 
-## Next steps when resuming
-- Check Gmail drafts folder to see which client emails were created
-- Review draft quality before sending
-- Update CRM (Airtable) with outreach dates after drafts are reviewed/sent
+## Context
+- Project: Hansson Hertzell
+- Focus: Daily automated outreach — creating draft emails to client leads
+- Uses Gmail MCP for draft creation
+
+## Next Steps
+- Continue creating drafts for remaining contacts in today's outreach batch
+- Drafts will sit in Gmail for Oskar to review and send
