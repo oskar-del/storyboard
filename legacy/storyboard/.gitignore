@@ -1,9 +1,0 @@
-node_modules/
-thumbnails/
-*.png
-*.jpg
-*.mp4
-.DS_Store
-storyboard-data.json
-ideas.jsonl
-seed_output.md

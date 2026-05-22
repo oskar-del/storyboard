@@ -5999,5 +5999,222 @@
     "_source": "session-sync",
     "_session_id": "local_e2576123-1164-401f-a20f-e9857102b988",
     "_logged": "2026-05-21T19:36:28.707350"
+  },
+  {
+    "id": "sync-hh-crm-collab-d022dfcd",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "crm-collaborator-import",
+    "title": "Collaborator Agencies Table Built in Airtable with 300 Records",
+    "summary": "Imported 300 collaborator agencies into a new Airtable table in the H&H CRM base: 274 Active, 14 Hard Bounced, and 12 Soft Bounced. Each record includes Agency Name, Email, Status, Region, Last Campaign Date, Bounce Count, and Notes. Confirmed zero duplicates via verification.",
+    "decisions": [
+      "Airtable Collaborator Agencies table is now the single source of truth for all collaborator email campaigns",
+      "Filter by Status='Active' before every send; update bounce statuses and Last Campaign Date after each campaign"
+    ],
+    "ideas": [
+      "Backfill Region field over time as data becomes available"
+    ],
+    "chips": [
+      "airtable",
+      "crm",
+      "email",
+      "collaborators"
+    ],
+    "date": "21 May",
+    "ts": 20260521,
+    "_source": "session-sync",
+    "_session_id": "local_c88809a5-75fd-4bb7-a3a1-a205c65fd598",
+    "_logged": "2026-05-21T21:18:25.000000"
+  },
+  {
+    "id": "sync-hh-fb-evening-9122d445",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "fb-group-posting-script-fix",
+    "title": "Facebook Group Posting Script Comment Locator Bug Fixed, 41 Groups Reached",
+    "summary": "Debugged and fixed the H&H Facebook group posting script: the second auto-share comment path was using a broken aria-label locator, causing comment insertion to fail silently. Both paths now use coordinate-based detection. A Gran Alacant property post reached 41 groups total; 8 groups that auto-shared but failed comment insertion were added to ALREADY_POSTED to prevent double-posting.",
+    "decisions": [
+      "Both auto-share comment paths now use coordinate-based detection instead of broken aria-label locator",
+      "Groups that auto-share successfully (even if comment fails) are immediately added to ALREADY_POSTED"
+    ],
+    "ideas": [
+      "Consider using personal Facebook account for the ~68 groups where the H&H Page isn't a member"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "script",
+      "bug-fix",
+      "h&h"
+    ],
+    "date": "21 May",
+    "ts": 20260521,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-21T21:18:25.000000"
+  },
+  {
+    "id": "sync-hh-email-report-e202b645",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email-marketing-audit",
+    "title": "Email Marketing Status Report: 3-Week Gap, Subscriber Limit Flag, High Unsubscribes",
+    "summary": "Generated a comprehensive MailerLite email marketing audit for May 20, 2026. No campaign has been sent since April 30 — W19 and W20 property digests are overdue. Open rates are strong (30-46%) but Swedish and CB North English segments have unsubscribe rates of 3-4%, far above the 0.5% warning threshold. All 12 draft campaigns are flagged with subscriber_import_limit_exceeded. Airtable campaign tracking tables are not being updated with actual sends.",
+    "decisions": [
+      "Subscriber import limit exceeded flag must be resolved before next campaign send",
+      "Duplicate Torrevieja penthouse drafts (3 copies from May 7-8) need cleanup"
+    ],
+    "ideas": [
+      "Sync actual campaign sends back to Airtable CRM tables (H&H and NBHCB both incomplete)"
+    ],
+    "chips": [
+      "email",
+      "mailerlite",
+      "audit",
+      "h&h",
+      "unsubscribes"
+    ],
+    "date": "21 May",
+    "ts": 20260521,
+    "_source": "session-sync",
+    "_session_id": "local_f1bf0b9c-3b6e-47fe-a34b-99a4a339bda5",
+    "_logged": "2026-05-21T21:18:25.000000"
+  },
+  {
+    "id": "sync-newbuild-blog-pipeline-2aa94a11",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Newbuild blog pipeline run — API socket failure mid-execution",
+    "summary": "Automated blog pipeline started task tracking, initiated parallel Airtable queries for Blog Articles slugs and Content Ideas source URLs, then failed with a FailedToOpenSocket error before completing. The pipeline got further than pure connection-refused failures — it reached the Airtable fetch stage before dropping.",
+    "decisions": [
+      "Parallel Airtable queries attempted for Blog Articles and Content Ideas tables",
+      "Session failed at API socket level before any content was selected or written"
+    ],
+    "ideas": [],
+    "chips": [
+      "blog",
+      "pipeline",
+      "automated",
+      "error",
+      "airtable"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_11731460-587a-4ffd-989d-fcdeb8579120",
+    "_logged": "2026-05-22T10:27:39.571155"
+  },
+  {
+    "id": "sync-newbuild-social-friday-941cbd0e",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Friday social pipeline (property highlight) timed out on Airtable query",
+    "summary": "Automated Friday social media pipeline read BRIEF.md, CONNECTION-MAP.md and PROGRESS.md successfully, identified today as a Friday property-highlight day, then hit an API timeout when querying Airtable for recent posts to build the exclusion list. No content was rendered or scheduled.",
+    "decisions": [
+      "Content type correctly determined as Friday property highlight",
+      "Pipeline brief and connection files read successfully before failure",
+      "Timeout occurred during Airtable recent-posts query for exclusion list"
+    ],
+    "ideas": [],
+    "chips": [
+      "social",
+      "pipeline",
+      "friday",
+      "property-highlight",
+      "error",
+      "timeout"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_f62f8374-01d1-4c0e-b94c-f4ba48786273",
+    "_logged": "2026-05-22T10:27:39.571155"
+  },
+  {
+    "id": "sync-hh-fotocasa-feed-plan-f8ec5d4e",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "fotocasa-feed-planning",
+    "title": "Planned Fotocasa XML feed from H&H CRM Properties table (1,223 records)",
+    "summary": "Session worked through the correct architecture for the Fotocasa XML feed, establishing that the H&H CRM Properties table (1,223 records from REDSP new builds, Background Properties, and H&H resales) is the single source of truth — not the NBHCB Developments table. A handoff brief was written to FOTOCASA-FEED-BRIEF.md so a new session can generate the XML from this exact table. The Resale Online feed going live that day will add more properties automatically once integrated.",
+    "decisions": [
+      "H&H CRM Properties table (1,223 records) is the Fotocasa feed source, not NBHCB Developments",
+      "Fotocasa XML generation handed off to new dedicated session via FOTOCASA-FEED-BRIEF.md",
+      "Resale Online feed will feed into the same CRM table when live"
+    ],
+    "ideas": [
+      "Add Resale Online feed integration to H&H CRM Properties table"
+    ],
+    "chips": [
+      "fotocasa",
+      "xml-feed",
+      "h&h-crm",
+      "handoff"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
+    "_logged": "2026-05-22T11:06:25.703396"
+  },
+  {
+    "id": "sync-hh-social-pipeline-5a42d685",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H Social Content Plan for Edificio Vento — Platform Captions & Calendar",
+    "summary": "Ran the H&H social media pipeline for the first time. Audited Airtable and found 5 Edificio Vento listings flagged for social posting (1-bed from €158K to penthouse at €488K). Created platform-specific captions for Facebook/Instagram, TikTok/Reels, and Pinterest for 4 posts mapped to Tue/Wed/Thu/Sat slots. Blocked on live posting until Postiz H&H channels are configured and Remotion templates adapted to Navy/Gold branding.",
+    "decisions": [
+      "Use Edificio Vento as the first H&H social content batch — 5 listings flagged 'Post on Social Media: Yes'",
+      "Weekly slots: Tue/Wed/Thu/Sat publishing cadence per pipeline best practices",
+      "Live posting deferred — needs Postiz Facebook Page + Instagram channel setup first"
+    ],
+    "ideas": [
+      "Create a 'Social Posts' table in H&H Airtable to track publishing",
+      "Adapt Remotion templates to H&H Navy/Gold branding for video reels"
+    ],
+    "chips": [
+      "social-media",
+      "airtable",
+      "h&h",
+      "content-plan",
+      "edificio-vento"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_8ed30a92-d86a-4cd6-94e4-4804975a0a5e",
+    "_logged": "2026-05-22T11:51:49.000000"
+  },
+  {
+    "id": "sync-storyboard-47-fd61862f",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-collab-view",
+    "title": "Storyboard Collab View Progress & ChatGPT-to-Dropbox Data Flow Explained",
+    "summary": "Continued building the Storyboard collaboration view. Confirmed timeline and clusters sub-views are complete; Decisions sub-view (graph-style chain visualization) is designed but not yet built. Clarified the ChatGPT-to-Dropbox data flow for colleague Mike: ChatGPT generates a JSON block, user saves it via one Terminal command to ~/Dropbox/Storyboard-Vault/inbox/, Dropbox syncs everywhere. Claude/Cowork side writes blocks automatically via MCP. Next step is a clipboard watcher to make ChatGPT side fully automatic.",
+    "decisions": [
+      "Decisions sub-view is next major build — graph-style showing how decisions chain together",
+      "ChatGPT→Dropbox is currently semi-automatic (one Terminal paste); clipboard watcher would make it zero-touch",
+      "Claude/Cowork side is fully automatic via MCP capture_block"
+    ],
+    "ideas": [
+      "Build clipboard watcher script (~30 min) to auto-save Storyboard JSON from clipboard to inbox folder",
+      "Fix dashboard launchd auto-start and MCP server auto-start"
+    ],
+    "chips": [
+      "storyboard",
+      "collab-view",
+      "chatgpt",
+      "dropbox",
+      "automation"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_56cc43df-4add-4723-b185-1a7dd87738e9",
+    "_logged": "2026-05-22T11:51:49.000000"
   }
 ]
