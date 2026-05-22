@@ -6216,5 +6216,113 @@
     "_source": "session-sync",
     "_session_id": "local_56cc43df-4add-4723-b185-1a7dd87738e9",
     "_logged": "2026-05-22T11:51:49.000000"
+  },
+  {
+    "id": "sync-newbuild-social-pipeline-f62f8374",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Newbuild Social Pipeline Run — Friday Property Highlight (Timeout)",
+    "summary": "The Friday social pipeline ran and determined the content type (property/development highlight). It read the BRIEF, CONNECTION-MAP, and PROGRESS files successfully, then timed out when attempting to query Airtable for recent posts. No content was scheduled this run.",
+    "decisions": [
+      "Friday = property highlight day per pipeline schedule",
+      "Pipeline correctly read all config files before failure"
+    ],
+    "ideas": [
+      "Investigate Airtable connection stability during scheduled runs"
+    ],
+    "chips": [
+      "social-media",
+      "pipeline",
+      "airtable",
+      "timeout"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_f62f8374-01d1-4c0e-b94c-f4ba48786273",
+    "_logged": "2026-05-22T12:06:26.185351"
+  },
+  {
+    "id": "sync-hh-sales-crm-collab-c88809a5",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-sales-crm",
+    "title": "Imported 300 Collaborator Agencies into H&H CRM Airtable Base",
+    "summary": "Built and populated a new Collaborator Agencies table in the H&H CRM Airtable base with all 300 collaborating agents. The import was split across 4 batches: 274 Active, 14 Bounced-Hard (dead domains, never email again), 12 Bounced-Soft (full inboxes, flagged for review). Deduplication was verified — zero duplicates confirmed.",
+    "decisions": [
+      "Imported in batches of 100 for reliability",
+      "Used Last Campaign Date = May 11 for all records",
+      "Hard bounces marked to never email again; soft bounces flagged for review"
+    ],
+    "ideas": [
+      "Future collaborator email campaigns pull directly from this table filtered by Status=Active"
+    ],
+    "chips": [
+      "airtable",
+      "crm",
+      "collaborators",
+      "email-list"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_c88809a5-75fd-4bb7-a3a1-a205c65fd598",
+    "_logged": "2026-05-22T12:06:26.185351"
+  },
+  {
+    "id": "sync-hh-fb-posting-evening-c9e71827",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "Fixed Facebook Group Posting Script — Comment Box Locator Bug",
+    "summary": "Diagnosed and fixed a bug in the FB group posting script where the auto-share comment box locator was broken in the search-path code path. Fixed both paths to use coordinate-based detection. Added 8 groups that had auto-shared (but failed the teaser comment) to ALREADY_POSTED to prevent double-posting. Gran Alacant property post reached 41 groups total.",
+    "decisions": [
+      "Use coordinate-based comment box detection instead of aria-label selector (broken)",
+      "Groups where only comment failed (not share) still count as posted — add to ALREADY_POSTED"
+    ],
+    "ideas": [
+      "Script is now clean for next property — just update POST_URL, POST_AREA, clear ALREADY_POSTED"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "bugfix",
+      "script"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_c9e71827-4e15-417f-ba51-5b060ed89f3d",
+    "_logged": "2026-05-22T12:06:26.185351"
+  },
+  {
+    "id": "sync-propertyos-tool-demo-7b731290",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "propertyos-tool-demo",
+    "title": "PropertyOS 4-tool demo completed for Grupo Inmocosta",
+    "summary": "Built and delivered all four PropertyOS tools for Grupo Inmocosta: a Valuation Report (€85k–€99k tiers with 6 comparables), an Agent Presentation PDF (4-property shortlist with photos and contact footer), an AI Visibility Audit (56/100 Grade C with schema/FAQ findings), and a full Marketing Suite (SEO copy, Facebook, Instagram, WhatsApp). After a git reset deleted critical Railway files, they were restored and redeployed. All four tools verified at 100/100.",
+    "decisions": [
+      "Restored deleted Railway files (pres/, agency_loader.py, agencies/) after git reset wiped them",
+      "AI Visibility Audit scored real live domain inmobiliaria.grupoinmocosta.com — not a mock",
+      "Marketing Suite copy written by Claude (not template strings) for agent-specific voice"
+    ],
+    "ideas": [
+      "Add automated Railway deploy check after any git reset to prevent file loss"
+    ],
+    "chips": [
+      "PropertyOS",
+      "Opero",
+      "PDF",
+      "Sales Tools",
+      "Grupo Inmocosta",
+      "Railway"
+    ],
+    "date": "22 May",
+    "ts": 20260522,
+    "_source": "session-sync",
+    "_session_id": "local_415ae2e4-4200-4e4b-ad5e-9b9b8732c97b",
+    "_logged": "2026-05-22T12:21:31.055054"
   }
 ]
