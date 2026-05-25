@@ -1,0 +1,48 @@
+#!/bin/bash
+# pre-push hook — prevents accidental mass-deletion of monorepo files.
+#
+# Install (run once per clone):
+#   git config core.hooksPath .githooks
+#
+# This hook fires before every `git push` and aborts if the push would
+# delete more than 10 files from protected directories.
+
+PROTECTED_DIRS="apps supabase infra browser-extension"
+MAX_DELETIONS=10
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # Skip branch deletions and new branches (no remote sha to compare)
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+  if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+
+  for DIR in $PROTECTED_DIRS; do
+    DELETIONS=$(git diff --name-only --diff-filter=D "$remote_sha".."$local_sha" -- "$DIR/" 2>/dev/null | wc -l | tr -d ' ')
+
+    if [ "$DELETIONS" -gt "$MAX_DELETIONS" ]; then
+      echo ""
+      echo "╔══════════════════════════════════════════════════════════╗"
+      echo "║  PRE-PUSH HOOK: BLOCKED — potential mass wipe detected   ║"
+      echo "╚══════════════════════════════════════════════════════════╝"
+      echo ""
+      echo "  This push would DELETE $DELETIONS files from $DIR/"
+      echo "  (limit is $MAX_DELETIONS)"
+      echo ""
+      echo "  This is almost certainly an accident — your local working"
+      echo "  tree is probably out of date. Fix with:"
+      echo ""
+      echo "    git pull --rebase origin main"
+      echo ""
+      echo "  If you genuinely intend this mass-deletion, bypass with:"
+      echo ""
+      echo "    git push --no-verify"
+      echo ""
+      exit 1
+    fi
+  done
+done
+
+exit 0

@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storyboard — Design V3 Light</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:       #f7f8fa;
+  --surface:  #ffffff;
+  --nav-bg:   #f1f3f5;
+  --border:   #e3e6ea;
+  --border-2: #eef0f3;
+  --text:     #1a1d23;
+  --text-2:   #5c6370;
+  --text-3:   #9ba3af;
+  --accent:   #5b57e6;
+  --accent-bg:#f0f0fd;
+  --green:    #0f9b6e;
+  --green-bg: #edfaf5;
+  --yellow:   #c47d0e;
+  --yellow-bg:#fef9ee;
+  --red:      #c0392b;
+  --red-bg:   #fdf2f2;
+  --nav-w:    220px;
+  --top-h:    52px;
+  --r:        8px;
+}
+
+html, body { height: 100%; overflow: hidden; font-size: 13px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SHELL ── */
+.app {
+  display: grid;
+  grid-template-columns: var(--nav-w) 1fr;
+  grid-template-rows: var(--top-h) 1fr;
+  height: 100vh;
+}
+
+/* ══════════ TOPBAR ══════════ */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.topbar-logo {
+  width: var(--nav-w);
+  display: flex; align-items: center; gap: 9px;
+  padding: 0 16px;
+  height: 100%;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+}
+.logo-mark {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; color: #fff;
+  flex-shrink: 0;
+}
+.logo-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -.2px; }
+.logo-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: .3px;
+  color: var(--accent); background: var(--accent-bg);
+  border-radius: 4px; padding: 1px 5px; margin-left: 1px; flex-shrink: 0;
+}
+
+.topbar-search {
+  flex: 1; max-width: 380px; margin: 0 0 0 20px;
+  display: flex; align-items: center; gap: 7px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 6px 12px;
+  cursor: text; color: var(--text-3);
+  transition: border-color .12s, box-shadow .12s;
+}
+.topbar-search:hover { border-color: #c5c8ce; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.search-icon { font-size: 13px; }
+.search-placeholder { font-size: 12px; flex: 1; }
+.search-kbd {
+  font-size: 10px; font-weight: 600; color: var(--text-3);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 5px;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; margin-left: auto; padding-right: 16px; }
+.sprint-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--accent-bg); border: 1px solid #d4d2f7;
+  border-radius: 20px; padding: 4px 11px;
+  font-size: 11px; font-weight: 700; color: var(--accent);
+}
+.sprint-bars { display: flex; gap: 2px; }
+.sbar { width: 4px; height: 9px; border-radius: 2px; }
+.sbar.on  { background: var(--accent); }
+.sbar.off { background: #d4d2f7; }
+
+.btn-capture {
+  background: var(--accent); color: #fff;
+  border: none; border-radius: var(--r);
+  padding: 6px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  transition: opacity .15s;
+}
+.btn-capture:hover { opacity: .88; }
+
+.avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+
+/* ══════════ LEFT NAV ══════════ */
+.left-nav {
+  background: var(--nav-bg);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 0 0 16px;
+}
+
+.nav-section-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .6px; text-transform: uppercase;
+  color: var(--text-3);
+  padding: 14px 14px 5px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 6px; margin: 0 5px 1px;
+  cursor: pointer; transition: background .1s;
+  font-size: 12.5px; color: var(--text-2);
+  position: relative;
+}
+.nav-item:hover { background: #e8eaed; color: var(--text); }
+.nav-item.active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.nav-item.active .nav-icon { color: var(--accent); }
+.nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; color: var(--text-3); }
+.nav-label { flex: 1; }
+
+.nav-badge {
+  font-size: 10px; font-weight: 600;
+  padding: 1px 6px; border-radius: 10px;
+  background: rgba(0,0,0,.06); color: var(--text-3);
+}
+.nav-badge.accent { background: var(--accent-bg); color: var(--accent); }
+.nav-badge.green  { background: var(--green-bg);  color: var(--green); }
+.nav-badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
+
+/* project items */
+.nav-proj {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 10px 5px 12px;
+  border-radius: 6px; margin: 0 5px 1px;
+  cursor: pointer; transition: background .1s;
+}
+.nav-proj:hover { background: #e8eaed; }
+.nav-proj.active { background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.proj-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.proj-dot.on  { background: var(--green); }
+.proj-dot.dim { background: #d1d5db; }
+.proj-name    { font-size: 12px; color: var(--text-2); flex: 1; }
+.proj-name.active { color: var(--text); font-weight: 600; }
+.proj-meta    { font-size: 10px; color: var(--text-3); }
+
+.nav-more {
+  font-size: 11px; color: var(--text-3);
+  padding: 4px 12px 4px 38px;
+  cursor: pointer;
+}
+.nav-more:hover { color: var(--accent); }
+
+.nav-divider { height: 1px; background: var(--border); margin: 7px 12px; }
+
+.nav-footer {
+  margin-top: auto; padding: 12px 14px 0;
+  display: flex; gap: 12px;
+}
+.nf-stat { font-size: 10px; color: var(--text-3); }
+.nf-stat b { color: var(--text-2); font-weight: 600; }
+
+/* ══════════ MAIN ══════════ */
+.main { overflow: hidden; display: flex; flex-direction: column; background: var(--bg); }
+
+/* toolbar */
+.toolbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.breadcrumb { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-3); }
+.breadcrumb .active { color: var(--text); font-weight: 600; }
+.sep { font-size: 10px; color: var(--border); }
+
+.period-tabs {
+  display: flex; gap: 2px; margin-left: auto;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 7px; padding: 2px;
+}
+.ptab {
+  padding: 4px 11px; border-radius: 5px;
+  font-size: 11px; font-weight: 500; color: var(--text-3);
+  background: none; border: none; cursor: pointer; transition: all .1s;
+}
+.ptab.on { background: var(--surface); color: var(--text); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+
+.view-tabs {
+  display: flex; gap: 2px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 7px; padding: 2px;
+}
+.vtab {
+  padding: 4px 10px; border-radius: 5px;
+  font-size: 11px; font-weight: 500; color: var(--text-3);
+  background: none; border: none; cursor: pointer; transition: all .1s;
+}
+.vtab.on { background: var(--surface); color: var(--text); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+
+/* ══════════ CONTENT PANELS ══════════ */
+.content { flex: 1; overflow-y: auto; }
+.panel { display: none; padding: 20px; height: 100%; }
+.panel.active { display: block; }
+
+/* ── DASHBOARD PANEL ── */
+.dash-overview {
+  display: grid;
+  grid-template-columns: 200px 200px 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.sc-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--text-3); margin-bottom: 6px; }
+.sc-num { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--text); line-height: 1; margin-bottom: 3px; }
+.sc-sub { font-size: 11px; color: var(--text-3); }
+
+.sprint-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 18px;
+}
+.sprint-info { flex: 1; }
+.si-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.si-sub { font-size: 11px; color: var(--text-3); margin-bottom: 10px; }
+.sprint-track { display: flex; gap: 3px; margin-bottom: 5px; }
+.sd { flex: 1; height: 5px; border-radius: 3px; background: var(--border); }
+.sd.done { background: var(--accent); }
+.sd.now  { background: #a5b4fc; }
+.si-meta { font-size: 10px; color: var(--text-3); }
+.si-meta b { color: var(--accent); font-weight: 700; }
+.sprint-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.sprint-score { text-align: center; }
+.ss-num { font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; }
+.ss-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; color: var(--text-3); margin-top: 1px; }
+.btn-seed {
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid #d4d2f7; border-radius: 7px;
+  padding: 6px 12px; font-size: 11px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.btn-seed:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* today activity */
+.activity-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid var(--border-2);
+  font-size: 12px; color: var(--text-2);
+}
+.activity-row:last-child { border-bottom: none; }
+.ar-icon { font-size: 13px; width: 20px; text-align: center; flex-shrink: 0; color: var(--text-3); }
+.ar-time { font-size: 10px; color: var(--text-3); margin-left: auto; flex-shrink: 0; }
+
+/* velocity mini chart */
+.vel-bars { display: flex; align-items: flex-end; gap: 3px; height: 36px; }
+.vbar { flex: 1; border-radius: 2px 2px 0 0; background: var(--border); transition: background .2s; }
+.vbar.hi { background: var(--accent); }
+.vbar.mid { background: #a5b4fc; }
+
+/* section header */
+.section-head {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-3);
+  padding: 14px 0 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-head::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* blocks grid */
+.blocks { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 10px; }
+
+.block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 15px;
+  cursor: pointer;
+  transition: border-color .12s, box-shadow .12s;
+  border-left: 3px solid transparent;
+}
+.block:hover {
+  border-color: #d0d5dd;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.block-type {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .4px;
+  color: var(--text-3); margin-bottom: 7px;
+  display: flex; align-items: center; gap: 5px;
+}
+.block-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 6px; }
+.block-summary { font-size: 11px; color: var(--text-3); line-height: 1.55; margin-bottom: 9px; }
+.block-foot { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.chip {
+  font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 5px;
+  background: var(--bg); color: var(--text-3);
+  border: 1px solid var(--border);
+}
+.block-date { font-size: 10px; color: var(--text-3); margin-left: auto; }
+
+/* block accent left borders */
+.block-session    { border-left-color: var(--accent); }
+.block-decision   { border-left-color: var(--green); }
+.block-idea       { border-left-color: var(--yellow); }
+.block-feature    { border-left-color: #7c3aed; }
+
+/* ── PROJECT PANEL ── */
+.proj-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.ph-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); margin-top: 4px; flex-shrink: 0; }
+.ph-body { flex: 1; }
+.ph-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+.ph-sub { font-size: 12px; color: var(--text-3); margin-bottom: 12px; }
+.ph-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ph-tag {
+  font-size: 11px; font-weight: 500; padding: 3px 10px;
+  border-radius: 5px; background: var(--bg);
+  color: var(--text-2); border: 1px solid var(--border);
+}
+.ph-meta { flex-shrink: 0; text-align: right; }
+.ph-score { font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1; }
+.ph-score-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .4px; color: var(--text-3); font-weight: 600; }
+
+/* journal timeline */
+.journal { display: flex; flex-direction: column; }
+.j-day { display: grid; grid-template-columns: 90px 1fr; gap: 0; margin-bottom: 6px; }
+.j-date {
+  padding-top: 2px; font-size: 11px; font-weight: 600;
+  color: var(--text-3); text-align: right; padding-right: 16px;
+  position: relative;
+}
+.j-date::after {
+  content: '';
+  position: absolute; right: -1px; top: 7px; bottom: -100px;
+  width: 1px; background: var(--border);
+}
+.j-dot {
+  position: absolute; right: -5px; top: 4px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--border);
+  z-index: 1;
+}
+.j-dot.active { border-color: var(--accent); background: var(--accent); }
+.j-entries { padding-left: 16px; padding-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+.j-entry {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 11px 14px;
+  border-left: 2px solid transparent;
+  transition: border-color .12s;
+  cursor: pointer;
+}
+.j-entry:hover { border-color: #d0d5dd; }
+.je-type { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-3); margin-bottom: 4px; }
+.je-title { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 4px; }
+.je-sum { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+
+/* ── IDEAS PANEL ── */
+.ideas-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.ideas-count {
+  font-size: 11px; font-weight: 600; color: var(--text-3);
+  padding: 3px 10px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 20px;
+}
+.idea-filters { display: flex; gap: 6px; margin-left: auto; }
+.ifilter {
+  padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-3); cursor: pointer;
+}
+.ifilter.on { background: var(--accent-bg); border-color: #d4d2f7; color: var(--accent); font-weight: 600; }
+
+.idea-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+  display: flex; gap: 12px; margin-bottom: 8px;
+  cursor: pointer; transition: border-color .12s;
+}
+.idea-card:hover { border-color: #d0d5dd; }
+.ic-left { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
+.heat-dot { width: 8px; height: 8px; border-radius: 50%; }
+.heat-hot  { background: #ef4444; }
+.heat-warm { background: #f97316; }
+.heat-cool { background: #94a3b8; }
+.ic-body { flex: 1; }
+.ic-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.ic-foot { display: flex; gap: 6px; align-items: center; }
+.ic-tag { font-size: 10px; padding: 2px 7px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text-3); }
+
+/* ── AGENTS PANEL ── */
+.agent-intro {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;
+}
+.agent-tabs { display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 2px; width: fit-content; margin-bottom: 16px; }
+.atab { padding: 6px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; color: var(--text-3); cursor: pointer; background: none; border: none; }
+.atab.on { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.persona-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap: 10px; margin-bottom: 16px; }
+.persona-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 14px; cursor: pointer; transition: all .12s;
+}
+.persona-card:hover { border-color: var(--accent); }
+.persona-card.on { border-color: var(--accent); background: var(--accent-bg); }
+.pc-emoji { font-size: 24px; margin-bottom: 7px; }
+.pc-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.pc-desc { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+
+.run-btn {
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: opacity .15s; display: flex; align-items: center; gap: 7px;
+}
+.run-btn:hover { opacity: .87; }
+
+/* audit tab */
+.audit-url-wrap { display: flex; gap: 10px; margin-bottom: 14px; }
+.audit-input {
+  flex: 1; padding: 9px 13px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); font-size: 13px; color: var(--text);
+  font-family: inherit; outline: none;
+  transition: border-color .12s;
+}
+.audit-input:focus { border-color: var(--accent); background: var(--surface); }
+.audit-input::placeholder { color: var(--text-3); }
+
+/* decisions panel */
+.decision-row {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; margin-bottom: 8px;
+  cursor: pointer; transition: border-color .12s;
+  border-left: 3px solid var(--green);
+}
+.decision-row:hover { border-color: #d0d5dd; }
+.dr-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.dr-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+  padding: 2px 7px; border-radius: 4px;
+  background: var(--green-bg); color: var(--green);
+}
+.dr-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.dr-rationale { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+
+/* ── ANNOTATIONS (design callouts) ── */
+.callout {
+  position: fixed; bottom: 16px; right: 16px;
+  font-size: 11px; font-weight: 600; color: var(--text-2);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 6px 14px; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  display: flex; align-items: center; gap: 7px;
+}
+.callout span { color: var(--accent); }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+.panel.active { animation: fadeIn .2s ease; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <div class="logo-mark">S</div>
+      <span class="logo-name">Storyboard</span>
+      <span class="logo-tag">DAY 2</span>
+    </div>
+
+    <div class="topbar-search">
+      <span class="search-icon">🔍</span>
+      <span class="search-placeholder">Search everything…</span>
+      <span class="search-kbd">⌘K</span>
+    </div>
+
+    <div class="topbar-right">
+      <div class="sprint-chip">
+        <div class="sprint-bars">
+          <div class="sbar on"></div><div class="sbar on"></div>
+          <div class="sbar off"></div><div class="sbar off"></div><div class="sbar off"></div>
+          <div class="sbar off"></div><div class="sbar off"></div><div class="sbar off"></div>
+          <div class="sbar off"></div><div class="sbar off"></div>
+        </div>
+        Day 2 / 10
+      </div>
+      <button class="btn-capture">+ Capture</button>
+      <div class="avatar">O</div>
+    </div>
+  </header>
+
+  <!-- LEFT NAV -->
+  <nav class="left-nav">
+
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-item active" id="nav-dashboard" onclick="show('dashboard', this)">
+      <span class="nav-icon">⬡</span>
+      <span class="nav-label">Dashboard</span>
+    </div>
+
+    <div class="nav-section-label" style="margin-top:4px">Active projects</div>
+    <div class="nav-proj active" id="nav-storyboard" onclick="show('project', this, 'storyboard')">
+      <div class="proj-dot on"></div>
+      <span class="proj-name active">Storyboard</span>
+      <span class="proj-meta">D2</span>
+    </div>
+    <div class="nav-proj" id="nav-propertyos" onclick="show('project', this, 'propertyos')">
+      <div class="proj-dot on"></div>
+      <span class="proj-name">PropertyOS</span>
+      <span class="proj-meta" style="color:var(--green);font-weight:600">Live</span>
+    </div>
+    <div class="nav-proj">
+      <div class="proj-dot dim"></div>
+      <span class="proj-name">NewBuild Homes</span>
+      <span class="proj-meta">—</span>
+    </div>
+    <div class="nav-more">+ 3 more projects</div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-section-label">Capture</div>
+    <div class="nav-item" id="nav-ideas" onclick="show('ideas', this)">
+      <span class="nav-icon">💡</span>
+      <span class="nav-label">Ideas</span>
+      <span class="nav-badge yellow">5</span>
+    </div>
+    <div class="nav-item" id="nav-decisions" onclick="show('decisions', this)">
+      <span class="nav-icon" style="font-size:12px;font-weight:700">✓</span>
+      <span class="nav-label">Decisions</span>
+      <span class="nav-badge green">12</span>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-section-label">Intelligence</div>
+    <div class="nav-item" id="nav-agents" onclick="show('agents', this)">
+      <span class="nav-icon">🤖</span>
+      <span class="nav-label">Agents</span>
+      <span class="nav-badge accent">4</span>
+    </div>
+    <div class="nav-item" id="nav-context" onclick="show('context', this)">
+      <span class="nav-icon">⚡</span>
+      <span class="nav-label">Context</span>
+    </div>
+    <div class="nav-item" id="nav-inspect" onclick="show('inspect', this)">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Inspect</span>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-section-label">Tools</div>
+    <div class="nav-item" id="nav-skills">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Skills</span>
+      <span class="nav-badge">35</span>
+    </div>
+    <div class="nav-item" id="nav-files">
+      <span class="nav-icon">📁</span>
+      <span class="nav-label">Files</span>
+    </div>
+
+    <div class="nav-footer">
+      <div class="nf-stat"><b>1,124</b> commits</div>
+      <div class="nf-stat"><b>6</b> projects</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Toolbar (shared) -->
+    <div class="toolbar">
+      <div class="breadcrumb">
+        <span>All work</span>
+        <span class="sep">/</span>
+        <span class="active" id="breadcrumb-label">Dashboard</span>
+      </div>
+      <div class="period-tabs">
+        <button class="ptab on">All time</button>
+        <button class="ptab">Month</button>
+        <button class="ptab">Week</button>
+        <button class="ptab">Today</button>
+      </div>
+      <div class="view-tabs">
+        <button class="vtab on">⬡ Board</button>
+        <button class="vtab">≡ List</button>
+        <button class="vtab">→ Pipeline</button>
+        <button class="vtab">📖 Journal</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ─── DASHBOARD PANEL ─── -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="dash-overview">
+          <div class="stat-card">
+            <div class="sc-label">Today</div>
+            <div class="sc-num">3</div>
+            <div class="sc-sub">sessions · 4 decisions</div>
+            <div style="margin-top:12px">
+              <div class="activity-row">
+                <span class="ar-icon">🧠</span><span>Agents + Audit wired</span>
+                <span class="ar-time">14:02</span>
+              </div>
+              <div class="activity-row">
+                <span class="ar-icon">✓</span><span>Nav sections redesigned</span>
+                <span class="ar-time">13:30</span>
+              </div>
+              <div class="activity-row">
+                <span class="ar-icon">💡</span><span>Journey personas captured</span>
+                <span class="ar-time">12:15</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="sc-label">Velocity</div>
+            <div class="sc-num" style="color:var(--green)">↑ 12%</div>
+            <div class="sc-sub">vs last week</div>
+            <div class="vel-bars" style="margin-top:14px">
+              <div class="vbar" style="height:30%"></div>
+              <div class="vbar" style="height:45%"></div>
+              <div class="vbar mid" style="height:40%"></div>
+              <div class="vbar mid" style="height:60%"></div>
+              <div class="vbar mid" style="height:55%"></div>
+              <div class="vbar hi" style="height:80%"></div>
+              <div class="vbar hi" style="height:100%"></div>
+            </div>
+            <div style="font-size:9px;color:var(--text-3);margin-top:4px">7-week trend</div>
+          </div>
+
+          <div class="sprint-stat">
+            <div class="sprint-info">
+              <div class="si-title">Storyboard Sprint</div>
+              <div class="si-sub">10-day MVP build · public</div>
+              <div class="sprint-track">
+                <div class="sd done"></div><div class="sd now"></div>
+                <div class="sd"></div><div class="sd"></div><div class="sd"></div>
+                <div class="sd"></div><div class="sd"></div><div class="sd"></div>
+                <div class="sd"></div><div class="sd"></div>
+              </div>
+              <div class="si-meta"><b>Day 2</b> of 10 · on track · 8 days left</div>
+              <div style="margin-top:10px;font-size:11px;color:var(--text-3)">Next: Real audit crawl · Audit-to-PPTX · Scheduled audits</div>
+            </div>
+            <div style="border-left:1px solid var(--border);padding-left:18px;display:flex;flex-direction:column;align-items:center;gap:10px">
+              <div class="sprint-score">
+                <div class="ss-num">68</div>
+                <div class="ss-lbl">score</div>
+              </div>
+              <button class="btn-seed">⚡ Seed chat</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head">Recent work</div>
+        <div class="blocks">
+          <div class="block block-session">
+            <div class="block-type">🧠 Session</div>
+            <div class="block-title">Day 2 — Agents + full audit pipeline wired to audit.py</div>
+            <div class="block-summary">Two-tab Agents view: persona simulation + website audit. audit.py integrated via MCP server with real scoring, competitor benchmarking, findings as blocks.</div>
+            <div class="block-foot">
+              <span class="chip">Agents</span><span class="chip">Audit</span><span class="chip">MCP</span>
+              <span class="block-date">Today</span>
+            </div>
+          </div>
+          <div class="block block-decision">
+            <div class="block-type">✓ Decision</div>
+            <div class="block-title">Website audit = the onboarding hook for any company with a URL</div>
+            <div class="block-summary">Board seeded with real scored findings from minute one. Competitive delta built-in. Falls back to generated findings on GitHub Pages.</div>
+            <div class="block-foot">
+              <span class="chip" style="background:var(--green-bg);color:var(--green);border-color:#c6f0e0">High confidence</span>
+              <span class="block-date">Today</span>
+            </div>
+          </div>
+          <div class="block block-idea">
+            <div class="block-type">💡 Idea</div>
+            <div class="block-title">Four onboarding journeys: Business · Operator · Power user · Enterprise</div>
+            <div class="block-summary">Each journey has its own first-run path. Business = audit. Operator = lightweight widget. Power user = full MCP. Enterprise = team features.</div>
+            <div class="block-foot">
+              <span class="chip" style="background:var(--yellow-bg);color:var(--yellow);border-color:#fde68a">Hot 🔥</span>
+              <span class="block-date">Today</span>
+            </div>
+          </div>
+          <div class="block block-session">
+            <div class="block-type">🧠 Session</div>
+            <div class="block-title">Nav redesign — V2 dark + V3 light concepts</div>
+            <div class="block-summary">Google Analytics–style hierarchy. Four sections: Overview, Capture, Intelligence, Tools. Projects show top 3 active. Flat list eliminated.</div>
+            <div class="block-foot">
+              <span class="chip">Design</span><span class="chip">UI</span>
+              <span class="block-date">Today</span>
+            </div>
+          </div>
+          <div class="block block-decision">
+            <div class="block-type">✓ Decision</div>
+            <div class="block-title">Barcelona meetup Apr 29 — primary target for Storyboard pitch</div>
+            <div class="block-summary">First Claude-specific meetup in Barcelona. 60 cap. Audience is Claude Code / Cowork users. Perfect for audit onboarding demo.</div>
+            <div class="block-foot">
+              <span class="chip">Meetups</span><span class="chip">Barcelona</span>
+              <span class="block-date">Today</span>
+            </div>
+          </div>
+          <div class="block block-feature" style="border-left-color:#7c3aed">
+            <div class="block-type">🔧 Feature</div>
+            <div class="block-title">Journal view — vertical timeline for project-level browsing</div>
+            <div class="block-summary">Date headers, type icons on left rail, decision/idea pills. Replaces empty grid for single-project views.</div>
+            <div class="block-foot">
+              <span class="chip">Journal</span>
+              <span class="block-date">Today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── PROJECT PANEL ─── -->
+      <div class="panel" id="panel-project">
+        <div class="proj-hero">
+          <div class="ph-dot"></div>
+          <div class="ph-body">
+            <div class="ph-title" id="proj-title">Storyboard</div>
+            <div class="ph-sub" id="proj-sub">10-day public sprint · Day 2 of 10 · on track</div>
+            <div class="ph-tags">
+              <span class="ph-tag">Single-file HTML</span>
+              <span class="ph-tag">MCP server</span>
+              <span class="ph-tag">GitHub Pages</span>
+              <span class="ph-tag">Barcelona meetup Apr 29</span>
+            </div>
+          </div>
+          <div class="ph-meta">
+            <div class="ph-score">68</div>
+            <div class="ph-score-lbl">sprint score</div>
+          </div>
+        </div>
+
+        <div class="section-head">Journal</div>
+        <div class="journal">
+          <div class="j-day">
+            <div class="j-date">
+              Apr 18 — Today
+              <div class="j-dot active"></div>
+            </div>
+            <div class="j-entries">
+              <div class="j-entry" style="border-left-color:var(--accent)">
+                <div class="je-type">🧠 Session</div>
+                <div class="je-title">Agents nav + full audit pipeline wired to audit.py</div>
+                <div class="je-sum">Two-tab view, real scoring, competitor benchmarking. /audit endpoint on MCP server calls Python directly.</div>
+              </div>
+              <div class="j-entry" style="border-left-color:var(--green)">
+                <div class="je-type">✓ Decision</div>
+                <div class="je-title">Website audit is the onboarding hook — any URL works</div>
+                <div class="je-sum">Board seeded with real findings from minute one. Competitive delta built-in.</div>
+              </div>
+              <div class="j-entry" style="border-left-color:var(--yellow)">
+                <div class="je-type">💡 Idea</div>
+                <div class="je-title">Four onboarding journeys: Business / Operator / Power user / Enterprise</div>
+              </div>
+            </div>
+          </div>
+          <div class="j-day">
+            <div class="j-date">
+              Apr 17
+              <div class="j-dot"></div>
+            </div>
+            <div class="j-entries">
+              <div class="j-entry" style="border-left-color:var(--accent)">
+                <div class="je-type">🧠 Session</div>
+                <div class="je-title">Dashboard v1 — App shell + grid, landing page, MCP server</div>
+                <div class="je-sum">Full product scaffold in one day. GitHub Pages live. Waitlist collecting signups.</div>
+              </div>
+              <div class="j-entry" style="border-left-color:#7c3aed">
+                <div class="je-type">🔧 Feature</div>
+                <div class="je-title">Sprint progress pill · Masonry grid · Context hub</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── IDEAS PANEL ─── -->
+      <div class="panel" id="panel-ideas">
+        <div class="ideas-header">
+          <div style="font-size:16px;font-weight:700">Ideas</div>
+          <div class="ideas-count">5 open</div>
+          <div class="idea-filters">
+            <div class="ifilter on">All</div>
+            <div class="ifilter">🔥 Hot</div>
+            <div class="ifilter">Storyboard</div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="ic-left"><div class="heat-dot heat-hot"></div></div>
+          <div class="ic-body">
+            <div class="ic-title">Four onboarding journeys: Business / Operator / Power user / Enterprise</div>
+            <div class="ic-foot">
+              <span class="ic-tag">Storyboard</span>
+              <span class="ic-tag">Onboarding</span>
+              <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+            </div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="ic-left"><div class="heat-dot heat-hot"></div></div>
+          <div class="ic-body">
+            <div class="ic-title">Audit-to-PPTX — one click from findings to branded Opero deck</div>
+            <div class="ic-foot">
+              <span class="ic-tag">Storyboard</span><span class="ic-tag">Audit</span>
+              <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+            </div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="ic-left"><div class="heat-dot heat-warm"></div></div>
+          <div class="ic-body">
+            <div class="ic-title">Scheduled weekly audits with diff — surface only what changed since last run</div>
+            <div class="ic-foot">
+              <span class="ic-tag">Storyboard</span><span class="ic-tag">Day 3</span>
+              <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+            </div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="ic-left"><div class="heat-dot heat-warm"></div></div>
+          <div class="ic-body">
+            <div class="ic-title">Journey selector banner — shown on first load, dismissed after onboarding complete</div>
+            <div class="ic-foot">
+              <span class="ic-tag">UI</span><span class="ic-tag">Design V3</span>
+              <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+            </div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="ic-left"><div class="heat-dot heat-cool"></div></div>
+          <div class="ic-body">
+            <div class="ic-title">Enterprise journey — team visibility, stakeholder exports, audit-as-service</div>
+            <div class="ic-foot">
+              <span class="ic-tag">Later</span>
+              <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── DECISIONS PANEL ─── -->
+      <div class="panel" id="panel-decisions">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="font-size:16px;font-weight:700">Decisions</div>
+          <div class="ideas-count">12 locked</div>
+        </div>
+        <div class="decision-row">
+          <div class="dr-head">
+            <span class="dr-badge">High confidence</span>
+            <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+          </div>
+          <div class="dr-title">Website audit = the onboarding hook for any company with a URL</div>
+          <div class="dr-rationale">Board seeded with real scored findings from minute one. The audit.py pipeline already has 46 checks across 5 categories.</div>
+        </div>
+        <div class="decision-row">
+          <div class="dr-head">
+            <span class="dr-badge">High confidence</span>
+            <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+          </div>
+          <div class="dr-title">Nav: 4 sections — Overview, Capture, Intelligence, Tools</div>
+          <div class="dr-rationale">Google Analytics–style hierarchy. Features grouped by intent not by type. Projects show top 3 active, rest collapsed.</div>
+        </div>
+        <div class="decision-row">
+          <div class="dr-head">
+            <span class="dr-badge">High confidence</span>
+            <span style="font-size:10px;color:var(--text-3);margin-left:auto">Today</span>
+          </div>
+          <div class="dr-title">Barcelona Claude meetup (Apr 29) = primary distribution target</div>
+          <div class="dr-rationale">First Claude-specific meetup, 60 cap, audience is exactly our ICP. 11 days to prep a tight demo.</div>
+        </div>
+        <div class="decision-row">
+          <div class="dr-head">
+            <span class="dr-badge">Locked</span>
+            <span style="font-size:10px;color:var(--text-3);margin-left:auto">Apr 17</span>
+          </div>
+          <div class="dr-title">Sonnet 4.6 for sprint, Opus only for architecture decisions</div>
+          <div class="dr-rationale">Speed matters more than perfection in a 10-day sprint. Opus reserved for genuine architectural choices.</div>
+        </div>
+        <div class="decision-row">
+          <div class="dr-head">
+            <span class="dr-badge">Locked</span>
+            <span style="font-size:10px;color:var(--text-3);margin-left:auto">Apr 17</span>
+          </div>
+          <div class="dr-title">Single-file HTML, no build tools, no dependencies</div>
+          <div class="dr-rationale">Maximum portability. Works on localhost, GitHub Pages, and any static host. Zero setup friction.</div>
+        </div>
+      </div>
+
+      <!-- ─── AGENTS PANEL ─── -->
+      <div class="panel" id="panel-agents">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="font-size:16px;font-weight:700">Agents</div>
+          <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:var(--accent-bg);color:var(--accent);font-weight:600;border:1px solid #d4d2f7">Research preview</span>
+        </div>
+
+        <div class="agent-tabs">
+          <button class="atab on">👥 Persona Simulation</button>
+          <button class="atab">🔎 Website Audit</button>
+        </div>
+
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:16px;max-width:520px;line-height:1.65">
+          4 AI user types read your actual storyboard data — projects, sessions, decisions, ideas — and report back as that persona would. Find blind spots before users do.
+        </div>
+
+        <div class="persona-grid">
+          <div class="persona-card on">
+            <div class="pc-emoji">📊</div>
+            <div class="pc-name">Product Manager</div>
+            <div class="pc-desc">Runs sprints, manages stakeholders. Wants visibility and reportability.</div>
+          </div>
+          <div class="persona-card on">
+            <div class="pc-emoji">🔨</div>
+            <div class="pc-name">Solo Builder</div>
+            <div class="pc-desc">Ships fast alone with AI. Context window pain is real.</div>
+          </div>
+          <div class="persona-card">
+            <div class="pc-emoji">🚀</div>
+            <div class="pc-name">Startup Founder</div>
+            <div class="pc-desc">Running a company with AI as core workforce.</div>
+          </div>
+          <div class="persona-card">
+            <div class="pc-emoji">⌨️</div>
+            <div class="pc-name">Developer</div>
+            <div class="pc-desc">Cares about API, MCP, and integrations.</div>
+          </div>
+        </div>
+
+        <button class="run-btn">▶ Run Simulation</button>
+      </div>
+
+      <!-- ─── CONTEXT PANEL ─── -->
+      <div class="panel" id="panel-context">
+        <div style="font-size:16px;font-weight:700;margin-bottom:16px">Context Hub</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px">
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Storyboard — ready to seed</div>
+          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">
+            4 sessions · 12 decisions · 5 ideas · Day 2 of sprint · 68/100 sprint score<br>
+            Last seeded: 2h ago · Context freshness: 🟢 Current
+          </div>
+          <button class="btn-seed" style="font-size:12px;padding:7px 16px">⚡ Copy seed to clipboard</button>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px">
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">PropertyOS — ready to seed</div>
+          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">
+            Flask web form in progress · Catastro API confirmed · pisos.com scraping live<br>
+            Last seeded: 3 days ago · Context freshness: 🟡 Slightly stale
+          </div>
+          <button class="btn-seed" style="font-size:12px;padding:7px 16px">⚡ Copy seed to clipboard</button>
+        </div>
+      </div>
+
+      <!-- ─── INSPECT PANEL ─── -->
+      <div class="panel" id="panel-inspect">
+        <div style="font-size:16px;font-weight:700;margin-bottom:4px">Inspect</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:20px">AI quality check on your storyboard content</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;color:var(--text-3)">
+          <div style="font-size:32px;margin-bottom:12px">🔍</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Run an inspection</div>
+          <div style="font-size:12px;margin-bottom:16px">Checks your sessions, decisions, and ideas for completeness, clarity, and consistency.</div>
+          <button class="run-btn" style="margin:0 auto">Run inspection</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+
+</div><!-- /app -->
+
+<div class="callout">Design V3 Light — <span>click the nav to explore</span></div>
+
+<script>
+function show(panel, navEl, sub) {
+  // deactivate all nav items
+  document.querySelectorAll('.nav-item, .nav-proj').forEach(el => {
+    el.classList.remove('active');
+    el.querySelectorAll('.proj-name').forEach(n => n.classList.remove('active'));
+  });
+
+  // activate clicked
+  navEl.classList.add('active');
+  navEl.querySelectorAll('.proj-name').forEach(n => n.classList.add('active'));
+
+  // hide all panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+  // show target panel
+  const target = document.getElementById('panel-' + panel);
+  if (target) target.classList.add('active');
+
+  // update breadcrumb
+  const labels = {
+    dashboard: 'Dashboard',
+    project: sub === 'storyboard' ? 'Storyboard' : 'PropertyOS',
+    ideas: 'Ideas',
+    decisions: 'Decisions',
+    agents: 'Agents',
+    context: 'Context',
+    inspect: 'Inspect',
+  };
+  document.getElementById('breadcrumb-label').textContent = labels[panel] || panel;
+
+  // customise project panel per project
+  if (panel === 'project' && sub === 'propertyos') {
+    document.getElementById('proj-title').textContent = 'PropertyOS';
+    document.getElementById('proj-sub').textContent = 'Valuation engine + map live · Flask web form next';
+  } else if (panel === 'project') {
+    document.getElementById('proj-title').textContent = 'Storyboard';
+    document.getElementById('proj-sub').textContent = '10-day public sprint · Day 2 of 10 · on track';
+  }
+}
+</script>
+</body>
+</html>

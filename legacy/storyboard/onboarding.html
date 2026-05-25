@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storyboard — Start here</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #0d1117;
+  --surface: #161b27;
+  --border: rgba(255,255,255,.08);
+  --text: #e8eaf6;
+  --text-2: #94a3b8;
+  --text-3: #475569;
+  --accent: #6c63ff;
+}
+html, body { height:100%; background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; overflow-x: hidden; }
+
+/* ── HEADER ───────────────────────────────── */
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px; border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: linear-gradient(135deg, #6c63ff, #a78bfa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.logo-name { font-size: 16px; font-weight: 800; letter-spacing: -.3px; }
+.logo-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 8px;
+  background: rgba(108,99,255,.15); color: #a78bfa; letter-spacing: .3px; }
+.skip-link { font-size: 12px; color: var(--text-3); cursor: pointer; text-decoration: none;
+  transition: color .15s; }
+.skip-link:hover { color: var(--text-2); }
+
+/* ── HERO ─────────────────────────────────── */
+.hero {
+  text-align: center; padding: 52px 24px 40px;
+  max-width: 600px; margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #6c63ff; margin-bottom: 14px;
+}
+.hero-title {
+  font-size: 36px; font-weight: 900; letter-spacing: -1.2px; line-height: 1.1;
+  margin-bottom: 14px;
+}
+.hero-title span { color: #a78bfa; }
+.hero-sub { font-size: 15px; color: var(--text-2); line-height: 1.6; }
+
+/* ── TRACK SELECT ─────────────────────────── */
+.track-row {
+  display: flex; gap: 12px; justify-content: center;
+  padding: 0 24px 32px; max-width: 760px; margin: 0 auto;
+}
+.track-card {
+  flex: 1; max-width: 340px;
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 18px; padding: 28px 24px;
+  cursor: pointer; transition: all .2s; position: relative; overflow: hidden;
+}
+.track-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: 18px 18px 0 0;
+}
+.track-card.business::before { background: linear-gradient(to right, #6c63ff, #a78bfa); }
+.track-card.individual::before { background: linear-gradient(to right, #10b981, #34d399); }
+.track-card:hover { border-color: rgba(108,99,255,.35); transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+.track-card.individual:hover { border-color: rgba(16,185,129,.35); }
+.track-icon { font-size: 28px; margin-bottom: 12px; }
+.track-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 6px; }
+.track-card.business .track-label { color: #6c63ff; }
+.track-card.individual .track-label { color: #10b981; }
+.track-title { font-size: 20px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 8px; }
+.track-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+.track-arrow { position: absolute; bottom: 22px; right: 22px; font-size: 18px; opacity: .25;
+  transition: opacity .2s, transform .2s; }
+.track-card:hover .track-arrow { opacity: .6; transform: translateX(3px); }
+
+/* ── JOURNEY GRID ─────────────────────────── */
+.journeys {
+  max-width: 900px; margin: 0 auto; padding: 0 24px 60px;
+  display: none;
+}
+.journeys.visible { display: block; }
+.journeys-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 16px; text-align: center;
+}
+.journey-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+@media (max-width: 640px) { .journey-grid { grid-template-columns: 1fr; } }
+.journey-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 20px 18px; cursor: pointer;
+  transition: all .18s; position: relative;
+}
+.journey-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.3); }
+.journey-card.selected { border-color: var(--j-color); background: rgba(108,99,255,.06); }
+.journey-icon { font-size: 24px; margin-bottom: 10px; }
+.journey-title { font-size: 14px; font-weight: 800; letter-spacing: -.2px; margin-bottom: 5px; }
+.journey-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.journey-tag {
+  display: inline-block; margin-top: 8px;
+  font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 8px;
+  background: rgba(255,255,255,.05); color: var(--text-3);
+}
+.journey-check {
+  position: absolute; top: 14px; right: 14px; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--j-color, #6c63ff);
+  display: none; align-items: center; justify-content: center;
+  font-size: 11px; color: #fff;
+}
+.journey-card.selected .journey-check { display: flex; }
+
+/* ── CTA ──────────────────────────────────── */
+.cta-wrap {
+  text-align: center; padding: 0 24px 40px;
+  display: none;
+}
+.cta-wrap.visible { display: block; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #6c63ff, #8b5cf6);
+  color: #fff; font-size: 15px; font-weight: 800; letter-spacing: -.2px;
+  padding: 14px 32px; border-radius: 50px; border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(108,99,255,.4); transition: all .2s;
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,99,255,.5); }
+.cta-sub { font-size: 12px; color: var(--text-3); margin-top: 10px; }
+
+/* ── STEP DOTS ────────────────────────────── */
+.step-dots {
+  display: flex; gap: 8px; justify-content: center; padding: 28px 0 20px;
+}
+.step-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.1); transition: all .2s;
+}
+.step-dot.active { background: #6c63ff; width: 20px; border-radius: 4px; }
+.step-dot.done { background: rgba(108,99,255,.4); }
+
+/* ── BOTTOM STATS ─────────────────────────── */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 10px 24px; border-top: 1px solid var(--border);
+  background: rgba(13,17,23,.92); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center; gap: 32px;
+}
+.bstat { font-size: 11px; color: var(--text-3); }
+.bstat b { color: var(--text-2); }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo">
+    <div class="logo-mark">◈</div>
+    <span class="logo-name">Storyboard</span>
+    <span class="logo-badge">BETA</span>
+  </div>
+  <a class="skip-link" href="app.html">Skip setup → open dashboard</a>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Start here</div>
+  <h1 class="hero-title">Your AI context,<br><span>never lost again</span></h1>
+  <p class="hero-sub">Tell us how you work and we'll set up Storyboard for your journey.</p>
+</div>
+
+<div class="step-dots">
+  <div class="step-dot active" id="dot1"></div>
+  <div class="step-dot" id="dot2"></div>
+  <div class="step-dot" id="dot3"></div>
+</div>
+
+<!-- Step 1: Track select -->
+<div class="track-row" id="step1">
+  <div class="track-card business" onclick="selectTrack('business')">
+    <div class="track-icon">🏢</div>
+    <div class="track-label">Business</div>
+    <div class="track-title">I'm running or building a business</div>
+    <div class="track-desc">Connect AI to your operations, structure your workflows, and never lose a decision again.</div>
+    <div class="track-arrow">→</div>
+  </div>
+  <div class="track-card individual" onclick="selectTrack('individual')">
+    <div class="track-icon">👤</div>
+    <div class="track-label">Individual</div>
+    <div class="track-title">I'm working on my own projects</div>
+    <div class="track-desc">Track what you're building, capture ideas from any AI tool, and keep the thread alive.</div>
+    <div class="track-arrow">→</div>
+  </div>
+</div>
+
+<!-- Step 2: Journey select (injected by JS) -->
+<div class="journeys" id="step2"></div>
+
+<!-- Step 3: CTA -->
+<div class="cta-wrap" id="step3">
+  <button class="cta-btn" onclick="launchDashboard()">
+    <span>Open my Storyboard</span>
+    <span>→</span>
+  </button>
+  <div class="cta-sub">Everything is saved. You can change your setup anytime.</div>
+</div>
+
+<div class="bottom-bar">
+  <div class="bstat"><b>Context windows</b> end. Your project doesn't.</div>
+  <div class="bstat"><b>Every decision</b> captured, searchable, seedable.</div>
+  <div class="bstat"><b>Works with</b> Claude · ChatGPT · Gemini · any AI</div>
+</div>
+
+<script>
+const JOURNEYS = {
+  business: [
+    {
+      id: 'running',
+      icon: '⚡',
+      title: 'Running business',
+      desc: 'Already operational. Connect MCPs, structure team memory, automate repeatable work.',
+      tag: 'Most popular',
+      color: '#6c63ff',
+    },
+    {
+      id: 'new-business',
+      icon: '🚀',
+      title: 'Starting a business',
+      desc: 'Build from zero with AI as your co-founder. Daily briefing, step-by-step setup.',
+      tag: 'Founder path',
+      color: '#a78bfa',
+    },
+    {
+      id: 'exit',
+      icon: '💰',
+      title: 'Selling / exiting',
+      desc: 'Prepare for due diligence. Every decision logged, every session documented.',
+      tag: 'Documentation',
+      color: '#f59e0b',
+    },
+  ],
+  individual: [
+    {
+      id: 'side-project',
+      icon: '💡',
+      title: 'Side project',
+      desc: 'Building something alongside a day job. Keep the thread alive between sessions.',
+      tag: 'Builder',
+      color: '#10b981',
+    },
+    {
+      id: 'power-user',
+      icon: '🧠',
+      title: 'Power user',
+      desc: 'Already deep in AI tools. One memory layer that connects everything.',
+      tag: 'Advanced',
+      color: '#6c63ff',
+    },
+    {
+      id: 'just-tracking',
+      icon: '💬',
+      title: 'Track my chats',
+      desc: "I just don't want to lose my conversations. Nothing else, for now.",
+      tag: 'Simplest setup',
+      color: '#34d399',
+    },
+  ],
+};
+
+let selectedTrack = null;
+let selectedJourney = null;
+
+function selectTrack(track) {
+  selectedTrack = track;
+
+  // Animate step 1 out
+  document.getElementById('step1').style.opacity = '0.4';
+  document.getElementById('step1').style.pointerEvents = 'none';
+
+  // Update dots
+  document.getElementById('dot1').className = 'step-dot done';
+  document.getElementById('dot2').className = 'step-dot active';
+
+  // Render journeys
+  const j = JOURNEYS[track];
+  const container = document.getElementById('step2');
+  container.innerHTML = `
+    <div class="journeys-label">Now pick your journey</div>
+    <div class="journey-grid">
+      ${j.map(item => `
+        <div class="journey-card" id="j-${item.id}" style="--j-color:${item.color}"
+          onclick="selectJourney('${item.id}', '${item.color}')">
+          <div class="journey-check">✓</div>
+          <div class="journey-icon">${item.icon}</div>
+          <div class="journey-title">${item.title}</div>
+          <div class="journey-desc">${item.desc}</div>
+          <span class="journey-tag">${item.tag}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  container.classList.add('visible');
+
+  // Scroll to journeys
+  setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function selectJourney(journeyId, color) {
+  selectedJourney = journeyId;
+
+  // Deselect all, select this one
+  document.querySelectorAll('.journey-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('j-' + journeyId)?.classList.add('selected');
+
+  // Update dots
+  document.getElementById('dot2').className = 'step-dot done';
+  document.getElementById('dot3').className = 'step-dot active';
+
+  // Show CTA
+  const cta = document.getElementById('step3');
+  cta.classList.add('visible');
+  setTimeout(() => cta.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function launchDashboard() {
+  // Save journey choice to localStorage for the dashboard to read
+  localStorage.setItem('sb_track', selectedTrack);
+  localStorage.setItem('sb_journey', selectedJourney);
+  localStorage.setItem('sb_onboarded', '1');
+  window.location.href = 'app.html';
+}
+</script>
+</body>
+</html>
