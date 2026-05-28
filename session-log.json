@@ -6381,5 +6381,106 @@
     "_source": "session-sync",
     "_session_id": "local_d5983faf-0b46-4fc9-a8ea-f6fd2bf015f6",
     "_logged": "2026-05-28T17:21:44.239261"
+  },
+  {
+    "id": "sync-nbhcb-blog-failed-6fde8c6e",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog pipeline run failed at startup (socket error)",
+    "summary": "The daily newbuild blog pipeline scheduled task started but immediately failed with a socket connection error before completing any content scouting or article writing. No Airtable records were created.",
+    "decisions": [
+      "Pipeline needs retry logic for API socket failures"
+    ],
+    "ideas": [
+      "Add health check before main pipeline execution"
+    ],
+    "chips": [
+      "blog",
+      "pipeline",
+      "failed",
+      "scheduled-task"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_48e63c65-a191-46fb-8e9b-613bc234f784",
+    "_logged": "2026-05-28T17:37:20.000000"
+  },
+  {
+    "id": "sync-nbhcb-social-failed-400d6ace",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Social pipeline run failed with ECONNRESET after reading brief files",
+    "summary": "The newbuild social media pipeline scheduled task started and read its BRIEF, CONNECTION-MAP, and PROGRESS files, then failed with an ECONNRESET error before determining the content type or generating any posts.",
+    "decisions": [
+      "Pipeline reads config files correctly but API connectivity is unstable"
+    ],
+    "ideas": [
+      "Add connection retry on ECONNRESET in pipeline wrapper"
+    ],
+    "chips": [
+      "social",
+      "pipeline",
+      "failed",
+      "scheduled-task"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_b396f75f-cc4d-40c5-9835-8ac74c2a5e7b",
+    "_logged": "2026-05-28T17:37:20.500000"
+  },
+  {
+    "id": "sync-email-marketing-timeout-90378b9d",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email-marketing",
+    "title": "Email marketing session queried MailerLite subscribers and campaigns, timed out",
+    "summary": "An email marketing session queried MailerLite for subscriber count, campaign list (twice), subscriber list, and read a local file before timing out. No emails were sent or campaigns created. The session appeared to be auditing or preparing campaign data.",
+    "decisions": [
+      "MailerLite queries completed but the full workflow did not finish"
+    ],
+    "ideas": [
+      "Split large email marketing tasks into smaller atomic steps"
+    ],
+    "chips": [
+      "email",
+      "mailerlite",
+      "timeout",
+      "campaigns"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_d25017d7-0798-434b-9917-a700f44db3e6",
+    "_logged": "2026-05-28T17:37:21.000000"
+  },
+  {
+    "id": "sync-perf-mktg-meta-tos-0108cff0",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "performance-marketing",
+    "title": "Diagnosed Meta Custom Audience upload blocked by unaccepted TOS and missing admin role",
+    "summary": "Investigated why Custom Audience upload was failing for H&H Invest account in Meta Ads Manager. Root cause: Custom Audience Terms of Service had never been accepted for this account, and the user's role was Employee (not Admin) in Business Manager. Identified that an existing Admin must first upgrade user permissions before TOS can be accepted.",
+    "decisions": [
+      "Custom Audience TOS acceptance requires Admin role in Business Manager",
+      "Recommended checking Business Settings → People to identify admins and request role upgrade"
+    ],
+    "ideas": [
+      "Once admin role is granted, retry upload at business.facebook.com/ads/manage/customaudiences/tos"
+    ],
+    "chips": [
+      "meta-ads",
+      "custom-audience",
+      "permissions",
+      "business-manager"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_816af0d2-0d12-48df-bff4-1440a2e5c931",
+    "_logged": "2026-05-28T18:07:47.860023"
   }
 ]
