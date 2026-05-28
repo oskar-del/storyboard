@@ -6324,5 +6324,62 @@
     "_source": "session-sync",
     "_session_id": "local_415ae2e4-4200-4e4b-ad5e-9b9b8732c97b",
     "_logged": "2026-05-22T12:21:31.055054"
+  },
+  {
+    "id": "sync-weekly-backlink-5c621a22",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "weekly-backlink-agent",
+    "title": "Weekly backlink report: 5 opportunities across Quora and CostablancaForum",
+    "summary": "The weekly backlink agent found 5 forum/Q&A opportunities: one active CostablancaForum thread about Cabo Roig holiday homes and four Quora questions covering ongoing costs, cheapest areas, market timing, and first-person buying experience. Drafted answers for all five linking to relevant site guides. ExpatForum.com is now IP-banned for the automated browser — previously drafted answers there must be posted manually.",
+    "decisions": [
+      "Prioritised CostablancaForum thread with no new-build angle in 31 replies",
+      "Targeted stale Quora answers (12 years old) with fresh 2024-2026 content",
+      "Flagged ExpatForum IP ban — manual posting required for 3 existing drafts"
+    ],
+    "ideas": [
+      "Consider a manual posting reminder workflow for ExpatForum answers"
+    ],
+    "chips": [
+      "backlinks",
+      "seo",
+      "quora",
+      "forum",
+      "automated"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_ab36e600-1568-4a9e-a577-4da0af0851c4",
+    "_logged": "2026-05-28T17:21:44.239261"
+  },
+  {
+    "id": "sync-hh-social-content-plan-b25163b3",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H social pipeline audit: 2-week content plan ready, 4 setup steps required before automation",
+    "summary": "The H&H social pipeline ran but could not schedule posts because Postiz channels for H&H are not yet configured. Checked Airtable (1,377 H&H properties), selected 5 diverse properties across the EUR299K-EUR4.5M range, and wrote platform-ready captions for Facebook/Instagram with a posting schedule from 28 May to 6 June. The content plan was saved as a markdown file.",
+    "decisions": [
+      "Ran pipeline in report-only mode since Postiz H&H channels are unconfigured",
+      "Selected 5 properties spanning full price spectrum for audience range"
+    ],
+    "ideas": [
+      "Connect H&H Facebook Page + Instagram to Postiz to activate automation",
+      "Build H&H Remotion template (Navy/Gold/Cream) based on NBHCB PropertyCard",
+      "Add Social Posts tracking table to H&H Airtable CRM base"
+    ],
+    "chips": [
+      "social-media",
+      "h&h",
+      "content-plan",
+      "postiz",
+      "automation-blocked"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_d5983faf-0b46-4fc9-a8ea-f6fd2bf015f6",
+    "_logged": "2026-05-28T17:21:44.239261"
   }
 ]
