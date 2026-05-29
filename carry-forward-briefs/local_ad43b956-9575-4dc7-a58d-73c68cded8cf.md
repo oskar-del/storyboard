@@ -1,13 +1,12 @@
 # Carry-Forward Brief: Hh crm outreach
-**Session:** local_ad43b956-9575-4dc7-a58d-73c68cded8cf
-**Updated:** 2026-05-29T04:39:43
-**Status:** Running (74 assistant turns)
+**Session:** local_ad43b956-9575-4dc7-a58d-73c68cded8cf  
+**Status:** Running (74 assistant turns as of 2026-05-29T20:05:56)
 
 ## What's happening
-Daily H&H CRM outreach — reviewing Gmail threads for warm leads and creating personalised follow-up email drafts.
+CRM-based outreach session for H&H. Screening Gmail contacts and creating personalized draft emails. Two contacts already skipped (S. Barissa and Cristina Santos — both already bought property).
 
-## Latest state
-- Processing large contact list with skip/draft classification
-- Skipped: S. Barissa (already bought villa), Cristina Santos (already bought)
-- Currently batch-creating Gmail drafts (multiple create_draft calls in parallel)
-- 74 turns — very deep in batch, likely near completion
+## Last known state
+Batch-creating Gmail drafts via the Gmail MCP — multiple `create_draft` calls running in sequence.
+
+## Expected outcome
+Batch of personalized outreach drafts ready for Oskar to review. Already-bought clients filtered out.
