@@ -1,17 +1,17 @@
 # Carry-Forward Brief: Hh crm outreach
-**Session:** local_ad43b956-9575-4dc7-a58d-73c68cded8cf  
-**Status:** Running (74 assistant turns)  
-**Briefed:** 2026-05-28T19:23:44
+**Session:** local_ad43b956-9575-4dc7-a58d-73c68cded8cf
+**Status:** Running (74 turns as of 2026-05-29T03:21)
+**Project:** Hansson Hertzell
 
 ## What's happening
-H&H CRM outreach session — reviewing client history from Gmail/CRM and creating personalized draft emails for warm/cold leads. Long-running session (74 turns) actively batch-creating Gmail drafts.
+Processing H&H CRM client list for outreach qualification. Working through leads one by one to determine engagement potential.
 
-## Latest context
-- Filtering: skipping clients who already purchased (S. Barissa — bought villa; Cristina Santos — already bought)
-- Currently in final draft-creation phase, calling `create_draft` in parallel batches
-- Has processed a large number of clients
+## Progress so far
+- S. Barissa → already bought a villa (skip)
+- Cristina Santos → already bought (skip)
+- Continuing through remaining client list
 
 ## Next steps when resuming
-- Wait for completion — mid-batch creating drafts
-- Review all created Gmail drafts before sending
-- Note which clients were skipped (already purchased) vs. drafted
+- Check output file for list of qualified leads vs. skipped contacts
+- Review any drafted outreach messages
+- Confirm final list of active prospects to follow up with
