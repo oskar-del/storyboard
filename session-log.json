@@ -6482,5 +6482,113 @@
     "_source": "session-sync",
     "_session_id": "local_816af0d2-0d12-48df-bff4-1440a2e5c931",
     "_logged": "2026-05-28T18:07:47.860023"
+  },
+  {
+    "id": "sync-daily-outreach-hh-048eeb60",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach",
+    "title": "Daily client outreach drafts — 10 hot leads, Gmail drafts in progress",
+    "summary": "Session fetched top 10 hot leads from Airtable CRM and began generating personalized Gmail draft emails for each. Drafts being created in parallel batches for H&H prospects.",
+    "decisions": [
+      "Use first 10 hot leads sorted by score",
+      "Create drafts in parallel batches for speed"
+    ],
+    "ideas": [
+      "Could segment by region for more targeted messaging"
+    ],
+    "chips": [
+      "outreach",
+      "gmail-drafts",
+      "crm",
+      "automation"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_bbc404f5-2bd2-4b11-9327-f044cbaec06d",
+    "_logged": "2026-05-28T21:52:56.210107"
+  },
+  {
+    "id": "sync-nbhcb-blog-pipeline-dbc0d6dd",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog content scout found 2 new qualifying articles for Airtable pipeline",
+    "summary": "Content scout evaluated recent property news, skipping 7 articles with existing slugs. Two new qualifying articles were identified: 'Luxury property growth cements Alicante as Spain's third market' (score 6.5) and 'Spain crowned southern Europe's hottest property market' (score 6). Both pushed to Airtable as blog drafts.",
+    "decisions": [
+      "Score threshold ≥5 for qualification",
+      "Skip articles with existing slug matches",
+      "Alicante luxury market and Spain hottest market stories added"
+    ],
+    "ideas": [
+      "Alicante luxury growth angle is strong — could do series"
+    ],
+    "chips": [
+      "blog-pipeline",
+      "content-scout",
+      "airtable",
+      "seo"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_e2981573-ec8a-4282-b44f-3fa0bd751a1a",
+    "_logged": "2026-05-28T21:52:56.210107"
+  },
+  {
+    "id": "sync-hh-crm-outreach-b90db035",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-crm-outreach",
+    "title": "H&H CRM outreach — 20 personalized Gmail drafts, skipped 2 already-bought clients",
+    "summary": "Session reviewed 22 CRM leads, discovered 2 (S. Barissa, Cristina Santos) had already purchased and were skipped. Holger (luxury Moraira buyer) and Maksym (garage inquiry) added as replacements. Creating 20 personalized Gmail drafts in parallel batches.",
+    "decisions": [
+      "Skip clients who already bought property",
+      "Replace with Holger (luxury Moraira) and Maksym",
+      "Create drafts in parallel for speed"
+    ],
+    "ideas": [
+      "Post-purchase clients could be added to a referral sequence instead"
+    ],
+    "chips": [
+      "crm-outreach",
+      "gmail-drafts",
+      "personalization",
+      "h&h"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_ad43b956-9575-4dc7-a58d-73c68cded8cf",
+    "_logged": "2026-05-28T21:52:56.210107"
+  },
+  {
+    "id": "sync-daily-outreach-sv-fb5082da",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-swedish",
+    "title": "Daily client outreach drafts — 10 Swedish INITIAL leads, personalized Swedish emails",
+    "summary": "Session fetched 10 Swedish clients at INITIAL stage from Airtable CRM. All clients are Swedish with no region assigned. Personalized Swedish-language emails being created with blog links matched to budget and luxury tags.",
+    "decisions": [
+      "Write in Swedish for all 10 clients",
+      "Include blog links matched to client budget/luxury profile",
+      "Region INITIAL = no specific area targeting yet"
+    ],
+    "ideas": [
+      "Could auto-assign region based on price range to improve targeting"
+    ],
+    "chips": [
+      "outreach",
+      "swedish",
+      "gmail-drafts",
+      "crm",
+      "initial-stage"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_5b5454b4-b28c-4e5c-9ee6-5c996c23783d",
+    "_logged": "2026-05-28T21:52:56.210107"
   }
 ]
