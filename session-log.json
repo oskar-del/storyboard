@@ -6703,5 +6703,142 @@
     "_source": "session-sync",
     "_session_id": "local_ab36e600-1568-4a9e-a577-4da0af0851c4",
     "_logged": "2026-05-29T20:05:56.164359"
+  },
+  {
+    "id": "sync-nbhcb-brain-cbwsync-a1b2c3d4",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "airtable-cbw-feed-sync",
+    "title": "Pushed 14 CBW (Costa Blanca Woningen) properties to H&H Airtable CRM",
+    "summary": "Loaded 14 CBW property records from XML feed and pushed them all to Airtable in a single batch call (Airtable total now ~1,391 records). Task #35 completed. Task #34 (Alegria enrichment for 70 remaining properties) is still blocked — needs browser automation or direct Inmovilla API access. Task #36 (unique EN/SV descriptions) was identified as next.",
+    "decisions": [
+      "Batch all 14 CBW records in a single Airtable call (max 50 per request allows it)",
+      "Deferred Alegria enrichment (Task #34) — blocked on Inmovilla API access",
+      "Noted ~319 property gap between website (~1,710) and Airtable (~1,391) — XML feed properties not yet synced"
+    ],
+    "ideas": [
+      "Batch job to sync remaining XML feed properties (REDSP, Background, RPF, BEN, HISI, SPC) to Airtable"
+    ],
+    "chips": [
+      "airtable",
+      "data-pipeline",
+      "cbw-feed",
+      "crm-sync"
+    ],
+    "date": "30 May",
+    "ts": 20260530,
+    "_source": "session-sync",
+    "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
+    "_logged": "2026-05-30T00:53:17.110650"
+  },
+  {
+    "id": "sync-hh-collab-email-b2c3d4e5",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "weekly-collaborator-email",
+    "title": "Weekly collaborator email generated for 20 new properties — send blocked by auth + empty groups",
+    "summary": "Identified 20 new H&H properties (8 residential, 12 building plots >€400K) since the May 9 check. Generated a branded H&H email newsletter saved to AI folder. Send is blocked by two issues: MailerLite browser not authenticated (requires Ace editor injection via logged-in session) and collaborator groups 'HH Collaborators - CB North/South' have 0 subscribers — the ~300 agents haven't been imported yet.",
+    "decisions": [
+      "Generated HTML email and MailerLite campaign draft despite blockers, to be sent manually",
+      "Identified that collaborator contact import must happen before automation can work"
+    ],
+    "ideas": [
+      "Import ~300 collaborator agents into MailerLite CB North/South groups",
+      "Solve MailerLite auth for automated sends (session persistence or API token approach)"
+    ],
+    "chips": [
+      "mailerlite",
+      "email-campaign",
+      "collaborators",
+      "blocked"
+    ],
+    "date": "29 May",
+    "ts": 20260529,
+    "_source": "session-sync",
+    "_session_id": "local_b7f2aa24-58d1-4a24-838c-34a301e8e12b",
+    "_logged": "2026-05-30T00:53:17.110650"
+  },
+  {
+    "id": "sync-nbhcb-backlink-c3d4e5f6",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "weekly-backlink-agent",
+    "title": "5 backlink opportunities found — CostablancaForum + 4 Quora threads with drafted answers",
+    "summary": "Weekly backlink run found 5 high-quality opportunities: 1 active CostablancaForum thread (Irish family, Cabo Roig) where no one mentioned new builds or 10-year warranty, and 4 Quora questions (ongoing costs, cheapest area, good time to buy, personal buying experience) with draft answers linking to relevant guide pages. ExpatForum.com is IP-banned for automated browser — 3 previously drafted answers from May 18 still unposted.",
+    "decisions": [
+      "Prioritized Quora unanswered/stale threads over forums for link placement",
+      "Noted ExpatForum.com IP ban — manual posting required from personal browser"
+    ],
+    "ideas": [
+      "Post the 5 drafted answers manually from personal browser",
+      "Address ExpatForum IP ban — use residential proxy or post manually"
+    ],
+    "chips": [
+      "backlinks",
+      "seo",
+      "quora",
+      "content-marketing"
+    ],
+    "date": "29 May",
+    "ts": 20260529,
+    "_source": "session-sync",
+    "_session_id": "local_ab36e600-1568-4a9e-a577-4da0af0851c4",
+    "_logged": "2026-05-30T00:53:17.110650"
+  },
+  {
+    "id": "sync-hh-perfmkt-meta-d4e5f6a7",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "meta-custom-audience-setup",
+    "title": "Meta Custom Audience upload blocked — TOS not accepted and missing admin role on H&H Business Manager",
+    "summary": "Attempted to upload a Custom Audience (customer list) to H&H Invest Meta Ads account. Upload failed with 'Invalid permissions' because the Custom Audience Terms of Service have never been accepted for this account, and the user is an Employee (not Admin) on the Business Manager. To fix: an existing admin needs to accept the TOS at the Custom Audiences TOS URL, or upgrade the user's role to Admin first.",
+    "decisions": [
+      "Identified dual blocker: TOS acceptance required + user needs Admin role on Business Manager",
+      "Chrome computer-use restriction confirmed — cannot click Facebook domains via extension"
+    ],
+    "ideas": [
+      "Get Business Manager admin to accept Custom Audience TOS or upgrade user role",
+      "Once resolved, retry customer list upload for retargeting campaigns"
+    ],
+    "chips": [
+      "meta-ads",
+      "custom-audience",
+      "facebook",
+      "blocked",
+      "performance-marketing"
+    ],
+    "date": "29 May",
+    "ts": 20260529,
+    "_source": "session-sync",
+    "_session_id": "local_816af0d2-0d12-48df-bff4-1440a2e5c931",
+    "_logged": "2026-05-30T00:53:17.110650"
+  },
+  {
+    "id": "sync-hh-social-pipeline-e5f6a7b8",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline-setup",
+    "title": "H&H social pipeline content plan built — 5 properties, 2-week schedule ready but Postiz not configured",
+    "summary": "Ran the H&H social pipeline for the first time. Selected 5 diverse properties (€299K–€4.5M) from 1,377 H&H Airtable records, wrote platform-ready captions for each (FB/IG + group teasers), and built a posting schedule from May 28 to June 6. No posts were actually scheduled because H&H's Facebook/Instagram channels aren't connected to Postiz yet. Four setup steps identified to activate the pipeline.",
+    "decisions": [
+      "Generated content plan proactively to validate pipeline logic before channels are configured",
+      "Identified 4 blocking setup steps: connect FB/IG to Postiz, populate image URLs in Airtable, build H&H Remotion template, add Social Posts table to Airtable"
+    ],
+    "ideas": [
+      "Build H&H Remotion template (copy NBHCB PropertyCard, swap to Navy/Gold/Cream palette)",
+      "Populate image URLs in H&H Airtable — currently empty fields blocking automated posts"
+    ],
+    "chips": [
+      "social-media",
+      "postiz",
+      "content-plan",
+      "pipeline",
+      "setup"
+    ],
+    "date": "28 May",
+    "ts": 20260528,
+    "_source": "session-sync",
+    "_session_id": "local_d5983faf-0b46-4fc9-a8ea-f6fd2bf015f6",
+    "_logged": "2026-05-30T00:53:17.110650"
   }
 ]
