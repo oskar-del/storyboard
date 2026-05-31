@@ -6840,5 +6840,31 @@
     "_source": "session-sync",
     "_session_id": "local_d5983faf-0b46-4fc9-a8ea-f6fd2bf015f6",
     "_logged": "2026-05-30T00:53:17.110650"
+  },
+  {
+    "id": "sync-midnight-sun-festival-6a29d0a1",
+    "type": "session",
+    "project": "Other",
+    "task": "midnight-sun-festival-site",
+    "title": "Midnight Sun festival site — banner image, build & deploy",
+    "summary": "Built and deployed a Midnight Sun festival website. Hit a wall with a drone photo that existed only in visual context and wasn't accessible on disk (Cowork limitation). Worked around it by using an existing aerial photo from the photos folder as a temporary banner, styled it, and redeployed. Swap-in of the real drone image is pending the user saving it to the AI folder.",
+    "decisions": [
+      "Used existing aerial photo as temporary banner instead of blocking on inaccessible drone image",
+      "Noted Cowork limitation: images in visual context are not saved to any accessible disk path"
+    ],
+    "ideas": [
+      "When drone photo is saved to AI folder, swap it in as permanent banner"
+    ],
+    "chips": [
+      "festival",
+      "web",
+      "deployment",
+      "image-handling"
+    ],
+    "date": "30 May",
+    "ts": 20260530,
+    "_source": "session-sync",
+    "_session_id": "local_2c369da2-f9bd-4c2b-b8d6-060eb39452be",
+    "_logged": "2026-05-30T08:52:10.714917"
   }
 ]
