@@ -7486,5 +7486,108 @@
     "_source": "session-sync",
     "_session_id": "local_691c0ff0-5f2d-4323-90fa-531b5fcbd71e",
     "_logged": "2026-06-02T20:01:52.142038"
+  },
+  {
+    "id": "sync-hh-sales-crm-108a1ab9",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-sales-crm",
+    "title": "Prepared collaborator email for Gran Alacant property (commission + media check)",
+    "summary": "Session prepared a collaborator outreach email for a Gran Alacant property with a €6,000 + IVA commission. The wording was updated from 'refer a client' to 'book a visit or get info'. Gmail was searched to confirm the property had never been emailed out before — it hadn't, only the Google Drive folder had been prepared ahead of time.",
+    "decisions": [
+      "Commission phrasing simplified to 'Collaborator Commission €6,000 + IVA, Paid at notary completion'",
+      "CTA changed to 'book the visit or get any info' instead of 'refer a client'",
+      "Confirmed no prior send by searching Gmail — safe to send to 274 active collaborators"
+    ],
+    "ideas": [
+      "Pre-prepare Google Drive media folders before outreach emails to speed up send process"
+    ],
+    "chips": [
+      "email",
+      "collaborators",
+      "gran-alacant",
+      "sales"
+    ],
+    "date": "2 Jun",
+    "ts": 20260602,
+    "_source": "session-sync",
+    "_session_id": "local_c88809a5-75fd-4bb7-a3a1-a205c65fd598",
+    "_logged": "2026-06-02T21:34:41.985793"
+  },
+  {
+    "id": "sync-newbuild-blog-3887f28d",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Blog content scoring: 2 new articles added (Valencia ITP tax + Spain property tax comparison)",
+    "summary": "The automated blog pipeline scored and deduplicated incoming content ideas against 57 existing source URLs and 200 blog slugs. Two unique, high-scoring articles were identified and added to Airtable: a timely piece on Valencia's ITP rate change (effective June 1) and a Spanish regions property tax comparison piece with a unique angle not yet covered.",
+    "decisions": [
+      "Valencia ITP 9% article prioritised (Score 14) — timely, June 1 rate now live",
+      "Spanish regions property tax comparison selected (Score 13) — unique angle not in pipeline"
+    ],
+    "ideas": [
+      "Track ITP/tax changes by region for recurring timely content opportunities"
+    ],
+    "chips": [
+      "blog",
+      "content-pipeline",
+      "seo",
+      "airtable",
+      "tax"
+    ],
+    "date": "2 Jun",
+    "ts": 20260602,
+    "_source": "session-sync",
+    "_session_id": "local_d558ab5a-2f7a-4447-9491-8d5f39833758",
+    "_logged": "2026-06-02T21:34:41.985793"
+  },
+  {
+    "id": "sync-newbuild-social-3e7c97a5",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Social pipeline: 4 posts scheduled, YouTube skipped (stills rejected)",
+    "summary": "The automated social pipeline scheduled 4 posts across platforms and logged them to Airtable. YouTube was skipped because it requires video content and rejects still images. All other platforms were handled successfully.",
+    "decisions": [
+      "YouTube excluded from still-image scheduling — platform requires video",
+      "4 posts successfully scheduled and logged to Airtable Social Posts table"
+    ],
+    "ideas": [
+      "Consider generating short Remotion video reels for YouTube Shorts in the social pipeline"
+    ],
+    "chips": [
+      "social-media",
+      "pipeline",
+      "airtable",
+      "scheduling"
+    ],
+    "date": "2 Jun",
+    "ts": 20260602,
+    "_source": "session-sync",
+    "_session_id": "local_e3bf9dac-bafc-47a9-8c9b-74aa2e75d8c7",
+    "_logged": "2026-06-02T21:34:41.985793"
+  },
+  {
+    "id": "sync-hh-outreach-8301903d",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach",
+    "title": "Created 5 Gmail draft outreach emails for client follow-up",
+    "summary": "The daily client outreach automation ran and created 5 Gmail draft emails for client follow-up. Each draft was created via the Gmail MCP tool, ready for Oskar to review and send.",
+    "decisions": [
+      "5 drafts created and staged in Gmail for manual review before sending"
+    ],
+    "ideas": [],
+    "chips": [
+      "email",
+      "outreach",
+      "crm",
+      "gmail"
+    ],
+    "date": "2 Jun",
+    "ts": 20260602,
+    "_source": "session-sync",
+    "_session_id": "local_a6cb27d0-e317-4d12-bfbf-92aef19502f7",
+    "_logged": "2026-06-02T21:34:41.985793"
   }
 ]
