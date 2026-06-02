@@ -1,15 +1,16 @@
 # Carry-Forward Brief: Daily client outreach drafts
 **Session:** local_c01d5f0a-9f2f-4d47-b5cf-c18573bcd608
-**Status:** running
-**Updated:** 2026-05-31T11:20:38.308990
+**Updated:** 2026-05-31T12:06:00
+**Status:** Running (20 assistant turns)
 
-## What's happening
-Creating 10 personalised Gmail draft emails for client outreach. 20 assistant turns. Session pulled client data from Airtable and is creating Gmail drafts via Gmail MCP in concurrent batches.
+## Current State
+Creating 10 Gmail drafts for daily client outreach. Running batch creation concurrently.
 
-## Key context
-- 10 drafts being created concurrently in Gmail
-- Data sourced from Airtable client records
-- Drafts need manual review before sending
+## Key Context
+- 10 outreach drafts being created via Gmail MCP
+- Batch/concurrent approach for speed
+- H&H client outreach automation
 
-## On resume
-Check all 10 drafts were created successfully in Gmail. If any failed, note which client records need retry. Drafts are ready for Oskar to review and send.
+## Next Steps
+- Confirm all 10 drafts created successfully
+- Review drafts before sending
