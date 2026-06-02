@@ -1,17 +1,22 @@
 # Carry-Forward Brief: Newbuild Social Pipeline
 **Session:** local_e3bf9dac-bafc-47a9-8c9b-74aa2e75d8c7
-**Updated:** 2026-06-01T17:08:31
-**Status:** Running (63 turns)
+**Status:** Running (63 assistant turns)
+**Briefed:** 2026-06-02T01:16:57
 
-## What's happening
-Running the newbuild social media pipeline for newbuildhomescostablanca.com. Scheduling property content across 5 platforms via Postiz.
+## What's Happening
+The newbuild social pipeline is in its final stage — scheduling is complete and it's now logging results to Airtable. YouTube was skipped (API rejects still images, requires video).
 
-## Last known state
-- YouTube rejects still images (known API limitation — requires video format)
-- 4 posts successfully scheduled (Instagram, Facebook, Pinterest, TikTok)
-- Now logging completed posts to Airtable CRM
+## Last Known State
+- YouTube: Skipped (stills not accepted — requires video format)
+- 4 posts scheduled successfully across other platforms
+- Currently logging/recording to Airtable
 
-## Next steps when resuming
+## Next Steps When Resuming
 - Confirm Airtable logging completed
-- Note: YouTube stills rejection is expected — not a bug
-- Check if all 4 scheduled posts appear in Postiz dashboard
+- Check scheduled posts in Postiz for accuracy
+- Note: YouTube gap is a known limitation — consider adding video reel templates for future runs
+
+## Key Context
+- Project: New Build Homes Costa Blanca
+- Platforms: Instagram, Facebook, Pinterest, TikTok (YouTube skipped for stills)
+- Uses Postiz for scheduling, Airtable for content calendar logging

@@ -1,17 +1,24 @@
-# Carry-Forward Brief: Newbuild blog pipeline
-**Session:** local_1c95cfb4-2bec-41ba-a8c7-35c1dc7c843b
-**Updated:** 2026-05-31T12:06:00
-**Status:** Running (33 assistant turns)
+# Carry-Forward Brief: Newbuild Blog Pipeline
+**Session:** local_1c95cfb4-2bec-41ba-a8c7-35c1dc7c843b  
+**Status:** Running (33 assistant turns)  
+**Generated:** 2026-05-31T15:20:38Z  
 
-## Current State
-Loaded 57 existing Content Ideas and 200 blog article slugs from Airtable. Now updating tasks and pushing new content ideas.
+## What's happening
+Running the automated blog content pipeline for newbuildhomescostablanca.com. Generating and publishing new blog articles.
 
-## Key Context
-- Content intelligence phase: data from Airtable CRM loaded
-- 200 existing blog articles as reference for gap analysis
-- New Build Homes Costa Blanca blog content pipeline
-- Next step likely: generating new article ideas or drafting content
+## Last known state
+- Loaded 57 existing Content Ideas from Airtable
+- Loaded 200 existing blog article slugs (deduplication reference)
+- Task list updated with new article targets
+- Creating Airtable records for new articles (in progress at transcript end)
 
-## Next Steps
-- Push new content ideas to Airtable Content Ideas table
-- Potentially draft MDX articles for highest-priority topics
+## Key context
+- Blog articles live in Airtable "Blog Articles" table
+- Content ideas sourced from "Content Ideas" table
+- Deduplication is based on slug matching against 200 existing articles
+- Pipeline creates Airtable records first, then likely writes MDX files
+
+## Recommended next steps
+1. Confirm new Airtable records were created
+2. Check if MDX files were generated and pushed to repo
+3. Verify no duplicate slugs were introduced

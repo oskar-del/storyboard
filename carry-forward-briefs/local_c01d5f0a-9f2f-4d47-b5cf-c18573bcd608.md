@@ -1,16 +1,13 @@
 # Carry-Forward Brief: Daily client outreach drafts
-**Session:** local_c01d5f0a-9f2f-4d47-b5cf-c18573bcd608
-**Updated:** 2026-05-31T12:06:00
-**Status:** Running (20 assistant turns)
+**Session:** local_c01d5f0a-9f2f-4d47-b5cf-c18573bcd608  
+**Status:** Running (20 assistant turns)  
+**Generated:** 2026-05-31T15:50:48
 
-## Current State
-Creating 10 Gmail drafts for daily client outreach. Running batch creation concurrently.
+## What's happening
+Creating 10 Gmail draft emails for daily client outreach — likely for Hansson & Hertzell. Drafts are being created concurrently in batches via the Gmail MCP.
 
-## Key Context
-- 10 outreach drafts being created via Gmail MCP
-- Batch/concurrent approach for speed
-- H&H client outreach automation
+## Last action
+Concurrent batch creation of 10 Gmail drafts using the Gmail MCP.
 
-## Next Steps
-- Confirm all 10 drafts created successfully
-- Review drafts before sending
+## On resume
+Check Gmail drafts folder to confirm all 10 drafts were successfully created. Review drafts for any that failed or need personalisation before sending.

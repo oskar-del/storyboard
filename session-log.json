@@ -7460,5 +7460,31 @@
     "_source": "session-sync",
     "_session_id": "local_69084291-dc40-4deb-9117-97830535c219",
     "_logged": "2026-06-02T19:06:18.765601"
+  },
+  {
+    "id": "sync-hh-nextjs-migration-6bf385a4",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-nextjs-migration",
+    "title": "Added 4 Swedish blog posts and llms-full.txt to H&H Next.js site",
+    "summary": "Pushed 4 Swedish (SV) blog posts and an llms-full.txt file to the hanssonhertzell.se Next.js site's main branch. All commits (c045fbbe, 3b3a874d, 4768e82b) passed Vercel build checks and are live. The session covered an extensive migration workflow with 119 assistant turns.",
+    "decisions": [
+      "Added SV language blog content to expand multilingual coverage",
+      "Generated llms-full.txt for LLM-readable site content indexing"
+    ],
+    "ideas": [],
+    "chips": [
+      "blog",
+      "Swedish",
+      "multilingual",
+      "Next.js",
+      "Vercel",
+      "content"
+    ],
+    "date": "2 Jun",
+    "ts": 20260602,
+    "_source": "session-sync",
+    "_session_id": "local_691c0ff0-5f2d-4323-90fa-531b5fcbd71e",
+    "_logged": "2026-06-02T20:01:52.142038"
   }
 ]
