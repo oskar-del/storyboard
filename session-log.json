@@ -7589,5 +7589,61 @@
     "_source": "session-sync",
     "_session_id": "local_a6cb27d0-e317-4d12-bfbf-92aef19502f7",
     "_logged": "2026-06-02T21:34:41.985793"
+  },
+  {
+    "id": "sync-hh-email-campaigns-0d0399fc",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-email-campaigns",
+    "title": "H&H MailerLite campaign subject updated; browser HTML injection blocked by session limit",
+    "summary": "Updated the MailerLite campaign subject line via API successfully. Attempted browser-based HTML content injection to work around the Growing Business plan API restriction that blocks content updates. Session hit the rate limit before HTML injection could complete.",
+    "decisions": [
+      "Use browser injection (Chrome extension) for HTML content — API blocks it on Growing Business plan",
+      "Update campaign subject via MailerLite API separately from content body"
+    ],
+    "ideas": [
+      "Send test email once HTML injection is complete in a resumed session"
+    ],
+    "chips": [
+      "H&H",
+      "MailerLite",
+      "email",
+      "browser-injection",
+      "session-limit"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_efed7942-c84b-4cee-ac50-bd26e9e6a083",
+    "_logged": "2026-06-03T17:59:30.922869"
+  },
+  {
+    "id": "sync-email-marketing-audit-99cfb85b",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email-marketing-audit",
+    "title": "Email marketing audit — 34-day newsletter gap, 12 stale drafts, NBHCB list at 0 subscribers",
+    "summary": "Generated a full email marketing status report across MailerLite and Airtable. No newsletter has been sent since April 30 (34 days). Open rates are strong (31–45%), with the Swedish segment leading at 45% open rate and 9.5% CTR. Found 12 stale drafts in MailerLite including an unsent Torrevieja Penthouse collaborator draft targeting 274 agencies, and NBHCB newsletter list at 0 subscribers due to missing Airtable sync.",
+    "decisions": [
+      "Priority: send June newsletters (EN, SV, ES — last sent Week 18, now Week 22)",
+      "Send or delete Torrevieja Penthouse draft to 274 collaborator agencies",
+      "Sync NewBuild Leads from Airtable to MailerLite to fix 0-subscriber NBHCB list"
+    ],
+    "ideas": [
+      "Set up automated Airtable→MailerLite sync pipeline for NBHCB leads"
+    ],
+    "chips": [
+      "H&H",
+      "NBHCB",
+      "MailerLite",
+      "email",
+      "audit",
+      "newsletter"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_ef77b895-20df-4462-b55c-375cdcc16ac1",
+    "_logged": "2026-06-03T17:59:30.922869"
   }
 ]
