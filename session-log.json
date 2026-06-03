@@ -7645,5 +7645,164 @@
     "_source": "session-sync",
     "_session_id": "local_ef77b895-20df-4462-b55c-375cdcc16ac1",
     "_logged": "2026-06-03T17:59:30.922869"
+  },
+  {
+    "id": "sync-daily-outreach-fc0cc3de",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "Daily Gmail draft generation for 10 H&H client outreach contacts",
+    "summary": "Automated pipeline pulled H&H CRM contacts from Airtable and generated 10 personalised Gmail draft emails for client outreach. Tool calls fetched relevant client records, then sequentially created drafts via Gmail MCP. Session still running mid-draft creation.",
+    "decisions": [
+      "Pull contacts from Airtable CRM before drafting",
+      "Create drafts in batches of 3 for reliability"
+    ],
+    "ideas": [
+      "Potential to auto-send rather than draft if open rate tracking is added"
+    ],
+    "chips": [
+      "gmail",
+      "airtable",
+      "crm",
+      "outreach",
+      "automation"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_45606ea1-aa3c-4ad8-ae57-d5cce8e7ef74",
+    "_logged": "2026-06-03T18:09:23.336386"
+  },
+  {
+    "id": "sync-newbuild-blog-d66c14b0",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Newbuild blog pipeline: 5 articles added to Airtable after deduplication",
+    "summary": "Content pipeline searched the web for Costa Blanca real estate news, scored articles for relevance, and deduplicated against existing Airtable blog slugs. 3 articles were skipped as already-tracked topics (ITP tax reduction, mortgage rates, Spain bubble). 5 qualifying new articles were created as Airtable records for future writing.",
+    "decisions": [
+      "Deduplicate by matching incoming topics against existing slug patterns in Airtable",
+      "Skip articles whose topics are covered by existing draft or published slugs"
+    ],
+    "ideas": [
+      "Add a 'freshness' score — even existing topics could merit a refresh if data is >6 months old"
+    ],
+    "chips": [
+      "content-scouting",
+      "airtable",
+      "blog",
+      "deduplication",
+      "web-search"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_248b727b-9d4b-444f-99ca-f0821f08464d",
+    "_logged": "2026-06-03T18:09:23.336386"
+  },
+  {
+    "id": "sync-hh-fb-morning-bb4c89d7",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting-morning",
+    "title": "H&H morning Facebook group posting run initiated",
+    "summary": "Scheduled morning run to share the latest H&H property post across targeted Facebook groups. Checked FB profile login status and fetched the latest post to compare against the previous run log. Session was in early stages at capture time.",
+    "decisions": [
+      "Check LOG.md for last shared post URL to avoid re-posting duplicates",
+      "Segment groups by property area (torrevieja, alicante, north, all)"
+    ],
+    "ideas": [],
+    "chips": [
+      "facebook",
+      "social-media",
+      "automation",
+      "hh"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_c44d0150-b58b-4141-a598-c8c705b78436",
+    "_logged": "2026-06-03T18:09:23.336386"
+  },
+  {
+    "id": "sync-newbuild-social-691b5d6e",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Social media pipeline: 4/5 platforms scheduled, YouTube rejected stills",
+    "summary": "Full social pipeline run rendered Remotion still templates, uploaded to Postiz, and scheduled posts across Facebook, Instagram, Pinterest, and TikTok (4/5 platforms). YouTube rejected the still image format — confirmed known limitation. All scheduled posts logged back to Airtable as Social Posts records.",
+    "decisions": [
+      "Skip YouTube for still images; only use for video reels",
+      "Log all scheduling outcomes to Airtable for content calendar visibility"
+    ],
+    "ideas": [
+      "Auto-generate short-form video reel for YouTube from the same property data to fill the gap"
+    ],
+    "chips": [
+      "social-media",
+      "postiz",
+      "airtable",
+      "remotion",
+      "youtube-limitation"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_5091ceba-702f-4e0a-bb68-68aa94e4cdb1",
+    "_logged": "2026-06-03T18:09:23.336386"
+  },
+  {
+    "id": "sync-property-email-scan-edc5cc14",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-email-scanner",
+    "title": "Property email inbox scan: report written and emails marked as read",
+    "summary": "Automated Gmail scan for property-related inbound emails. Found and processed multiple messages (10+ unlabel operations observed), wrote a structured report file, and marked all scanned emails as read. Session was completing final unlabel operations at capture time.",
+    "decisions": [
+      "Batch unlabel operations after report is written to avoid partial state",
+      "Write report to file before marking emails read"
+    ],
+    "ideas": [
+      "Route high-priority leads (e.g. direct viewing requests) to a separate urgent queue"
+    ],
+    "chips": [
+      "gmail",
+      "email-scanner",
+      "property-leads",
+      "automation",
+      "hh"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_b9ae4407-f2ae-4784-9018-81b8aa1b9790",
+    "_logged": "2026-06-03T18:09:23.336386"
+  },
+  {
+    "id": "sync-alegria-monitor-ccf23966",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "alegria-property-monitor",
+    "title": "Alegria property monitor: scraping property pages via Chrome",
+    "summary": "Scheduled property monitoring run for Alegria development, navigating to property detail pages via the Claude-in-Chrome MCP to detect price changes, availability updates, or new listings. Session was mid-scrape at capture time with 17 assistant turns completed.",
+    "decisions": [
+      "Use Chrome MCP for JavaScript-rendered pages where raw fetch returns a shell",
+      "Run monitoring on a scheduled basis to catch changes as they happen"
+    ],
+    "ideas": [
+      "Alert via email or Slack when price drops or availability changes are detected"
+    ],
+    "chips": [
+      "property-monitor",
+      "chrome",
+      "scraping",
+      "alegria",
+      "hh"
+    ],
+    "date": "3 Jun",
+    "ts": 20260603,
+    "_source": "session-sync",
+    "_session_id": "local_f4d74e25-9719-41b1-adc8-d92fb5886ed4",
+    "_logged": "2026-06-03T18:09:23.336386"
   }
 ]
