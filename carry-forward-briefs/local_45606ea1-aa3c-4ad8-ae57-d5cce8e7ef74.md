@@ -1,16 +1,12 @@
-# Carry-Forward Brief: Daily client outreach drafts
-**Session:** local_45606ea1-aa3c-4ad8-ae57-d5cce8e7ef74
-**Status:** Running (20 turns as of 2026-06-03T17:59:30)
-**Project:** Hansson Hertzell
+# Carry-forward brief — Daily client outreach drafts
+_Updated: 2026-06-04 21:23 (session-sync)_
 
-## What's happening
-Creating 10 Gmail draft emails for client outreach. Was working on drafts 1–3 when last checked.
+**Project:** Hansson Hertzell (CRM outreach)
+**Status:** RUNNING — creating 10 Gmail outreach drafts.
 
-## Last known state
-- Creating 10 Gmail drafts
-- Started on first 3 drafts
+## Recent context
+"Now creating the 10 Gmail drafts" — batch of create_draft calls underway. Drafts only, for review.
 
-## On resume
-- Verify all 10 drafts were created in Gmail
-- Review draft content for personalization accuracy
-- Drafts may need manual review before sending
+## Carry-forward
+- Confirm 10 drafts created and review-ready (not sent).
+- Overlaps with sessions local_c1b3c68d and local_c6c8ea9f — dedupe leads across all three.

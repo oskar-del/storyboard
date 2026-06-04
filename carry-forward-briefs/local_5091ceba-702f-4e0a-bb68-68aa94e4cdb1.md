@@ -1,17 +1,12 @@
-# Carry-Forward Brief: Newbuild social pipeline
-**Session:** local_5091ceba-702f-4e0a-bb68-68aa94e4cdb1
-**Status:** Running (67 turns as of 2026-06-03T17:59:30)
+# Carry-forward brief — Newbuild social pipeline
+_Updated: 2026-06-04 21:23 (session-sync)_
+
 **Project:** New Build Homes
+**Status:** RUNNING — scheduled posts on 4/5 platforms; logging to Airtable.
 
-## What's happening
-Scheduling social media posts across 5 platforms via Postiz. Hit a YouTube limitation — YouTube rejects still images entirely, so it was skipped. 4/5 platforms successfully scheduled.
+## Recent context
+Rendered stills and scheduled via Postiz. 4/5 platforms accepted; YouTube rejected the stills (known limitation — YouTube does not accept still images). Now logging the scheduled posts to the Airtable Social Posts table.
 
-## Last known state
-- 4/5 platforms scheduled (Facebook, Instagram, TikTok, Pinterest likely)
-- YouTube skipped due to still-image rejection
-- Logging results to Airtable in progress
-
-## On resume
-- Confirm Airtable logging completed for all scheduled posts
-- Note YouTube still-image limitation in social pipeline documentation
-- Consider video-only content for YouTube slot
+## Carry-forward
+- For YouTube, supply a video (not a still) or skip the channel.
+- Confirm Airtable Social Posts records were written for the 4 scheduled platforms.

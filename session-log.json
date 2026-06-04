@@ -7804,5 +7804,82 @@
     "_source": "session-sync",
     "_session_id": "local_f4d74e25-9719-41b1-adc8-d92fb5886ed4",
     "_logged": "2026-06-03T18:09:23.336386"
+  },
+  {
+    "id": "sync-hh-social-pipeline-9eb8c4b9",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H social pipeline run aborted by API socket error mid-Airtable query",
+    "summary": "Scheduled H&H social content pipeline run that began by querying the Airtable CRM (search_bases, list_tables_for_base) to pull content for posts. The run terminated early with an 'API Error: socket connection closed unexpectedly' before any posts were produced.",
+    "decisions": [
+      "Pull social content source data from Airtable CRM at start of pipeline"
+    ],
+    "ideas": [
+      "Add retry/backoff handling so socket errors don't abort the whole scheduled run"
+    ],
+    "chips": [
+      "social",
+      "airtable",
+      "hh",
+      "scheduled",
+      "errored"
+    ],
+    "date": "4 Jun",
+    "ts": 20260604,
+    "_source": "session-sync",
+    "_session_id": "local_9eb8c4b9-27a1-4926-a75a-16114d69b624",
+    "_logged": "2026-06-04T09:40:53.053095"
+  },
+  {
+    "id": "sync-property-email-scanner-750dc6bc",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-email-scanner",
+    "title": "Property email scanner run aborted during tool load (socket error)",
+    "summary": "Scheduled run of the property-email-scanner task that scans Gmail's 'Claude' label for new property offers, checks exclusivity via reverse image search, and produces an intake shortlist. The run failed almost immediately with an 'API Error: socket connection closed unexpectedly' while loading tools, so no emails were scanned.",
+    "decisions": [
+      "Screen incoming property emails for shared-vs-exclusive before adding to the H&H feed"
+    ],
+    "ideas": [
+      "Add retry handling so transient socket errors during tool loading don't kill the run"
+    ],
+    "chips": [
+      "gmail",
+      "property-intake",
+      "hh",
+      "scheduled",
+      "errored"
+    ],
+    "date": "4 Jun",
+    "ts": 20260604,
+    "_source": "session-sync",
+    "_session_id": "local_750dc6bc-a6eb-4c0d-9a4a-6040a0e38f98",
+    "_logged": "2026-06-04T09:40:53.053095"
+  },
+  {
+    "id": "sync-weekly-backlink-d11b8234",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "weekly-backlink-agent",
+    "title": "Weekly backlink run: 5 outreach drafts, 1 fully verified (Torrevieja forum)",
+    "summary": "Ran the weekly backlink agent and produced report-2026-06-04.md with 5 drafted link-building opportunities. Only the CostaBlancaForum 'areas not to buy in Torrevieja' thread was fully verified (read in full, evergreen, 55 replies); the other 4 (2 Quora, 2 expat-forum) have complete drafts but need manual checks.",
+    "decisions": [
+      "Only mark opportunities verified when the thread is read in full live — flagged Reddit/Quora/ExpatForum drafts as needing manual check",
+      "Each draft uses a single contextual link in an experienced-expat voice rather than a pitch"
+    ],
+    "ideas": [
+      "Verify each linked slug (/areas/torrevieja, /beach, /blog/..., /guides/costs-taxes) is live before posting since drafts came from the topic→URL map, not a crawl"
+    ],
+    "chips": [
+      "seo",
+      "backlinks",
+      "outreach"
+    ],
+    "date": "4 Jun",
+    "ts": 20260604,
+    "_source": "session-sync",
+    "_session_id": "local_b5ab128b-de54-41f9-a31e-183328b54073",
+    "_logged": "2026-06-04T14:20:37.465400"
   }
 ]
