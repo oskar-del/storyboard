@@ -1,12 +1,12 @@
 # Carry-forward brief — Daily client outreach drafts
-_Updated: 2026-06-04 21:23 (session-sync)_
 
-**Project:** Hansson Hertzell (CRM outreach)
-**Status:** RUNNING — creating ~10 Gmail outreach drafts.
+- **Project:** Hansson Hertzell
+- **Session:** local_c1b3c68d-5fa1-437f-a9ed-8ff09771dab4
+- **Status:** running
+- **Briefed:** 2026-06-05T19:36:38
 
 ## Recent context
-Generating a batch of 10 review-ready Gmail drafts for client outreach (create_draft calls in flight). Drafts only — not sent.
+21 turns. Latest: pulled 14 Hot-tier uncontacted clients, using the first 10; creating drafts now.
 
-## Carry-forward
-- Confirm all 10 drafts landed in Gmail Drafts and are review-ready (not auto-sent).
-- Check for overlap with the parallel "Hh crm outreach" session to avoid double-drafting the same leads.
+## Carry forward
+Carry forward: duplicate-purpose run alongside session 0151f959 (both creating Hot-tier outreach drafts). Check for overlap before sending to avoid double outreach.

@@ -7881,5 +7881,55 @@
     "_source": "session-sync",
     "_session_id": "local_b5ab128b-de54-41f9-a31e-183328b54073",
     "_logged": "2026-06-04T14:20:37.465400"
+  },
+  {
+    "id": "sync-hh-collab-email-b345b888",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "collaborator-email",
+    "title": "H&H collaborator email built for CB North villa — send held on group mismatch",
+    "summary": "Built a weekly collaborator newsletter around the one genuinely new listing (8176DEN, €1.06M six-bed sea-view villa in Las Rotas, Denia, CB North) with live-verified image. Held the send autonomously due to multiple discrepancies before blasting ~274 real agents.",
+    "decisions": [
+      "Original feed URL in task is dead (404) — used working current-Houzez-sooprema.xml export instead",
+      "Recipient group IDs in task don't exist; documented CB North/South groups are empty — real 274-agent list is 'HH Collaborator Agencies' (ID 187161412690249310, 45.71% open rate)",
+      "Send held for human review; Growing Business plan still needs browser Ace-editor HTML injection"
+    ],
+    "ideas": [
+      "Update task file with working feed URL and correct 'HH Collaborator Agencies' group ID"
+    ],
+    "chips": [
+      "send held",
+      "CB North villa"
+    ],
+    "date": "5 Jun",
+    "ts": 20260605,
+    "_source": "session-sync",
+    "_session_id": "local_b345b888-2379-4e0f-b4dd-9de1bdebcfe4",
+    "_logged": "2026-06-05T15:30:56.045415"
+  },
+  {
+    "id": "sync-alegria-monitor-4ada2eae",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "alegria-property-monitor",
+    "title": "Alegria property monitor run aborted by 529 API overload",
+    "summary": "Scheduled run to diff Alegria International listings against the H&H alegria-properties.json feed (detect new/sold/price-changed properties, update file, git push). The run aborted almost immediately after a 529 Overloaded API error during initial tool setup, so no comparison or feed update was performed.",
+    "decisions": [
+      "Logged as an aborted run — no listings were fetched or compared",
+      "No git changes made to hh-next feed this run"
+    ],
+    "ideas": [
+      "Add a retry/backoff on 529 so monitor runs survive transient API overload"
+    ],
+    "chips": [
+      "property-feed",
+      "monitor",
+      "aborted"
+    ],
+    "date": "5 Jun",
+    "ts": 20260605,
+    "_source": "session-sync",
+    "_session_id": "local_4ada2eae-203e-4656-a1f3-a95075797106",
+    "_logged": "2026-06-05T19:04:29.226806"
   }
 ]

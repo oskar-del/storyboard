@@ -1,12 +1,12 @@
 # Carry-forward brief — Newbuild blog pipeline
-_Updated: 2026-06-04 21:23 (session-sync)_
 
-**Project:** New Build Homes
-**Status:** RUNNING — content-scout scored discovered topics; creating qualifying articles in Airtable.
+- **Project:** New Build Homes
+- **Session:** local_e6b33c5e-8ea3-4db9-b202-b346c35bcbbb
+- **Status:** running
+- **Briefed:** 2026-06-05T19:36:38
 
 ## Recent context
-Scored trending topics, deduped against existing Airtable slugs. Skipped already-covered topics: ITP tax reduction (imontlegal tracked), mortgage discount (spanish-mortgage-rates-2026), Spain bubble (spain-property-bubble-analysis), cost of retiring (retiring-spain-planning-guide), golden visa alternatives (golden-visa-ended-spain-options). Creating the remaining qualifying articles via create_records_for_table.
+61 turns. Parallel blog scouting run. Latest: scouting complete; genuinely fresh non-duplicate May–June 2026 items clearing threshold include a Supreme Court-related item.
 
-## Carry-forward
-- Verify the new Airtable Blog Article records were created without dupes.
-- Next step after creation: draft/generate the MDX for the qualifying articles.
+## Carry forward
+Carry forward: fresh topics identified (incl. a Supreme Court item). Coordinate with session 70f0b97c to avoid duplicate drafts.
