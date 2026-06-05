@@ -1,12 +1,13 @@
 # Carry-forward brief — Newbuild blog pipeline
 
+- **Session ID:** local_e6b33c5e-8ea3-4db9-b202-b346c35bcbbb
 - **Project:** New Build Homes
-- **Session:** local_e6b33c5e-8ea3-4db9-b202-b346c35bcbbb
-- **Status:** running
-- **Briefed:** 2026-06-05T19:36:38
+- **Status at sync:** running (61 assistant turns)
+- **Captured:** 2026-06-05T21:36:31
 
-## Recent context
-61 turns. Parallel blog scouting run. Latest: scouting complete; genuinely fresh non-duplicate May–June 2026 items clearing threshold include a Supreme Court-related item.
+## Where it is
+Scouting complete. The genuinely fresh, non-duplicate items (May–June 2026) that clear the threshold include a Spanish Supreme Court ruling item (truncated in transcript) among the qualifying topics.
 
-## Carry forward
-Carry forward: fresh topics identified (incl. a Supreme Court item). Coordinate with session 70f0b97c to avoid duplicate drafts.
+## Carry-forward
+- Move the cleared May–June 2026 items into drafting.
+- A parallel blog-pipeline session (70f0b97c) is also running and at a similar scoring stage. Reconcile the two cleared-topic lists before drafting to prevent duplicate articles.
