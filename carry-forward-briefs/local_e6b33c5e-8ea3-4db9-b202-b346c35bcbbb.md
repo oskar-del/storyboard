@@ -1,13 +1,8 @@
 # Carry-forward brief — Newbuild blog pipeline
+**Session:** local_e6b33c5e-8ea3-4db9-b202-b346c35bcbbb · **Project:** New Build Homes · **Captured:** 2026-06-06 (running)
 
-- **Session ID:** local_e6b33c5e-8ea3-4db9-b202-b346c35bcbbb
-- **Project:** New Build Homes
-- **Status at sync:** running (61 assistant turns)
-- **Captured:** 2026-06-05T21:36:31
+Parallel content-scout run for the Costa Blanca blog, scouting May–June 2026 news against the threshold and existing coverage.
 
-## Where it is
-Scouting complete. The genuinely fresh, non-duplicate items (May–June 2026) that clear the threshold include a Spanish Supreme Court ruling item (truncated in transcript) among the qualifying topics.
+**Latest state:** Scouting complete. The genuinely fresh, non-duplicate items clearing the threshold include a Spanish Supreme Court ruling item (and a short list of others).
 
-## Carry-forward
-- Move the cleared May–June 2026 items into drafting.
-- A parallel blog-pipeline session (70f0b97c) is also running and at a similar scoring stage. Reconcile the two cleared-topic lists before drafting to prevent duplicate articles.
+**Next on resume:** Confirm the fresh items, dedupe against the other concurrent blog-pipeline run (70f0b97c) to avoid double-logging, then record to Airtable / draft.

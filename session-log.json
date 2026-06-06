@@ -7931,5 +7931,29 @@
     "_source": "session-sync",
     "_session_id": "local_4ada2eae-203e-4656-a1f3-a95075797106",
     "_logged": "2026-06-05T19:04:29.226806"
+  },
+  {
+    "id": "sync-hh-property-email-scanner-0cfd2a2d",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-intake",
+    "title": "Property email scanner — blocked by Gmail API socket error",
+    "summary": "Scheduled run to scan Gmail 'Claude' label for new property offers, extract data, and run exclusivity (reverse-image) checks. Aborted early: the Gmail search_threads call returned a closed-socket API error before any emails were read. No intake shortlist produced.",
+    "decisions": [
+      "Run aborted — Gmail MCP socket connection closed unexpectedly",
+      "No properties evaluated or presented"
+    ],
+    "ideas": [
+      "Retry the property email scan once the Gmail API connection is stable"
+    ],
+    "chips": [
+      "blocked",
+      "gmail"
+    ],
+    "date": "6 Jun",
+    "ts": 20260606,
+    "_source": "session-sync",
+    "_session_id": "local_0cfd2a2d-9389-4235-aaa1-77f8d5cb41e0",
+    "_logged": "2026-06-06T12:35:52.241120"
   }
 ]

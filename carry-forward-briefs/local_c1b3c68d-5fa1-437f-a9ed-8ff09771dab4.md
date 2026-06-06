@@ -1,13 +1,8 @@
 # Carry-forward brief — Daily client outreach drafts
+**Session:** local_c1b3c68d-5fa1-437f-a9ed-8ff09771dab4 · **Project:** Hansson Hertzell · **Captured:** 2026-06-06 (running)
 
-- **Session ID:** local_c1b3c68d-5fa1-437f-a9ed-8ff09771dab4
-- **Project:** Hansson Hertzell
-- **Status at sync:** running (21 assistant turns)
-- **Captured:** 2026-06-05T21:36:31
+Parallel daily run drafting outreach emails for Hot-tier uncontacted CRM clients.
 
-## Where it is
-Pulled **14 Hot-tier uncontacted clients; using the first 10** to create outreach drafts.
+**Latest state:** Pulled 14 Hot-tier uncontacted clients; using the first 10. Creating the drafts now.
 
-## Carry-forward
-- Deliverable is 10 drafts from the first 10 of the 14 pulled.
-- Overlaps heavily with session 0151f959 (same "Daily client outreach drafts" task, also 10 Hot-tier uncontacted) and c6c8ea9f (Hh crm outreach). Strongly check for duplicate drafting of the same clients across these three concurrent sessions.
+**Next on resume:** Finish drafts, save (do not auto-send). Note: overlaps with concurrent run 0151f959 — reconcile to avoid duplicate drafts for the same clients.
