@@ -1,8 +1,11 @@
-# Carry-forward brief — H&H CRM outreach
-**Session:** local_c6c8ea9f-e1e9-4c36-8e7f-5adc129790df · **Project:** Hansson Hertzell · **Captured:** 2026-06-06 (running)
+# Carry-forward brief — Hh crm outreach
 
-Reviewing CRM contacts to identify genuinely uncontacted / under-followed-up leads for outreach.
+- **Session:** local_c6c8ea9f-e1e9-4c36-8e7f-5adc129790df
+- **Status at sync:** running (33 assistant turns)
+- **Captured:** 2026-06-06T12:51:33Z
 
-**Latest state:** Audited contact history — only Wolfgang Spielmann was ever contacted (replied to twice, no response back). Joey, Legouera, and Hakan are genuinely uncontacted.
+## Recent context
+Reviewed contact history: only Wolfgang Spielmann was ever contacted (replied twice, no response). Joey, Legouera, and Hakan are genuinely uncontacted. Drafting outreach for those.
 
-**Next on resume:** Draft outreach for the uncontacted leads (Joey, Legouera, Hakan) and decide on a follow-up for Spielmann.
+## Carry-forward
+Session was actively running at sync time. Resume from the state above; verify the last action completed (write/commit/post/import) before continuing to avoid duplicate work.
