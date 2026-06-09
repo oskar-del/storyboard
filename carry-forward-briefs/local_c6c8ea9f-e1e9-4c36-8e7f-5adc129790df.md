@@ -1,23 +1,18 @@
-# Carry-Forward Brief: Hh crm outreach
+# Carry-Forward Brief: H&H CRM Outreach
 **Session:** local_c6c8ea9f-e1e9-4c36-8e7f-5adc129790df  
-**Status:** Running (36 assistant turns)  
-**As of:** 2026-06-07T20:35:58.990848
+**Status:** Running (33+ turns)  
+**Captured:** 2026-06-06T22:37:14
 
-## Current State
-Deep into the H&H CRM outreach workflow. Gmail `list_drafts` was declined (write/read permission gate). The session confirmed via Gmail search that 3 untouched leads have no existing threads. Now attempting to update Airtable records — CRM corrections and status updates.
+## What's happening
+The H&H CRM outreach session is scanning email history to identify buyer leads with missed follow-ups. Found 3 genuine untouched leads (Joey, Legouera, Hakan) with zero prior correspondence, plus Wolfgang Spielmann who was contacted twice with no reply. Currently drafting review-ready outreach emails for the untouched leads and correcting Spielmann's stale status.
 
-## Last Actions
-- Gmail search confirmed no existing email threads for 3 specific untouched leads
-- `list_drafts` declined — pivoting to putting draft content directly in the report
-- Calling `update_records_for_table` in Airtable (in progress)
+## Last known state
+Loaded Gmail draft tools and listing existing drafts — about to create new outreach draft emails for the 3 untouched leads.
 
-## What to Pick Up Next
-- Check Airtable update result — was the CRM record correction successful?
-- Review the report output for draft content that needs to be manually sent via Gmail
-- 3 untouched leads are ready for outreach — drafts should be in session output
-- Verify which "review-ready drafts" were prepared and whether any need follow-up
+## Key findings so far
+- **Wolfgang Spielmann**: contacted twice, no response — status needs updating to "no response"
+- **Joey, Legouera, Hakan**: genuine buyer leads, zero correspondence — outreach drafts being created
+- Drafts are review-ready (not auto-sent)
 
-## Key Context
-- 36 turns in — this is a substantial automated outreach session
-- Gmail write actions are gated — content is being saved to files/report instead
-- Running in parallel with Daily client outreach drafts session (local_45606ea1)
+## Resume notes
+Check Gmail drafts folder for newly created outreach emails from this session.
