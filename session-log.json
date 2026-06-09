@@ -9112,5 +9112,35 @@
     "_source": "session-sync",
     "_session_id": "local_19f3e998-e4e2-46db-ada1-4fd5e7fb45ef",
     "_logged": "2026-06-09T09:35:31.648795"
+  },
+  {
+    "id": "sync-nbhcb-hh-brain-fix-b6c2feca",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-feed-fixes",
+    "title": "Fixed Fotocasa feed: removed bad EMAIL images, resolved 9 COORDINATES_OUT_OF_RANGE properties",
+    "summary": "Cleaned up the Fotocasa XML property feed by excluding all EMAIL-* properties (which had marketing images, not photos) and fixing 9 properties with coordinates landing in the sea or wrong locations. Added hardcoded inland GPS coordinates to 7 HH CRM properties and a hardcoded override for a live RPF feed property whose source coords hit the Torrevieja salt lagoon. Also added TOWN_COORDS fallbacks for portixol, cabo cervera, cabo roig, lomas de cabo roig, dehesa de campoamor, and la manga, and excluded broken property HH-GI-26862655 with missing CDN and no beds/baths data.",
+    "decisions": [
+      "EMAIL-* properties excluded from Fotocasa feed (images are marketing slides, not property photos)",
+      "Hardcoded inland GPS overrides added to hh-crm-properties.json for 7 properties",
+      "Live RPF feed property 14-4501/1862 gets coords override in route.ts (source data wrong)",
+      "Town-level TOWN_COORDS fallbacks added for 6 coastal towns prone to sea-landing coordinates",
+      "HH-GI-26862655 fully excluded due to broken CDN and missing bedroom/bathroom data"
+    ],
+    "ideas": [
+      "Consider auditing all EMAIL-* properties for usable data before full exclusion"
+    ],
+    "chips": [
+      "fotocasa",
+      "coordinates",
+      "property-feed",
+      "data-quality",
+      "hh-crm"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
+    "_logged": "2026-06-09T09:53:06.285774"
   }
 ]
