@@ -2,28 +2,26 @@
 
 **Session ID:** local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a
 **Project:** New Build Homes / Hansson Hertzell (brain/agent session)
-**Status:** Running (270+ assistant turns)
-**Brief written:** 2026-06-09T10:51:49
+**Status:** Running (311+ assistant turns)
+**Brief written:** 2026-06-09T12:42:00
 
 ## What's happening
 
-Syncing the local property JSON cache with the live XML feed data. The live feed has grown significantly and the cached JSON is stale.
+Major property data sync + scheduling work for the NBHCB / H&H platform.
+
+## Progress so far
+
+- Synced the property JSON cache from stale (~2,258 properties, 3.5MB) toward the live feed (~3,359 properties)
+- Resolved the 15MB JSON bloat issue (was including extra fields)
+- Registered a new **scheduled task** via the scheduled-tasks MCP
+- Now verifying the **Netlify build** picks up the refreshed JSON correctly
 
 ## Current state
 
-- Live feed: **3,359 properties** (current)
-- Cached JSON: **2,258 properties** (stale)
-- A sync script has been written and run
-- Problem hit: output JSON is **15MB** (too large; previous cache was ~3.5MB)
-- Currently debugging/trimming the output to get back to a reasonable size
-
-## Key decision
-
-The old JSON at 3.5MB was acceptable; the new 15MB output suggests the sync script may be including extra fields or not stripping data correctly.
+The assistant just registered a scheduled task and is running bash commands to verify the Netlify build reflects the new JSON. This appears to be the final verification step before the sync workflow is considered complete.
 
 ## Next steps when resuming
 
-- Identify why the synced JSON is 4-5x larger than expected
-- Strip unnecessary fields or apply compression/field filtering
-- Verify final output is ~3-4MB and property count matches the live feed (~3,359)
-- Confirm downstream services (website, API routes) pick up the refreshed cache
+- Confirm Netlify build succeeds and the new JSON is used in production
+- Check downstream services (website routes, API) are returning updated property data
+- Verify the scheduled task is correctly configured (interval, task name, script path)
