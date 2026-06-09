@@ -9198,5 +9198,194 @@
     "_source": "session-sync",
     "_session_id": "local_69084291-dc40-4deb-9117-97830535c219",
     "_logged": "2026-06-09T13:05:48.258062"
+  },
+  {
+    "id": "sync-sofia-inbox-fix-f7c058aa",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "sofia-inbox-fix",
+    "title": "Fixed Sofia n8n polling rate and JSON control character crash",
+    "summary": "The Sofia inbox n8n workflow had two critical bugs: 1-minute polling burned through all 2,500 monthly executions in ~1.7 days, and the Call Claude node crashed on control characters in email bodies. Fixed by changing polling to hourly (720/month) and sanitizing email content before JSON serialization. Sofia resumes on July 1st when executions reset; user can upgrade to Pro (€60/month) to restore immediately.",
+    "decisions": [
+      "Changed polling interval from every 1 minute to every 60 minutes",
+      "Strip control characters from email content before it hits Claude",
+      "Added email validation guard to prevent bad addresses crashing the send node"
+    ],
+    "ideas": [
+      "Upgrade to n8n Pro (€60/month) to restore Sofia before July 1st execution reset"
+    ],
+    "chips": [
+      "n8n",
+      "sofia",
+      "automation",
+      "bug-fix",
+      "email"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-09T14:20:55.041380"
+  },
+  {
+    "id": "sync-property-scanner-be5679ad",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "property-email-scanner",
+    "title": "Property email scanner automated run — 3 emails processed",
+    "summary": "Automated scheduled run of the property email scanner. Scanned Gmail for unread property enquiry emails, wrote a report of findings, and marked 3 unread emails as read.",
+    "decisions": [],
+    "ideas": [],
+    "chips": [
+      "automation",
+      "email",
+      "scanner",
+      "scheduled",
+      "gmail"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_be5679ad-c31f-4924-a8d3-ccbb203295af",
+    "_logged": "2026-06-09T14:20:55.041380"
+  },
+  {
+    "id": "sync-newbuild-blog-c2e2aa0b",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Newbuild blog pipeline — 5 new articles pushed to Airtable",
+    "summary": "Automated blog content pipeline run. Searched for new topics, deduplicated against existing articles, selected 5 articles scoring 5+ on relevance, and created them as records in the Airtable Blog Articles table.",
+    "decisions": [
+      "Only push articles that pass deduplication and score 5+ on relevance"
+    ],
+    "ideas": [],
+    "chips": [
+      "blog",
+      "content",
+      "airtable",
+      "automation",
+      "pipeline",
+      "seo"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_c2e2aa0b-390a-4d4e-abc5-6f6e07b69c96",
+    "_logged": "2026-06-09T14:20:55.041380"
+  },
+  {
+    "id": "sync-nbhcb-brain-9a28220e",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-brain-marathon",
+    "title": "Resale Online integrated — site grew from 1,744 to 3,699 properties",
+    "summary": "Massive session integrating the Resale Online feed (2,258 properties) alongside existing sources, more than doubling the property count. Also fixed Fotocasa Kyero V3 feed (images, coordinates, phone format), scraped 61 Grupo Inmocosta resale properties, added 20+ email-intake properties from 7 agencies, and trimmed the JSON data bundle from 7.2MB to 3.3MB. Three scheduled tasks set up: Alegria monitor, email scanner, link checker.",
+    "decisions": [
+      "Strip descriptions to trim JSON bundle from 7.2MB to 3.3MB for build performance",
+      "Keep Fotocasa feed clean — exclude resale/no-image properties",
+      "Three scheduled tasks deployed: Alegria monitor, email scanner, link checker"
+    ],
+    "ideas": [
+      "Smart tag enrichment engine written and ready to wire in",
+      "Next: smart tags + filter UI, image classification with Sonnet, property card redesign, Resale Online daily sync"
+    ],
+    "chips": [
+      "nbhcb",
+      "resale-online",
+      "feed-integration",
+      "fotocasa",
+      "airtable",
+      "performance"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_9a28220e-94eb-4b42-926b-8e67aebce132",
+    "_logged": "2026-06-09T14:20:55.041380"
+  },
+  {
+    "id": "sync-hh-social-pipeline-adb45157",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H social pipeline — 6 captions created for Jun 9-15, automation blockers mapped",
+    "summary": "Ran the H&H social pipeline against the 1,618-property Airtable CRM. Created 6 ready-to-post captions for the week of June 9–15 (luxury villa €729K, two mid-range villas, two apartments, Benissa lifestyle, brand trust post) plus Facebook group teasers. Identified 4 blockers before full automation can go live: Facebook/Instagram not connected to Postiz, no H&H Remotion templates built, no Social Posts table in Airtable, property image URLs not populated.",
+    "decisions": [
+      "Produce manual captions until 4 automation blockers are resolved",
+      "Include Facebook group teasers alongside all property post captions"
+    ],
+    "ideas": [
+      "Build H&H Remotion templates in Navy/Gold/Cream brand variant",
+      "Add Social Posts table to H&H Airtable base and populate property image URLs"
+    ],
+    "chips": [
+      "social-media",
+      "h&h",
+      "postiz",
+      "airtable",
+      "automation",
+      "content-calendar"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_adb45157-ee8b-4e6f-b9a5-0cf8b8a3e557",
+    "_logged": "2026-06-09T14:20:55.041380"
+  },
+  {
+    "id": "sync-blogs-nbhcb-d8dc68f1",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "blog-pipeline-airtable-setup",
+    "title": "NBHCB Blog pipeline — Airtable cleanup and source data pull",
+    "summary": "Session working on the New Build Homes blog pipeline. Deleted example/placeholder records from the Airtable blog tables, then started pulling live NBHCB source data into the blog ideas and articles tables.",
+    "decisions": [
+      "Remove example records before populating with real NBHCB content",
+      "Pull source data directly from NBHCB Airtable base"
+    ],
+    "ideas": [
+      "Automate blog idea seeding from live property/area data"
+    ],
+    "chips": [
+      "blog",
+      "airtable",
+      "nbhcb",
+      "pipeline"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_d8dc68f1-8412-491e-8b0a-0e18774e89e9",
+    "_logged": "2026-06-09T15:40:41.810377"
+  },
+  {
+    "id": "sync-sofia-email-fix-cfa84a1a",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "sofia-inbox-email-fix",
+    "title": "Fixed Sofia n8n email responder: poll rate & control char crash",
+    "summary": "Sofia AI inbox responder was broken due to two bugs: 1-minute polling burned the n8n Starter plan's 2,500 monthly execution quota in under 2 days, and control characters in email bodies crashed the Call Claude node. Poll rate changed to hourly (720/month), control char stripping added before Claude call, and an email validation guard added to prevent bad addresses crashing the send node. Monthly execution quota now exhausted until July 1 reset.",
+    "decisions": [
+      "Changed n8n polling from 1min to 60min to stay within 720 executions/month",
+      "Added control character sanitization in Build Sofia Prompt node",
+      "Added email validation guard before send node",
+      "Wait for July 1 quota reset rather than upgrading to Pro plan immediately"
+    ],
+    "ideas": [
+      "Upgrade to n8n Pro (€60/mo) if Sofia needs to be live before July 1"
+    ],
+    "chips": [
+      "n8n",
+      "Sofia",
+      "email-automation",
+      "workflow",
+      "Hansson Hertzell"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-09T18:51:27.129192"
   }
 ]
