@@ -9534,5 +9534,387 @@
     "_source": "session-sync",
     "_session_id": "local_533ad2b8-8bf3-4908-9c0a-27904308f42b",
     "_logged": "2026-06-10T08:30:13.286524"
+  },
+  {
+    "id": "sync-hh-netlify-cutover-b6c2feca",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "netlify-cutover-preflight",
+    "title": "H&H Netlify cutover pre-flight: redirects verified, legal pages & schema flagged as blockers",
+    "summary": "Session audited the hanssonhertzell.se → Netlify migration readiness. Fotocasa feed confirmed complete and redirect file verified (35 articles × 5 languages = 310 lines). Remaining hard blockers before DNS cutover identified: GDPR legal pages (Privacy Policy, Cookie Policy, Legal Notice), sitemap/robots.txt, GA4 env vars, schema markup (FAQPage, Article, breadcrumbs), and redirect spot-checking.",
+    "decisions": [
+      "Redirects considered complete — 35 articles × 5 languages covered",
+      "Legal pages flagged as hard block before cutover (GDPR/Spain requirement)",
+      "Analytics env vars must use real IDs, not placeholders"
+    ],
+    "ideas": [
+      "After cutover: update feed SITE_URL from hanssonhertzell.netlify.app to hanssonhertzell.se"
+    ],
+    "chips": [
+      "migration",
+      "netlify",
+      "redirects",
+      "SEO",
+      "GDPR"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
+    "_logged": "2026-06-10T09:05:43.570974"
+  },
+  {
+    "id": "sync-migration-57a11777",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "area-filter-fix",
+    "title": "Debug area page CTAs not passing city filter param to properties",
+    "summary": "Investigated a broken user flow where area pages (/en/areas/javea, /en/areas/calpe etc.) had 'View Properties' CTAs linking to plain /en/properties with no ?city= param, so clicking any area showed all 5,392 properties instead of area-specific results. Also surfaced tag inconsistencies in the static data ('Sea Views' vs 'Sea views' as separate tags, and 'Resale Online' source label leaking into the filter layer). Session ended with a proposed fix to wire area CTAs to pass ?city= parameters.",
+    "decisions": [
+      "Area CTA links need ?city= param to properly filter properties to that area",
+      "Tag normalization needed: 'Sea Views'/'Sea views' inconsistency, 'Resale Online' source label leaking into filters"
+    ],
+    "ideas": [
+      "Audit what chips/tags the XML feed properties actually carry to improve chip filter design"
+    ],
+    "chips": [
+      "filters",
+      "area-pages",
+      "bug-investigation",
+      "NBHCB"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_57a11777-7ffa-4498-8a9a-6447faf13377",
+    "_logged": "2026-06-10T09:20:47.952596"
+  },
+  {
+    "id": "sync-hh-email-camp-ceb31a61",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-email-campaign",
+    "title": "H&H Email Campaign Sent to 274 Collaborators",
+    "summary": "Set up and sent a branded H&H email campaign to 274 collaborators. A test send to oskar@hanssonhertzell.com was used to verify euro symbols (€419,000 and €6,000) rendered correctly in the email before firing to the full list.",
+    "decisions": [
+      "Test email sent first to verify special character rendering",
+      "Full send to 274 collaborators after confirmation"
+    ],
+    "ideas": [],
+    "chips": [
+      "email",
+      "mailerlite",
+      "campaign",
+      "H&H"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01",
+    "_logged": "2026-06-10T14:07:05.491991"
+  },
+  {
+    "id": "sync-sofia-vidal-wa-f7c058aa",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "sofia-whatsapp-build",
+    "title": "Sofia Vidal WhatsApp Business API Integration Planned",
+    "summary": "Planning and scoping session for Sofia's WhatsApp Business API channel. Read SOFIA-MASTER-PROMPT.md to align on her voice (max 3 sentences, no bullets, WhatsApp register — opens as 'Sofia here from Hansson & Hertzell'). All infrastructure (n8n, Anthropic credentials, Sofia's brain) is in place; only missing piece is the Spanish SIM number to register with Meta.",
+    "decisions": [
+      "Sofia uses a dedicated business WhatsApp line separate from Oskar's personal number",
+      "WhatsApp messages: max 3 sentences, no bullet points, conversational register",
+      "Sofia opens as 'Sofia here from Hansson & Hertzell' not generic AI greeting"
+    ],
+    "ideas": [
+      "Wire Sofia into n8n alongside existing email workflow once SIM is registered"
+    ],
+    "chips": [
+      "sofia",
+      "whatsapp",
+      "n8n",
+      "AI-agent",
+      "H&H"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-10T14:07:05.491991"
+  },
+  {
+    "id": "sync-blogs-content-d8dc68f1",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "blog-content-push",
+    "title": "12 H&H + 11 NBHCB Blog Articles Written and Committed",
+    "summary": "Wrote and committed 23 articles across both sites, pushing H&H EN count from 79 to 119. Topics spanned retirement in Spain, housing law, Plan Estatal Vivienda, renovation grants, micro-apartment investment, British remote workers, snagging checklists, IRNR tax guide, and Spanish inheritance law. All Content Brain ideas processed, marked Published, and logged in Airtable Articles table.",
+    "decisions": [
+      "Content Brain pair pattern: NBHCB JSON article + H&H companion for each topic",
+      "All commits to git; all articles logged in Airtable",
+      "H&H EN target of 119 reached this session"
+    ],
+    "ideas": [
+      "Costa Blanca vs Costa del Sol comparison article performed well as standalone H&H piece"
+    ],
+    "chips": [
+      "blog",
+      "content",
+      "SEO",
+      "articles",
+      "H&H",
+      "NBHCB"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_d8dc68f1-8412-491e-8b0a-0e18774e89e9",
+    "_logged": "2026-06-10T14:07:05.491991"
+  },
+  {
+    "id": "sync-nbhcb-brain-db-b6c2feca",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-brain-dashboard",
+    "title": "NBHCB Brain Dashboard Updated with Live Source Cards and Email Intake Panel",
+    "summary": "Rebuilt the NBHCB Brain dashboard artifact with real data: source cards showing per-source counts and weekly additions, an email intake panel listing all 23 EMAIL-* properties with in-feed/no-price/no-images status, and a recent additions timeline. Alegria monitor confirmed running daily but no property changes detected since May — their portfolio hasn't moved.",
+    "decisions": [
+      "Dashboard shows honest '0 new this week' for Alegria rather than hiding the silence",
+      "Email intake: 19 in feed, 2 excluded for no price, 2 excluded for no images",
+      "Recent Additions panel scoped to last 7 days"
+    ],
+    "ideas": [],
+    "chips": [
+      "dashboard",
+      "brain",
+      "NBHCB",
+      "property-sources",
+      "airtable"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
+    "_logged": "2026-06-10T14:07:05.491991"
+  },
+  {
+    "id": "sync-nb-social-pipe-e23aba99",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Cycling Costa Blanca North Posts Scheduled Across 4 Channels for June 11",
+    "summary": "Ran the Wednesday June 10 social pipeline using a pre-built cycling Javea/Benissa batch (unscheduled since April 29). Rendered 2 Remotion stills, uploaded to Postiz, and scheduled 4 posts for June 11 across Instagram, Facebook, TikTok, and Pinterest. Discovered that YouTube now rejects still images with HTTP 400 'Item must be a video'.",
+    "decisions": [
+      "Skip YouTube for still image runs going forward — YouTube channel should only receive video content",
+      "Sports & Activities content category used for the first time",
+      "Pre-built batch from April 29 reused rather than generating new content"
+    ],
+    "ideas": [
+      "Review YouTube channel config in Postiz to prevent future 400 errors"
+    ],
+    "chips": [
+      "social",
+      "postiz",
+      "remotion",
+      "NBHCB",
+      "content-pipeline"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_e23aba99-2e68-4bba-b8ba-2d118db2df46",
+    "_logged": "2026-06-10T14:07:05.491991"
+  },
+  {
+    "id": "sync-storyboard-gtm-eef0c862",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-decks",
+    "title": "GTM Brief and Competitor Deep Dive Decks Built (20 Slides Total)",
+    "summary": "Built two Storyboard presentation decks: a 10-slide GTM Brief with a new closing slide 'Five Gaps. One Opportunity.' and a standalone 10-slide Competitor Deep Dive covering Chat Archivers, Memory APIs, Screen Capture, TypingMind, and Obsidian/PKM. Proposed a third deck 'Who We're Building For' with 7-slide PLG motion and persona structure.",
+    "decisions": [
+      "GTM Brief gets a unifying summary slide at the end",
+      "Competitor Deep Dive is a standalone deck, not embedded in GTM Brief",
+      "Third deck to focus on PLG growth path: individual → team → org account"
+    ],
+    "ideas": [
+      "Third deck 'Who We're Building For': The Indie Builder, The Agency Dev, The Researcher/PhD archetypes",
+      "PLG motion: free individual → invites colleague → team of 5 → manager notices → org account"
+    ],
+    "chips": [
+      "storyboard",
+      "GTM",
+      "presentations",
+      "competitor-analysis",
+      "PLG"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_eef0c862-ebb8-463d-8706-f36c10b93d7d",
+    "_logged": "2026-06-10T14:07:05.491991"
+  },
+  {
+    "id": "sync-hh-email-setup-0258efa4",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-email-campaigns-setup",
+    "title": "H&H MailerLite campaign test email sent to collaborators",
+    "summary": "Drove MailerLite via Chrome automation to send a test newsletter email to oskar@hanssonhertzell.com verifying €419,000 and €6,000 price formatting. Session was mid-flow awaiting confirmation before sending to 274 collaborators.",
+    "decisions": [
+      "Used browser automation (Chrome MCP) to interact with MailerLite UI",
+      "Test send before full collaborator blast of 274 recipients"
+    ],
+    "ideas": [],
+    "chips": [
+      "H&H",
+      "MailerLite",
+      "email",
+      "automation"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01",
+    "_logged": "2026-06-10T15:22:12.228628"
+  },
+  {
+    "id": "sync-sofia-whatsapp-c14ce850",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "sofia-vidal-whatsapp-build",
+    "title": "Sofia Vidal WhatsApp Business API integration planning",
+    "summary": "Worked on setting up WhatsApp channel for Sofia Vidal AI agent. Read SOFIA-MASTER-PROMPT.md (58KB) to realign on her voice — discovers she opens as \"Sofia here from Hansson & Hertzell\", max 3 sentences on WhatsApp, no fluff phrases. Session ended waiting for the purchased Spanish SIM number to proceed with WhatsApp Business API registration.",
+    "decisions": [
+      "Read SOFIA-MASTER-PROMPT.md directly instead of searching 1800+ sessions",
+      "WhatsApp channel to be separate from personal Oskar number — dedicated business line",
+      "Sofia tone: direct opinions, specific property recommendations, not generic offers"
+    ],
+    "ideas": [
+      "Wire WhatsApp into n8n alongside existing email workflow"
+    ],
+    "chips": [
+      "H&H",
+      "Sofia",
+      "WhatsApp",
+      "AI-agent",
+      "n8n"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-10T15:22:12.228628"
+  },
+  {
+    "id": "sync-blogs-content-blitz-f6a9792b",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-nbhcb-blog-content-blitz",
+    "title": "H&H blog scaled 79→119 EN articles, NBHCB 203→214 in one session",
+    "summary": "Mass content production session writing 12 original H&H articles and 6 paired NBHCB/H&H Content Brain articles. Topics covered retirement in Spain, housing law buyers guide, Plan Estatal Vivienda grants, renovation grants €35k, micro apartment investment, British remote workers, buying timeline, running costs, Costa Blanca vs Costa del Sol comparison, IRNR tax guide, snagging checklist, and Spanish inheritance law. All articles committed to git and logged in Airtable Articles table.",
+    "decisions": [
+      "Content Brain pairing strategy: write NBHCB MDX article + companion H&H article simultaneously",
+      "All Content Brain ideas marked Published after processing",
+      "Spanish inheritance law added as final article to reach 119 target"
+    ],
+    "ideas": [
+      "H&H EN article count target achieved (119)"
+    ],
+    "chips": [
+      "H&H",
+      "NBHCB",
+      "blogs",
+      "SEO",
+      "content",
+      "airtable"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_d8dc68f1-8412-491e-8b0a-0e18774e89e9",
+    "_logged": "2026-06-10T15:22:12.228628"
+  },
+  {
+    "id": "sync-nbhcb-brain-dashboard-53dc262c",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-property-brain-dashboard",
+    "title": "NBHCB/H&H Brain dashboard rebuilt with honest source data",
+    "summary": "Rebuilt the Cowork artifact dashboard to show accurate property source stats including additions this week, email intake queue with status (19 in feed, 2 no price, 2 no images), and recent additions timeline. Clarified that Alegria monitor running daily does not mean new properties daily — it only commits when Alegria's website actually changes (zero changes detected since May).",
+    "decisions": [
+      "Dashboard shows honest \"0 new this week\" for sources with no changes, not misleading counters",
+      "61 GI (Grupo Inmocosta) properties added June 4 shown in recent additions",
+      "Email intake panel shows 23 EMAIL-* properties with per-property status"
+    ],
+    "ideas": [],
+    "chips": [
+      "NBHCB",
+      "H&H",
+      "dashboard",
+      "airtable",
+      "property-sources"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
+    "_logged": "2026-06-10T15:22:12.228628"
+  },
+  {
+    "id": "sync-newbuild-social-cycling-1a838e9a",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline-jun10",
+    "title": "NBHCB social pipeline: cycling Javea/Benissa content scheduled across 4 channels",
+    "summary": "Ran Wednesday June 10 social pipeline using pre-built batch for cycling routes in Costa Blanca North (Javea and Benissa, Vuelta España routes). Rendered 2 Remotion stills (2.2MB square + 1.9MB Pinterest), uploaded to Postiz, and scheduled 4 posts for June 11 across Instagram, Facebook, TikTok, and Pinterest. Discovered YouTube rejects still images with HTTP 400 — skipped YouTube this run.",
+    "decisions": [
+      "Used pre-built batch cycling-javea-benissa-guide.json (unscheduled since April 29)",
+      "YouTube skipped — only accepts video content, not stills",
+      "Sports & Activities category used for first time"
+    ],
+    "ideas": [
+      "Review YouTube channel config in Postiz — only send video compositions going forward"
+    ],
+    "chips": [
+      "NBHCB",
+      "social",
+      "Postiz",
+      "Remotion",
+      "scheduling"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_e23aba99-2e68-4bba-b8ba-2d118db2df46",
+    "_logged": "2026-06-10T15:22:12.228628"
+  },
+  {
+    "id": "sync-storyboard-gtm-decks-7c712c9f",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-gtm-competitor-decks",
+    "title": "Built GTM Brief + Competitor Deep Dive presentation decks for Storyboard",
+    "summary": "Created two 10-slide presentation decks for Storyboard: a GTM Brief deck (with new slide 10 \"Five Gaps. One Opportunity.\" summarising the market opportunity) and a standalone Competitor Deep Dive covering chat archivers, memory APIs, screen capture, TypingMind, Obsidian/PKM, threat ranking, and \"What to Steal / How to Win\". Also proposed structure for a third deck \"Who We're Building For\" covering 3 user archetypes, PLG growth path, and expansion pricing model.",
+    "decisions": [
+      "GTM Brief: single deck with market summary on final slide",
+      "Competitor Deep Dive: standalone deck, not combined with GTM",
+      "Third deck proposed: 7-slide persona/archetype deck for investor conversations"
+    ],
+    "ideas": [
+      "PLG motion: Individual → team of 5 → manager notices dashboard → org account — no sales needed",
+      "Category framing: \"AI work management for knowledge workers\" — first mover"
+    ],
+    "chips": [
+      "Storyboard",
+      "GTM",
+      "decks",
+      "competitor-analysis",
+      "investor"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_eef0c862-ebb8-463d-8706-f36c10b93d7d",
+    "_logged": "2026-06-10T15:22:12.228628"
   }
 ]
