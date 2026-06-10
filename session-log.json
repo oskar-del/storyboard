@@ -9916,5 +9916,133 @@
     "_source": "session-sync",
     "_session_id": "local_eef0c862-ebb8-463d-8706-f36c10b93d7d",
     "_logged": "2026-06-10T15:22:12.228628"
+  },
+  {
+    "id": "sync-property-email-rerun-54667a0c",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-email-scanner-rerun",
+    "title": "Re-ran property email scanner: 11 Gmail threads scanned with exclusivity checks",
+    "summary": "Executed the automated property email scanner (rerun) across the H&H Gmail inbox, processing 11 threads tagged with the 'Claude' label. Performed reverse-image-search exclusivity checks on each listing to classify shared vs exclusive properties. Completed the pipeline by removing the 'Claude' label from processed threads.",
+    "decisions": [
+      "Rerun triggered separately from the original scanner — likely to catch missed or errored threads",
+      "Used unlabel_thread to mark processed emails as done rather than mark-as-read"
+    ],
+    "ideas": [
+      "Consider adding retry logic to handle socket closure errors in the base scanner"
+    ],
+    "chips": [
+      "gmail",
+      "property-scanner",
+      "exclusivity-check",
+      "automation"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_07094179-4a35-4b13-9c9b-edfccda34de8",
+    "_logged": "2026-06-10T16:40:44.378021"
+  },
+  {
+    "id": "sync-daily-outreach-drafts-b6dc3772",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "Created 10 personalised Gmail outreach drafts for Swedish-speaking Airtable clients",
+    "summary": "Pulled 10 Swedish-speaking clients from the Airtable CRM with budgets €300k–€500k and generated personalised outreach email drafts in Gmail for each. Drafts tailored to individual client profiles and saved for Oskar to review and send.",
+    "decisions": [
+      "Targeted Swedish-language segment with €300k–€500k budget from CRM",
+      "Created drafts (not sent) so Oskar can review before sending"
+    ],
+    "ideas": [
+      "Add language-specific template variations (Swedish vs English)"
+    ],
+    "chips": [
+      "gmail",
+      "outreach",
+      "airtable",
+      "crm",
+      "swedish-clients"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_43d5910a-b262-4fb9-ae6d-6c1052122a79",
+    "_logged": "2026-06-10T16:40:44.378021"
+  },
+  {
+    "id": "sync-alegria-property-monitor-a6eb6335",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "alegria-property-monitor",
+    "title": "Monitored Alegria development property listings via browser automation",
+    "summary": "Ran automated monitoring of the Alegria property development using Chrome browser automation. Session navigated to the relevant property pages to track listing status and availability changes.",
+    "decisions": [
+      "Used Chrome browser automation for live page state rather than cached XML feed"
+    ],
+    "ideas": [
+      "Store monitoring results in Airtable for trend tracking over time"
+    ],
+    "chips": [
+      "property-monitor",
+      "alegria",
+      "browser-automation",
+      "newbuild"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_204a9425-fe60-4007-a769-5102f48c04a0",
+    "_logged": "2026-06-10T16:40:44.378021"
+  },
+  {
+    "id": "sync-grupo-inmocosta-sync-a64aa395",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "grupo-inmocosta-daily-sync",
+    "title": "Ran daily sync with Grupo Inmocosta property listings via browser",
+    "summary": "Executed the daily Grupo Inmocosta sync, reading configuration files and navigating to the agency portal via Chrome to pull updated listing data. Part of the recurring feed pipeline to keep H&H property data current.",
+    "decisions": [
+      "Browser-based sync rather than API — Grupo Inmocosta does not expose a direct feed"
+    ],
+    "ideas": [
+      "Cache sync results to avoid re-fetching unchanged listings"
+    ],
+    "chips": [
+      "grupo-inmocosta",
+      "daily-sync",
+      "feed",
+      "browser-automation"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_ea8885c7-1e01-4cbc-9f22-c34bc080f2a1",
+    "_logged": "2026-06-10T16:40:44.378021"
+  },
+  {
+    "id": "sync-hh-fb-morning-post-5937ac1f",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-morning-post",
+    "title": "Posted morning property content to H&H Facebook group",
+    "summary": "Executed the morning H&H Facebook group posting routine, navigating to the group via Chrome and publishing property content. Part of the recurring social media distribution schedule.",
+    "decisions": [
+      "Morning posting window chosen to maximise organic reach for the H&H audience"
+    ],
+    "ideas": [
+      "A/B test post timing between morning and midday slots"
+    ],
+    "chips": [
+      "facebook",
+      "social-media",
+      "hh",
+      "morning-routine"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_0588719c-b045-4d77-b2e2-b05b328d76b1",
+    "_logged": "2026-06-10T16:40:44.378021"
   }
 ]
