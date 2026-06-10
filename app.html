@@ -3321,6 +3321,168 @@ body.light-mode .stg-action-btn { background: #f0f2f8; border-color: #e2e6f0; co
 body.light-mode .td-kickoff-card { background: rgba(108,99,255,.04); }
 body.light-mode .td-kickoff-input { background: #f7f8fa; }
 
+
+/* ═════════ COLLAB VIEW ═════════ */
+.collab-view { padding: 4px 22px 60px; width: 100%; max-width: 1100px; margin: 0 auto; }
+.collab-view-head {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: nowrap; gap: 16px;
+  padding: 12px 0 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  position: sticky; top: 0;
+  background: var(--bg, var(--surface, #fff));
+  z-index: 5;
+}
+body:not(.light-mode) .collab-view-head { background: var(--bg, #0a0e1a); }
+.collab-view-title {
+  font-size: 18px; font-weight: 800; color: var(--text);
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0; white-space: nowrap;
+}
+.collab-view-title .cv-icon {
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(249,115,22,.18));
+  border-radius: 8px;
+  font-size: 14px;
+}
+.collab-view-authors {
+  display: flex; gap: 10px; align-items: center; flex-shrink: 0;
+}
+.cv-author-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  padding: 6px 12px; border-radius: 20px;
+}
+.cv-author-chip .cv-dot { width: 9px; height: 9px; border-radius: 50%; }
+.cv-author-chip-oskar { background: rgba(59,130,246,.10); color: #2563eb; border: 1px solid rgba(59,130,246,.28); }
+body:not(.light-mode) .cv-author-chip-oskar { color: #93c5fd; }
+.cv-author-chip-oskar .cv-dot { background: #3B82F6; }
+.cv-author-chip-colleague { background: rgba(249,115,22,.10); color: #c2410c; border: 1px solid rgba(249,115,22,.28); }
+body:not(.light-mode) .cv-author-chip-colleague { color: #fdba74; }
+.cv-author-chip-colleague .cv-dot { background: #F97316; }
+
+.cv-day { margin-bottom: 26px; }
+.cv-day-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px; padding-bottom: 4px;
+  font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-3);
+}
+.cv-day-head::before, .cv-day-head::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.cv-day-head .cv-day-date { padding: 0 14px; color: var(--text-2); }
+.cv-day[data-date="undated"] .cv-day-head { opacity: 0.5; }
+.cv-day[data-date="undated"] { margin-top: 40px; }
+
+.cv-row {
+  display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 480px);
+  gap: 24px;
+  align-items: start;
+  justify-content: center;
+}
+.cv-col {
+  display: flex; flex-direction: column; gap: 10px;
+  min-height: 40px;
+}
+.cv-col-empty {
+  font-size: 11px; font-style: italic; color: var(--text-3);
+  padding: 16px 14px; border: 1px dashed var(--border);
+  border-radius: 12px; text-align: center;
+  max-width: 460px;
+}
+
+/* CARD BASE */
+.cv-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform .12s, box-shadow .12s;
+  position: relative;
+  max-width: 460px;
+  width: 100%;
+}
+.cv-card:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+
+/* AUTHOR × SOURCE color matrix
+ * Oskar      + Claude   → DARK blue
+ * Oskar      + ChatGPT  → LIGHT blue
+ * Colleague  + Claude   → DARK orange
+ * Colleague  + ChatGPT  → LIGHT orange
+ */
+.cv-card[data-author="oskar"][data-tone="claude"] {
+  background: linear-gradient(135deg, rgba(30,64,175,.16), rgba(30,64,175,.08));
+  border-color: rgba(30,64,175,.40);
+}
+.cv-card[data-author="oskar"][data-tone="chatgpt"] {
+  background: linear-gradient(135deg, rgba(16,163,127,.18), rgba(16,163,127,.06));
+  border-color: rgba(16,163,127,.45);
+  border-left: 4px solid #3B82F6;  /* Oskar's blue rail to keep authorship visible */
+}
+.cv-card[data-author="colleague"][data-tone="claude"] {
+  background: linear-gradient(135deg, rgba(194,65,12,.16), rgba(194,65,12,.08));
+  border-color: rgba(194,65,12,.40);
+}
+.cv-card[data-author="colleague"][data-tone="chatgpt"] {
+  background: linear-gradient(135deg, rgba(16,163,127,.18), rgba(16,163,127,.06));
+  border-color: rgba(16,163,127,.45);
+  border-left: 4px solid #F97316;  /* Colleague's coral rail to keep authorship visible */
+}
+/* fallback for manual / unknown */
+.cv-card[data-tone="manual"] {
+  background: rgba(245,158,11,.10);
+  border-color: rgba(245,158,11,.35);
+}
+
+/* TAGS ROW */
+.cv-card-tags {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.cv-tag {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 20px;
+  white-space: nowrap;
+}
+.cv-tag-author { /* base author tag — color-set per author below */ }
+.cv-card[data-author="oskar"] .cv-tag-author     { background: #1e40af; color: #fff; }
+.cv-card[data-author="colleague"] .cv-tag-author { background: #c2410c; color: #fff; }
+.cv-tag-source { /* source — color-set per tone */ }
+.cv-card[data-tone="claude"]  .cv-tag-source { background: rgba(255,255,255,.65); color: #1e40af; border: 1px solid rgba(30,64,175,.3); }
+.cv-card[data-author="colleague"][data-tone="claude"] .cv-tag-source { color: #c2410c; border-color: rgba(194,65,12,.3); }
+.cv-card[data-tone="chatgpt"] .cv-tag-source { background: #10a37f; color: #fff; }
+.cv-card[data-tone="manual"]  .cv-tag-source { background: #f59e0b; color: #fff; }
+.cv-tag-type {
+  background: rgba(255,255,255,.50); color: var(--text-2);
+  border: 1px solid rgba(0,0,0,.08);
+}
+body:not(.light-mode) .cv-tag-type { background: rgba(0,0,0,.25); color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.1); }
+
+/* TITLE + SUMMARY */
+.cv-card-title {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  line-height: 1.35; margin-bottom: 5px;
+}
+.cv-card-sum {
+  font-size: 12px; color: var(--text-2); line-height: 1.5;
+  margin-bottom: 6px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cv-card-task {
+  font-size: 10.5px; font-weight: 600;
+  color: var(--text-3); font-style: italic;
+}
+
+.cv-empty {
+  padding: 60px 20px; text-align: center; color: var(--text-3);
+  font-size: 14px;
+}
+.cv-empty-icon { font-size: 32px; margin-bottom: 12px; }
+
 /* ═════════ COLLAB MODE — Step 3 ═════════
  * Author attribution shown only when body has .collab-mode.
  * Solo mode = invisible (default styling preserved).
@@ -3423,6 +3585,102 @@ body:not(.light-mode) .canvas-card-authors-label { color: #fbbf24; }
   width: 9px; height: 9px;
 }
 
+
+/* ═════════ COLLAB VIEW — Sub-tabs ═════════ */
+.cv-subtabs {
+  display: flex; gap: 6px;
+  margin-bottom: 22px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(99,102,241,.03);
+  width: fit-content;
+}
+.cv-subtab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 8px;
+  border: 0; background: transparent;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+  color: var(--text-3);
+  cursor: pointer; transition: all .15s;
+}
+.cv-subtab:hover { color: var(--text); background: rgba(99,102,241,.06); }
+.cv-subtab.on {
+  background: var(--card); color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 0 0 1px var(--border) inset;
+}
+.cv-subtab-icon {
+  font-family: var(--mono, "Courier New"), monospace;
+  font-size: 10px;
+  color: var(--text-3);
+}
+.cv-subtab.on .cv-subtab-icon { color: #6366f1; }
+
+/* ═════════ COLLAB VIEW — Clusters ═════════ */
+.cv-clusters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.cv-cluster {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: default;
+  transition: transform .15s, box-shadow .15s;
+}
+.cv-cluster:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+.cv-cluster-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cv-cluster-name {
+  font-size: 13.5px; font-weight: 700; color: var(--text);
+  word-break: break-word;
+}
+.cv-cluster-count {
+  font-size: 18px; font-weight: 800; color: #6366f1;
+  flex-shrink: 0; margin-left: 8px;
+}
+.cv-cluster-bar {
+  height: 6px; border-radius: 3px; overflow: hidden;
+  display: flex; background: rgba(0,0,0,.06);
+  margin-bottom: 8px;
+}
+body:not(.light-mode) .cv-cluster-bar { background: rgba(255,255,255,.08); }
+.cv-cluster-bar-oskar { background: #3B82F6; height: 100%; }
+.cv-cluster-bar-coll  { background: #F97316; height: 100%; }
+.cv-cluster-authors {
+  display: flex; gap: 14px;
+  font-size: 11px; font-weight: 600; color: var(--text-2);
+  margin-bottom: 10px;
+}
+.cv-cluster-author { display: inline-flex; align-items: center; gap: 5px; }
+.cv-cluster-author .cv-dot { width: 7px; height: 7px; border-radius: 50%; }
+.cv-cluster-author .cv-dot-oskar { background: #3B82F6; }
+.cv-cluster-author .cv-dot-coll  { background: #F97316; }
+.cv-cluster-latest {
+  border-top: 1px dashed var(--border); padding-top: 8px;
+}
+.cv-cluster-latest-label {
+  font-size: 9px; font-weight: 800; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px;
+}
+.cv-cluster-latest-title {
+  font-size: 11.5px; color: var(--text-2); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Coming soon placeholder for decisions */
+.cv-coming-soon {
+  padding: 60px 20px; text-align: center;
+  color: var(--text-3); font-size: 13px; line-height: 1.7;
+  border: 1px dashed var(--border); border-radius: 12px;
+}
+.cv-coming-soon .cv-empty-icon { font-size: 28px; margin-bottom: 14px; }
+
 /* COLLAB SPLIT FEED — Step 3.5 (Option A) */
 body.collab-mode #feed.collab-split-active {
   display: grid !important;
@@ -3489,6 +3747,7 @@ body.collab-mode #feed.collab-split-active .block::before { display: none; }
 
   </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -3874,6 +4133,10 @@ body.collab-mode #feed.collab-split-active .block::before { display: none; }
         <span class="nav-tool-label">Files</span>
         <span class="nav-tool-badge" id="filesCount">6</span>
       </button>
+      <button class="nav-tool-item" id="sphereBtn" onclick="openSphereView()">
+        <span class="nav-tool-label">Sphere</span>
+        <span class="nav-tool-badge" style="background:rgba(108,99,255,.15);color:#a78bfa;font-size:9px;">β</span>
+      </button>
 
       <div class="nav-divider" style="margin:8px 12px 4px"></div>
 
@@ -4033,6 +4296,13 @@ body.collab-mode #feed.collab-split-active .block::before { display: none; }
             <rect x="7" y="0" width="2.5" height="9" rx="1" fill="currentColor" opacity=".8"/>
             <rect x="10.5" y="2" width="2.5" height="6" rx="1" fill="currentColor"/>
             <rect x="13" y="4" width="1" height="2" rx=".5" fill="currentColor" opacity=".4"/>
+          </svg>
+        </button>
+        <button class="view-tab" id="collabBtn" onclick="setView('collab')" title="Collab — two-author timeline of shared work">
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
+            <circle cx="4" cy="4" r="2.5" fill="currentColor" opacity=".7"/>
+            <circle cx="10" cy="4" r="2.5" fill="currentColor" opacity=".7"/>
+            <path d="M1 11 Q4 8 7 10 Q10 8 13 11" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".5"/>
           </svg>
         </button>
       </div>
@@ -5654,7 +5924,12 @@ const CURRENT_AUTHOR = (typeof window !== 'undefined' && window.STORYBOARD_AUTHO
 const AUTHOR_COLORS  = { oskar: '#3B82F6', colleague: '#F97316', claude: '#F59E0B' };
 // Collab projects — kept in sync with mcp-server.js. Only these projects appear in Collab mode.
 const COLLAB_PROJECTS = ['Storyboard'];
-let authorMode = 'solo'; // 'solo' | 'collab'
+let authorMode = 'solo';
+let activeCollabSub = 'timeline'; // 'timeline' | 'clusters' | 'decisions'
+function setCollabSub(s) {
+  activeCollabSub = s;
+  if (typeof renderFeed === 'function') renderFeed();
+} // 'solo' | 'collab'
 
 function toggleAuthorMode() {
   authorMode = authorMode === 'solo' ? 'collab' : 'solo';
@@ -5814,6 +6089,12 @@ function periodTs() {
 // VIEW TOGGLE
 // ═══════════════════════════════════
 function setView(v) {
+  // If we're leaving the collab view, restore feed's default column behavior
+  if (typeof activeView !== 'undefined' && activeView === 'collab' && v !== 'collab') {
+    const _f = document.getElementById('feed');
+    if (_f) { _f.style.columnCount = ''; _f.style.columnWidth = ''; }
+  }
+  
   activeView = v;
   const feed = document.getElementById('feed');
   feed.classList.toggle('list-view',     v === 'list');
@@ -6889,6 +7170,220 @@ function setTlZoom(z) {
 // ═══════════════════════════════════
 // RENDER FEED
 // ═══════════════════════════════════
+function renderCollabView() {
+  const el = document.getElementById('feed');
+  if (!el) return;
+
+  // The default #feed has column-count: 3 (multi-col newspaper layout for grid view).
+  // Override so the Collab view's days stack vertically.
+  el.style.columnCount = '1';
+  el.style.columnWidth = 'auto';
+
+  // Always filter to collab projects, regardless of Solo/Collab toggle.
+  // The Collab view is inherently "shared work" — that's its purpose.
+  // The Collab view shows the full collaboration story — no period filter applied.
+  // Sub-tabs (Timeline / Clusters / Decisions) handle their own layouts within.
+  const all = mergedBlocksRaw().filter(b => COLLAB_PROJECTS.includes(b.project));
+
+  // Stamp author defaults
+  const blocks = all.map(b => ({ ...b, _author: b._author || 'oskar' }));
+
+  if (!blocks.length) {
+    el.innerHTML = `<div class="collab-view"><div class="cv-empty">
+      <div class="cv-empty-icon">⇄</div>
+      No shared work yet. Blocks from collab projects (Storyboard) will appear here as you and your collaborators contribute.
+    </div></div>`;
+    return;
+  }
+
+  // Group by date (YYYY-MM-DD from ts)
+  const byDate = {};
+  blocks.forEach(b => {
+    const ts = b.ts;
+    let key = 'undated';
+    if (ts && /^\d{8}$/.test(String(ts))) {
+      const s = String(ts);
+      key = `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+    }
+    if (!byDate[key]) byDate[key] = { oskar: [], colleague: [] };
+    const a = b._author === 'colleague' ? 'colleague' : 'oskar';
+    byDate[key][a].push(b);
+  });
+
+  // Sort dated days newest-first; push "undated" to the end so it doesn't dominate
+  const dates = Object.keys(byDate).sort((a, b) => {
+    if (a === 'undated') return 1;
+    if (b === 'undated') return -1;
+    return b.localeCompare(a);
+  });
+  const fmt = (key) => {
+    if (key === 'undated') return 'Undated';
+    const d = new Date(key + 'T12:00:00');
+    if (isNaN(d)) return key;
+    return d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' });
+  };
+
+  function sourceIcon(b) {
+    const s = (b._source || '').toLowerCase();
+    if (s.includes('chatgpt')) return '✦';
+    if (s.includes('session'))  return '◈';
+    if (s.includes('manual'))   return '✎';
+    return '◈';
+  }
+
+  function sourceLabel(b) {
+    const s = (b._source || '').toLowerCase();
+    if (s.includes('chatgpt')) return 'CHATGPT';
+    if (s.includes('session') || s.includes('cowork')) return 'CLAUDE';
+    if (s.includes('manual'))   return 'MANUAL';
+    return 'CLAUDE';
+  }
+  function sourceTone(b) {
+    const s = (b._source || '').toLowerCase();
+    if (s.includes('chatgpt')) return 'chatgpt';
+    if (s.includes('session') || s.includes('cowork')) return 'claude';
+    if (s.includes('manual'))   return 'manual';
+    return 'claude';
+  }
+  function cardHtml(b) {
+    const sum = (b.summary || '').slice(0, 110);
+    const author = b._author || 'oskar';
+    const tone = sourceTone(b);
+    const sLabel = sourceLabel(b);
+    const aLabel = author.toUpperCase();
+    return `<div class="cv-card" data-author="${author}" data-tone="${tone}" onclick="openDetail('${b.id}')">
+      <div class="cv-card-tags">
+        <span class="cv-tag cv-tag-author">${aLabel}</span>
+        <span class="cv-tag cv-tag-source">${sLabel}</span>
+        <span class="cv-tag cv-tag-type">${(b.type || 'block').toUpperCase()}</span>
+      </div>
+      <div class="cv-card-title">${(b.title || 'Untitled').replace(/</g, '&lt;')}</div>
+      ${sum ? `<div class="cv-card-sum">${sum.replace(/</g, '&lt;')}${(b.summary||'').length>110?'…':''}</div>` : ''}
+      ${b.task ? `<div class="cv-card-task">↳ ${b.task}</div>` : ''}
+    </div>`;
+  }
+
+  const oskarCount = blocks.filter(b => b._author === 'oskar').length;
+  const collCount  = blocks.filter(b => b._author === 'colleague').length;
+
+  const daysHtml = dates.map(date => {
+    const day = byDate[date];
+    const lCol = day.oskar.length
+      ? day.oskar.map(cardHtml).join('')
+      : '<div class="cv-col-empty">Nothing from Oskar this day.</div>';
+    const rCol = day.colleague.length
+      ? day.colleague.map(cardHtml).join('')
+      : '<div class="cv-col-empty">Nothing from Colleague this day.</div>';
+    return `<div class="cv-day" data-date="${date}">
+      <div class="cv-day-head"><span class="cv-day-date">${fmt(date)}</span></div>
+      <div class="cv-row">
+        <div class="cv-col">${lCol}</div>
+        <div class="cv-col">${rCol}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Sub-tab bar at top of Collab view
+  const subTabs = `<div class="cv-subtabs">
+    <button class="cv-subtab ${activeCollabSub==='timeline'?'on':''}" onclick="setCollabSub('timeline')">
+      <span class="cv-subtab-icon">⎯◯⎯</span>Timeline
+    </button>
+    <button class="cv-subtab ${activeCollabSub==='clusters'?'on':''}" onclick="setCollabSub('clusters')">
+      <span class="cv-subtab-icon">◉ ◉</span>Clusters
+    </button>
+    <button class="cv-subtab ${activeCollabSub==='decisions'?'on':''}" onclick="setCollabSub('decisions')">
+      <span class="cv-subtab-icon">◇ → ◇</span>Decisions
+    </button>
+  </div>`;
+
+  // Common header (always shown)
+  const header = `<div class="collab-view-head">
+    <div class="collab-view-title">
+      <span class="cv-icon">⇄</span>
+      <span>Collab</span>
+    </div>
+    <div class="collab-view-authors">
+      <div class="cv-author-chip cv-author-chip-oskar"><span class="cv-dot"></span>Oskar ${oskarCount}</div>
+      <div class="cv-author-chip cv-author-chip-colleague"><span class="cv-dot"></span>Colleague ${collCount}</div>
+    </div>
+  </div>`;
+
+  // Dispatch sub-view body
+  let bodyHtml = '';
+  if (activeCollabSub === 'clusters') {
+    bodyHtml = renderCollabClustersBody(blocks);
+  } else if (activeCollabSub === 'decisions') {
+    bodyHtml = `<div class="cv-coming-soon">
+      <div class="cv-empty-icon">◇ → ◇</div>
+      Decisions sub-view — coming next.<br>
+      Will show decisions as nodes with arrows tracing the conversations that led to each one.
+    </div>`;
+  } else {
+    bodyHtml = daysHtml;
+  }
+
+  el.innerHTML = `<div class="collab-view">
+    ${header}
+    ${subTabs}
+    ${bodyHtml}
+  </div>`;
+}
+
+// Clusters sub-view — group blocks by task, show author breakdown per cluster
+function renderCollabClustersBody(blocks) {
+  // Group by task; ungrouped blocks get bucketed under "untagged"
+  const byTask = {};
+  blocks.forEach(b => {
+    const t = (b.task || '').trim() || 'untagged';
+    if (!byTask[t]) byTask[t] = { task: t, oskar: 0, colleague: 0, items: [] };
+    if (b._author === 'colleague') byTask[t].colleague++;
+    else byTask[t].oskar++;
+    byTask[t].items.push(b);
+  });
+  // Sort each cluster's items by ts descending so "latest" is index 0
+  Object.values(byTask).forEach(c => c.items.sort((a, b) => (b.ts||0) - (a.ts||0)));
+  // Sort clusters by total activity (most blocks first)
+  const clusters = Object.values(byTask).sort((a, b) => (b.oskar + b.colleague) - (a.oskar + a.colleague));
+
+  if (!clusters.length) {
+    return `<div class="cv-empty">
+      <div class="cv-empty-icon">◉</div>
+      No clusters yet — clusters appear when blocks share a task.
+    </div>`;
+  }
+
+  function clusterCard(c) {
+    const total = c.oskar + c.colleague;
+    const latest = c.items[0];
+    const latestTitle = latest ? (latest.title || 'Untitled').replace(/</g,'&lt;') : '';
+    // Bar fill proportional to author contribution
+    const oskarPct = total ? Math.round((c.oskar / total) * 100) : 0;
+    const collPct = 100 - oskarPct;
+    return `<div class="cv-cluster">
+      <div class="cv-cluster-head">
+        <div class="cv-cluster-name">${c.task.replace(/</g,'&lt;')}</div>
+        <div class="cv-cluster-count">${total}</div>
+      </div>
+      <div class="cv-cluster-bar">
+        <div class="cv-cluster-bar-oskar" style="width:${oskarPct}%"></div>
+        <div class="cv-cluster-bar-coll" style="width:${collPct}%"></div>
+      </div>
+      <div class="cv-cluster-authors">
+        <div class="cv-cluster-author"><span class="cv-dot cv-dot-oskar"></span>${c.oskar} Oskar</div>
+        <div class="cv-cluster-author"><span class="cv-dot cv-dot-coll"></span>${c.colleague} Colleague</div>
+      </div>
+      ${latest ? `<div class="cv-cluster-latest">
+        <div class="cv-cluster-latest-label">Latest</div>
+        <div class="cv-cluster-latest-title">${latestTitle}</div>
+      </div>` : ''}
+    </div>`;
+  }
+
+  return `<div class="cv-clusters-grid">
+    ${clusters.map(clusterCard).join('')}
+  </div>`;
+}
+
 function mergedBlocksRaw() {
   // liveBlocks (from MCP) take precedence — deduplicate by id
   const seen = new Set();
@@ -7098,6 +7593,7 @@ function renderFeed() {
   if (activeView === 'canvas')   { renderCanvasView();   return; }
   if (activeView === 'timeline') { renderTimelineView(); return; }
   if (activeView === 'pipeline') { renderPipelineView(); return; }
+  if (activeView === 'collab')   { renderCollabView();   return; }
   // Skills view — managed by renderSkillsView(), don't override
   if (skillsViewActive) { renderSkillsView(); return; }
   // Decisions view — managed by toggleDecisionsView(), don't override
@@ -12137,6 +12633,291 @@ function openCategoryView(filterCat) {
     ${insightHtml}
     ${sectionsHtml || `<div class="cat-empty">No blocks in this category yet.</div>`}
   </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  SPHERE VIEW  —  3D Knowledge Graph
+// ══════════════════════════════════════════════════════════
+let _sphereCleanup = null;
+
+function openSphereView() {
+  clearAllNavActive();
+  document.getElementById('sphereBtn')?.classList.add('active');
+  const feed = document.getElementById('feed');
+  if (_sphereCleanup) { _sphereCleanup(); _sphereCleanup = null; }
+
+  feed.innerHTML = `
+    <div id="sv-wrap" style="position:relative;width:100%;height:calc(100vh - 48px);overflow:hidden;background:#050510;">
+      <canvas id="sv-cv" style="display:block;width:100%;height:100%;"></canvas>
+      <div style="position:absolute;top:0;left:0;right:0;padding:14px 18px 40px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(to bottom,rgba(5,5,16,.92) 55%,transparent);pointer-events:none;">
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:4px;">Knowledge Sphere</div>
+          <div style="font-size:15px;font-weight:700;color:rgba(255,255,255,.92);">Bloom <span style="color:rgba(255,255,255,.3);font-weight:400;font-size:13px;">— Sprint 4</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.04);border:1px solid rgba(160,140,255,.2);border-radius:20px;padding:5px 13px;margin-top:3px;">
+          <div style="width:5px;height:5px;border-radius:50%;background:#FFB347;flex-shrink:0;animation:svpulse 2s ease-in-out infinite;"></div>
+          <span style="font-size:10px;color:rgba(170,170,210,.85);">Goal: Launch 3 agency pilots by July 31</span>
+        </div>
+      </div>
+      <div style="position:absolute;top:68px;right:16px;display:flex;flex-direction:column;gap:6px;pointer-events:none;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.22);text-transform:uppercase;margin-bottom:2px;">Team</div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:7px;height:7px;border-radius:50%;background:#A78BFA;"></div><span style="font-size:11px;color:rgba(255,255,255,.55);">Sofia <span style="opacity:.45;font-size:10px;">CEO</span></span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:7px;height:7px;border-radius:50%;background:#60A5FA;"></div><span style="font-size:11px;color:rgba(255,255,255,.55);">Priya <span style="opacity:.45;font-size:10px;">Design</span></span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:7px;height:7px;border-radius:50%;background:#34D399;"></div><span style="font-size:11px;color:rgba(255,255,255,.55);">Mikkel <span style="opacity:.45;font-size:10px;">CTO</span></span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:7px;height:7px;border-radius:50%;background:#FBBF24;"></div><span style="font-size:11px;color:rgba(255,255,255,.55);">Tom <span style="opacity:.45;font-size:10px;">Sales</span></span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:7px;height:7px;border-radius:50%;background:#F87171;"></div><span style="font-size:11px;color:rgba(255,255,255,.55);">Alex <span style="opacity:.45;font-size:10px;">Ops ⚠</span></span></div>
+      </div>
+      <div id="sv-alert" style="position:absolute;bottom:16px;right:16px;display:none;align-items:center;gap:7px;background:rgba(30,0,10,.93);border:1px solid rgba(220,50,80,.35);border-radius:7px;padding:7px 13px;">
+        <div style="width:5px;height:5px;border-radius:50%;background:#FF5566;flex-shrink:0;"></div>
+        <span style="font-size:10px;color:#FF99AA;">Alex's work is drifting from sprint goal</span>
+      </div>
+      <div id="sv-tt" style="position:absolute;left:18px;bottom:50px;display:none;background:rgba(10,10,28,.96);border:1px solid rgba(108,99,255,.25);border-radius:9px;padding:11px 15px;pointer-events:none;min-width:175px;backdrop-filter:blur(6px);">
+        <div id="sv-tt-name" style="font-size:13px;font-weight:700;color:#e8eaf6;margin-bottom:5px;"></div>
+        <div id="sv-tt-who" style="font-size:10px;color:rgba(160,160,200,.65);margin-bottom:3px;"></div>
+        <div id="sv-tt-score" style="font-size:10px;"></div>
+      </div>
+      <div style="position:absolute;bottom:16px;left:18px;pointer-events:none;">
+        <span style="font-size:10px;color:rgba(55,55,100,.8);">drag to orbit · hover nodes</span>
+      </div>
+    </div>
+  `;
+
+  if (!document.getElementById('sv-kf')) {
+    const s = document.createElement('style'); s.id = 'sv-kf';
+    s.textContent = '@keyframes svpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}';
+    document.head.appendChild(s);
+  }
+
+  if (!window.THREE) {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload = _buildSphere; document.head.appendChild(s);
+  } else { _buildSphere(); }
+}
+
+function _buildSphere() {
+  const wrap  = document.getElementById('sv-wrap');
+  const cv    = document.getElementById('sv-cv');
+  const alrt  = document.getElementById('sv-alert');
+  const ttEl  = document.getElementById('sv-tt');
+  const ttNm  = document.getElementById('sv-tt-name');
+  const ttWho = document.getElementById('sv-tt-who');
+  const ttScr = document.getElementById('sv-tt-score');
+  if (!wrap || !cv) return;
+
+  let W = wrap.clientWidth || 900, H = wrap.clientHeight || 600;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x050510);
+  const cam = new THREE.PerspectiveCamera(50, W/H, 0.1, 400);
+  cam.position.set(0, 0, 32);
+  const renderer = new THREE.WebGLRenderer({canvas: cv, antialias: true});
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+
+  // Stars
+  const sv = new Float32Array(2000*3);
+  for (let i=0;i<2000;i++){sv[i*3]=(Math.random()-.5)*300;sv[i*3+1]=(Math.random()-.5)*300;sv[i*3+2]=(Math.random()-.5)*300;}
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sv,3));
+  scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0x223366,size:0.14,sizeAttenuation:true})));
+
+  scene.add(new THREE.AmbientLight(0x111133, 2.5));
+  const cL = new THREE.PointLight(0xFFBB44, 3.5, 28); scene.add(cL);
+
+  // North Star orb
+  const orb = new THREE.Mesh(new THREE.SphereGeometry(0.52,20,20),
+    new THREE.MeshPhongMaterial({color:0xFFB347, emissive:0xCC5500, shininess:100}));
+  scene.add(orb);
+
+  // ── Company persona: Bloom (SaaS, customer success) ──────────────────
+  const NODES = [
+    // Sofia — CEO — violet
+    {t:'agency pilot',       who:'Sofia',  c:'#A78BFA', score:0.97, n:8},
+    {t:'success metrics',    who:'Sofia',  c:'#A78BFA', score:0.92, n:5},
+    {t:'pilot feedback',     who:'Sofia',  c:'#A78BFA', score:0.89, n:4},
+    {t:'trial activation',   who:'Sofia',  c:'#A78BFA', score:0.91, n:6},
+    {t:'product vision',     who:'Sofia',  c:'#A78BFA', score:0.85, n:3},
+    // Priya — Design — blue
+    {t:'onboarding flow',    who:'Priya',  c:'#60A5FA', score:0.94, n:7},
+    {t:'client dashboard',   who:'Priya',  c:'#60A5FA', score:0.88, n:5},
+    {t:'component library',  who:'Priya',  c:'#60A5FA', score:0.83, n:4},
+    {t:'user testing',       who:'Priya',  c:'#60A5FA', score:0.86, n:6},
+    {t:'design system',      who:'Priya',  c:'#60A5FA', score:0.78, n:3},
+    // Mikkel — CTO — green
+    {t:'API integration',    who:'Mikkel', c:'#34D399', score:0.88, n:9},
+    {t:'webhook events',     who:'Mikkel', c:'#34D399', score:0.82, n:6},
+    {t:'database schema',    who:'Mikkel', c:'#34D399', score:0.80, n:5},
+    {t:'auth flow',          who:'Mikkel', c:'#34D399', score:0.75, n:4},
+    {t:'rate limiting',      who:'Mikkel', c:'#34D399', score:0.57, n:3},
+    // Tom — Sales — amber
+    {t:'outreach sequence',  who:'Tom',    c:'#FBBF24', score:0.91, n:8},
+    {t:'demo script',        who:'Tom',    c:'#FBBF24', score:0.92, n:7},
+    {t:'CRM pipeline',       who:'Tom',    c:'#FBBF24', score:0.85, n:5},
+    {t:'email templates',    who:'Tom',    c:'#FBBF24', score:0.61, n:4},
+    {t:'follow-up cadence',  who:'Tom',    c:'#FBBF24', score:0.82, n:3},
+    // Alex — Ops — red — DRIFTING
+    {t:'NFT integration',    who:'Alex',   c:'#F87171', score:0.07, n:3},
+    {t:'crypto wallet',      who:'Alex',   c:'#F87171', score:0.05, n:2},
+    {t:'Web3 payments',      who:'Alex',   c:'#F87171', score:0.04, n:4},
+    {t:'token gating',       who:'Alex',   c:'#F87171', score:0.06, n:2},
+    {t:'blockchain audit',   who:'Alex',   c:'#F87171', score:0.08, n:1},
+  ];
+
+  const LINKS = [
+    [0,1],[0,2],[0,3],[1,2],[1,3],[2,4],                  // Sofia cluster
+    [5,6],[5,7],[5,8],[6,7],[6,8],[7,9],[8,9],             // Priya cluster
+    [10,11],[10,12],[11,12],[12,13],[10,13],[11,14],        // Mikkel cluster
+    [15,16],[15,17],[16,17],[16,19],[17,19],[18,15],        // Tom cluster
+    [0,15],[0,5],[3,5],[5,8],[10,6],[16,5],[3,16],[10,12], // Cross-team connections
+    [20,21],[21,22],[22,23],[22,24],[20,23],                // Alex cluster (mostly isolated)
+  ];
+
+  // Text sprite
+  function mkSpr(text, color) {
+    const c = document.createElement('canvas'); c.width=310; c.height=64;
+    const ctx = c.getContext('2d');
+    ctx.font = 'bold 23px Arial, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = color; ctx.shadowBlur = 16;
+    ctx.fillStyle = color; ctx.fillText(text, 155, 32);
+    const tex = new THREE.CanvasTexture(c); tex.minFilter = THREE.LinearFilter;
+    const mat = new THREE.SpriteMaterial({map:tex, transparent:true, depthWrite:false});
+    const spr = new THREE.Sprite(mat); spr.scale.set(5.0, 5.0*64/310, 1);
+    return spr;
+  }
+
+  // Init positions — aligned nodes near center, drifters further out
+  const NO = NODES.map(nd => {
+    const r = nd.score > 0.3 ? (2.5 + (1-nd.score)*9 + Math.random()*2.5) : 13 + Math.random()*3;
+    const phi = Math.random()*Math.PI*2, theta = Math.acos(2*Math.random()-1);
+    const spr = mkSpr(nd.t, nd.c); scene.add(spr);
+    spr.position.set(r*Math.sin(theta)*Math.cos(phi), r*Math.cos(theta), r*Math.sin(theta)*Math.sin(phi));
+    return {spr, nd, vx:(Math.random()-.5)*.1, vy:(Math.random()-.5)*.1, vz:(Math.random()-.5)*.1};
+  });
+
+  // Dynamic edge lines
+  const edges = LINKS.map(([a,b]) => {
+    const pa = new Float32Array(6);
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pa,3));
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({color:0x6655CC,transparent:true,opacity:0.2}));
+    scene.add(line);
+    return {line, geo, pa, a, b};
+  });
+
+  // Raycaster for hover
+  const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(-9, -9);
+  cv.addEventListener('mousemove', e => {
+    const r = cv.getBoundingClientRect();
+    mouse.x = ((e.clientX-r.left)/r.width)*2-1;
+    mouse.y = -((e.clientY-r.top)/r.height)*2+1;
+  });
+
+  // Camera drag orbit
+  let drag=false, lx=0, ly=0, phi=0, theta=0;
+  cv.style.cursor = 'grab';
+  cv.addEventListener('mousedown', e=>{drag=true;lx=e.clientX;ly=e.clientY;cv.style.cursor='grabbing';});
+  window.addEventListener('mouseup', ()=>{drag=false;cv.style.cursor='grab';});
+  window.addEventListener('mousemove', e=>{
+    if (!drag) return;
+    phi -= (e.clientX-lx)*.007;
+    theta = Math.max(-.65, Math.min(.65, theta+(e.clientY-ly)*.005));
+    lx=e.clientX; ly=e.clientY;
+  });
+
+  // Force params
+  const REP=8.5, SPR=0.018, REST=4.8, DAMP=0.88, GRAV=0.013;
+
+  let t=0, shown=false, rafId=null;
+
+  const anim = () => {
+    rafId = requestAnimationFrame(anim);
+    t += 0.011;
+
+    // Forces
+    const F = NO.map(()=>({fx:0,fy:0,fz:0}));
+
+    // Goal gravity toward origin
+    NO.forEach((n,i) => {
+      const {x,y,z} = n.spr.position; const s = n.nd.score;
+      F[i].fx -= x*GRAV*s; F[i].fy -= y*GRAV*s; F[i].fz -= z*GRAV*s;
+    });
+
+    // Pairwise repulsion
+    for (let i=0;i<NO.length;i++) {
+      for (let j=i+1;j<NO.length;j++) {
+        const a=NO[i].spr.position, b=NO[j].spr.position;
+        let dx=a.x-b.x, dy=a.y-b.y, dz=a.z-b.z;
+        let d=Math.sqrt(dx*dx+dy*dy+dz*dz); if(d<0.5)d=0.5;
+        const f=REP/(d*d*d);
+        F[i].fx+=dx*f; F[i].fy+=dy*f; F[i].fz+=dz*f;
+        F[j].fx-=dx*f; F[j].fy-=dy*f; F[j].fz-=dz*f;
+      }
+    }
+
+    // Spring forces along links
+    LINKS.forEach(([a,b]) => {
+      const pa=NO[a].spr.position, pb=NO[b].spr.position;
+      let dx=pb.x-pa.x, dy=pb.y-pa.y, dz=pb.z-pa.z;
+      const d=Math.sqrt(dx*dx+dy*dy+dz*dz); if(d<0.01)return;
+      const s=(d-REST)*SPR/d;
+      F[a].fx+=dx*s; F[a].fy+=dy*s; F[a].fz+=dz*s;
+      F[b].fx-=dx*s; F[b].fy-=dy*s; F[b].fz-=dz*s;
+    });
+
+    // Integrate
+    NO.forEach((n,i) => {
+      n.vx=(n.vx+F[i].fx)*DAMP; n.vy=(n.vy+F[i].fy)*DAMP; n.vz=(n.vz+F[i].fz)*DAMP;
+      n.spr.position.x+=n.vx; n.spr.position.y+=n.vy; n.spr.position.z+=n.vz;
+    });
+
+    // Update edge lines
+    edges.forEach(({geo,pa,a,b})=>{
+      const A=NO[a].spr.position, B=NO[b].spr.position;
+      pa[0]=A.x;pa[1]=A.y;pa[2]=A.z; pa[3]=B.x;pa[4]=B.y;pa[5]=B.z;
+      geo.attributes.position.needsUpdate=true;
+    });
+
+    // Drift alert
+    const ap=NO[20].spr.position;
+    const ad=Math.sqrt(ap.x**2+ap.y**2+ap.z**2);
+    if(ad>10&&!shown){shown=true;alrt.style.display='flex';}
+    if(shown)alrt.style.opacity=(.6+Math.sin(t*3.1)*.38).toFixed(2);
+
+    // Camera
+    if(!drag) phi+=0.003;
+    cam.position.set(Math.cos(phi)*Math.cos(theta)*32,Math.sin(theta)*32,Math.sin(phi)*Math.cos(theta)*32);
+    cam.lookAt(0,0,0); cam.updateMatrixWorld();
+
+    // Hover raycasting
+    ray.setFromCamera(mouse, cam);
+    const hits = ray.intersectObjects(NO.map(n=>n.spr));
+    if(hits.length){
+      const hit=hits[0].object, found=NO.find(n=>n.spr===hit);
+      if(found){
+        cv.style.cursor='pointer';
+        const nd=found.nd;
+        const sc=Math.round(nd.score*100);
+        const cl=nd.score>0.7?'#4ade80':nd.score>0.4?'#facc15':'#f87171';
+        ttNm.textContent=nd.t; ttWho.textContent=`${nd.who} · ${nd.n} sessions`;
+        ttScr.innerHTML=`<span style="color:${cl}">●</span> ${sc}% goal alignment`;
+        ttEl.style.display='block';
+      }
+    } else { if(!drag)cv.style.cursor='grab'; ttEl.style.display='none'; }
+
+    // Pulse orb
+    orb.scale.setScalar(1+Math.sin(t*2.2)*.14);
+    cL.intensity=3+Math.sin(t*2.2)*.9;
+    renderer.render(scene,cam);
+  };
+  anim();
+
+  _sphereCleanup = () => { cancelAnimationFrame(rafId); renderer.dispose(); };
+
+  const ro = new ResizeObserver(()=>{
+    W=wrap.clientWidth; H=wrap.clientHeight;
+    cam.aspect=W/H; cam.updateProjectionMatrix();
+    renderer.setSize(W,H);
+  });
+  ro.observe(wrap);
 }
 
 // ══════════════════════════════════════════════════════════

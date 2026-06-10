@@ -1,30 +1,9 @@
-# ── Build artifacts ───────────────────────────────────────────────────────────
 node_modules/
-.next/
-dist/
-build/
-*.log
-
-# ── OS / editor ───────────────────────────────────────────────────────────────
-.DS_Store
-.env
-.env.local
-.env.*.local
-
-# ── Media (large files, not tracked in git) ───────────────────────────────────
 thumbnails/
 *.png
 *.jpg
 *.mp4
-
-# ── Legacy data files (live data — not committed) ────────────────────────────
+.DS_Store
 storyboard-data.json
 ideas.jsonl
 seed_output.md
-blocks-data.json
-raw-captures.json
-waitlist.json
-
-# ── Supabase local dev ────────────────────────────────────────────────────────
-supabase/.branches/
-supabase/.temp/
