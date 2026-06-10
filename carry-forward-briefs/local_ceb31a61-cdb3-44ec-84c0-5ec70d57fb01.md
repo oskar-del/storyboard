@@ -1,20 +1,17 @@
 # Carry-Forward Brief: H&H email campaigns setup
-**Session:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01
-**Status:** Running (1950 assistant turns)
-**Last updated:** 2026-06-10T13:21:15
+**Session ID:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01
+**Status:** Running (93 assistant turns)
+**Briefed at:** 2026-06-10T23:36:33Z
 
 ## What's happening
-Long-running session setting up H&H (Hansson & Hertzell) email campaigns in MailerLite. Currently in the process of sending a test email — the last visible action was "Error cleared. Now clicking 'Send a test'" followed by browser automation in Chrome against the MailerLite UI.
+Setting up and sending an email campaign for Hansson & Hertzell via MailerLite. Currently in the final verification stage — checking the campaign preview URL to validate rendering before sending.
 
-## Recent actions
-- Cleared an error in the MailerLite campaign editor
-- Clicking the "Send a test" button via browser automation
-- Using JavaScript tool on the MailerLite page
+## Last known state
+- Navigated to preview URL in Chrome to verify email rendering
+- Has been working through MailerLite's campaign setup flow (93 turns suggests a complex multi-step process — likely HTML template injection, subscriber group targeting, and pre-send verification)
 
-## Context
-- Project: Hansson & Hertzell
-- Tool: MailerLite (browser automation via Claude in Chrome)
-- The session is extremely long (1950 turns) suggesting it has been fighting the MailerLite UI for an extended period
-
-## On resume
-Check whether the test send succeeded. If the campaign is in a sendable state, confirm with Oskar before sending to the full list.
+## What to do when resuming
+- Check if the preview rendered correctly
+- If yes: send the campaign
+- If no: debug the rendering issue (likely the Ace editor HTML injection technique per hh-email-pipeline skill)
+- Verify the subscriber group targeting is correct before sending

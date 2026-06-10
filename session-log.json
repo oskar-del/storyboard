@@ -10044,5 +10044,303 @@
     "_source": "session-sync",
     "_session_id": "local_0588719c-b045-4d77-b2e2-b05b328d76b1",
     "_logged": "2026-06-10T16:40:44.378021"
+  },
+  {
+    "id": "sync-sofia-whatsapp-32d2f5ce",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "whatsapp-setup",
+    "title": "WhatsApp Business API setup via Meta developer portal for H&H",
+    "summary": "Oskar went through the Meta developer portal to create a WhatsApp Business app ('Sophia H&H') to integrate with an n8n webhook. Session covered developer account registration, app creation with the WhatsApp use case selected, and setting up the production phone number (+34 745 04 97 08). Next step was generating a system user token with whatsapp_business_messaging + whatsapp_business_management scopes.",
+    "decisions": [
+      "App named 'Sophia H&H' (WhatsApp use case blocked the original name)",
+      "n8n webhook URL: https://hanssonhertzell.app.n8n.cloud/webhook/sofia-whatsapp",
+      "Using Hansson & Hertzell Invest as the business portfolio"
+    ],
+    "ideas": [
+      "Complete production setup in Meta: add real number, generate never-expiring system user token, wire up to n8n"
+    ],
+    "chips": [
+      "whatsapp",
+      "meta",
+      "n8n",
+      "integration",
+      "h&h"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-10T18:24:36.078881"
+  },
+  {
+    "id": "sync-hh-email-campaign-c32ca69a",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-email-campaigns",
+    "title": "Gran Alacant collaborator campaign configured and test email sent",
+    "summary": "Set up a branded H&H email campaign for Gran Alacant 2-bed apartment (€419k, €6k commission) targeting 274 collaborators. Navigated MailerLite's cached template preview issue, confirmed correct campaign content via test email send to oskar@hanssonhertzell.com. Pending inbox confirmation before full send.",
+    "decisions": [
+      "Send test email before full send to verify branded template renders correctly",
+      "Use rich text email (186895851542546290) not drag-and-drop template"
+    ],
+    "ideas": [
+      "Automate collaborator campaign send after test email confirmation"
+    ],
+    "chips": [
+      "MailerLite",
+      "email-campaign",
+      "H&H",
+      "collaborators"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-hh-migration-env-fda6f225",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-next-migration",
+    "title": "Identified missing Netlify env vars blocking hh-next contact form",
+    "summary": "Debugged the hh-next contact form being broken on Netlify — confirmed 0 records in Airtable Website Leads table. Root cause: .env.local vars (Airtable, MailerLite, Anthropic API keys) were never pushed to Netlify. Listed the 5 env vars needed in Netlify dashboard. GA4 measurement ID still a placeholder requiring the real G- value.",
+    "decisions": [
+      "Deploy on Netlify not Vercel (confirmed)",
+      "Env vars must be added manually in Netlify Site configuration → Environment variables"
+    ],
+    "ideas": [
+      "Get real GA4 measurement ID from GA4 property"
+    ],
+    "chips": [
+      "Netlify",
+      "env-vars",
+      "hh-next",
+      "contact-form",
+      "migration"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_57a11777-7ffa-4498-8a9a-6447faf13377",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-blogs-batch-d59d4128",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "blog-content-batch",
+    "title": "Wrote 12 H&H and 11 NBHCB blog articles, reaching H&H target of 119",
+    "summary": "Wrote and committed 6 paired Content Brain articles (NBHCB JSON + H&H companion posts) plus 6 original H&H articles covering buying guide, running costs, area comparison, IRNR tax, snagging checklist, and Spanish inheritance law. H&H hit target of 119 EN articles; NBHCB grew from 203 to 214. All articles logged in Airtable and Content Brain ideas marked Published.",
+    "decisions": [
+      "Write paired NBHCB + H&H articles for maximum content leverage",
+      "Original H&H articles cover legal and practical buying topics"
+    ],
+    "ideas": [
+      "Continue pairing strategy for future blog batches"
+    ],
+    "chips": [
+      "blog",
+      "SEO",
+      "H&H",
+      "NBHCB",
+      "content-brain",
+      "Airtable"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_d8dc68f1-8412-491e-8b0a-0e18774e89e9",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-nbhcb-brain-dashboard-bcaefd69",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-brain-dashboard",
+    "title": "Updated PropertyOS brain dashboard with source cards, email intake, and recent additions",
+    "summary": "Rebuilt the Cowork artifact dashboard to show source cards with weekly additions, an Email Intake panel listing 23 EMAIL-* properties (19 live, 2 no-price, 2 no-images), and a Recent Additions panel showing last 7 days of new properties. Alegria monitor confirmed showing 0 new properties this week — portfolio unchanged since May.",
+    "decisions": [
+      "Dashboard shows honest data: 0 changes for Alegria rather than masking it",
+      "Email Intake panel distinguishes live vs excluded properties"
+    ],
+    "ideas": [
+      "Auto-refresh dashboard after noon task runs"
+    ],
+    "chips": [
+      "dashboard",
+      "NBHCB",
+      "PropertyOS",
+      "Airtable",
+      "artifact"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-hh-migration-handover-58568442",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-migration-handover",
+    "title": "Reconciled hh-next migration handover with WS7 docs and Netlify decision",
+    "summary": "Consolidated migration status by reading WS7 planning brain (SETUP, PROGRESS, EXECUTION-PLAN docs). Confirmed Netlify over Vercel. Discovered 5,998-URL HH-Redirect-Map.xlsx vs only 310 lines in _redirects — coverage gap to fix. Identified SEO issues: EN missing from sitemap, Swedish root/se duplication, FAQ structured data. Updated MIGRATION-MASTER-HANDOVER.md with all blockers. Instructions: paste START-HERE-MIGRATION.md into new session.",
+    "decisions": [
+      "Netlify confirmed (not Vercel) for hh-next deployment",
+      "START-HERE files are the only things Oskar pastes — handover docs are read by Claude automatically"
+    ],
+    "ideas": [
+      "Cross-check HH-Redirect-Map.xlsx 5,998 URLs against current _redirects 310 lines"
+    ],
+    "chips": [
+      "migration",
+      "hh-next",
+      "Netlify",
+      "SEO",
+      "redirects",
+      "handover"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_69084291-dc40-4deb-9117-97830535c219",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-email-marketing-audit-d35b3ea5",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "email-marketing-audit",
+    "title": "Email marketing audit: 277 active subscribers, 6 weeks no newsletter, 14 drafts pending",
+    "summary": "Ran automated email marketing status check. Found only 277 active MailerLite subscribers vs ~4,578 expected — most campaign groups at 0 active. Last campaign sent April 30 (6 weeks ago). Gran Alacant collaborator campaign is ready to send (274 recipients). 14 drafts in MailerLite with 8 stale. 6 NBHCB Airtable leads unsynced to MailerLite.",
+    "decisions": [
+      "Send Gran Alacant collaborator campaign immediately",
+      "Investigate subscriber count drop from ~4,578 to 277"
+    ],
+    "ideas": [
+      "Build Week 23 CB South EN newsletter",
+      "Sync 6 NBHCB leads to MailerLite"
+    ],
+    "chips": [
+      "MailerLite",
+      "email-marketing",
+      "newsletter",
+      "H&H",
+      "NBHCB"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_533ad2b8-8bf3-4908-9c0a-27904308f42b",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-nbhcb-blog-pipeline-175f50fb",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-blog-pipeline",
+    "title": "Daily blog pipeline: 5 new content ideas pushed to Airtable from Google News",
+    "summary": "Ran content scout across 8 query clusters (Google News, idealista, euroweeklynews, theolivepress). Found 5 qualifying new articles on Spain property demand shift, asking price cuts, Alicante Sareb housing, home sale speed, and flexible retirement. Pushed to Airtable Status: New. Phase 2 write step skipped — no Approved articles pending.",
+    "decisions": [
+      "Dedup against 200 existing blog slugs and 57 Content Ideas to avoid repeats",
+      "Phase 2 write step only runs if Oskar approves ideas first"
+    ],
+    "ideas": [
+      "Review and approve new content ideas in Airtable to trigger Phase 2 write"
+    ],
+    "chips": [
+      "blog-pipeline",
+      "NBHCB",
+      "content-scout",
+      "Airtable",
+      "SEO"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_07ce0be8-6b11-4aa9-bf20-207b1b0d47a9",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-nbhcb-social-pipeline-076f5dd5",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "nbhcb-social-pipeline",
+    "title": "Social pipeline: Cycling Costa Blanca North batch scheduled to 4 platforms",
+    "summary": "Ran Wednesday social pipeline using pre-built cycling-javea-benissa-guide.json batch (Sports & Activities category, first use). Rendered 2 Remotion stills (square + Pinterest), uploaded to Postiz, scheduled 4 posts for June 11 across Instagram, Facebook, TikTok, Pinterest. Logged to Airtable. YouTube rejected still images with HTTP 400 — going forward YouTube receives video only.",
+    "decisions": [
+      "YouTube channel excluded from still-image posts — video only",
+      "Sports & Activities content category used for the first time"
+    ],
+    "ideas": [
+      "Review Postiz dashboard to fix YouTube channel config"
+    ],
+    "chips": [
+      "social-media",
+      "NBHCB",
+      "Remotion",
+      "Postiz",
+      "Airtable",
+      "YouTube"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_e23aba99-2e68-4bba-b8ba-2d118db2df46",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-sofia-vidal-n8n-a0e079c0",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "n8n-meta-webhook",
+    "title": "Fixed n8n Meta webhook GET verification for Sofia Vidal",
+    "summary": "Debugged n8n workflow where Meta's verification ping was not being handled correctly on the GET webhook endpoint. Spawned subagent to fix the workflow. Resolved — Meta Verify and Save should now succeed.",
+    "decisions": [
+      "n8n GET webhook must handle Meta's challenge-response verification ping separately from POST"
+    ],
+    "ideas": [],
+    "chips": [
+      "n8n",
+      "Meta",
+      "webhook",
+      "automation"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-10T18:52:38.648589"
+  },
+  {
+    "id": "sync-sofia-meta-67fda929",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "meta-system-user-setup",
+    "title": "Meta Business Manager system user token setup for sofia-n8n Facebook integration",
+    "summary": "Session focused on configuring a permanent Meta system user token (sofia-n8n) for H&H's Facebook/Instagram API integration using App ID 13000416089559735. Claude guided through the Business Settings → Accounts → Apps → System Users flow. The user requested Claude perform the steps via Chrome but existing browser windows with Meta sessions were inaccessible from the extension.",
+    "decisions": [
+      "Use system user 'sofia-n8n' with Admin role for never-expiring token",
+      "App ID 13000416089559735 assigned to the system user",
+      "Chrome extension cannot access existing browser sessions logged into Meta"
+    ],
+    "ideas": [
+      "Consider documenting Meta system user setup process for future team onboarding"
+    ],
+    "chips": [
+      "meta",
+      "facebook",
+      "system-user",
+      "api-token",
+      "h&h"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-10T19:53:55.526706"
   }
 ]
