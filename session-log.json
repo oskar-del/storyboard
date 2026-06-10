@@ -9387,5 +9387,152 @@
     "_source": "session-sync",
     "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
     "_logged": "2026-06-09T18:51:27.129192"
+  },
+  {
+    "id": "sync-storyboard-brain-e14fac4e",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "product-strategy",
+    "title": "Storyboard product strategy: MCP backend live, competitor analysis & visual layer positioning",
+    "summary": "Deep product strategy session for Storyboard — colleague's backend MCP is now built and connected live in Claude. Discussed the 'Dropbox folder' concept for zero-friction capture in Cowork, a capture-everything data philosophy for future personal LLMs, and a storyboard_capture MCP tool for real-time in-session logging. Analysed 14 competitors (Mem0, SuperPower ChatGPT, Screenpipe, etc.) and crystallised differentiation: Mem0 is developer infrastructure, Storyboard is the visual product for teams and managers.",
+    "decisions": [
+      "Colleague's backend MCP is built and live — Claude can now write directly to Storyboard from any session",
+      "Differentiator vs Mem0: Storyboard is a team-facing visual product, Mem0 is developer infrastructure — no real overlap",
+      "Capture-everything philosophy: log all raw data now, surface selectively later, enabling personal LLMs per client as a 12-18 month direction",
+      "Dropbox-like watched folder concept: if Claude Cowork folder IS the Storyboard workspace, capture becomes zero-friction",
+      "Developer+stakeholder is a valid segment — visual MCP for coders to surface decisions to PMs/CTOs without feeling like surveillance"
+    ],
+    "ideas": [
+      "storyboard_capture MCP tool so Claude can log decisions live as they happen, not retrospectively",
+      "Personal LLMs trained on a client's full AI work history — only possible if capture started early",
+      "Obsidian plugin as MVP distribution channel for early adopters, not long-term foundation",
+      "Chrome extension with on-device processing — backend receives structured blocks, never raw conversation text"
+    ],
+    "chips": [
+      "storyboard",
+      "strategy",
+      "competitors",
+      "chrome-extension",
+      "mcp",
+      "product-vision"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_eef0c862-ebb8-463d-8706-f36c10b93d7d",
+    "_logged": "2026-06-09T20:05:58.797391"
+  },
+  {
+    "id": "sync-blogs-content-brain-b7109c20",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "blog-content-pipeline",
+    "title": "Content Brain seeded with 55 NBHCB ideas; first H&H blog article written and committed",
+    "summary": "Completed seeding of the Content Brain Airtable base — 55 NBHCB Content Ideas migrated (4 batches) with categories, statuses, keywords, scores, and Fits Site tags. Wrote and committed the first H&H article targeting 'Costa Blanca property prices 2026 resale': 'Costa Blanca Property Prices Surged 18.3% in Q1 2026 — What Resale Buyers Need to Know'. Articles table now holds 200 NBHCB + 99 H&H articles; Netlify auto-build triggered.",
+    "decisions": [
+      "55 NBHCB Content Ideas imported to Content Brain (appO70BqO4GY4FP46 / tblRTwrNPizbcLt9f) in 4 batches",
+      "First H&H article keyword deliberately distinct from NBHCB: 'Costa Blanca property prices 2026 resale' vs new-build/investor angle",
+      "First content idea (score 18) marked Published with H&H article linked"
+    ],
+    "ideas": [
+      "NBHCB version of same market-update idea next — different primary keyword targeting new-build/investor angle"
+    ],
+    "chips": [
+      "content",
+      "blog",
+      "airtable",
+      "h&h",
+      "nbhcb",
+      "content-brain"
+    ],
+    "date": "9 Jun",
+    "ts": 20260609,
+    "_source": "session-sync",
+    "_session_id": "local_d8dc68f1-8412-491e-8b0a-0e18774e89e9",
+    "_logged": "2026-06-09T20:05:58.797391"
+  },
+  {
+    "id": "sync-newbuild-blog-pipeline-07ce0be8",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Content scout: 5 new article ideas pushed to Airtable, write phase skipped (no approved articles)",
+    "summary": "Daily Newbuild blog pipeline ran its content scout phase, searching Google News, Idealista, EuroWeekly News, and The Olive Press across 8 query clusters. Five new article candidates (Spain property demand shifts 2026, price cuts, Alicante Sareb homes, time-to-sell, flexible retirement) were pushed to Airtable with Status: New. Write phase skipped — no articles had Status=Approved yet, pending Oskar's review.",
+    "decisions": [
+      "Deduped against 200 existing blog slugs and 57 existing Content Ideas to avoid topic overlap",
+      "Write phase only runs when Airtable Status = Approved — skipped this run"
+    ],
+    "ideas": [
+      "Consider a Slack or email notification when new Content Ideas are waiting for approval"
+    ],
+    "chips": [
+      "content-scout",
+      "blog",
+      "airtable",
+      "newbuild"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_07ce0be8-6b11-4aa9-bf20-207b1b0d47a9",
+    "_logged": "2026-06-10T08:00:25.043479"
+  },
+  {
+    "id": "sync-newbuild-social-pipeline-e23aba99",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-social-pipeline",
+    "title": "Social pipeline: cycling Javea/Benissa stills rendered and scheduled across 4 channels for June 11",
+    "summary": "Wednesday Newbuild social pipeline ran using pre-built cycling batch (Costa Blanca North — Javea, Benissa & Vuelta España routes, unscheduled since April 29). Two Remotion stills rendered (2.2MB square + 1.9MB Pinterest), uploaded to Postiz, and 4 posts scheduled for June 11 across Instagram, Facebook, TikTok, and Pinterest. YouTube skipped after discovering it rejects still images with HTTP 400 'Item must be a video'.",
+    "decisions": [
+      "First use of Sports & Activities content category",
+      "YouTube channel excluded from still-image pipeline — video-only going forward",
+      "2 Digital Asset records + 3 Social Post records logged to Airtable"
+    ],
+    "ideas": [
+      "Review YouTube channel config in Postiz dashboard to prevent future HTTP 400 errors on stills"
+    ],
+    "chips": [
+      "social-pipeline",
+      "postiz",
+      "remotion",
+      "youtube-bug",
+      "cycling"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_e23aba99-2e68-4bba-b8ba-2d118db2df46",
+    "_logged": "2026-06-10T08:00:25.043479"
+  },
+  {
+    "id": "sync-email-mktg-audit-a7f2c81e",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "email-marketing-audit",
+    "title": "Email marketing audit: 277 subscribers (vs 4,578 expected), 6-week gap, campaign ready",
+    "summary": "Automated MailerLite audit found only 277 active subscribers vs ~4,578 expected, with most campaign groups showing 0 active members — a critical drop needing investigation. No newsletter has been sent since April 30 (6 weeks of silence). One Gran Alacant collaborator campaign is fully built with 274 active recipients and ready to send immediately.",
+    "decisions": [
+      "Flagged subscriber count drop as highest-priority issue requiring investigation",
+      "Identified 'Collaborator - Apartment Gran Alacant 2Bed EUR419k' as ready-to-send campaign",
+      "Recommended cleaning up 8 stale drafts from 14 sitting in MailerLite"
+    ],
+    "ideas": [
+      "Sync 6 unsynchronized NBHCB Airtable leads to MailerLite groups",
+      "Build Week 23 CB South EN newsletter (6 weeks overdue)"
+    ],
+    "chips": [
+      "email",
+      "MailerLite",
+      "newsletter",
+      "NBHCB",
+      "audit",
+      "subscribers"
+    ],
+    "date": "10 Jun",
+    "ts": 20260610,
+    "_source": "session-sync",
+    "_session_id": "local_533ad2b8-8bf3-4908-9c0a-27904308f42b",
+    "_logged": "2026-06-10T08:30:13.286524"
   }
 ]

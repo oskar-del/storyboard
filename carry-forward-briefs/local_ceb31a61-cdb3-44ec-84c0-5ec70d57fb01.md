@@ -1,20 +1,18 @@
-# Carry-Forward Brief: H&H email campaigns setup
-**Session ID:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01  
-**Status:** Running (802 assistant turns)  
-**Captured:** 2026-06-09T18:51:27
+# Carry-Forward Brief: H&H Email Campaigns Setup
+**Session:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01  
+**Written:** 2026-06-09T19:35:44.955203  
+**Status:** Running (990+ assistant turns)
 
-## Current State
-Actively injecting HTML email template into MailerLite's Redactor editor via base64 chunked approach, then intercepting the save network call to persist the HTML. Very long-running session (800+ turns) indicating a complex browser automation + email template workflow.
+## What's happening
+Setting up H&H email campaigns in MailerLite via browser automation (Chrome MCP). The session is injecting custom HTML into MailerLite's Redactor editor by intercepting the `changed` callback — identified as MailerLite's internal save hook. Multiple JavaScript injection attempts via `javascript_tool` to trigger the backend save after HTML is injected.
 
-## What's Being Done
-Setting up Hansson & Hertzell email campaigns in MailerLite — building and inserting branded HTML templates via Chrome automation, working around the Redactor editor's restrictions by injecting HTML directly.
+## In progress
+- HTML injection into MailerLite Custom HTML editor using Ace editor workaround
+- Firing the `changed` callback to trigger MailerLite's save mechanism
+- Multiple JS tool calls in sequence — likely iterating on the injection technique
 
-## Key Context
-- Uses the hh-email-pipeline skill approach (Ace editor / base64 HTML injection)
-- MailerLite Growing Business plan (Custom HTML workaround required)
-- Session has been running very long — context may be near limits
-
-## Next Steps If Resuming
-1. Verify the HTML injection succeeded and the campaign was saved
-2. Check if the campaign is ready to schedule/send
-3. If session died mid-inject, restart from the HTML template generation step
+## When resuming
+- Check if the HTML was successfully saved (look for success confirmation in MailerLite)
+- The `changed` callback approach is the key technique — if it failed, try dispatching a `change` event on the editor element
+- Review the hh-email-pipeline skill for alternative injection approaches
+- Once saved, proceed to scheduling/sending the campaign
