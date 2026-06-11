@@ -10342,5 +10342,112 @@
     "_source": "session-sync",
     "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
     "_logged": "2026-06-10T19:53:55.526706"
+  },
+  {
+    "id": "sync-hh-fb-morning-8fc8ece3",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-fb-group-posting",
+    "title": "H&H FB group morning posting failed — fb-poster MCP not connected",
+    "summary": "Automated morning post to H&H Facebook group failed because the fb-poster MCP server (fb_check_profile, fb_get_latest_post, fb_share_to_group) was not connected to the session. No posts were made. Failure was logged to LOG.md as instructed.",
+    "decisions": [
+      "Stop run and log failure when fb-poster MCP is unavailable",
+      "Write failure details to LOG.md for visibility"
+    ],
+    "ideas": [
+      "Ensure fb-poster MCP is running before next scheduled post run"
+    ],
+    "chips": [
+      "facebook",
+      "automation",
+      "mcp-failure",
+      "h&h"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_8fc8ece3-52b9-4a97-bb0d-716f1b3ddeb6",
+    "_logged": "2026-06-11T08:25:02.222152"
+  },
+  {
+    "id": "sync-property-email-scanner-fb0b90c8",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-email-scanner",
+    "title": "H&H property email scanner scanned 19 threads, hit API error before finish",
+    "summary": "Scanned 19 email threads to extract property data from Kolstad, Norwegian Estates, and United Real Estate Cabo Roig sources. Fetched the H&H feed for duplicate checking and began price verification for Cabo Roig properties. Hit an unexpected socket API error before completing final processing.",
+    "decisions": [
+      "Cross-reference against H&H feed to prevent duplicate listings",
+      "Fetch both agency emails and live feed before final reconciliation"
+    ],
+    "ideas": [
+      "Add retry logic for socket API errors mid-scan"
+    ],
+    "chips": [
+      "email-scanner",
+      "property-data",
+      "api-error",
+      "h&h"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_fb0b90c8-f1ba-4c91-90f0-ef7abda309dc",
+    "_logged": "2026-06-11T08:25:02.222152"
+  },
+  {
+    "id": "sync-newbuild-blog-pipeline-5779493a",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "newbuild-blog-pipeline",
+    "title": "Newbuild blog pipeline identified 3 qualifying articles, Airtable push failed",
+    "summary": "Blog content pipeline ran a full content inventory and search, finding 3 new qualifying articles with score ≥ 5 not already in the database. Tasks were created to push these to Airtable, but a socket API error interrupted the actual write. Articles are queued but not committed to Airtable.",
+    "decisions": [
+      "Score threshold ≥ 5 for qualifying articles",
+      "Deduplicate against existing Airtable DB before attempting push"
+    ],
+    "ideas": [
+      "Add Airtable push retry on API errors to avoid losing qualified articles"
+    ],
+    "chips": [
+      "blog-pipeline",
+      "airtable",
+      "api-error",
+      "content",
+      "new-build"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_5779493a-c0ec-41ce-8440-a049cd2f9a24",
+    "_logged": "2026-06-11T08:25:02.222152"
+  },
+  {
+    "id": "sync-hh-social-pipeline-007ece1f",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "hh-social-pipeline",
+    "title": "H&H social content plan ready — 5 posts Jun 11–20, captions + Facebook teasers written",
+    "summary": "H&H social pipeline ran for week of Jun 11 and produced a full content plan with 5 property posts on a Thu/Sat/Tue cadence covering price range €194K–€499K. Captions and 22:00 Facebook group teaser posts written for Thursday properties. Postiz is still not connected so posts remain in manual-only state.",
+    "decisions": [
+      "Thu/Sat/Tue posting cadence for week distribution",
+      "Cover entry-level coastal to villa for audience breadth",
+      "Write Facebook teaser posts for 22:00 the day before main posts"
+    ],
+    "ideas": [
+      "Connect H&H Facebook and Instagram to Postiz to unblock auto-scheduling"
+    ],
+    "chips": [
+      "social-media",
+      "content-plan",
+      "postiz-blocker",
+      "h&h",
+      "facebook"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_007ece1f-9fa5-431b-b0a3-a0d94b1d3b87",
+    "_logged": "2026-06-11T08:25:02.222152"
   }
 ]
