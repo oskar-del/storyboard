@@ -1,21 +1,16 @@
 # Carry-Forward Brief: H&H email campaigns setup
-**Session:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01  
-**Status:** Running (93 turns as of 2026-06-11 08:25)  
-**Updated:** 2026-06-11T08:25:02
+**Session:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01
+**Status:** Running (67 turns at time of brief)
+**Synced:** 2026-06-11T10:36:26
 
 ## What's happening
-Setting up H&H MailerLite email campaigns — a long-running session (93 turns) currently in final stages: navigating to campaign preview URL via Chrome to verify rendering before sending.
+Setting up email campaigns for Hansson & Hertzell via MailerLite. Currently injecting HTML email template content into the browser editor using JavaScript chunks.
 
-## State at last check
-- 93 assistant turns (very deep into the work)
-- Current action: navigating to preview URL to check email rendering
-- Using Chrome MCP (mcp__Claude_in_Chrome__navigate)
-- Appears to be using the Ace editor HTML injection technique for MailerLite Custom HTML
+## Last known state
+- Splitting HTML into 7 chunks for injection
+- Injecting chunks via mcp__Claude_in_Chrome__javascript_tool into the MailerLite editor
 
-## Next expected steps
-- Verify preview renders correctly
-- If OK → schedule or send the campaign
-- If not OK → adjust HTML and retry
-
-## Context
-H&H uses MailerLite Growing Business plan. HTML campaigns require the Ace editor injection workaround. Campaign is for hanssonhertzell.se subscribers.
+## Pick-up notes
+- Check if all 7 HTML chunks were injected successfully
+- Verify the email template renders correctly in MailerLite after injection
+- Campaign may still need to be scheduled or sent
