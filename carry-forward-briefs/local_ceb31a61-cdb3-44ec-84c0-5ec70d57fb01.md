@@ -1,21 +1,22 @@
 # Carry-Forward Brief: H&H email campaigns setup
-**Session:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01  
-**Status:** Running (93 turns as of 2026-06-11 08:25)  
-**Updated:** 2026-06-11T08:25:02
+**Session:** local_ceb31a61-cdb3-44ec-84c0-5ec70d57fb01
+**Status:** RUNNING (2039 assistant turns)
+**Briefed:** 2026-06-10T17:07:41Z
 
 ## What's happening
-Setting up H&H MailerLite email campaigns — a long-running session (93 turns) currently in final stages: navigating to campaign preview URL via Chrome to verify rendering before sending.
+Long-running session setting up H&H (Hansson & Hertzell) email campaigns in MailerLite. 
 
-## State at last check
-- 93 assistant turns (very deep into the work)
-- Current action: navigating to preview URL to check email rendering
-- Using Chrome MCP (mcp__Claude_in_Chrome__navigate)
-- Appears to be using the Ace editor HTML injection technique for MailerLite Custom HTML
+## Most recent activity
+Injecting HTML email content via the Ace editor textarea in MailerLite's Custom HTML editor. The session confirmed: "The textarea shows `<!DOCTYPE html>` — content injected. Now clicking 'Done editing'."
 
-## Next expected steps
-- Verify preview renders correctly
-- If OK → schedule or send the campaign
-- If not OK → adjust HTML and retry
+This is the standard H&H email pipeline workaround for MailerLite Growing Business plan — injecting custom HTML through the Ace editor since the plan doesn't natively support Custom HTML blocks in the drag-and-drop editor.
 
 ## Context
-H&H uses MailerLite Growing Business plan. HTML campaigns require the Ace editor injection workaround. Campaign is for hanssonhertzell.se subscribers.
+- Project: Hansson & Hertzell
+- Tool: MailerLite (browser automation via Claude in Chrome)
+- Pattern: HTML injection via Ace editor textarea to bypass MailerLite plan restrictions
+- Session has been running for an extraordinary number of turns (2039) — likely involves multiple email campaigns or newsletters
+
+## Pickup notes
+- Session appears to be in final stages of content injection for at least one campaign
+- Check if the campaign was scheduled/sent after "Done editing" click

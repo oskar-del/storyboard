@@ -10344,6 +10344,142 @@
     "_logged": "2026-06-10T19:53:55.526706"
   },
   {
+    "id": "sync-sofia-vidal-1a420326",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "sofia-vidal-buildout",
+    "title": "Sofia AI assistant — morning briefing, 7k re-engagement strategy & voice integration plan",
+    "summary": "Finalized WhatsApp polling schedule (30 min, 08:00–22:00 Madrid). Designed Sofia's morning briefing pulling calendar, Airtable tables, blog tracker, and Costa Blanca news into one daily WhatsApp message. Architected full 7,000-client re-engagement via Google Takeout Gmail extraction, batched WhatsApp templates (200/day), and Supabase + pgvector as the brain layer. Outlined ElevenLabs voice clone + Retell integration for live calls.",
+    "decisions": [
+      "Use Google Takeout MBOX for Gmail extraction (not API rate-limited calls)",
+      "Supabase + pgvector for brain/embedding layer, Airtable stays for operational CRM",
+      "Retell handles live phone calls, ElevenLabs handles async voice (WhatsApp notes, video)",
+      "Batch WhatsApp re-engagement at ~200/day to stay below Meta flagging threshold",
+      "File 3 WhatsApp message templates now (re-engagement, cold intro, property alert)"
+    ],
+    "ideas": [
+      "Morning briefing workflow (2h build) — highest daily value",
+      "Clone Sofia's embedded conversation data as sellable product for other agencies"
+    ],
+    "chips": [
+      "sofia",
+      "whatsapp",
+      "n8n",
+      "crm",
+      "elevenlabs",
+      "retell",
+      "supabase"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_f7c058aa-96a9-4af0-aea8-028d331296df",
+    "_logged": "2026-06-11T00:06:11.293697"
+  },
+  {
+    "id": "sync-storyboard-bugfix-e2d64af7",
+    "type": "session",
+    "project": "Storyboard",
+    "task": "storyboard-brain-bugfix",
+    "title": "Fixed Storyboard app port mismatch — live session-log now loads correctly",
+    "summary": "Fixed one-character bug where the Storyboard app pointed to port 3849 for live data while the mcp-server runs on 3847. App was falling back to stale blocks-data.json (last updated April 29) instead of the live merged feed. Port corrected to 3847 so /blocks now returns all 384 entries from merged blocks-data.json + session-log.json.",
+    "decisions": [
+      "Changed app config port 3849 → 3847 to match running mcp-server",
+      "mcp-server /blocks endpoint merges blocks-data.json + session-log.json"
+    ],
+    "ideas": [],
+    "chips": [
+      "storyboard",
+      "bugfix",
+      "mcp-server",
+      "port"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_eef0c862-ebb8-463d-8706-f36c10b93d7d",
+    "_logged": "2026-06-11T00:06:11.293697"
+  },
+  {
+    "id": "sync-blogs-content-sprint-71e12db0",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "blog-content-sprint",
+    "title": "Blog sprint — H&H grows 79→119, NBHCB 203→214, 12+11 articles committed",
+    "summary": "Full content sprint writing paired articles for H&H and NBHCB. Six Content Brain pairs published (retiring in Spain, housing law, Plan Estatal Vivienda, renovation grants, micro-apartments, British remote workers). Six original H&H articles added: buying timeline, running costs, Costa Blanca vs Costa del Sol, IRNR non-resident tax, new build snagging checklist, Spanish inheritance law. All articles committed to git and logged in Airtable Articles table.",
+    "decisions": [
+      "Paired content strategy: each NBHCB topic gets an H&H companion article",
+      "All Content Brain ideas marked Published in Airtable after writing"
+    ],
+    "ideas": [],
+    "chips": [
+      "blog",
+      "seo-content",
+      "h&h",
+      "nbhcb",
+      "content-sprint",
+      "airtable"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_d8dc68f1-8412-491e-8b0a-0e18774e89e9",
+    "_logged": "2026-06-11T00:06:11.293697"
+  },
+  {
+    "id": "sync-nbhcb-dashboard-c90a35f1",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "property-dashboard-rebuild",
+    "title": "Property sources dashboard rebuilt — honest status, email intake queue, recent additions",
+    "summary": "Rebuilt the property sources dashboard artifact to show accurate data: each source card shows count, additions this week, and last change date. Added Email Intake panel with all 23 EMAIL-* properties and statuses (19 live, 2 no price, 2 no images). Recent Additions section shows last 7 days of new properties. Confirmed Alegria monitor runs daily but no portfolio changes detected since May.",
+    "decisions": [
+      "Alegria monitor commits only when website actually changes — zero changes this week is correct",
+      "Email intake: 19 in feed, 2 excluded for no price, 2 excluded for no images"
+    ],
+    "ideas": [],
+    "chips": [
+      "nbhcb",
+      "dashboard",
+      "property-sources",
+      "artifact",
+      "alegria"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
+    "_logged": "2026-06-11T00:06:11.293697"
+  },
+  {
+    "id": "sync-social-pipeline-f3a2750d",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "social-pipeline-jun10",
+    "title": "Social pipeline — cycling Costa Blanca North content scheduled across 4 platforms",
+    "summary": "Ran the June 10 social pipeline with cycling guide content for Javea and Benissa. Rendered 2 Remotion stills (square + Pinterest format), uploaded to Postiz, and scheduled 4 posts for June 11 on Instagram, Facebook, TikTok, and Pinterest. YouTube skipped — channel now rejects still images with HTTP 400. Logged 2 Digital Asset records and 3 Social Post records to Airtable.",
+    "decisions": [
+      "YouTube excluded from still image pipeline going forward — rejects with HTTP 400 'Item must be a video'",
+      "Used pre-built batch cycling-javea-benissa-guide.json (unscheduled since April 29)"
+    ],
+    "ideas": [
+      "Review YouTube channel config in Postiz dashboard"
+    ],
+    "chips": [
+      "nbhcb",
+      "social",
+      "postiz",
+      "pipeline",
+      "remotion",
+      "youtube"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_e23aba99-2e68-4bba-b8ba-2d118db2df46",
+    "_logged": "2026-06-11T00:06:11.293697"
+  },
+  {
     "id": "sync-hh-fb-morning-8fc8ece3",
     "type": "session",
     "project": "Hansson Hertzell",
@@ -10448,6 +10584,33 @@
     "ts": 20260611,
     "_source": "session-sync",
     "_session_id": "local_007ece1f-9fa5-431b-b0a3-a0d94b1d3b87",
+    "_logged": "2026-06-11T08:25:02.222152"
+  },
+  {
+    "id": "sync-agency-brain-dashboard-b6c2feca",
+    "type": "session",
+    "project": "Opero Agency",
+    "task": "agency-brain-dashboard",
+    "title": "Agency brain dashboard rebuilt with source cards, email intake panel, and recent additions",
+    "summary": "Updated the live agency dashboard artifact with source cards showing property count, weekly additions, and last-change timestamp per source. Added email intake panel showing all 23 EMAIL-* properties with status tags (19 in feed, 2 no price, 2 no images). Recent additions section shows 61 GI properties added Jun 4; Alegria shows 'no changes since May' honestly.",
+    "decisions": [
+      "Display 'no changes detected' for Alegria rather than masking absence of updates",
+      "Show EMAIL-* property statuses transparently with in-feed / no-price / no-images tags"
+    ],
+    "ideas": [
+      "Auto-refresh dashboard after noon once daily scheduled tasks complete"
+    ],
+    "chips": [
+      "dashboard",
+      "artifact",
+      "property-data",
+      "agency-brain",
+      "nbhcb"
+    ],
+    "date": "11 Jun",
+    "ts": 20260611,
+    "_source": "session-sync",
+    "_session_id": "local_b6c2feca-d46f-4bd8-ac29-3e6c94590c0a",
     "_logged": "2026-06-11T08:25:02.222152"
   }
 ]
