@@ -10900,5 +10900,82 @@
     "_source": "session-sync",
     "_session_id": "local_16ab39aa-c555-4601-a49b-5b477337be9a",
     "_logged": "2026-06-12T09:06:09.949628"
+  },
+  {
+    "id": "sync-prop-email-scan-d37ea581",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "property-email-scanner",
+    "title": "Property intake scan blocked — Gmail connector unavailable",
+    "summary": "Scheduled property-email-scanner run could not execute because no Gmail connector was authorized for the session and none appeared in the MCP registry. No emails were read or marked, so the next run picks up everything once Gmail access is restored.",
+    "decisions": [
+      "Logged a BLOCKED status report rather than guessing",
+      "Left all labeled emails untouched for the next run"
+    ],
+    "ideas": [
+      "Reconnect Gmail via Settings → Connectors before re-running"
+    ],
+    "chips": [
+      "blocked",
+      "gmail",
+      "property-intake"
+    ],
+    "date": "12 Jun",
+    "ts": 20260612,
+    "_source": "session-sync",
+    "_session_id": "local_746d5704-3b08-4d13-affb-4d6ea6bac75d",
+    "_logged": "2026-06-12T09:09:37.665892"
+  },
+  {
+    "id": "sync-outreach-drafts-13a77171",
+    "type": "session",
+    "project": "Hansson Hertzell",
+    "task": "daily-client-outreach-drafts",
+    "title": "Daily outreach drafts blocked — Airtable + Gmail connectors missing",
+    "summary": "Scheduled outreach-draft run was blocked because neither the Airtable nor Gmail connectors were available in the session. No CRM records were read or tagged and no drafts created; blocker logged to Database/outreach-log.md.",
+    "decisions": [
+      "Logged blocked run to outreach-log.md",
+      "Took no write actions to avoid double-tagging clients"
+    ],
+    "ideas": [
+      "Reconnect Airtable and Gmail for the scheduled-task session, then re-run"
+    ],
+    "chips": [
+      "blocked",
+      "airtable",
+      "gmail",
+      "outreach"
+    ],
+    "date": "12 Jun",
+    "ts": 20260612,
+    "_source": "session-sync",
+    "_session_id": "local_03ba5db1-4c74-4169-b0a5-7dcba25eb273",
+    "_logged": "2026-06-12T09:09:37.665892"
+  },
+  {
+    "id": "sync-nb-social-6b8617c4",
+    "type": "session",
+    "project": "New Build Homes",
+    "task": "social-pipeline",
+    "title": "Friday social pipeline: N8675 Torrevieja villa scheduled across 4 channels",
+    "summary": "Ran the Friday New Build social pipeline. Selected N8675, a 3-bed villa with private pool in Torrevieja (EUR700k, Costa Blanca South), rendered square + Pinterest cards via Remotion, and scheduled posts to Instagram, Facebook, TikTok and Pinterest for June 13 via direct Postiz API calls. Logged assets and posts to Airtable and updated PROGRESS.md.",
+    "decisions": [
+      "Chose villa N8675 to rotate cleanly off last week bungalow and feature Torrevieja",
+      "Skipped YouTube — it rejects still images (known issue since June 10)"
+    ],
+    "ideas": [
+      "Direct Postiz API calls worked from the VM without the browser bridge"
+    ],
+    "chips": [
+      "Postiz",
+      "Remotion",
+      "Airtable",
+      "social"
+    ],
+    "date": "12 Jun",
+    "ts": 20260612,
+    "_source": "session-sync",
+    "_session_id": "local_65550ebf-5153-4329-a1e5-7a474c2beaf8",
+    "_logged": "2026-06-12T09:20:44.357776"
   }
 ]
